@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageCONTR">
+    <children>
+      <HBox alignment="CENTER_RIGHT" layoutX="187.0" prefHeight="47.0" prefWidth="1533.0" styleClass="HBox" stylesheets="@../../css/HBox.css" AnchorPane.bottomAnchor="739.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label prefHeight="18.0" prefWidth="310.0" text="Current System Time : ">
+               <HBox.margin>
+                  <Insets right="1100.0" />
+               </HBox.margin>
+            </Label>
+            <ImageView fitHeight="47.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../TARUC%20Degree%20Materials/21WMR04840.jpg" />
+               </image>
+            </ImageView>
+            <MFXCircleToggleNode prefHeight="58.0" prefWidth="67.0" size="20.0">
+               <graphic>
+                  <FontAwesomeIconView glyphName="GEAR" size="15" />
+               </graphic>
+               <padding>
+                  <Insets top="35.0" />
+               </padding>
+            </MFXCircleToggleNode>
+         </children>
+      </HBox>
+      <MFXScrollPane layoutY="54.0" prefHeight="732.0" prefWidth="1533.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="54.0">
+         <content>
+              <VBox prefHeight="730.0" prefWidth="186.0">
+                  <children>
+                      <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Staff Management">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Create Staff" />
+                        <MenuItem mnemonicParsing="false" text="Update Staff" />
+                        <MenuItem mnemonicParsing="false" text="View Staff" />
+                     </items>
+                      </SplitMenuButton>
+                  <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Customer Management">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Create Customer" />
+                        <MenuItem mnemonicParsing="false" text="Update Customer" />
+                        <MenuItem mnemonicParsing="false" text="View Customer" />
+                     </items>
+                  </SplitMenuButton>
+                  <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Sales Management">
+                     <items>
+                        <Menu mnemonicParsing="false" text="Customer Inquiry Management">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Create Customer Inquiry" />
+                              <MenuItem mnemonicParsing="false" text="Update Customer Inquiry" />
+                              <MenuItem mnemonicParsing="false" text="View Customer Inquiry" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Quotation Management">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Create Quotation" />
+                              <MenuItem mnemonicParsing="false" text="Update Quotation" />
+                              <MenuItem mnemonicParsing="false" text="View Quotation" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Sales Order Management">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Create Transfer Order" />
+                              <MenuItem mnemonicParsing="false" text="Update Transfer Order" />
+                              <MenuItem mnemonicParsing="false" text="View Transfer Order" />
+                           </items>
+                        </Menu>
+                     </items>
+                  </SplitMenuButton>
+                  <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Warehouse Management">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="View Inventory" />
+                        <Menu mnemonicParsing="false" text="Transfer Order Management">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Create Transfer Order" />
+                              <MenuItem mnemonicParsing="false" text="Update Transfer Order" />
+                              <MenuItem mnemonicParsing="false" text="View Transfer Order" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="RDN Management">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Create RDN" />
+                              <MenuItem mnemonicParsing="false" text="Update RDN" />
+                              <MenuItem mnemonicParsing="false" text="View RDN" />
+                           </items>
+                        </Menu>
+                     </items>
+                  </SplitMenuButton>
+                  <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Accounting Management">
+                     <items>
+                        <Menu mnemonicParsing="false" text="Invoice Management">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Create Invoice" />
+                              <MenuItem mnemonicParsing="false" text="View Invoice" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Payment Management">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Create Payment" />
+                              <MenuItem mnemonicParsing="false" text="View Receipt" />
+                           </items>
+                        </Menu>
+                     </items>
+                  </SplitMenuButton>
+                  <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Reporting">
+                     <items>
+                        <Menu mnemonicParsing="false" text="Sales Reports">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Sales Report" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Warehouse Reports">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Inventory Control Report" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Accounting Reports">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Accounting Report" />
+                           </items>
+                        </Menu>
+                     </items>
+                  </SplitMenuButton>
+                  </children>
+               <stylesheets>
+                  <URL value="@../../css/SplitMenuButton.css" />
+                  <URL value="@../../css/MenuButtons.css" />
+                  <URL value="@../../css/MenuItem.css" />
+               </stylesheets>
+               <opaqueInsets>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+               </opaqueInsets>
+              </VBox>
+         </content>
+      </MFXScrollPane>
+    </children>
+</AnchorPane>

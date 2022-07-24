@@ -1,0 +1,62 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/*
+    Created on : Jul 23, 2022, 4:20:24 PM
+    Author     : Tee Zhuo Xuan
+*/
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/*
+    Created on : Jul 23, 2022, 3:56:03 PM
+    Author     : Tee Zhuo Xuan
+*/
+
+VBox{
+    -fx-background-color: rgba(232,232,232,1);
+}
+
+.menu{
+    -fx-background-color: transparent;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-border-style:  hidden none solid none;
+    -fx-border-color: #5a22ba;
+}
+
+.menu .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: #5a22ba;
+}
+.menu .arrow{
+    -fx-background-color: black;
+}
+
+.menu:hover,
+.menu:focused{
+    -fx-background-color: #5a22ba;
+}
+.menu:hover > .label,
+.menu:focused > .label
+{
+    -fx-text-fill: white;
+}
+
+.menu:hover .arrow,
+.menu:focused .arrow{
+    -fx-background-color: white;
+}
+
+
+
+
+
+
+
+
+
+
+

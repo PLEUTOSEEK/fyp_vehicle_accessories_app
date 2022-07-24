@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<TitledPane animated="false" collapsible="false" prefWidth="1103.0" text="Position Description" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <AnchorPane minWidth="0.0" prefWidth="200.0">
+         <children>
+            <GridPane layoutX="1.0" layoutY="-31.0" prefHeight="415.0" prefWidth="1091.0" stylesheets="@../../css/Buttons.css">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="357.6000061035156" minWidth="0.0" prefWidth="7.466674268245697" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="961.8" minWidth="10.0" prefWidth="549.1333257317543" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="534.2666625976564" minWidth="10.0" prefWidth="531.0666503906251" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="94.9333251953125" minHeight="0.0" prefHeight="49.93333892822265" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="204.8" minHeight="10.0" prefHeight="201.66666107177736" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="179.33334960937498" minHeight="10.0" prefHeight="64.7999877929687" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="162.60001220703123" minHeight="10.0" prefHeight="71.4665710449218" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <AnchorPane prefHeight="160.0" prefWidth="525.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                     <children>
+                        <GridPane layoutX="-7.0" prefHeight="341.0" prefWidth="538.0" stylesheets="@../../css/Buttons.css">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="92.53336334228516" minWidth="0.0" prefWidth="10.400023460388184" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="410.2" minWidth="10.0" prefWidth="257.5999765396118" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="280.39999389648443" minWidth="10.0" prefWidth="264.39999389648443" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <StackPane prefHeight="515.0" prefWidth="527.0" styleClass="grid-background" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </StackPane>
+                              <Label styleClass="small-label" stylesheets="@../../css/labels.css" text="Employee Information" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.valignment="CENTER">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font size="26.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="15.0" right="15.0" />
+                                 </padding>
+                              </Label>
+                              <MFXTextField alignment="CENTER_RIGHT" floatingText="Work Place ID" prefHeight="49.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </MFXTextField>
+                              <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="LIST" />
+                                 </graphic>
+                                 <padding>
+                                    <Insets bottom="1.0" top="10.0" />
+                                 </padding>
+                                 <GridPane.margin>
+                                    <Insets top="3.0" />
+                                 </GridPane.margin>
+                              </MFXCircleToggleNode>
+                              <MFXComboBox alignment="CENTER_RIGHT" allowEdit="true" floatingText="Employee Type" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </MFXComboBox>
+                              <MFXTextField alignment="CENTER_RIGHT" floatingText="Report To" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </MFXTextField>
+                              <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="LIST" />
+                                 </graphic>
+                                 <padding>
+                                    <Insets bottom="1.0" top="10.0" />
+                                 </padding>
+                                 <GridPane.margin>
+                                    <Insets top="3.0" />
+                                 </GridPane.margin>
+                              </MFXCircleToggleNode>
+                              <MFXDatePicker alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Entry Date" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </MFXDatePicker>
+                              <MFXComboBox alignment="CENTER_RIGHT" allowEdit="true" floatingText="Role" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </MFXComboBox>
+                              <MFXTextField alignment="CENTER_RIGHT" floatingText="Occupation" prefHeight="49.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </MFXTextField>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </GridPane>
+         </children>
+      </AnchorPane>
+   </content>
+</TitledPane>

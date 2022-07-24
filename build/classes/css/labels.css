@@ -1,0 +1,20 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/*
+    Created on : Jul 17, 2022, 11:47:18 AM
+    Author     : Tee Zhuo Xuan
+*/
+
+.label {
+    -fx-background-color: #5E24C3;
+    -fx-border-radius: 20 0 20 0;
+    -fx-background-radius: 20 0 20 0;
+}
+
+.small-label {
+    -fx-background-color: #5E24C3;
+    -fx-border-radius: 5 5 5 5;
+    -fx-background-radius: 5 5 5 5;
+}

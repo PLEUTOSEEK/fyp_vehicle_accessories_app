@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" stylesheets="@../../css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.InvoiceCONTR">
+   <children>
+      <MFXScrollPane minHeight="785.0" minWidth="1532.0" prefHeight="786.0" prefWidth="1533.0" styleClass="grid-pane" stylesheets="@../../css/PaneBackgroundColor.css" trackColor="#828282" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <GridPane minHeight="900.0" minWidth="1511.0" prefHeight="1691.0" prefWidth="1516.0">
+               <columnConstraints>
+                  <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="118.33333587646484" minHeight="10.0" prefHeight="46.80000305175781" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="212.33333587646484" minHeight="10.0" prefHeight="77.99999694824218" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="201.6666717529297" minHeight="10.0" prefHeight="201.6666717529297" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <TitledPane animated="false" collapsible="false" prefHeight="726.0" prefWidth="1457.0" text="Header" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                     <content>
+                        <AnchorPane prefHeight="197.0" prefWidth="1426.0">
+                           <children>
+                              <GridPane layoutX="6.0" minHeight="133.0" minWidth="707.0" prefHeight="302.0" prefWidth="1378.0">
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="216.00001220703126" minWidth="10.0" prefWidth="188.99998168945314" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="186.39999389648438" minWidth="0.0" prefWidth="86.80004882812503" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="795.0" minWidth="10.0" prefWidth="189.39996337890625" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="713.9996826171875" minWidth="0.0" prefWidth="80.800048828125" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="945.2" minWidth="10.0" prefWidth="839.1999511718751" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="88.20000305175782" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="184.2" minHeight="10.0" prefHeight="55.399993896484375" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="293.6000213623047" minHeight="0.0" prefHeight="56.40000915527344" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="349.800016784668" minHeight="10.0" prefHeight="57.799987792968764" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="427.9999755859375" minHeight="0.0" prefHeight="54.600003051757824" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="410.6000122070312" minHeight="0.0" prefHeight="56.800006103515614" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="395.20001831054685" minHeight="7.399957275390648" prefHeight="20.799993896484352" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <MFXTextField fx:id="txtASD" alignment="CENTER_RIGHT" editable="false" floatingText="Invoice ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.rowIndex="1" />
+                                    <MFXDatePicker alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Reference Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <MFXTextField fx:id="txtQuotRef" alignment="CENTER_RIGHT" editable="false" floatingText="Sales Order Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <MFXTextField alignment="CENTER_RIGHT" floatingText="Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                    <MFXTextField alignment="CENTER_RIGHT" floatingText="Ref. Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                    <MFXComboBox alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="sd" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" collapsible="false" minWidth="1406.0" prefHeight="379.0" prefWidth="1406.0" text="Product and Service" GridPane.columnIndex="1" GridPane.columnSpan="19" GridPane.rowIndex="7" GridPane.valignment="TOP">
+                     <content>
+                        <AnchorPane prefHeight="502.0" prefWidth="1416.0">
+                           <children>
+                              <GridPane layoutX="17.0" prefHeight="482.0" prefWidth="1371.0" stylesheets="@../../css/Buttons.css">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="93.5999755859375" minWidth="0.7999687194824219" prefWidth="2.9333152770996094" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="220.0" minWidth="10.0" prefWidth="216.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.66665649414062" minWidth="10.0" prefWidth="105.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <MFXTableView prefHeight="349.0" prefWidth="1400.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" GridPane.valignment="TOP" />
+                                    <MFXButton buttonType="RAISED" minHeight="27.0" minWidth="70.0" styleClass="outline-button" text="Add" GridPane.columnIndex="12" GridPane.halignment="RIGHT">
+                                       <GridPane.margin>
+                                          <Insets right="1.0" />
+                                       </GridPane.margin>
+                                    </MFXButton>
+                                    <MFXTextField fx:id="txtASD111" alignment="CENTER_RIGHT" editable="false" floatingText="Sub. Total" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="8" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                    <MFXTextField fx:id="txtASD1111" alignment="CENTER_RIGHT" editable="false" floatingText="Total Payable (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="201.0" text="aaa" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                    <MFXTextField fx:id="txtASD1112" alignment="CENTER_RIGHT" editable="false" floatingText="Discount" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                    <MFXTextField fx:id="txtASD11121" alignment="CENTER_RIGHT" editable="false" floatingText="Gross (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </TitledPane>
+                  <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="303.0" stylesheets="@../../css/labels.css" text="Invoice" textFill="WHITE" GridPane.columnIndex="17" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="Arial monospaced for SAP Bold" size="52.0" />
+                     </font>
+                  </Label>
+                  <MFXCircleToggleNode prefHeight="87.0" prefWidth="67.0" size="25.0" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="ANGLE_LEFT" size="35" />
+                     </graphic>
+                  </MFXCircleToggleNode>
+                  <TitledPane animated="false" collapsible="false" minWidth="1406.0" prefWidth="1406.0" text="Signatures" GridPane.columnIndex="1" GridPane.columnSpan="19" GridPane.rowIndex="21" GridPane.valignment="TOP">
+                     <content>
+                        <AnchorPane prefHeight="484.0" prefWidth="1421.0">
+                           <children>
+                              <GridPane layoutX="11.0" prefHeight="90.0" prefWidth="1390.0">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="231.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.99997558593753" minWidth="10.0" prefWidth="231.99997558593753" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="226.3999755859375" minWidth="10.0" prefWidth="188.40002441406256" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="335.9999755859375" minWidth="10.0" prefWidth="335.9999755859375" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="53.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="24.0" minHeight="7.0" prefHeight="7.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fffafa" height="90.0" stroke="#5e24c3" strokeType="INSIDE" width="90.0" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Rectangle>
+                                    <MFXTextField fx:id="txtASD1112111" alignment="CENTER_RIGHT" floatingText="Issued By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.rowIndex="1" />
+                                    <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <padding>
+                                          <Insets bottom="1.0" top="10.0" />
+                                       </padding>
+                                       <graphic>
+                                          <FontAwesomeIconView glyphName="LIST" />
+                                       </graphic>
+                                       <GridPane.margin>
+                                          <Insets right="17.0" />
+                                       </GridPane.margin>
+                                    </MFXCircleToggleNode>
+                                    <MFXTextField fx:id="txtASD11121112" alignment="CENTER_RIGHT" floatingText="Released &amp; Verified By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <padding>
+                                          <Insets bottom="1.0" top="10.0" />
+                                       </padding>
+                                       <graphic>
+                                          <FontAwesomeIconView glyphName="LIST" />
+                                       </graphic>
+                                       <GridPane.margin>
+                                          <Insets right="17.0" />
+                                       </GridPane.margin>
+                                    </MFXCircleToggleNode>
+                                    <ImageView fitHeight="89.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true" styleClass="image" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                       <image>
+                                          <Image url="@../../../../Pictures/Screenshots/Screenshot%20(11).png" />
+                                       </image>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </ImageView>
+                                    <MFXTextField fx:id="txtASD11121111" alignment="CENTER_RIGHT" floatingText="Customer Signature" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <padding>
+                                          <Insets bottom="1.0" top="10.0" />
+                                       </padding>
+                                       <graphic>
+                                          <FontAwesomeIconView glyphName="LIST" />
+                                       </graphic>
+                                    </MFXCircleToggleNode>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+               </children>
+            </GridPane>
+         </content>
+      </MFXScrollPane>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c1c1ec" height="53.0" layoutX="3.0" layoutY="728.0" stroke="#cdc7d9" strokeType="INSIDE" width="1515.0" />
+      <MFXButton buttonType="RAISED" layoutX="1430.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" styleClass="outline-button" text="Save" />
+      <MFXButton id="custom" layoutX="1331.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" text="Discard" />
+   </children>
+</AnchorPane>

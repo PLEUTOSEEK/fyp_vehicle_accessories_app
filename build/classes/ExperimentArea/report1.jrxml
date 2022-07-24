@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b1ddaf1c-f39c-4e9e-9a5b-aaae2eed5bf0">
+    <property name="ireport.zoom" value="1.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="XUanParameter" class="java.lang.String">
+        <defaultValueExpression><![CDATA[]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+		<![CDATA[SELECT
+     *
+FROM
+      Customer
+Where
+	Customer_ID = $P{XUanParameter}]]>
+    </queryString>
+    <field name="Customer_ID" class="java.lang.String"/>
+    <field name="Bill_To_Addr" class="java.lang.String"/>
+    <field name="Avatar_Img" class="java.lang.String"/>
+    <field name="Name" class="java.lang.String"/>
+    <field name="Gender" class="java.lang.String"/>
+    <field name="DOB" class="java.sql.Date"/>
+    <field name="IC" class="java.lang.String"/>
+    <field name="Marital_Status" class="java.lang.String"/>
+    <field name="Nationality" class="java.lang.String"/>
+    <field name="Honorifics" class="java.lang.String"/>
+    <field name="Residential_Address" class="java.lang.String"/>
+    <field name="Corresponding_Address" class="java.lang.String"/>
+    <field name="Email" class="java.lang.String"/>
+    <field name="Mobile_No" class="java.lang.String"/>
+    <field name="Extension_No" class="java.lang.String"/>
+    <field name="Office_Phone_No" class="java.lang.String"/>
+    <field name="Home_Phone_No" class="java.lang.String"/>
+    <field name="Occupation" class="java.lang.String"/>
+    <field name="Race" class="java.lang.String"/>
+    <field name="Religion" class="java.lang.String"/>
+    <field name="Bank_Acc_Provider" class="java.lang.String"/>
+    <field name="Bank_Acc_No" class="java.lang.String"/>
+    <field name="Customer_Type" class="java.lang.String"/>
+    <field name="Status" class="java.lang.String"/>
+    <field name="Created_Date" class="java.sql.Timestamp"/>
+    <field name="Modified_Date_Time" class="java.sql.Timestamp"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="79" splitType="Stretch">
+            <textField pattern="dd MMMMM yyyy">
+                <reportElement x="455" y="0" width="100" height="20" uuid="2b6af0aa-edf7-4a3b-933f-d4bf3fa3607d"/>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="35" splitType="Stretch"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="61" splitType="Stretch">
+            <textField>
+                <reportElement x="32" y="15" width="100" height="20" uuid="6a6d4c4a-4188-4c06-9d75-1d6d1facd66f"/>
+                <textFieldExpression><![CDATA[$F{Gender}]]></textFieldExpression>
+            </textField>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="125" splitType="Stretch"/>
+    </detail>
+    <columnFooter>
+        <band height="45" splitType="Stretch"/>
+    </columnFooter>
+    <pageFooter>
+        <band height="54" splitType="Stretch"/>
+    </pageFooter>
+    <summary>
+        <band height="42" splitType="Stretch"/>
+    </summary>
+</jasperReport>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.EntityOverviewCONTR">
+    <children>
+      <MFXScrollPane minHeight="785.0" minWidth="1530.0" prefHeight="786.0" prefWidth="1533.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+              <GridPane minHeight="785.0" minWidth="1530.0" prefHeight="785.0" prefWidth="1530.0" stylesheets="@../../css/Buttons.css">
+                  <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                  <RowConstraints maxHeight="603.8000244140625" minHeight="10.0" prefHeight="75.99999389648437" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="603.8000244140625" minHeight="10.0" prefHeight="84.79999084472655" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="657.6000228881836" minHeight="10.0" prefHeight="594.4000091552734" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="62.19998779296873" minHeight="10.0" prefHeight="46.19998779296873" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                  <children>
+                  <MFXCircleToggleNode prefHeight="87.0" prefWidth="67.0" size="25.0" GridPane.halignment="LEFT" GridPane.valignment="TOP">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="ANGLE_LEFT" size="35" />
+                     </graphic>
+                  </MFXCircleToggleNode>
+                      <MFXTableView prefHeight="753.0" prefWidth="1530.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.rowSpan="2147483647" GridPane.valignment="TOP">
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin>
+                  </MFXTableView>
+                  <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="926.0" stylesheets="@../../css/labels.css" text="Entity Overview" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                     <font>
+                        <Font name="Arial monospaced for SAP Bold" size="52.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  </children>
+              </GridPane>
+         </content>
+      </MFXScrollPane>
+    </children>
+</AnchorPane>
