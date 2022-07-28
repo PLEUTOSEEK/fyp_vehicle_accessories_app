@@ -17,6 +17,14 @@ public class Document extends Entity {
     protected byte[] signedDocPic;
     protected String status;
 
+    public Document(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status) {
+        super(createdDateTime, modifiedDateTime);
+        this.code = code;
+        this.actualCreatedDateTime = actualCreatedDateTime;
+        this.signedDocPic = signedDocPic;
+        this.status = status;
+    }
+
     public String getCode() {
         return code;
     }

@@ -5,6 +5,7 @@
 package Entity;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
@@ -27,6 +28,25 @@ public class Person extends Entity {
     protected String race;
     protected String religion;
     protected String status;
+
+    public Person(Timestamp createdDateTime, Timestamp modifiedDateTime, byte[] avatarImg, String name, String gender, Date DOB, String IC, String maritalStatus, String nationality, String honorifics, Address residentialAddr, Address corAddr, Contact contact, String occupation, String race, String religion, String status) {
+        super(createdDateTime, modifiedDateTime);
+        this.avatarImg = avatarImg;
+        this.name = name;
+        this.gender = gender;
+        this.DOB = DOB;
+        this.IC = IC;
+        this.maritalStatus = maritalStatus;
+        this.nationality = nationality;
+        this.honorifics = honorifics;
+        this.residentialAddr = residentialAddr;
+        this.corAddr = corAddr;
+        this.contact = contact;
+        this.occupation = occupation;
+        this.race = race;
+        this.religion = religion;
+        this.status = status;
+    }
 
     public byte[] getAvatarImg() {
         return avatarImg;

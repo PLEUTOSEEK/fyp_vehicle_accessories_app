@@ -4,6 +4,8 @@
  */
 package Entity;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author Tee Zhuo Xuan
@@ -17,6 +19,20 @@ public class Address extends Entity {
     private String postalCode;
     private String state;
     private String country;
+
+    public Address(Timestamp createdDateTime, Timestamp modifiedDateTime, String addressID, String locationName, String address, String city, String postalCode, String state, String country) {
+        super(createdDateTime, modifiedDateTime);
+        this.addressID = addressID;
+        this.locationName = locationName;
+        this.address = address;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.state = state;
+        this.country = country;
+    }
+
+    public Address() {
+    }
 
     public String getAddressID() {
         return addressID;

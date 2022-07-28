@@ -8,6 +8,8 @@ import Entity.SalesOrder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -185,6 +187,44 @@ public class SalesOrderDAO {
 
             //return object
             return latestCode;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static List<SalesOrder> getAllData() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        List<SalesOrder> SOs = new ArrayList<>();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                SOs.add(new SalesOrder());
+            }
+
+            //return object
+            return SOs;
         } catch (Exception e) {
             return null;
         } finally {

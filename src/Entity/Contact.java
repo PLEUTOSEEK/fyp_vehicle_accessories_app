@@ -16,6 +16,18 @@ public class Contact {
     private String offPhNo; // office phone number
     private String homePhNo; // home phone number
 
+    public Contact(String email, String mobileNo, String ext, String offPhNo, String homePhNo) {
+        this.email = email;
+        this.mobileNo = mobileNo;
+        this.ext = ext;
+        this.offPhNo = offPhNo;
+        this.homePhNo = homePhNo;
+    }
+
+    public Contact() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     public String getEmail() {
         return email;
     }

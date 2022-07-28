@@ -18,3 +18,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-border-radius: 5 5 5 5;
     -fx-background-radius: 5 5 5 5;
 }
+
+.normal-label {
+    -fx-background-color: transparent;
+    -fx-border-radius: 20 0 20 0;
+    -fx-background-radius: 20 0 20 0;
+}

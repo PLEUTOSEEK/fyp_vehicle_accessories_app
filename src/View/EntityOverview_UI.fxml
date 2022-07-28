@@ -14,7 +14,7 @@
 
 <AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.EntityOverviewCONTR">
     <children>
-      <MFXScrollPane minHeight="785.0" minWidth="1530.0" prefHeight="786.0" prefWidth="1533.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MFXScrollPane minHeight="785.0" minWidth="1530.0" prefHeight="786.0" prefWidth="1533.0" stylesheets="@../Material/css/labels.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
               <GridPane minHeight="785.0" minWidth="1530.0" prefHeight="785.0" prefWidth="1530.0" stylesheets="@../../css/Buttons.css">
                   <columnConstraints>

@@ -4,6 +4,8 @@
  */
 package Entity;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author Tee Zhuo Xuan
@@ -11,8 +13,20 @@ package Entity;
 public class CollectAddress extends Entity {
 
     private String collectAddrID;
+    private Customer customerID;
     private Person person;
     private Address addr;
+
+    public CollectAddress(Timestamp createdDateTime, Timestamp modifiedDateTime, String collectAddrID, Customer customerID, Person person, Address addr) {
+        super(createdDateTime, modifiedDateTime);
+        this.collectAddrID = collectAddrID;
+        this.customerID = customerID;
+        this.person = person;
+        this.addr = addr;
+    }
+
+    public CollectAddress() {
+    }
 
     public String getCollectAddrID() {
         return collectAddrID;

@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 
@@ -76,7 +77,7 @@ public class QuotationDAO {
             ps.setBigDecimal(16, quotation.getNett());
             ps.setString(17, quotation.getIssuedBy().getStaffID());
             ps.setString(18, quotation.getReleasedAVerifiedBy().getStaffID());
-            ps.setString(19, quotation.getCustomerSignature().getCustID());
+            ps.setString(19, quotation.getCustomerSignature().getCollectAddrID());
             ps.setString(20, quotation.getStatus());
             ps.setTimestamp(21, quotation.getCreatedDate());
             ps.setTimestamp(22, quotation.getActualCreatedDateTime());
@@ -138,7 +139,7 @@ public class QuotationDAO {
                 quotation.setNett(rs.getBigDecimal("QUOT_Nett"));
                 quotation.setIssuedBy(StaffDAO.getStaffByID(rs.getString("QUOT_Issued_By")));
                 quotation.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("QUOT_Released_And_Verified_By")));
-                quotation.setCustomerSignature(CustomerDAO.getCustomerByID(rs.getString("QUOT_Customer_Signed")));
+                quotation.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Customer_Signed")));
                 quotation.setStatus(rs.getString("QUOT_Status"));
                 quotation.setCreatedDate(rs.getTimestamp("QUOT_Created_Date"));
                 quotation.setActualCreatedDateTime(rs.getTimestamp("QUOT_Actual_Created_Date"));
@@ -203,7 +204,66 @@ public class QuotationDAO {
     }
 
     public static List<Quotation> getAllQuotation() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        List<Quotation> quots = new ArrayList<>();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT * FROM View_Retrieve_All_Quotation";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                quots.add(new Quotation(
+                        rs.getTimestamp("QUOT_Created_Date"),
+                        rs.getTimestamp("QUOT_Modified_Date_Time"),
+                        rs.getString("QUOT_Quot_ID"),
+                        rs.getTimestamp("QUOT_Actual_Created_Date"),
+                        Base64.decodeBase64(rs.getString("signedDocPic")),
+                        rs.getString("QUOT_Status"),
+                        CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("QUOT_CI_ID")),
+                        rs.getString("QUOT_Reference_Type"),
+                        rs.getString("QUOT_Reference"),
+                        CustomerDAO.getCustomerByID(rs.getString("QUOT_Bill_To_Cust")),
+                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Deliver_To")),
+                        StaffDAO.getStaffByID(rs.getString("QUOT_Sales_Person")),
+                        rs.getString("QUOT_Currency_Code"),
+                        rs.getDate("QUOT_Quot_Validity_Date"),
+                        rs.getDate("QUOT_Required_Delivery_Date"),
+                        rs.getString("QUOT_Payment_Term"),
+                        rs.getString("QUOT_Shipment_Term"),
+                        rs.getBigDecimal("QUOT_Gross"),
+                        rs.getBigDecimal("QUOT_Discount"),
+                        rs.getBigDecimal("QUOT_Sub_Total"),
+                        rs.getBigDecimal("QUOT_Nett"),
+                        StaffDAO.getStaffByID(rs.getString("QUOT_Issued_By")),
+                        StaffDAO.getStaffByID(rs.getString("QUOT_Released_And_Verified_By")),
+                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Customer_Signed"))
+                ));
+            }
+
+            //return object
+            return quots;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
     }
 
 }

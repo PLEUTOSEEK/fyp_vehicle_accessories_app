@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefWidth="745.0" stylesheets="@../../css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SalesOrderPSSelectCONTR">
+<AnchorPane id="AnchorPane" prefWidth="745.0" stylesheets="@../Material/css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SalesOrderPSSelectCONTR">
    <children>
       <GridPane layoutX="6.0" layoutY="6.0" prefHeight="138.0" prefWidth="745.0" stylesheets="@../../css/Buttons.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -59,4 +59,7 @@
          </padding>
       </GridPane>
    </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
 </AnchorPane>
