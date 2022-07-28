@@ -4,6 +4,8 @@
  */
 package Entity;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author Tee Zhuo Xuan
@@ -15,6 +17,19 @@ public class Place extends Entity {
     private Address placeAddr;
     private String description;
     private Contact contact;
+
+    public Place() {
+        this(null, null, "", "", null, "", null);
+    }
+
+    public Place(Timestamp createdDateTime, Timestamp modifiedDateTime, String placeID, String placeName, Address placeAddr, String description, Contact contact) {
+        super(createdDateTime, modifiedDateTime);
+        this.placeID = placeID;
+        this.placeName = placeName;
+        this.placeAddr = placeAddr;
+        this.description = description;
+        this.contact = contact;
+    }
 
     public String getPlaceID() {
         return placeID;

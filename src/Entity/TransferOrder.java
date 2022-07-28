@@ -4,6 +4,7 @@
  */
 package Entity;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -21,6 +22,22 @@ public class TransferOrder<T> extends Document {
     private Staff issuedBy;
     private Staff transferBy;
     private Customer itemReceivedBy;
+
+    public TransferOrder() {
+        this(null, null, "", null, null, "", null, null, "", null, null, null, null, null);
+    }
+
+    public TransferOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, Staff PIC, Place destination, String reqType, T reqTypeRef, List<Item> items, Staff issuedBy, Staff transferBy, Customer itemReceivedBy) {
+        super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
+        this.PIC = PIC;
+        this.destination = destination;
+        this.reqType = reqType;
+        this.reqTypeRef = reqTypeRef;
+        this.items = items;
+        this.issuedBy = issuedBy;
+        this.transferBy = transferBy;
+        this.itemReceivedBy = itemReceivedBy;
+    }
 
     public Staff getPIC() {
         return PIC;

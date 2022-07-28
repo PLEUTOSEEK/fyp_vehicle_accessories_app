@@ -4,6 +4,8 @@
  */
 package Entity;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -18,6 +20,20 @@ public class Customer extends Person {
     private Address billToAddr;
     private List<CollectAddress> dlvrAddrs;
     private String custType; // organization or personal
+
+    public Customer(Timestamp createdDateTime, Timestamp modifiedDateTime, byte[] avatarImg, String name, String gender, Date DOB, String IC, String maritalStatus, String nationality, String honorifics, Address residentialAddr, Address corAddr, Contact contact, String occupation, String race, String religion, String status, String custID, String bankAccProvider, String bankAccNo, Address billToAddr, List<CollectAddress> dlvrAddrs, String custType) {
+        super(createdDateTime, modifiedDateTime, avatarImg, name, gender, DOB, IC, maritalStatus, nationality, honorifics, residentialAddr, corAddr, contact, occupation, race, religion, status);
+        this.custID = custID;
+        this.bankAccProvider = bankAccProvider;
+        this.bankAccNo = bankAccNo;
+        this.billToAddr = billToAddr;
+        this.dlvrAddrs = dlvrAddrs;
+        this.custType = custType;
+    }
+
+    public Customer() {
+        this(null, null, null, "", "", null, "", "", "", "", null, null, null, "", "", "", "", "", "", "", null, null, "");
+    }
 
     public String getCustID() {
         return custID;

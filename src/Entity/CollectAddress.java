@@ -26,6 +26,7 @@ public class CollectAddress extends Entity {
     }
 
     public CollectAddress() {
+        this(null, null, "", null, null, null);
     }
 
     public String getCollectAddrID() {

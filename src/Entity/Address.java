@@ -32,6 +32,7 @@ public class Address extends Entity {
     }
 
     public Address() {
+        this(null, null, "", "", "", "", "", "", "");
     }
 
     public String getAddressID() {

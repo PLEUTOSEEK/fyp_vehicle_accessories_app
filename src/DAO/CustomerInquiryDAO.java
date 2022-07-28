@@ -106,30 +106,34 @@ public class CustomerInquiryDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                customerInquiry.setCode(rs.getString("CI_CI_ID"));
-                customerInquiry.setReferenceType(rs.getString("CI_Reference_Type"));
-                customerInquiry.setReference(rs.getString("CI_Reference"));
-                customerInquiry.setBillToCust(CustomerDAO.getCustomerByID(rs.getString("CI_Bill_To_Cust")));
-                customerInquiry.setDeliverToCust(CollectAddressDAO.getCollectAddressByID(rs.getString("CI_Deliver_To")));
-                customerInquiry.setSalesPerson(StaffDAO.getStaffByID(rs.getString("CI_Sales_Person")));
-                customerInquiry.setCurrencyCode(rs.getString("CI_Currency_Code"));
-                customerInquiry.setRequiredDeliveryDate(rs.getDate("CI_Required_Delivery_Date"));
-                customerInquiry.setPymtTerm(rs.getString("CI_Payment_Term"));
-                customerInquiry.setShipmentTerm(rs.getString("CI_Shipment_Term"));
-                customerInquiry.setGross(rs.getBigDecimal("CI_Gross"));
-                customerInquiry.setDiscount(rs.getBigDecimal("CI_Discount"));
-                customerInquiry.setSubTotal(rs.getBigDecimal("CI_Sub_Total"));
-                customerInquiry.setNett(rs.getBigDecimal("CI_Nett"));
-                customerInquiry.setIssuedBy(StaffDAO.getStaffByID(rs.getString("CI_Issued_By")));
-                customerInquiry.setStatus(rs.getString("CI_Status"));
-                customerInquiry.setCreatedDate(rs.getTimestamp("CI_Created_Date"));
-                customerInquiry.setActualCreatedDateTime(rs.getTimestamp("CI_Actual_Created_Date"));
-                customerInquiry.setSignedDocPic(Base64.decodeBase64(rs.getString("CI_Signed_Doc_Pic")));
-                customerInquiry.setModifiedDateTime(rs.getTimestamp("CI_Modified_Date_Time"));
+                customerInquiry = new CustomerInquiry(
+                        rs.getTimestamp("Created_Date"),
+                        rs.getTimestamp("Modified_Date_Time"),
+                        rs.getString("CI_ID"),
+                        rs.getTimestamp("CI_Actual_Created_Date"),
+                        Base64.decodeBase64(rs.getString("CI_Signed_Doc_Pic")),
+                        rs.getString("CI_Status"),
+                        rs.getString("CI_Reference_Type"),
+                        rs.getString("CI_Reference"),
+                        CustomerDAO.getCustomerByID(rs.getString("CI_Bill_To_Cust")),
+                        CollectAddressDAO.getCollectAddressByID(rs.getString("CI_Deliver_To")),
+                        rs.getString("CI_Currency_Code"),
+                        rs.getDate("CI_Required_Delivery_Date"),
+                        rs.getString("CI_Payment_Term"),
+                        rs.getString("CI_Shipment_Term"),
+                        StaffDAO.getStaffByID("CI_Sales_Person"),
+                        null,
+                        rs.getBigDecimal("CI_Gross"),
+                        rs.getBigDecimal("CI_Discount"),
+                        rs.getBigDecimal("CI_Sub_Total"),
+                        rs.getBigDecimal("CI_Nett"),
+                        StaffDAO.getStaffByID(rs.getString("CI_Issued_By"))
+                );
                 return customerInquiry;
             } else {
                 return null;
             }
+
         } catch (Exception e) {
             return null;
         } finally {

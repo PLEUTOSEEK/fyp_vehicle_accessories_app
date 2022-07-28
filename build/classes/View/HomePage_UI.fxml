@@ -17,7 +17,7 @@
 
 <AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageCONTR">
     <children>
-      <HBox alignment="CENTER_RIGHT" layoutX="187.0" prefHeight="47.0" prefWidth="1533.0" styleClass="HBox" stylesheets="@../../css/HBox.css" AnchorPane.bottomAnchor="739.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox alignment="CENTER_RIGHT" layoutX="187.0" prefHeight="47.0" prefWidth="1533.0" styleClass="HBox" stylesheets="@../Material/css/HBox.css" AnchorPane.bottomAnchor="739.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="310.0" text="Current System Time : ">
                <HBox.margin>
@@ -138,9 +138,9 @@
                   </SplitMenuButton>
                   </children>
                <stylesheets>
-                  <URL value="@../../css/SplitMenuButton.css" />
-                  <URL value="@../../css/MenuButtons.css" />
-                  <URL value="@../../css/MenuItem.css" />
+                  <URL value="@../Material/css/SplitMenuButton.css" />
+                  <URL value="@../Material/css/MenuButtons.css" />
+                  <URL value="@../Material/css/MenuItem.css" />
                </stylesheets>
                <opaqueInsets>
                   <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />

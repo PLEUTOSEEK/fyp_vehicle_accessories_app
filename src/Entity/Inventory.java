@@ -4,6 +4,8 @@
  */
 package Entity;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author Tee Zhuo Xuan
@@ -16,5 +18,15 @@ public class Inventory extends Entity {
     private Integer reservedQty;
     private Integer readyQty;
     private Integer ttlQty;
+
+    public Inventory(String inventoryID, Place storePlace, Product product, Integer reservedQty, Integer readyQty, Integer ttlQty, Timestamp createdDateTime, Timestamp modifiedDateTime) {
+        super(createdDateTime, modifiedDateTime);
+        this.inventoryID = inventoryID;
+        this.storePlace = storePlace;
+        this.product = product;
+        this.reservedQty = reservedQty;
+        this.readyQty = readyQty;
+        this.ttlQty = ttlQty;
+    }
 
 }

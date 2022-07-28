@@ -5,6 +5,7 @@
 package Entity;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -22,5 +23,18 @@ public class Receipt extends Document {
     private BigDecimal paidAmtPrev;
     private BigDecimal balUnpaid;
     private Customer customerSignature;
+
+    public Receipt(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, Invoice INV, String referenceType, String reference, List<Item> items, BigDecimal ttlPayable, BigDecimal paidAmt, BigDecimal paidAmtPrev, BigDecimal balUnpaid, Customer customerSignature) {
+        super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
+        this.INV = INV;
+        this.referenceType = referenceType;
+        this.reference = reference;
+        this.items = items;
+        this.ttlPayable = ttlPayable;
+        this.paidAmt = paidAmt;
+        this.paidAmtPrev = paidAmtPrev;
+        this.balUnpaid = balUnpaid;
+        this.customerSignature = customerSignature;
+    }
 
 }

@@ -5,6 +5,7 @@
 package Entity;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -25,6 +26,25 @@ public class DeliveryOrder extends Document {
     private Staff releasedAVerifiedBy;
     private Staff deliveryBy;
     private Customer itemReceivedBy;
+
+    public DeliveryOrder() {
+        this(null, null, "", null, null, "", null, null, null, null, "", "", null, null, null, null, null);
+    }
+
+    public DeliveryOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, Place deliverFr, SalesOrder SO, Date deliveryDate, ReturnDeliveryNote RDN, String referenceType, String reference, List<Item> items, Staff issuedBy, Staff releasedAVerifiedBy, Staff deliveryBy, Customer itemReceivedBy) {
+        super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
+        this.deliverFr = deliverFr;
+        this.SO = SO;
+        this.deliveryDate = deliveryDate;
+        this.RDN = RDN;
+        this.referenceType = referenceType;
+        this.reference = reference;
+        this.items = items;
+        this.issuedBy = issuedBy;
+        this.releasedAVerifiedBy = releasedAVerifiedBy;
+        this.deliveryBy = deliveryBy;
+        this.itemReceivedBy = itemReceivedBy;
+    }
 
     public Place getDeliverFr() {
         return deliverFr;

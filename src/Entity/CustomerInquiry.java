@@ -6,6 +6,7 @@ package Entity;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -29,6 +30,29 @@ public class CustomerInquiry extends Document {
     private BigDecimal subTotal;
     private BigDecimal nett;
     private Staff issuedBy;
+
+    public CustomerInquiry() {
+        this(null, null, "", null, null, "", "", "", null, null, "", null, "", "", null, null, null, null, null, null, null);
+    }
+
+    public CustomerInquiry(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, String referenceType, String reference, Customer billToCust, CollectAddress deliverToCust, String currencyCode, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, Staff salesPerson, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy) {
+        super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
+        this.referenceType = referenceType;
+        this.reference = reference;
+        this.billToCust = billToCust;
+        this.deliverToCust = deliverToCust;
+        this.currencyCode = currencyCode;
+        this.requiredDeliveryDate = requiredDeliveryDate;
+        this.pymtTerm = pymtTerm;
+        this.shipmentTerm = shipmentTerm;
+        this.salesPerson = salesPerson;
+        this.items = items;
+        this.gross = gross;
+        this.discount = discount;
+        this.subTotal = subTotal;
+        this.nett = nett;
+        this.issuedBy = issuedBy;
+    }
 
     public String getReferenceType() {
         return referenceType;

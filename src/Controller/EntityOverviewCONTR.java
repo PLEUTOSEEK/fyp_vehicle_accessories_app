@@ -4,14 +4,8 @@
  */
 package Controller;
 
-import Entity.Quotation;
-import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
-import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
-import io.github.palexdev.materialfx.filter.LongFilter;
-import io.github.palexdev.materialfx.filter.StringFilter;
 import java.net.URL;
-import java.util.Comparator;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,22 +17,21 @@ import javafx.fxml.Initializable;
  */
 public class EntityOverviewCONTR implements Initializable {
 
+    @FXML
+    private MFXTableView<Object> tblVw;
+
     /**
      * Initializes the controller class.
      */
-    private final Object type;
-
-    @FXML
-    private MFXTableView<Object> table;
-
+    //private final Object type;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         // draw table here
-        setupTable();
-        table.autosizeColumnsOnInitialization();
+//        setupTable();
+//        table.autosizeColumnsOnInitialization();
     }
-
+    /*
     public EntityOverviewCONTR(Object type) {
         this.type = type;
     }
@@ -106,6 +99,8 @@ public class EntityOverviewCONTR implements Initializable {
         //soTable.setItems();
         //
         //6
-        table = (MFXTableView<Object>) (Object) quotTable;
+        tblVw = (MFXTableView<Object>) (Object) quotTable;
     }
+
+     */
 }

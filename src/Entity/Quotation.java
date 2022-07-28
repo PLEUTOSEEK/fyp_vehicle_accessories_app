@@ -32,6 +32,7 @@ public class Quotation extends Document {
     private CollectAddress customerSignature;
 
     public Quotation() {
+        this(null, null, "", null, null, "", null, "", "", null, null, null, "", null, null, "", "", null, null, null, null, null, null, null);
     }
 
     public Quotation(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, CustomerInquiry CI, String referenceType, String reference, Customer billToCust, CollectAddress deliverToCust, Staff salesPerson, String currencyCode, Date quotValidityDate, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy, Staff releasedAVerifiedBy, CollectAddress customerSignature) {

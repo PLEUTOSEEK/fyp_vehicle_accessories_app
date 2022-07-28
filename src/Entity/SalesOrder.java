@@ -6,6 +6,7 @@ package Entity;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -33,6 +34,33 @@ public class SalesOrder extends Document {
     private Staff issuedBy;
     private Staff releasedAVerifiedBy;
     private Customer customerSignature;
+
+    public SalesOrder() {
+        this(null, null, "", null, null, "", null, null, "", null, "", "", null, "", null, "", "", null, null, null, null, null, null, null, null);
+    }
+
+    public SalesOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, Customer billToCust, CollectAddress deliverToCust, String custPOReference, Quotation quotRef, String referenceType, String reference, Staff salesPerson, String currencyCode, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy, Staff releasedAVerifiedBy, Customer customerSignature) {
+        super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
+        this.billToCust = billToCust;
+        this.deliverToCust = deliverToCust;
+        this.custPOReference = custPOReference;
+        this.quotRef = quotRef;
+        this.referenceType = referenceType;
+        this.reference = reference;
+        this.salesPerson = salesPerson;
+        this.currencyCode = currencyCode;
+        this.requiredDeliveryDate = requiredDeliveryDate;
+        this.pymtTerm = pymtTerm;
+        this.shipmentTerm = shipmentTerm;
+        this.items = items;
+        this.gross = gross;
+        this.discount = discount;
+        this.subTotal = subTotal;
+        this.nett = nett;
+        this.issuedBy = issuedBy;
+        this.releasedAVerifiedBy = releasedAVerifiedBy;
+        this.customerSignature = customerSignature;
+    }
 
     public Customer getBillToCust() {
         return billToCust;

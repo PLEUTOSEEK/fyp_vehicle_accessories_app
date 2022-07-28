@@ -5,6 +5,7 @@
 package Entity;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
@@ -18,7 +19,24 @@ public class Staff extends Person {
     private Staff reportTo;
     private String empType; // full/ part time
     private String password;
+    private String role;
     private String accountStatus; // haven't put in class diagram
+
+    public Staff() {
+        this(null, null, null, "", "", null, "", "", "", "", null, null, null, "", "", "", "", null, null, null, null, "", "", "", "");
+    }
+
+    public Staff(Timestamp createdDateTime, Timestamp modifiedDateTime, byte[] avatarImg, String name, String gender, Date DOB, String IC, String maritalStatus, String nationality, String honorifics, Address residentialAddr, Address corAddr, Contact contact, String occupation, String race, String religion, String status, String staffID, Place workPlace, Date entryDate, Staff reportTo, String empType, String password, String role, String accountStatus) {
+        super(createdDateTime, modifiedDateTime, avatarImg, name, gender, DOB, IC, maritalStatus, nationality, honorifics, residentialAddr, corAddr, contact, occupation, race, religion, status);
+        this.staffID = staffID;
+        this.workPlace = workPlace;
+        this.entryDate = entryDate;
+        this.reportTo = reportTo;
+        this.empType = empType;
+        this.password = password;
+        this.role = role;
+        this.accountStatus = accountStatus;
+    }
 
     public String getStaffID() {
         return staffID;

@@ -25,10 +25,12 @@ public class AddressDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "";
+            query = "SELECT * FROM View_Retrieve_All_Address WHERE ADDR_Address_ID = ?";
             ps = conn.prepareStatement(query);
 
             // bind parameter
+            ps.setString(1, ID);
+
             rs = ps.executeQuery();
 
             while (rs.next()) {

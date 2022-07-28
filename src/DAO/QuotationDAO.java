@@ -121,30 +121,32 @@ public class QuotationDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                quotation.setCode(rs.getString("QUOT_Quot_ID"));
-                quotation.setCI(CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("QUOT_CI_ID")));
-                quotation.setReferenceType(rs.getString("QUOT_Reference_Type"));
-                quotation.setReference(rs.getString("QUOT_Reference"));
-                quotation.setBillToCust(CustomerDAO.getCustomerByID(rs.getString("QUOT_Bill_To_Cust")));
-                quotation.setDeliverToCust(CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Deliver_To")));
-                quotation.setSalesPerson(StaffDAO.getStaffByID(rs.getString("QUOT_Sales_Person")));
-                quotation.setCurrencyCode(rs.getString("QUOT_Currency_Code"));
-                quotation.setQuotValidityDate(rs.getDate("QUOT_Quot_Validity_Date"));
-                quotation.setRequiredDeliveryDate(rs.getDate("QUOT_Required_Delivery_Date"));
-                quotation.setPymtTerm(rs.getString("QUOT_Payment_Term"));
-                quotation.setShipmentTerm(rs.getString("QUOT_Shipment_Term"));
-                quotation.setGross(rs.getBigDecimal("QUOT_Gross"));
-                quotation.setDiscount(rs.getBigDecimal("QUOT_Discount"));
-                quotation.setSubTotal(rs.getBigDecimal("QUOT_Sub_Total"));
-                quotation.setNett(rs.getBigDecimal("QUOT_Nett"));
-                quotation.setIssuedBy(StaffDAO.getStaffByID(rs.getString("QUOT_Issued_By")));
-                quotation.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("QUOT_Released_And_Verified_By")));
-                quotation.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Customer_Signed")));
-                quotation.setStatus(rs.getString("QUOT_Status"));
-                quotation.setCreatedDate(rs.getTimestamp("QUOT_Created_Date"));
-                quotation.setActualCreatedDateTime(rs.getTimestamp("QUOT_Actual_Created_Date"));
-                quotation.setSignedDocPic(Base64.decodeBase64(rs.getString("QUOT_Signed_Doc_Pic")));
-                quotation.setModifiedDateTime(rs.getTimestamp("QUOT_Modified_Date_Time"));
+                quotation = new Quotation(
+                        rs.getTimestamp("QUOT_Created_Date"),
+                        rs.getTimestamp("QUOT_Modified_Date_Time"),
+                        rs.getString("QUOT_Quot_ID"),
+                        rs.getTimestamp("QUOT_Actual_Created_Date"),
+                        Base64.decodeBase64(rs.getString("signedDocPic")),
+                        rs.getString("QUOT_Status"),
+                        CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("QUOT_CI_ID")),
+                        rs.getString("QUOT_Reference_Type"),
+                        rs.getString("QUOT_Reference"),
+                        CustomerDAO.getCustomerByID(rs.getString("QUOT_Bill_To_Cust")),
+                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Deliver_To")),
+                        StaffDAO.getStaffByID(rs.getString("QUOT_Sales_Person")),
+                        rs.getString("QUOT_Currency_Code"),
+                        rs.getDate("QUOT_Quot_Validity_Date"),
+                        rs.getDate("QUOT_Required_Delivery_Date"),
+                        rs.getString("QUOT_Payment_Term"),
+                        rs.getString("QUOT_Shipment_Term"),
+                        rs.getBigDecimal("QUOT_Gross"),
+                        rs.getBigDecimal("QUOT_Discount"),
+                        rs.getBigDecimal("QUOT_Sub_Total"),
+                        rs.getBigDecimal("QUOT_Nett"),
+                        StaffDAO.getStaffByID(rs.getString("QUOT_Issued_By")),
+                        StaffDAO.getStaffByID(rs.getString("QUOT_Released_And_Verified_By")),
+                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Customer_Signed"))
+                );
                 return quotation;
             } else {
                 return null;
@@ -250,6 +252,7 @@ public class QuotationDAO {
 
             //return object
             return quots;
+
         } catch (Exception e) {
             return null;
         } finally {

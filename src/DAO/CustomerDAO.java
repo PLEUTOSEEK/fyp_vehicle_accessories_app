@@ -4,7 +4,6 @@
  */
 package DAO;
 
-import Entity.Address;
 import Entity.Contact;
 import Entity.Customer;
 import java.sql.Connection;
@@ -28,77 +27,46 @@ public class CustomerDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM ";
+            query = "SELECT * FROM View_Retrieve_All_Customer WHERE CUST_Customer_ID = ? ";
             ps = conn.prepareStatement(query);
 
             // bind parameter
+            ps.setString(1, code);
+
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                customer.setCustID(rs.getString("CUST_Customer_ID"));
-
-                Address billToAddr = new Address();
-                billToAddr.setAddressID(rs.getString("CUST_ADDR_Address_ID"));
-                billToAddr.setLocationName(rs.getString("CUST_ADDR_Location_Name"));
-                billToAddr.setAddress(rs.getString("CUST_ADDR_Address"));
-                billToAddr.setCity(rs.getString("CUST_ADDR_City"));
-                billToAddr.setPostalCode(rs.getString("CUST_ADDR_Postal_Code"));
-                billToAddr.setState(rs.getString("CUST_ADDR_State"));
-                billToAddr.setCountry(rs.getString("CUST_ADDR_Country"));
-                billToAddr.setCreatedDate(rs.getTimestamp("CUST_ADDR_Created_Date"));
-                billToAddr.setModifiedDateTime(rs.getTimestamp("CUST_ADDR_Modified_Date_Time"));
-                customer.setBillToAddr(billToAddr);
-
-                customer.setAvatarImg(Base64.decodeBase64(rs.getString("CUST_Avatar_Img")));
-                customer.setName(rs.getString("CUST_Name"));
-                customer.setGender(rs.getString("CUST_Gender"));
-                customer.setDOB(rs.getDate("CUST_DOB"));
-                customer.setIC(rs.getString("CUST_IC"));
-                customer.setMaritalStatus(rs.getString("CUST_Marital_Status"));
-                customer.setNationality(rs.getString("CUST_Nationality"));
-                customer.setHonorifics(rs.getString("CUST_Honorifics"));
-
-                Address residentialAddr = new Address();
-                residentialAddr.setAddressID(rs.getString("CUST_ADDR2_Address_ID"));
-                residentialAddr.setLocationName(rs.getString("CUST_ADDR2_Location_Name"));
-                residentialAddr.setAddress(rs.getString("CUST_ADDR2_Address"));
-                residentialAddr.setCity(rs.getString("CUST_ADDR2_City"));
-                residentialAddr.setPostalCode(rs.getString("CUST_ADDR2_Postal_Code"));
-                residentialAddr.setState(rs.getString("CUST_ADDR2_State"));
-                residentialAddr.setCountry(rs.getString("CUST_ADDR2_Country"));
-                residentialAddr.setCreatedDate(rs.getTimestamp("CUST_ADDR2_Created_Date"));
-                residentialAddr.setModifiedDateTime(rs.getTimestamp("CUST_ADDR2_Modified_Date_Time"));
-                customer.setResidentialAddr(residentialAddr);
-
-                Address corAddr = new Address();
-                corAddr.setAddressID(rs.getString("CUST_ADDR3_Address_ID"));
-                corAddr.setLocationName(rs.getString("CUST_ADDR3_Location_Name"));
-                corAddr.setAddress(rs.getString("CUST_ADDR3_Address"));
-                corAddr.setCity(rs.getString("CUST_ADDR3_City"));
-                corAddr.setPostalCode(rs.getString("CUST_ADDR3_Postal_Code"));
-                corAddr.setState(rs.getString("CUST_ADDR3_State"));
-                corAddr.setCountry(rs.getString("CUST_ADDR3_Country"));
-                corAddr.setCreatedDate(rs.getTimestamp("CUST_ADDR3_Created_Date"));
-                corAddr.setModifiedDateTime(rs.getTimestamp("CUST_ADDR3_Modified_Date_Time"));
-                customer.setCorAddr(corAddr);
-
-                Contact contact = new Contact();
-                contact.setEmail(rs.getString("CUST_Email"));
-                contact.setMobileNo(rs.getString("CUST_Mobile_No"));
-                contact.setExt(rs.getString("CUST_Extension_No"));
-                contact.setOffPhNo(rs.getString("CUST_Office_Phone_No"));
-                contact.setHomePhNo(rs.getString("CUST_Home_Phone_No"));
-                customer.setContact(contact);
-
-                customer.setOccupation(rs.getString("CUST_Occupation"));
-                customer.setRace(rs.getString("CUST_Race"));
-                customer.setReligion(rs.getString("CUST_Religion"));
-                customer.setBankAccProvider(rs.getString("CUST_Bank_Acc_Provider"));
-                customer.setBankAccNo(rs.getString("CUST_Bank_Acc_No"));
-                customer.setCustType(rs.getString("CUST_Customer_Type"));
-                customer.setStatus(rs.getString("CUST_Status"));
-                customer.setCreatedDate(rs.getTimestamp("CUST_Created_Date"));
-                customer.setModifiedDateTime(rs.getTimestamp("CUST_Modified_Date_Time"));
+                customer = new Customer(
+                        rs.getTimestamp("CUST_Created_Date"),
+                        rs.getTimestamp("CUST_Modified_Date_Time"),
+                        Base64.decodeBase64(rs.getString("CUST_Avatar_Img")),
+                        rs.getString("CUST_Name"),
+                        rs.getString("CUST_Gender"),
+                        rs.getDate("CUST_DOB"),
+                        rs.getString("CUST_IC"),
+                        rs.getString("CUST_Marital_Status"),
+                        rs.getString("CUST_Nationality"),
+                        rs.getString("CUST_Honorifics"),
+                        AddressDAO.getAddressByID(rs.getString("CUST_Residential_Address")),
+                        AddressDAO.getAddressByID(rs.getString("CUST_Corresponding_Address")),
+                        new Contact(
+                                rs.getString("CUST_Email"),
+                                rs.getString("CUST_Mobile_No"),
+                                rs.getString("CUST_Extension_No"),
+                                rs.getString("CUST_Office_Phone_No"),
+                                rs.getString("CUST_Home_Phone_No")
+                        ),
+                        rs.getString("CUST_Occupation"),
+                        rs.getString("CUST_Race"),
+                        rs.getString("CUST_Religion"),
+                        rs.getString("CUST_Status"),
+                        rs.getString("CUST_Customer_ID"),
+                        rs.getString("CUST_Bank_Acc_Provider"),
+                        rs.getString("CUST_Bank_Acc_No"),
+                        AddressDAO.getAddressByID(rs.getString("CUST_Bill_To_Addr")),
+                        null,
+                        rs.getString("CUST_Customer_Type")
+                );
                 return customer;
             } else {
                 return null;

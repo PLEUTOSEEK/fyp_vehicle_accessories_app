@@ -5,6 +5,7 @@
 package Entity;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 /**
  *
@@ -19,5 +20,16 @@ class Product extends Entity {
     private String color;
     private BigDecimal sellPrice;
     private BigDecimal MSRP;
+
+    public Product(Timestamp createdDateTime, Timestamp modifiedDateTime, String prodID, String prodName, String partNo, String description, String color, BigDecimal sellPrice, BigDecimal MSRP) {
+        super(createdDateTime, modifiedDateTime);
+        this.prodID = prodID;
+        this.prodName = prodName;
+        this.partNo = partNo;
+        this.description = description;
+        this.color = color;
+        this.sellPrice = sellPrice;
+        this.MSRP = MSRP;
+    }
 
 }

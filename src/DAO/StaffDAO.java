@@ -145,91 +145,48 @@ public class StaffDAO {
 
             query = "SELECT * FROM View_Retrieve_All_Staff WHERE STAFF_Staff_ID = ?";
             ps = conn.prepareStatement(query);
-            ps.setString(1, ID);
+
             // bind parameter
+            ps.setString(1, ID);
+
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                staff.setStaffID(rs.getString("STAFF_Staff_ID"));
-                staff.setAvatarImg(Base64.decodeBase64(rs.getString("STAFF_Avatar_Img")));
-                staff.setName(rs.getString("STAFF_Name"));
-                staff.setGender(rs.getString("STAFF_Gender"));
-                staff.setDOB(rs.getDate("STAFF_DOB"));
-                staff.setIC(rs.getString("STAFF_IC"));
-                staff.setMaritalStatus(rs.getString("STAFF_Marital_Status"));
-                staff.setNationality(rs.getString("STAFF_Nationality"));
-                staff.setHonorifics(rs.getString("STAFF_Honorifics"));
-
-                Address residentialAddr = new Address();
-                residentialAddr.setAddressID(rs.getString("STAFF_ADDR_Address_ID"));
-                residentialAddr.setLocationName(rs.getString("STAFF_ADDR_Location_Name"));
-                residentialAddr.setAddress(rs.getString("STAFF_ADDR_Address"));
-                residentialAddr.setCity(rs.getString("STAFF_ADDR_City"));
-                residentialAddr.setPostalCode(rs.getString("STAFF_ADDR_Postal_Code"));
-                residentialAddr.setState(rs.getString("STAFF_ADDR_State"));
-                residentialAddr.setCountry(rs.getString("STAFF_ADDR_Country"));
-                residentialAddr.setCreatedDate(rs.getTimestamp("STAFF_ADDR_Created_Date"));
-                residentialAddr.setModifiedDateTime(rs.getTimestamp("STAFF_ADDR_Modified_Date_Time"));
-
-                staff.setResidentialAddr(residentialAddr);
-
-                Address corAddr = new Address();
-                corAddr.setAddressID(rs.getString("STAFF_ADDR2_Address_ID"));
-                corAddr.setLocationName(rs.getString("STAFF_ADDR2_Location_Name"));
-                corAddr.setAddress(rs.getString("STAFF_ADDR2_Address"));
-                corAddr.setCity(rs.getString("STAFF_ADDR2_City"));
-                corAddr.setPostalCode(rs.getString("STAFF_ADDR2_Postal_Code"));
-                corAddr.setState(rs.getString("STAFF_ADDR2_State"));
-                corAddr.setCountry(rs.getString("STAFF_ADDR2_Country"));
-                corAddr.setCreatedDate(rs.getTimestamp("STAFF_ADDR2_Created_Date"));
-                corAddr.setModifiedDateTime(rs.getTimestamp("STAFF_ADDR2_Modified_Date_Time"));
-
-                staff.setCorAddr(corAddr);
-
-                Contact contact = new Contact();
-                contact.setEmail(rs.getString("STAFF_Email"));
-                contact.setExt(rs.getString("STAFF_Extension_No"));
-                contact.setOffPhNo(rs.getString("STAFF_Office_Phone_No"));
-                contact.setHomePhNo(rs.getString("STAFF_Home_Phone_No"));
-
-                staff.setContact(contact);
-
-                staff.setOccupation(rs.getString("STAFF_Occupation"));
-                staff.setRace(rs.getString("STAFF_Race"));
-                staff.setReligion(rs.getString("STAFF_Religion"));
-
-                Place workPlace = new Place();
-                workPlace.setPlaceID(rs.getString("STAFF_PLACE_Place_ID"));
-                workPlace.setPlaceName(rs.getString("STAFF_PLACE_Place_Name"));
-                Address workPlaceAddress = new Address();
-                workPlaceAddress.setAddressID(rs.getString("STAFF_PLACE_ADDR_Address_ID"));
-                workPlaceAddress.setLocationName(rs.getString("STAFF_PLACE_ADDR_Location_Name"));
-                workPlaceAddress.setAddress(rs.getString("STAFF_PLACE_ADDR_Address"));
-                workPlaceAddress.setCity(rs.getString("STAFF_PLACE_ADDR_City"));
-                workPlaceAddress.setPostalCode(rs.getString("STAFF_PLACE_ADDR_Postal_Code"));
-                workPlaceAddress.setState(rs.getString("STAFF_PLACE_ADDR_State"));
-                workPlaceAddress.setCountry(rs.getString("STAFF_PLACE_ADDR_Country"));
-                workPlaceAddress.setCreatedDate(rs.getTimestamp("STAFF_PLACE_ADDR_Created_Date"));
-                workPlaceAddress.setModifiedDateTime(rs.getTimestamp("STAFF_PLACE_ADDR_Modified_Date_Time"));
-                workPlace.setPlaceAddr(workPlaceAddress);
-                workPlace.setDescription(rs.getString("STAFF_PLACE_Description"));
-                workPlace.setCreatedDate(rs.getTimestamp("STAFF_PLACE_Created_Date"));
-                workPlace.setModifiedDateTime(rs.getTimestamp("STAFF_PLACE_Modified_Date_Time"));
-
-                staff.setWorkPlace(workPlace);
-
-                staff.setEntryDate(rs.getDate("STAFF_Entry_Date"));
-                staff.setEmpType(rs.getString("STAFF_Employee_Type"));
-                staff.setPassword(rs.getString("STAFF_Password"));
-                staff.setStatus(rs.getString("STAFF_Status"));
-                staff.setCreatedDate(rs.getTimestamp("STAFF_Created_Date"));
-                staff.setModifiedDateTime(rs.getTimestamp("STAFF_Modified_Date_Time"));
-                staff.setReportTo(getReportToByID(rs.getString("STAFF_Report_To")));
+                staff = new Staff(
+                        rs.getTimestamp("STAFF_Created_Date"),
+                        rs.getTimestamp("STAFF_Modified_Date_Time"),
+                        Base64.decodeBase64(rs.getString("STAFF_Avatar_Img")),
+                        rs.getString("STAFF_Name"),
+                        rs.getString("STAFF_Gender"),
+                        rs.getDate("STAFF_DOB"),
+                        rs.getString("STAFF_IC"),
+                        rs.getString("STAFF_Marital_Status"),
+                        rs.getString("STAFF_Nationality"),
+                        rs.getString("STAFF_Honorifics"),
+                        AddressDAO.getAddressByID(rs.getString("STAFF_Residential_Address")),
+                        AddressDAO.getAddressByID(rs.getString("STAFF_Corresponding_Address")),
+                        new Contact(rs.getString("STAFF_Email"),
+                                rs.getString("STAFF_Mobile_No"),
+                                rs.getString("STAFF_Extension_No"),
+                                rs.getString("STAFF_Office_Phone_No"),
+                                rs.getString("STAFF_Home_Phone_No")),
+                        rs.getString("STAFF_Occupation"),
+                        rs.getString("STAFF_Race"),
+                        rs.getString("STAFF_Religion"),
+                        rs.getString("STAFF_Status"),
+                        rs.getString("STAFF_Staff_ID"),
+                        PlaceDAO.getPlaceByID(rs.getString("STAFF_Work_Place")),
+                        rs.getDate("STAFF_Entry_Date"),
+                        StaffDAO.getStaffByID(rs.getString("STAFF_Report_To")), // recursive break suspected
+                        rs.getString("STAFF_Employee_Type"),
+                        rs.getString("STAFF_Password"),
+                        rs.getString("STAFF_Role"),
+                        rs.getString("STAFF_Account_Status")
+                );
                 return staff;
             } else {
                 return null;
             }
-
             //return object
         } catch (Exception e) {
             return null;
