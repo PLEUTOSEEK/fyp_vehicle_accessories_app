@@ -155,7 +155,7 @@ public class StaffDAO {
                 staff = new Staff(
                         rs.getTimestamp("STAFF_Created_Date"),
                         rs.getTimestamp("STAFF_Modified_Date_Time"),
-                        Base64.decodeBase64(rs.getString("STAFF_Avatar_Img")),
+                        rs.getString("STAFF_Avatar_Img") == null ? null : Base64.decodeBase64(rs.getString("STAFF_Avatar_Img")),
                         rs.getString("STAFF_Name"),
                         rs.getString("STAFF_Gender"),
                         rs.getDate("STAFF_DOB"),

@@ -24,7 +24,7 @@
 
 <AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CustomerInquiryCONTR">
    <children>
-      <MFXScrollPane minHeight="785.0" minWidth="1532.0" prefHeight="786.0" prefWidth="1533.0" styleClass="grid-pane" stylesheets="@../../css/PaneBackgroundColor.css" trackColor="#828282" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MFXScrollPane minHeight="785.0" minWidth="1532.0" prefHeight="786.0" prefWidth="1533.0" styleClass="grid-pane" stylesheets="@../Material/css/PaneBackgroundColor.css" trackColor="#828282" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
             <GridPane minHeight="900.0" minWidth="1511.0" prefHeight="1691.0" prefWidth="1516.0">
                <columnConstraints>
@@ -196,10 +196,10 @@
                                           <Insets right="1.0" />
                                        </GridPane.margin>
                                     </MFXButton>
-                                    <MFXTextField fx:id="txtASD111" alignment="CENTER_RIGHT" editable="false" floatingText="Sub. Total" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="8" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                    <MFXTextField fx:id="txtASD1111" alignment="CENTER_RIGHT" editable="false" floatingText="Nett (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="201.0" text="aaa" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                    <MFXTextField fx:id="txtASD1112" alignment="CENTER_RIGHT" editable="false" floatingText="Discount" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                    <MFXTextField fx:id="txtASD11121" alignment="CENTER_RIGHT" editable="false" floatingText="Gross (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                    <MFXTextField fx:id="txtASD111" alignment="CENTER_RIGHT" editable="false" floatingText="Sub. Total" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="8" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                    <MFXTextField fx:id="txtASD1111" alignment="CENTER_RIGHT" editable="false" floatingText="Nett (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="201.0" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                    <MFXTextField fx:id="txtASD1112" alignment="CENTER_RIGHT" editable="false" floatingText="Discount" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                    <MFXTextField fx:id="txtASD11121" alignment="CENTER_RIGHT" editable="false" floatingText="Gross (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8" />
                                  </children>
                               </GridPane>
                            </children>
@@ -234,7 +234,7 @@
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </Rectangle>
-                                    <MFXTextField fx:id="txtASD111211" alignment="CENTER_RIGHT" floatingText="Issued By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.rowIndex="1" />
+                                    <MFXTextField fx:id="txtASD111211" alignment="CENTER_RIGHT" floatingText="Issued By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.rowIndex="1" />
                                     <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                                        <padding>
                                           <Insets bottom="1.0" top="10.0" />
@@ -260,7 +260,7 @@
                         </AnchorPane>
                      </content>
                   </TitledPane>
-                  <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="578.0" stylesheets="@../../css/labels.css" text="Customer Inquiry" textFill="WHITE" GridPane.columnIndex="13" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                  <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="578.0" styleClass="entity-header-label" stylesheets="@../../css/labels.css" text="Customer Inquiry" textFill="WHITE" GridPane.columnIndex="13" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                      <font>
                         <Font name="Arial monospaced for SAP Bold" size="52.0" />
                      </font>

@@ -39,7 +39,7 @@ public class CustomerDAO {
                 customer = new Customer(
                         rs.getTimestamp("CUST_Created_Date"),
                         rs.getTimestamp("CUST_Modified_Date_Time"),
-                        Base64.decodeBase64(rs.getString("CUST_Avatar_Img")),
+                        rs.getString("CUST_Avatar_Img") == null ? null : Base64.decodeBase64(rs.getString("CUST_Avatar_Img")),
                         rs.getString("CUST_Name"),
                         rs.getString("CUST_Gender"),
                         rs.getDate("CUST_DOB"),

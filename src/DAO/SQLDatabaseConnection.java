@@ -12,7 +12,7 @@ public class SQLDatabaseConnection {
     // Connect to your database.
     // Replace server name, username, and password with your credentials
     private static Connection getConnection(String sqlServer, String db, String user, String password) {
-
+        /*
         String connectionUrl
                 = "jdbc:sqlserver://" + sqlServer + ":1433;"
                 + "database=" + db + ";"
@@ -21,7 +21,15 @@ public class SQLDatabaseConnection {
                 + "encrypt=true;"
                 + "trustServerCertificate=false;"
                 + "loginTimeout=30;";
-
+         */
+        String connectionUrl
+                = "jdbc:sqlserver://" + sqlServer + ":1400;"
+                + "DatabaseName=" + db + ";"
+                + "user=" + user + ";"
+                + "password=" + password + ";"
+                + "encrypt=false;"
+                + "trustServerCertificate=false;"
+                + "loginTimeout=30;";
         try {
             // Code here.
             Connection connection = DriverManager.getConnection(connectionUrl);
@@ -37,11 +45,17 @@ public class SQLDatabaseConnection {
     }
 
     public static Connection openConn() {
-        Connection con = getConnection(
+        /*Connection con = getConnection(
                 "vehicle-accessories--server.database.windows.net",
                 "vehicle-accessories",
                 "TeeZhuoXuan@vehicle-accessories--server",
-                "oS6*3y57SnP2lv7tkBehY5Y6YbmR7n");
+                "oS6*3y57SnP2lv7tkBehY5Y6YbmR7n");*/
+
+        Connection con = getConnection(
+                "localhost",
+                "vehicle-accessories-2022-7-29-19-43",
+                "sa",
+                "wKKT@NBKP3sxiC8");
 
         return con;
     }

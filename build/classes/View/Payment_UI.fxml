@@ -113,19 +113,19 @@
                                                 <RowConstraints maxHeight="395.20001831054685" minHeight="7.399957275390648" prefHeight="20.799993896484352" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <MFXTextField fx:id="txtASD" alignment="CENTER_RIGHT" editable="false" floatingText="Receipt ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.rowIndex="1" />
+                                                <MFXTextField fx:id="txtASD" alignment="CENTER_RIGHT" editable="false" floatingText="Receipt ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.rowIndex="1" />
                                                 <MFXDatePicker alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Reference Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <MFXTextField fx:id="txtQuotRef" alignment="CENTER_RIGHT" editable="false" floatingText="Invoice Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                <MFXTextField alignment="CENTER_RIGHT" floatingText="Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                                <MFXTextField alignment="CENTER_RIGHT" floatingText="Ref. Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                <MFXComboBox alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="sd" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                                <MFXTextField fx:id="txtQuotRef" alignment="CENTER_RIGHT" editable="false" floatingText="Invoice Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                <MFXTextField alignment="CENTER_RIGHT" floatingText="Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                                <MFXTextField alignment="CENTER_RIGHT" floatingText="Ref. Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                <MFXComboBox alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                             </children>
                                         </GridPane>
                                     </children>
                                 </AnchorPane>
                             </content>
                         </TitledPane>
-                        <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="303.0" stylesheets="@../../css/labels.css" text="Invoice" textFill="WHITE" GridPane.columnIndex="17" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                        <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="303.0" styleClass="entity-header-label" stylesheets="@../Material/css/labels.css" text="Payment" textFill="WHITE" GridPane.columnIndex="17" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                             <font>
                                 <Font name="Arial monospaced for SAP Bold" size="52.0" />
                             </font>

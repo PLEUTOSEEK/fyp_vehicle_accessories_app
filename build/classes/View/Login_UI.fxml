@@ -20,15 +20,15 @@
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="181.00003662109373" minWidth="10.0" prefWidth="173.80002441406248" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="84.19998779296876" minHeight="10.0" prefHeight="84.19998779296876" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="62.600012207031256" minHeight="10.0" prefHeight="50.600012207031256" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="86.19998779296876" minHeight="10.0" prefHeight="80.59998168945313" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="87.79999389648438" minHeight="5.400012207031239" prefHeight="11.000018310546864" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="86.79999389648437" minHeight="10.0" prefHeight="86.79999389648437" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="115.20000610351562" minHeight="10.0" prefHeight="62.400009155273466" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="106.99999084472654" minHeight="10.0" prefHeight="106.99999084472654" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="397.0" stylesheets="@../../css/labels.css" text="Login" textFill="WHITE" GridPane.columnSpan="2147483647">
+                <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="397.0" styleClass="entity-header-label" stylesheets="@../Material/css/labels.css" text="Login" textFill="WHITE" GridPane.columnSpan="2147483647">
                     <font>
                         <Font name="Arial monospaced for SAP Bold" size="52.0" />
                     </font>

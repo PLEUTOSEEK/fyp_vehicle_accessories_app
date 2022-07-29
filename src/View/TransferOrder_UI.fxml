@@ -111,7 +111,7 @@
                                     <RowConstraints maxHeight="395.20001831054685" minHeight="7.399957275390648" prefHeight="20.799993896484352" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <MFXTextField fx:id="txtASD" alignment="CENTER_RIGHT" editable="false" floatingText="Transfer Order ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.rowIndex="1" />
+                                    <MFXTextField fx:id="txtASD" alignment="CENTER_RIGHT" editable="false" floatingText="Transfer Order ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.rowIndex="1" />
                                     <MFXDatePicker alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Reference Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                     <MFXTextField alignment="CENTER_RIGHT" floatingText="Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                     <MFXTextField alignment="CENTER_RIGHT" floatingText="Ref. Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="2" />
@@ -124,7 +124,7 @@
                                           <FontAwesomeIconView glyphName="LIST" />
                                        </graphic>
                                     </MFXCircleToggleNode>
-                                    <MFXComboBox alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="sd" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                    <MFXComboBox alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                     <MFXTextField alignment="CENTER_RIGHT" floatingText="Destination" minWidth="145.0" prefWidth="145.0" GridPane.rowIndex="3" />
                                     <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
                                        <padding>
@@ -259,7 +259,7 @@
                         </AnchorPane>
                      </content>
                   </TitledPane>
-                  <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="510.0" stylesheets="@../../css/labels.css" text="Transfer Order" textFill="WHITE" GridPane.columnIndex="14" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                  <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="510.0" styleClass="entity-header-label" stylesheets="@../Material/css/labels.css" text="Transfer Order" textFill="WHITE" GridPane.columnIndex="14" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                      <font>
                         <Font name="Arial monospaced for SAP Bold" size="52.0" />
                      </font>

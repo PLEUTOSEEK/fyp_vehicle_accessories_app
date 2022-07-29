@@ -7,7 +7,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     Author     : Tee Zhuo Xuan
 */
 
-.label {
+.entity-header-label {
     -fx-background-color: #5E24C3;
     -fx-border-radius: 20 0 20 0;
     -fx-background-radius: 20 0 20 0;
@@ -23,4 +23,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-background-color: transparent;
     -fx-border-radius: 20 0 20 0;
     -fx-background-radius: 20 0 20 0;
+}
+
+.table-row-cell .table-cell .label       {
+    -fx-background-color: azure;
 }

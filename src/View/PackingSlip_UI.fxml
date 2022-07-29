@@ -159,7 +159,7 @@
                                 <Insets />
                             </GridPane.margin>
                         </TitledPane>
-                        <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="440.0" stylesheets="@../../css/labels.css" text="Packing Slip" textFill="WHITE" GridPane.columnIndex="15" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                        <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="440.0" styleClass="entity-header-label" stylesheets="@../Material/css/labels.css" text="Packing Slip" textFill="WHITE" GridPane.columnIndex="15" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                             <font>
                                 <Font name="Arial monospaced for SAP Bold" size="52.0" />
                             </font>

@@ -24,7 +24,7 @@
 
 <AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CustomerCONTR">
    <children>
-      <MFXScrollPane minHeight="785.0" minWidth="1532.0" prefHeight="786.0" prefWidth="1533.0" styleClass="grid-pane" stylesheets="@../../css/PaneBackgroundColor.css" trackColor="#828282" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MFXScrollPane minHeight="785.0" minWidth="1532.0" prefHeight="786.0" prefWidth="1533.0" styleClass="grid-pane" stylesheets="@../Material/css/PaneBackgroundColor.css" trackColor="#828282" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
             <GridPane minHeight="2550.0" minWidth="1511.0" prefWidth="1516.0" stylesheets="@../../css/Buttons.css">
                <columnConstraints>
@@ -90,7 +90,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="372.0" stylesheets="@../../css/labels.css" text="Customer" textFill="WHITE" GridPane.columnIndex="16" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                  <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="372.0" styleClass="entity-header-label" stylesheets="@../../css/labels.css" text="Customer" textFill="WHITE" GridPane.columnIndex="16" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                      <font>
                         <Font name="Arial monospaced for SAP Bold" size="52.0" />
                      </font>

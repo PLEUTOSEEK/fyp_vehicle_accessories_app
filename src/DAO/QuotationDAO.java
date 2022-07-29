@@ -227,7 +227,7 @@ public class QuotationDAO {
                         rs.getTimestamp("QUOT_Modified_Date_Time"),
                         rs.getString("QUOT_Quot_ID"),
                         rs.getTimestamp("QUOT_Actual_Created_Date"),
-                        Base64.decodeBase64(rs.getString("signedDocPic")),
+                        rs.getString("QUOT_Signed_Doc_Pic") == null ? null : Base64.decodeBase64(rs.getString("QUOT_Signed_Doc_Pic")),
                         rs.getString("QUOT_Status"),
                         CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("QUOT_CI_ID")),
                         rs.getString("QUOT_Reference_Type"),

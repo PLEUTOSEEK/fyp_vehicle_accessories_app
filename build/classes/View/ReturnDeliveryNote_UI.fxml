@@ -191,10 +191,10 @@
                                                         <Insets right="1.0" />
                                                     </GridPane.margin>
                                                 </MFXButton>
-                                                <MFXTextField fx:id="txtASD111" alignment="CENTER_RIGHT" editable="false" floatingText="Sub. Total" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="8" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                                <MFXTextField fx:id="txtASD1111" alignment="CENTER_RIGHT" editable="false" floatingText="Nett (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="201.0" text="aaa" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                                <MFXTextField fx:id="txtASD1112" alignment="CENTER_RIGHT" editable="false" floatingText="Discount" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                                <MFXTextField fx:id="txtASD11121" alignment="CENTER_RIGHT" editable="false" floatingText="Gross (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtASD111" alignment="CENTER_RIGHT" editable="false" floatingText="Sub. Total" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="8" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtASD1111" alignment="CENTER_RIGHT" editable="false" floatingText="Nett (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="201.0" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtASD1112" alignment="CENTER_RIGHT" editable="false" floatingText="Discount" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtASD11121" alignment="CENTER_RIGHT" editable="false" floatingText="Gross (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8" />
                                             </children>
                                         </GridPane>
                                     </children>
@@ -204,7 +204,7 @@
                                 <Insets />
                             </GridPane.margin>
                         </TitledPane>
-                        <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="646.0" stylesheets="@../../css/labels.css" text="Return Delivery Note" textFill="WHITE" GridPane.columnIndex="12" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                        <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="646.0" styleClass="entity-header-label" stylesheets="@../../css/labels.css" text="Return Delivery Note" textFill="WHITE" GridPane.columnIndex="12" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                             <font>
                                 <Font name="Arial monospaced for SAP Bold" size="52.0" />
                             </font>

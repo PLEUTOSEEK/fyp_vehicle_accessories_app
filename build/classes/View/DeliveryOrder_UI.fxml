@@ -113,12 +113,12 @@
                                                 <RowConstraints maxHeight="395.20001831054685" minHeight="7.399957275390648" prefHeight="20.799993896484352" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <MFXTextField fx:id="txtASD" alignment="CENTER_RIGHT" editable="false" floatingText="Delivery Order ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.rowIndex="1" />
+                                                <MFXTextField fx:id="txtASD" alignment="CENTER_RIGHT" editable="false" floatingText="Delivery Order ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.rowIndex="1" />
                                                 <MFXDatePicker alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Reference Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                 <MFXTextField fx:id="txtQuotRef" alignment="CENTER_RIGHT" editable="false" floatingText="Sales Order Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                 <MFXTextField fx:id="txtPORef" alignment="CENTER_RIGHT" floatingText="RDN Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                <MFXTextField alignment="CENTER_RIGHT" floatingText="Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                                                <MFXTextField alignment="CENTER_RIGHT" floatingText="Ref. Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                                <MFXTextField alignment="CENTER_RIGHT" floatingText="Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                                <MFXTextField alignment="CENTER_RIGHT" floatingText="Ref. Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                                                 <MFXTextField alignment="CENTER_RIGHT" floatingText="Deliver From" minWidth="145.0" prefWidth="145.0" GridPane.rowIndex="2" />
                                                 <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                                                     <padding>
@@ -128,7 +128,7 @@
                                                         <FontAwesomeIconView glyphName="LIST" />
                                                     </graphic>
                                                 </MFXCircleToggleNode>
-                                                <MFXComboBox alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="sd" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                                <MFXComboBox alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                                 <MFXDatePicker alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Delivery Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.rowIndex="3" />
                                             </children>
                                         </GridPane>
@@ -174,10 +174,10 @@
                                                         <Insets right="1.0" />
                                                     </GridPane.margin>
                                                 </MFXButton>
-                                                <MFXTextField fx:id="txtASD111" alignment="CENTER_RIGHT" editable="false" floatingText="Sub. Total" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="8" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                                <MFXTextField fx:id="txtASD1111" alignment="CENTER_RIGHT" editable="false" floatingText="Nett (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="201.0" text="aaa" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                                <MFXTextField fx:id="txtASD1112" alignment="CENTER_RIGHT" editable="false" floatingText="Discount" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                                <MFXTextField fx:id="txtASD11121" alignment="CENTER_RIGHT" editable="false" floatingText="Gross (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtASD111" alignment="CENTER_RIGHT" editable="false" floatingText="Sub. Total" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="8" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtASD1111" alignment="CENTER_RIGHT" editable="false" floatingText="Nett (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="201.0" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtASD1112" alignment="CENTER_RIGHT" editable="false" floatingText="Discount" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtASD11121" alignment="CENTER_RIGHT" editable="false" floatingText="Gross (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8" />
                                             </children>
                                         </GridPane>
                                     </children>
@@ -220,7 +220,7 @@
                                                         <Cursor fx:constant="HAND" />
                                                     </cursor>
                                                 </Rectangle>
-                                                <MFXTextField fx:id="txtASD111211" alignment="CENTER_RIGHT" floatingText="Issued By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="aaa" GridPane.rowIndex="1" />
+                                                <MFXTextField fx:id="txtASD111211" alignment="CENTER_RIGHT" floatingText="Issued By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.rowIndex="1" />
                                                 <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                                                     <padding>
                                                         <Insets bottom="1.0" top="10.0" />
@@ -232,7 +232,7 @@
                                                         <Insets right="17.0" />
                                                     </GridPane.margin>
                                                 </MFXCircleToggleNode>
-                                                <MFXTextField fx:id="txtASD1112111" alignment="CENTER_RIGHT" floatingText="Released &amp; Verified By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="Releas" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <MFXTextField fx:id="txtASD1112111" alignment="CENTER_RIGHT" floatingText="Released &amp; Verified By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                                                     <padding>
                                                         <Insets bottom="1.0" top="10.0" />
@@ -252,8 +252,8 @@
                                                         <Cursor fx:constant="HAND" />
                                                     </cursor>
                                                 </ImageView>
-                                                <MFXTextField fx:id="txtASD11121111" alignment="CENTER_RIGHT" floatingText="Delivery By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="Releas" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <MFXTextField fx:id="txtASD111211111" alignment="CENTER_RIGHT" floatingText="Item Received By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="Releas" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                <MFXTextField fx:id="txtASD11121111" alignment="CENTER_RIGHT" floatingText="Delivery By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <MFXTextField fx:id="txtASD111211111" alignment="CENTER_RIGHT" floatingText="Item Received By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                        <GridPane.margin>
                                           <Insets left="10.0" />
                                        </GridPane.margin>
@@ -272,7 +272,7 @@
                                 </AnchorPane>
                             </content>
                         </TitledPane>
-                        <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="510.0" stylesheets="@../../css/labels.css" text="Delivery Order" textFill="WHITE" GridPane.columnIndex="14" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                        <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="510.0" styleClass="entity-header-label" stylesheets="@../Material/css/labels.css" text="Delivery Order" textFill="WHITE" GridPane.columnIndex="14" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                             <font>
                                 <Font name="Arial monospaced for SAP Bold" size="52.0" />
                             </font>

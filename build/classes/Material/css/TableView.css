@@ -1,0 +1,17 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/*
+    Created on : Jul 29, 2022, 3:04:57 PM
+    Author     : Tee Zhuo Xuan
+*/
+.mfx-table-view{
+    -fx-max-width:1530px;
+    overflow-x : scroll;
+}
+
+.mfx-table-row-cell:hover {
+    -fx-background-color: #5E24C3;
+    -fx-text-fill: white;
+}

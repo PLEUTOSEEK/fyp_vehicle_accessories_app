@@ -111,7 +111,7 @@ public class CustomerInquiryDAO {
                         rs.getTimestamp("Modified_Date_Time"),
                         rs.getString("CI_ID"),
                         rs.getTimestamp("CI_Actual_Created_Date"),
-                        Base64.decodeBase64(rs.getString("CI_Signed_Doc_Pic")),
+                        rs.getString("CI_Signed_Doc_Pic") == null ? null : Base64.decodeBase64(rs.getString("CI_Signed_Doc_Pic")),
                         rs.getString("CI_Status"),
                         rs.getString("CI_Reference_Type"),
                         rs.getString("CI_Reference"),

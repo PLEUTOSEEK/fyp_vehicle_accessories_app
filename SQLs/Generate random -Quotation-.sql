@@ -27,7 +27,7 @@ INSERT INTO [dbo].[Quotation]
            ,[Signed_Doc_Pic]
            ,[Modified_Date_Time])
      VALUES
-           ('QUOT2207-001'
+           ('QUOT2207-002'
            ,null
            ,null
            ,null
