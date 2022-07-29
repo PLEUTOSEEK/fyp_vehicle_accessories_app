@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,6 +57,10 @@ public class QuotationService {
             return "";
         }
 
+    }
+
+    public static List<Quotation> getAllQuotation() {
+        return QuotationDAO.getAllQuotation();
     }
 
     public static void saveNewQuotation(Quotation quotation) throws SQLException {

@@ -4,7 +4,11 @@
  */
 package DAO;
 
+import Entity.Contact;
 import Entity.Place;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  *
@@ -13,6 +17,58 @@ import Entity.Place;
 public class PlaceDAO {
 
     public static Place getPlaceByID(String ID) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        Place place = new Place();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT * FROM View_Retrieve_All_Place WHERE PLACE_Place_ID = ?";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            ps.setString(1, ID);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                place = new Place(
+                        rs.getTimestamp("PLACE_Created_Date"),
+                        rs.getTimestamp("PLACE_Modified_Date_Time"),
+                        rs.getString("PLACE_Place_ID"),
+                        rs.getString("PLACE_Place_Name"),
+                        AddressDAO.getAddressByID(rs.getString("PLACE_Address_ID")),
+                        rs.getString("PLACE_Description"),
+                        new Contact(
+                                rs.getString("PLACE_Email"),
+                                null,
+                                null,
+                                rs.getString("PLACE_Office_Phone_No"),
+                                null
+                        )
+                );
+                return place;
+            } else {
+                return null;
+            }
+
+            //return object
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
     }
 }

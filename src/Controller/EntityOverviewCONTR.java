@@ -4,9 +4,17 @@
  */
 package Controller;
 
+import Entity.Quotation;
+import Service.QuotationService;
+import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
+import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import io.github.palexdev.materialfx.filter.LongFilter;
+import io.github.palexdev.materialfx.filter.StringFilter;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
@@ -18,37 +26,26 @@ import javafx.fxml.Initializable;
 public class EntityOverviewCONTR implements Initializable {
 
     @FXML
-    private MFXTableView<Object> tblVw;
+    private MFXTableView<?> tblVw;
 
     /**
      * Initializes the controller class.
      */
-    //private final Object type;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         // draw table here
-//        setupTable();
-//        table.autosizeColumnsOnInitialization();
-    }
-    /*
-    public EntityOverviewCONTR(Object type) {
-        this.type = type;
-    }
-
-    public Object getMyType() {
-        return this.type;
+        setupTable();
+        tblVw.autosizeColumnsOnInitialization();
     }
 
     private void setupTable() {
-        if (getMyType() instanceof Quotation) {
-            forQuotation();
-        }
+        forQuotation();
     }
 
     private void forQuotation() {
         //1
-        MFXTableView<Quotation> quotTable = null;
+        MFXTableView<Quotation> quotTable = new MFXTableView<Quotation>();
         MFXTableColumn<Quotation> quotIDCol = new MFXTableColumn<>("Quotation ID", true, Comparator.comparing(quot -> quot.getCode()));
         MFXTableColumn<Quotation> ciCol = new MFXTableColumn<>("Cusrtomer Inquiry ID", true, Comparator.comparing(quot -> quot.getCI().getCode()));
         MFXTableColumn<Quotation> refTypeCol = new MFXTableColumn<>("Reference Type", true, Comparator.comparing(quot -> quot.getReferenceType()));
@@ -96,11 +93,10 @@ public class EntityOverviewCONTR implements Initializable {
         );
 
         //5
-        //soTable.setItems();
-        //
+        quotTable.setItems(FXCollections.observableList(QuotationService.getAllQuotation()));
         //6
         tblVw = (MFXTableView<Object>) (Object) quotTable;
+
     }
 
-     */
 }

@@ -189,6 +189,7 @@ public class StaffDAO {
             }
             //return object
         } catch (Exception e) {
+            System.out.println(e.toString());
             return null;
         } finally {
             try {
