@@ -29,7 +29,7 @@
                   <Image url="@../../../../TARUC%20Degree%20Materials/21WMR04840.jpg" />
                </image>
             </ImageView>
-            <MFXCircleToggleNode prefHeight="58.0" prefWidth="67.0" size="20.0">
+            <MFXCircleToggleNode fx:id="btnSetting" prefHeight="58.0" prefWidth="67.0" size="20.0">
                <graphic>
                   <FontAwesomeIconView glyphName="GEAR" size="15" />
                </graphic>

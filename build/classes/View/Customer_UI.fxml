@@ -543,7 +543,7 @@
                                        </padding>
                                     </MFXComboBox>
                                     <MFXButton buttonType="RAISED" minHeight="27.0" minWidth="70.0" styleClass="outline-button" text="Add" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="BOTTOM" />
-                                    <Label styleClass="small-label" stylesheets="@../../css/labels.css" text="Delivery Addresses" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.valignment="BOTTOM">
+                                    <Label styleClass="small-label" stylesheets="@../../css/labels.css" text="Collect Addresses" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.valignment="BOTTOM">
                                        <font>
                                           <Font size="26.0" />
                                        </font>

@@ -36,7 +36,7 @@
                         <Insets left="10.0" right="10.0" />
                     </GridPane.margin>
                 </Label>
-                <MFXTextField floatMode="BORDER" floatingText="Staff ID" prefHeight="50.0" prefWidth="379.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                <MFXTextField fx:id="txtStaffID" floatMode="BORDER" floatingText="Staff ID" prefHeight="50.0" prefWidth="379.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                     <GridPane.margin>
                         <Insets left="10.0" right="10.0" />
                     </GridPane.margin>
@@ -44,7 +44,7 @@
                         <Font size="20.0" />
                     </font>
                 </MFXTextField>
-                <MFXPasswordField alignment="TOP_LEFT" floatMode="BORDER" floatingText="Password" minHeight="54.0" prefHeight="54.0" prefWidth="335.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                <MFXPasswordField fx:id="txtPassword" alignment="TOP_LEFT" floatMode="BORDER" floatingText="Password" minHeight="54.0" prefHeight="54.0" prefWidth="335.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                     <GridPane.margin>
                         <Insets left="10.0" right="10.0" />
                     </GridPane.margin>
@@ -52,7 +52,7 @@
                         <Font size="20.0" />
                     </font>
                 </MFXPasswordField>
-                <MFXButton buttonType="RAISED" minHeight="27.0" minWidth="70.0" prefHeight="37.0" prefWidth="356.0" styleClass="outline-button" text="Login" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+                <MFXButton fx:id="btnLogin" buttonType="RAISED" minHeight="27.0" minWidth="70.0" onMousePressed="#login" prefHeight="37.0" prefWidth="356.0" styleClass="outline-button" text="Login" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -60,7 +60,7 @@
                         <Insets left="10.0" right="10.0" />
                     </GridPane.margin>
                 </MFXButton>
-                <MFXButton fx:id="polo" buttonType="RAISED" depthLevel="LEVEL0" styleClass="link-button" text="Forgot Password" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                <MFXButton fx:id="btnForgetPassword" buttonType="RAISED" depthLevel="LEVEL0" styleClass="link-button" text="Forgot Password" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets right="10.0" />
                     </GridPane.margin>
