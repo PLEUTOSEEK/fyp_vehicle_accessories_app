@@ -45,7 +45,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goBackPrevious(MouseEvent event) {
-        switchScene(passObj.getFxmlPaths().getLast().toString(), new BasicObjs(), BasicCONTRFunc.back);
+        switchScene(passObj.getFxmlPaths().getLast().toString(), new BasicObjs(), BasicObjs.back);
     }
 
     @Override
@@ -70,12 +70,13 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @Override
-    public BasicObjs sendData(BasicObjs sendObj, String direction) {
+    public BasicObjs sendData(BasicObjs passObj, String direction) {
         switch (direction) {
-            case BasicCONTRFunc.forward:
+            case BasicObjs.forward:
                 passObj.getFxmlPaths().addLast("View/Quotations_UI.fxml");
                 break;
         }
+        passObj.setPassDirection(direction);
         passObj.setLoginStaff(this.passObj.getLoginStaff());
         return passObj;
     }
@@ -87,6 +88,15 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         // Step 2
         if (stage.getUserData() != null) {
             passObj = (BasicObjs) stage.getUserData();
+
+            switch (passObj.getPassDirection()) {
+                //receive data from after scene;
+                case BasicObjs.back:
+                    if (passObj.getFxmlPaths().getLength() != 0) {
+                        passObj.getFxmlPaths().delLast();
+                    }
+                    break;
+            }
         } else {
             passObj = new BasicObjs();
         }

@@ -12,12 +12,9 @@ import PassObjs.BasicObjs;
  */
 public interface BasicCONTRFunc {
 
-    public static final String forward = "F";
-    public static final String back = "P";
-
     public void switchScene(String fxmlPath, BasicObjs passObj, String direction);
 
-    public BasicObjs sendData(BasicObjs sendObj, String direction);
+    public BasicObjs sendData(BasicObjs passObj, String direction);
 
     public void receiveData();
 }

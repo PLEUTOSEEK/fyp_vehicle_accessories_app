@@ -118,134 +118,134 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goToCreateStaffUI(ActionEvent event) {
-        switchScene("View/Staff_UI.fxml", new BasicObjs(new Staff()), BasicCONTRFunc.forward);
+        switchScene("View/Staff_UI.fxml", new BasicObjs(new Staff()), BasicObjs.forward);
     }
 
     @FXML
     private void goToUpdateStaffUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Staff()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Staff()), BasicObjs.forward);
     }
 
     @FXML
     private void goToViewStaffUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Staff()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Staff()), BasicObjs.forward);
     }
 
     @FXML
     private void goToCreateCustUI(ActionEvent event) {
-        switchScene("View/Customer_UI.fxml", new BasicObjs(new Customer()), BasicCONTRFunc.forward);
+        switchScene("View/Customer_UI.fxml", new BasicObjs(new Customer()), BasicObjs.forward);
     }
 
     @FXML
     private void goToUpdateCustUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Customer()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Customer()), BasicObjs.forward);
     }
 
     @FXML
     private void goToViewCustUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Customer()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Customer()), BasicObjs.forward);
     }
 
     @FXML
     private void goToCreateCIUI(ActionEvent event) {
-        switchScene("View/CustomerInquiry_UI.fxml", new BasicObjs(new CustomerInquiry()), BasicCONTRFunc.forward);
+        switchScene("View/CustomerInquiry_UI.fxml", new BasicObjs(new CustomerInquiry()), BasicObjs.forward);
     }
 
     @FXML
     private void goToUpdateCIUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new CustomerInquiry()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new CustomerInquiry()), BasicObjs.forward);
     }
 
     @FXML
     private void goToViewCIUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new CustomerInquiry()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new CustomerInquiry()), BasicObjs.forward);
     }
 
     @FXML
     private void goToCreateQuotationUI(ActionEvent event) {
-        switchScene("View/Quotations.fxml", new BasicObjs(new Quotation()), BasicCONTRFunc.forward);
+        switchScene("View/Quotations.fxml", new BasicObjs(new Quotation()), BasicObjs.forward);
     }
 
     @FXML
     private void goToUpdateQuotationUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Quotation()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Quotation()), BasicObjs.forward);
     }
 
     @FXML
     private void goToViewQuotationUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Quotation()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Quotation()), BasicObjs.forward);
     }
 
     @FXML
     private void goToCreateSOUI(ActionEvent event) {
-        switchScene("View/SalesOrder_UI.fxml", new BasicObjs(new SalesOrder()), BasicCONTRFunc.forward);
+        switchScene("View/SalesOrder_UI.fxml", new BasicObjs(new SalesOrder()), BasicObjs.forward);
 
     }
 
     @FXML
     private void goToUpdateSOUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new SalesOrder()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new SalesOrder()), BasicObjs.forward);
     }
 
     @FXML
     private void goToViewSOUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new SalesOrder()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new SalesOrder()), BasicObjs.forward);
     }
 
     @FXML
     private void goToViewInventory(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Inventory()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Inventory()), BasicObjs.forward);
     }
 
     @FXML
     private void goToCreateTOUI(ActionEvent event) {
-        switchScene("View/TransferOrder_UI.fxml", new BasicObjs(new TransferOrder()), BasicCONTRFunc.forward);
+        switchScene("View/TransferOrder_UI.fxml", new BasicObjs(new TransferOrder()), BasicObjs.forward);
     }
 
     @FXML
     private void goToUpdateTOUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new TransferOrder()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new TransferOrder()), BasicObjs.forward);
     }
 
     @FXML
     private void goToViewTOUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new TransferOrder()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new TransferOrder()), BasicObjs.forward);
     }
 
     @FXML
     private void goToCreateRDN(ActionEvent event) {
-        switchScene("View/ReturnDeliveryNote_UI.fxml", new BasicObjs(new ReturnDeliveryNote()), BasicCONTRFunc.forward);
+        switchScene("View/ReturnDeliveryNote_UI.fxml", new BasicObjs(new ReturnDeliveryNote()), BasicObjs.forward);
     }
 
     @FXML
     private void goToUpdateRDN(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new ReturnDeliveryNote()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new ReturnDeliveryNote()), BasicObjs.forward);
     }
 
     @FXML
     private void goToViewRDN(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new ReturnDeliveryNote()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new ReturnDeliveryNote()), BasicObjs.forward);
     }
 
     @FXML
     private void goToCreateInvoiceUI(ActionEvent event) {
-        switchScene("View/Invoice_UI.fxml", new BasicObjs(new Invoice()), BasicCONTRFunc.forward);
+        switchScene("View/Invoice_UI.fxml", new BasicObjs(new Invoice()), BasicObjs.forward);
     }
 
     @FXML
     private void goToViewInvoiceUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Invoice()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Invoice()), BasicObjs.forward);
     }
 
     @FXML
     private void goToCreatePaymentUI(ActionEvent event) {
-        switchScene("View/Payment_UI.fxml", new BasicObjs(new Receipt()), BasicCONTRFunc.forward);
+        switchScene("View/Payment_UI.fxml", new BasicObjs(new Receipt()), BasicObjs.forward);
 
     }
 
     @FXML
     private void goToViewReceiptUI(ActionEvent event) {
-        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Receipt()), BasicCONTRFunc.forward);
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Receipt()), BasicObjs.forward);
     }
 
     @FXML
@@ -287,11 +287,11 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     @Override
     public BasicObjs sendData(BasicObjs passObj, String direction) {
         switch (direction) {
-            case BasicCONTRFunc.forward:
+            case BasicObjs.forward:
                 passObj.getFxmlPaths().addLast("View/HomePage_UI.fxml");
                 break;
         }
-
+        passObj.setPassDirection(direction);
         passObj.setLoginStaff(this.passObj.getLoginStaff());
         return passObj;
     }
@@ -303,6 +303,15 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
         // Step 2
         if (stage.getUserData() != null) {
             passObj = (BasicObjs) stage.getUserData();
+
+            switch (passObj.getPassDirection()) {
+                //receive data from after scene;
+                case BasicObjs.back:
+                    if (passObj.getFxmlPaths().getLength() != 0) {
+                        passObj.getFxmlPaths().delLast();
+                    }
+                    break;
+            }
         } else {
             passObj = new BasicObjs();
         }

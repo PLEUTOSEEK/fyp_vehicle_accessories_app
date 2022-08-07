@@ -14,10 +14,14 @@ import adt.DoublyLinkedList;
 //Usually use to pass object between home page and entity view UI
 public class BasicObjs {
 
+    public static final String forward = "F";
+    public static final String back = "B";
+
     private Staff loginStaff;
     private Staff staff;
     private Object obj;
     private DoublyLinkedList<String> fxmlPaths = new DoublyLinkedList<>();
+    private String passDirection;
 
     public BasicObjs() {
     }
@@ -62,6 +66,14 @@ public class BasicObjs {
 
     public void setFxmlPaths(DoublyLinkedList<String> fxmlPath) {
         this.fxmlPaths = fxmlPath;
+    }
+
+    public String getPassDirection() {
+        return passDirection;
+    }
+
+    public void setPassDirection(String passDirection) {
+        this.passDirection = passDirection;
     }
 
 }
