@@ -45,58 +45,58 @@
                   <children>
                       <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Staff Management">
                      <items>
-                        <MenuItem mnemonicParsing="false" text="Create Staff" />
-                        <MenuItem mnemonicParsing="false" text="Update Staff" />
-                        <MenuItem mnemonicParsing="false" text="View Staff" />
+                        <MenuItem fx:id="mniCreateStaff" mnemonicParsing="false" onAction="#goToCreateStaffUI" text="Create Staff" />
+                        <MenuItem fx:id="mniUpdateStaff" mnemonicParsing="false" onAction="#goToUpdateStaffUI" text="Update Staff" />
+                        <MenuItem fx:id="mniViewStaff" mnemonicParsing="false" onAction="#goToViewStaffUI" text="View Staff" />
                      </items>
                       </SplitMenuButton>
                   <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Customer Management">
                      <items>
-                        <MenuItem mnemonicParsing="false" text="Create Customer" />
-                        <MenuItem mnemonicParsing="false" text="Update Customer" />
-                        <MenuItem mnemonicParsing="false" text="View Customer" />
+                        <MenuItem fx:id="mniCreateCust" mnemonicParsing="false" onAction="#goToCreateCustUI" text="Create Customer" />
+                        <MenuItem fx:id="mniUpdateCust" mnemonicParsing="false" onAction="#goToUpdateCustUI" text="Update Customer" />
+                        <MenuItem fx:id="mniViewCust" mnemonicParsing="false" onAction="#goToViewCustUI" text="View Customer" />
                      </items>
                   </SplitMenuButton>
                   <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Sales Management">
                      <items>
                         <Menu mnemonicParsing="false" text="Customer Inquiry Management">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Create Customer Inquiry" />
-                              <MenuItem mnemonicParsing="false" text="Update Customer Inquiry" />
-                              <MenuItem mnemonicParsing="false" text="View Customer Inquiry" />
+                              <MenuItem fx:id="mniCreateCI" mnemonicParsing="false" onAction="#goToCreateCIUI" text="Create Customer Inquiry" />
+                              <MenuItem fx:id="mniUpdateCI" mnemonicParsing="false" onAction="#goToUpdateCIUI" text="Update Customer Inquiry" />
+                              <MenuItem fx:id="mniViewCI" mnemonicParsing="false" onAction="#goToViewCIUI" text="View Customer Inquiry" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Quotation Management">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Create Quotation" />
-                              <MenuItem mnemonicParsing="false" text="Update Quotation" />
-                              <MenuItem mnemonicParsing="false" text="View Quotation" />
+                              <MenuItem fx:id="mniCreateQuotation" mnemonicParsing="false" onAction="#goToCreateQuotationUI" text="Create Quotation" />
+                              <MenuItem fx:id="mniUpdateQuotation" mnemonicParsing="false" onAction="#goToUpdateQuotationUI" text="Update Quotation" />
+                              <MenuItem fx:id="mniViewQuotation" mnemonicParsing="false" onAction="#goToViewQuotationUI" text="View Quotation" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Sales Order Management">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Create Transfer Order" />
-                              <MenuItem mnemonicParsing="false" text="Update Transfer Order" />
-                              <MenuItem mnemonicParsing="false" text="View Transfer Order" />
+                              <MenuItem fx:id="mniCreateSO" mnemonicParsing="false" onAction="#goToCreateSOUI" text="Create Transfer Order" />
+                              <MenuItem fx:id="mniUpdateSO" mnemonicParsing="false" onAction="#goToUpdateSOUI" text="Update Transfer Order" />
+                              <MenuItem fx:id="mniViewSO" mnemonicParsing="false" onAction="#goToViewSOUI" text="View Transfer Order" />
                            </items>
                         </Menu>
                      </items>
                   </SplitMenuButton>
                   <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Warehouse Management">
                      <items>
-                        <MenuItem mnemonicParsing="false" text="View Inventory" />
+                        <MenuItem fx:id="mniViewInventory" mnemonicParsing="false" onAction="#goToViewInventory" text="View Inventory" />
                         <Menu mnemonicParsing="false" text="Transfer Order Management">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Create Transfer Order" />
-                              <MenuItem mnemonicParsing="false" text="Update Transfer Order" />
-                              <MenuItem mnemonicParsing="false" text="View Transfer Order" />
+                              <MenuItem fx:id="mniCreateTO" mnemonicParsing="false" onAction="#goToCreateTOUI" text="Create Transfer Order" />
+                              <MenuItem fx:id="mniUpdateTO" mnemonicParsing="false" onAction="#goToUpdateTOUI" text="Update Transfer Order" />
+                              <MenuItem fx:id="mniViewTO" mnemonicParsing="false" onAction="#goToViewTOUI" text="View Transfer Order" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="RDN Management">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Create RDN" />
-                              <MenuItem mnemonicParsing="false" text="Update RDN" />
-                              <MenuItem mnemonicParsing="false" text="View RDN" />
+                              <MenuItem fx:id="mniCreateRDN" mnemonicParsing="false" onAction="#goToCreateRDN" text="Create RDN" />
+                              <MenuItem fx:id="mniUpdateRDN" mnemonicParsing="false" onAction="#goToUpdateRDN" text="Update RDN" />
+                              <MenuItem fx:id="mniViewRDN" mnemonicParsing="false" onAction="#goToViewRDN" text="View RDN" />
                            </items>
                         </Menu>
                      </items>
@@ -105,14 +105,14 @@
                      <items>
                         <Menu mnemonicParsing="false" text="Invoice Management">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Create Invoice" />
-                              <MenuItem mnemonicParsing="false" text="View Invoice" />
+                              <MenuItem fx:id="mniCreateInvoice" mnemonicParsing="false" onAction="#goToCreateInvoiceUI" text="Create Invoice" />
+                              <MenuItem fx:id="mniViewInvoice" mnemonicParsing="false" onAction="#goToViewInvoiceUI" text="View Invoice" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Payment Management">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Create Payment" />
-                              <MenuItem mnemonicParsing="false" text="View Receipt" />
+                              <MenuItem fx:id="mniCreatePayment" mnemonicParsing="false" onAction="#goToCreatePaymentUI" text="Create Payment" />
+                              <MenuItem fx:id="mniViewReceipt" mnemonicParsing="false" onAction="#goToViewReceiptUI" text="View Receipt" />
                            </items>
                         </Menu>
                      </items>
@@ -121,17 +121,17 @@
                      <items>
                         <Menu mnemonicParsing="false" text="Sales Reports">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Sales Report" />
+                              <MenuItem fx:id="mniSalesRpt" mnemonicParsing="false" onAction="#goToSalesReportUI" text="Sales Report" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Warehouse Reports">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Inventory Control Report" />
+                              <MenuItem fx:id="mniInventoryRpt" mnemonicParsing="false" onAction="#goToInventoryReportUI" text="Inventory Control Report" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Accounting Reports">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Accounting Report" />
+                              <MenuItem fx:id="mniAccRpt" mnemonicParsing="false" onAction="#goToAccountingReportUI" text="Accounting Report" />
                            </items>
                         </Menu>
                      </items>

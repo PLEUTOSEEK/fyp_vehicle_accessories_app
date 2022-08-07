@@ -4,13 +4,29 @@
  */
 package Controller;
 
+import Entity.Customer;
+import Entity.CustomerInquiry;
+import Entity.Inventory;
+import Entity.Invoice;
+import Entity.Quotation;
+import Entity.Receipt;
+import Entity.ReturnDeliveryNote;
+import Entity.SalesOrder;
 import Entity.Staff;
+import Entity.TransferOrder;
+import PassObjs.BasicObjs;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
 /**
@@ -18,12 +34,70 @@ import javafx.stage.Stage;
  *
  * @author Tee Zhuo Xuan
  */
-public class HomePageCONTR implements Initializable {
+public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
-    private Staff loginStaff;
+    private BasicObjs passObj;
 
     @FXML
     private MFXCircleToggleNode btnSetting;
+    @FXML
+    private MenuItem mniCreateStaff;
+    @FXML
+    private MenuItem mniUpdateStaff;
+    @FXML
+    private MenuItem mniViewStaff;
+    @FXML
+    private MenuItem mniCreateCust;
+    @FXML
+    private MenuItem mniUpdateCust;
+    @FXML
+    private MenuItem mniViewCust;
+    @FXML
+    private MenuItem mniCreateCI;
+    @FXML
+    private MenuItem mniUpdateCI;
+    @FXML
+    private MenuItem mniViewCI;
+    @FXML
+    private MenuItem mniCreateQuotation;
+    @FXML
+    private MenuItem mniUpdateQuotation;
+    @FXML
+    private MenuItem mniViewQuotation;
+    @FXML
+    private MenuItem mniCreateSO;
+    @FXML
+    private MenuItem mniUpdateSO;
+    @FXML
+    private MenuItem mniViewSO;
+    @FXML
+    private MenuItem mniViewInventory;
+    @FXML
+    private MenuItem mniCreateTO;
+    @FXML
+    private MenuItem mniUpdateTO;
+    @FXML
+    private MenuItem mniViewTO;
+    @FXML
+    private MenuItem mniCreateRDN;
+    @FXML
+    private MenuItem mniUpdateRDN;
+    @FXML
+    private MenuItem mniViewRDN;
+    @FXML
+    private MenuItem mniCreateInvoice;
+    @FXML
+    private MenuItem mniViewInvoice;
+    @FXML
+    private MenuItem mniCreatePayment;
+    @FXML
+    private MenuItem mniViewReceipt;
+    @FXML
+    private MenuItem mniSalesRpt;
+    @FXML
+    private MenuItem mniInventoryRpt;
+    @FXML
+    private MenuItem mniAccRpt;
 
     /**
      * Initializes the controller class.
@@ -42,10 +116,196 @@ public class HomePageCONTR implements Initializable {
         });
     }
 
-    private void receiveData() {
+    @FXML
+    private void goToCreateStaffUI(ActionEvent event) {
+        switchScene("View/Staff_UI.fxml", new BasicObjs(new Staff()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToUpdateStaffUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Staff()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToViewStaffUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Staff()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToCreateCustUI(ActionEvent event) {
+        switchScene("View/Customer_UI.fxml", new BasicObjs(new Customer()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToUpdateCustUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Customer()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToViewCustUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Customer()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToCreateCIUI(ActionEvent event) {
+        switchScene("View/CustomerInquiry_UI.fxml", new BasicObjs(new CustomerInquiry()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToUpdateCIUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new CustomerInquiry()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToViewCIUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new CustomerInquiry()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToCreateQuotationUI(ActionEvent event) {
+        switchScene("View/Quotations.fxml", new BasicObjs(new Quotation()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToUpdateQuotationUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Quotation()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToViewQuotationUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Quotation()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToCreateSOUI(ActionEvent event) {
+        switchScene("View/SalesOrder_UI.fxml", new BasicObjs(new SalesOrder()), BasicCONTRFunc.forward);
+
+    }
+
+    @FXML
+    private void goToUpdateSOUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new SalesOrder()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToViewSOUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new SalesOrder()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToViewInventory(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Inventory()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToCreateTOUI(ActionEvent event) {
+        switchScene("View/TransferOrder_UI.fxml", new BasicObjs(new TransferOrder()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToUpdateTOUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new TransferOrder()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToViewTOUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new TransferOrder()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToCreateRDN(ActionEvent event) {
+        switchScene("View/ReturnDeliveryNote_UI.fxml", new BasicObjs(new ReturnDeliveryNote()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToUpdateRDN(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new ReturnDeliveryNote()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToViewRDN(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new ReturnDeliveryNote()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToCreateInvoiceUI(ActionEvent event) {
+        switchScene("View/Invoice_UI.fxml", new BasicObjs(new Invoice()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToViewInvoiceUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Invoice()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToCreatePaymentUI(ActionEvent event) {
+        switchScene("View/Payment_UI.fxml", new BasicObjs(new Receipt()), BasicCONTRFunc.forward);
+
+    }
+
+    @FXML
+    private void goToViewReceiptUI(ActionEvent event) {
+        switchScene("View/EntityOverview_UI.fxml", new BasicObjs(new Receipt()), BasicCONTRFunc.forward);
+    }
+
+    @FXML
+    private void goToSalesReportUI(ActionEvent event) {
+        //haven't create report UI controls
+    }
+
+    @FXML
+    private void goToInventoryReportUI(ActionEvent event) {
+        //haven't create report UI controls
+    }
+
+    @FXML
+    private void goToAccountingReportUI(ActionEvent event) {
+        //haven't create report UI controls
+    }
+
+    @Override
+    public void switchScene(String fxmlPath, BasicObjs passObj, String direction) {
+        // Step 3
+        Stage stage = (Stage) btnSetting.getScene().getWindow();
+        stage.close();
+        try {
+            // Step 4
+            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(fxmlPath)); // Example: "View/HomePage_UI.fxml"
+            // Step 5
+            stage.setUserData(sendData(passObj, direction));
+            // Step 6
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            // Step 7
+            stage.show();
+
+        } catch (IOException e) {
+            System.err.println(String.format("Error: %s", e.getMessage()));
+        }
+    }
+
+    @Override
+    public BasicObjs sendData(BasicObjs passObj, String direction) {
+        switch (direction) {
+            case BasicCONTRFunc.forward:
+                passObj.getFxmlPaths().addLast("View/HomePage_UI.fxml");
+                break;
+        }
+
+        passObj.setLoginStaff(this.passObj.getLoginStaff());
+        return passObj;
+    }
+
+    @Override
+    public void receiveData() {
         // Step 1
         Stage stage = (Stage) btnSetting.getScene().getWindow();
         // Step 2
-        this.loginStaff = (Staff) stage.getUserData();
+        if (stage.getUserData() != null) {
+            passObj = (BasicObjs) stage.getUserData();
+        } else {
+            passObj = new BasicObjs();
+        }
     }
+
 }

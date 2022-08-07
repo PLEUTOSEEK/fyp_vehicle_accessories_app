@@ -14,22 +14,20 @@ import javafx.stage.Stage;
  *
  * @author Tee Zhuo Xuan
  */
-public class Main extends Application {
+public class VehicleAccessoriesSalesSystem extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        String targetFXMLPath = "View/HomePage_UI.fxml";
 
         try {
-
-            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("View/Login_UI.fxml"));
+            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(targetFXMLPath));
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**

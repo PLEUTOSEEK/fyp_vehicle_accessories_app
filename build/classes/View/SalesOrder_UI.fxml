@@ -216,7 +216,7 @@
                                 <Font name="Arial monospaced for SAP Bold" size="52.0" />
                             </font>
                         </Label>
-                        <MFXCircleToggleNode prefHeight="87.0" prefWidth="67.0" size="25.0" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                        <MFXCircleToggleNode fx:id="btnBack" onMousePressed="#goBackPrevious" prefHeight="87.0" prefWidth="67.0" size="25.0" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                             <graphic>
                                 <FontAwesomeIconView glyphName="ANGLE_LEFT" size="35" />
                             </graphic>

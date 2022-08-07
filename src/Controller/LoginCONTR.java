@@ -117,8 +117,7 @@ public class LoginCONTR implements Initializable {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Send Data to Home Page">
-    private void sendData(Staff staff) {
-        System.out.println(staff.getName() + "This is the fking name");
+    private void sendData(Object staff) {
         // Step 3
         Stage stage = (Stage) btnLogin.getScene().getWindow();
         stage.close();

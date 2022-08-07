@@ -26,6 +26,10 @@ public class Invoice extends Document {
     private Staff releasedAVerifiedBy;
     private Customer customerSignature;
 
+    public Invoice() {
+        this(null, null, "", null, null, "", null, "", "", null, new BigDecimal("0.00"), new BigDecimal("0.00"), new BigDecimal("0.00"), new BigDecimal("0.00"), null, null, null);
+    }
+
     public Invoice(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, SalesOrder SO, String referenceType, String reference, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal ttlPayable, Staff issuedBy, Staff releasedAVerifiedBy, Customer customerSignature) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.SO = SO;

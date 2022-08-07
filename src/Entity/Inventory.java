@@ -19,7 +19,11 @@ public class Inventory extends Entity {
     private Integer readyQty;
     private Integer ttlQty;
 
-    public Inventory(String inventoryID, Place storePlace, Product product, Integer reservedQty, Integer readyQty, Integer ttlQty, Timestamp createdDateTime, Timestamp modifiedDateTime) {
+    public Inventory() {
+        this(null, null, "", null, null, 0, 0, 0);
+    }
+
+    public Inventory(Timestamp createdDateTime, Timestamp modifiedDateTime, String inventoryID, Place storePlace, Product product, Integer reservedQty, Integer readyQty, Integer ttlQty) {
         super(createdDateTime, modifiedDateTime);
         this.inventoryID = inventoryID;
         this.storePlace = storePlace;

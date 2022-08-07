@@ -26,6 +26,10 @@ public class ReturnDeliveryNote extends Document {
     private Person itemPassedBackBy;
     private Staff itemReceivedBy;
 
+    public ReturnDeliveryNote() {
+        this(null, null, "", null, null, "", null, null, null, null, "", null, null, null, null, null, null);
+    }
+
     public ReturnDeliveryNote(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, SalesOrder SO, Place collBackTo, CollectAddress collBckFr, Date collectDate, String inspectorMsg, List<Item> items, Staff issuedBy, Staff inspectedBy, Staff collectBackBy, Person itemPassedBackBy, Staff itemReceivedBy) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.SO = SO;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import io.github.palexdev.materialfx.controls.MFXTableView?>
@@ -17,7 +18,7 @@
     <children>
         <MFXScrollPane minHeight="785.0" minWidth="1530.0" prefHeight="786.0" prefWidth="1533.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <content>
-                <GridPane maxHeight="1.7976931348623157E308" maxWidth="1530.0" minHeight="785.0" minWidth="1530.0" prefHeight="785.0" prefWidth="1530.0">
+                <GridPane maxHeight="1.7976931348623157E308" maxWidth="1530.0" minHeight="785.0" minWidth="1530.0" prefHeight="785.0" prefWidth="1530.0" stylesheets="@../Material/css/Buttons.css">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -31,7 +32,7 @@
                         <RowConstraints maxHeight="62.19998779296873" minHeight="10.0" prefHeight="46.19998779296873" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <MFXCircleToggleNode prefHeight="87.0" prefWidth="67.0" size="25.0" GridPane.halignment="LEFT" GridPane.valignment="TOP">
+                        <MFXCircleToggleNode fx:id="btnBack" onMousePressed="#goBackPrevious" prefHeight="87.0" prefWidth="67.0" size="25.0" GridPane.halignment="LEFT" GridPane.valignment="TOP">
                             <graphic>
                                 <FontAwesomeIconView glyphName="ANGLE_LEFT" size="35" />
                             </graphic>
@@ -53,6 +54,11 @@
                               </MFXTableView>
                      </content>
                   </MFXScrollPane>
+                  <MFXButton prefHeight="27.0" prefWidth="83.0" styleClass="outline-button" text="Refresh" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="2.0" />
+                     </GridPane.margin>
+                  </MFXButton>
                     </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

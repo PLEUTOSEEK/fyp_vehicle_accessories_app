@@ -4,7 +4,6 @@
  */
 package DAO;
 
-import Entity.Quotation;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +11,10 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.codec.binary.Base64;
+
+import Entity.Quotation;
 
 /**
  *
@@ -119,7 +121,7 @@ public class QuotationDAO {
             ps.setString(1, code);
 
             rs = ps.executeQuery();
-
+            
             if (rs.next()) {
                 quotation = new Quotation(
                         rs.getTimestamp("QUOT_Created_Date"),

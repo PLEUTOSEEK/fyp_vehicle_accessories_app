@@ -23,7 +23,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<fx:root id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" stylesheets="@../Material/css/Buttons.css" type="AnchorPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SalesOrderCONTR">
+<AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" stylesheets="@../Material/css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ReturnDerliveryNoteCONTR">
     <children>
         <MFXScrollPane minHeight="785.0" minWidth="1532.0" prefHeight="786.0" prefWidth="1533.0" styleClass="grid-pane" trackColor="#828282" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <content>
@@ -209,7 +209,7 @@
                                 <Font name="Arial monospaced for SAP Bold" size="52.0" />
                             </font>
                         </Label>
-                        <MFXCircleToggleNode prefHeight="87.0" prefWidth="67.0" size="25.0" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                        <MFXCircleToggleNode fx:id="btnBack" onMousePressed="#goBackPrevious" prefHeight="87.0" prefWidth="67.0" size="25.0" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                             <graphic>
                                 <FontAwesomeIconView glyphName="ANGLE_LEFT" size="35" />
                             </graphic>
@@ -323,4 +323,4 @@
         <MFXButton buttonType="RAISED" layoutX="1430.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" styleClass="outline-button" text="Save" />
         <MFXButton id="custom" layoutX="1331.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" text="Discard" />
     </children>
-</fx:root>
+</AnchorPane>
