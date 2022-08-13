@@ -53,7 +53,7 @@ public class SQLDatabaseConnection {
 
         Connection con = getConnection(
                 "localhost",
-                "vehicle-accessories-2022-7-29-19-43",
+                "vehicle-accessories-2022-8-9-8-57",
                 "sa",
                 "wKKT@NBKP3sxiC8");
 

@@ -5,12 +5,19 @@
 package Controller;
 
 import PassObjs.BasicObjs;
+import javafx.scene.control.Alert;
 
 /**
  *
  * @author Tee Zhuo Xuan
  */
 public interface BasicCONTRFunc {
+
+    public void inputValidation();
+
+    public boolean clearAllFieldsValue();
+
+    public void alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt);
 
     public void switchScene(String fxmlPath, BasicObjs passObj, String direction);
 
