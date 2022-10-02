@@ -4,9 +4,14 @@
  */
 package Controller;
 
+import Entity.Customer;
 import Entity.Quotation;
+import Entity.Staff;
 import PassObjs.BasicObjs;
+import Service.CustomerService;
 import Service.QuotationService;
+import Service.StaffService;
+import Utils.DateFilter;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
@@ -29,6 +34,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -69,7 +75,144 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
     private void setupTable() {
         if (this.passObj.getObj() instanceof Quotation) {
             forQuotation();
+        } else if (this.passObj.getObj() instanceof Customer) {
+
+        } else if (this.passObj.getObj() instanceof Staff) {
+
         }
+    }
+
+    private void forCustomer() {
+        // Customer ID
+        MFXTableColumn<Customer> custIDCol = new MFXTableColumn<>("Customer ID", true, Comparator.comparing(cust -> cust.getCustID()));
+        // Name
+        MFXTableColumn<Customer> custNmCol = new MFXTableColumn<>("Name", true, Comparator.comparing(cust -> cust.getName()));
+        // Email
+        MFXTableColumn<Customer> emailCol = new MFXTableColumn<>("Email", true, Comparator.comparing(cust -> cust.getContact().getEmail()));
+        // Mobile Number
+        MFXTableColumn<Customer> mobNoCol = new MFXTableColumn<>("Mobile No.", true, Comparator.comparing(cust -> cust.getContact().getMobileNo()));
+        // Bill To Address
+        MFXTableColumn<Customer> billTo = new MFXTableColumn<>("Bill To Address", true, Comparator.comparing(cust -> cust.getBillToAddr().getLocationName()));
+
+        // Customer ID
+        custIDCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getCustID()));
+        // Name
+        custNmCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getName()));
+        // Email
+        emailCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getContact().getEmail()));
+        // Mobile Number
+        mobNoCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getContact().getMobileNo()));
+        // Bill To Address
+        billTo.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getBillToAddr().getLocationName()));
+
+        ((MFXTableView<Customer>) tblVw).getTableColumns().addAll(
+                custIDCol,
+                custNmCol,
+                emailCol,
+                mobNoCol,
+                billTo
+        );
+
+        ((MFXTableView<Customer>) tblVw).getFilters().addAll(
+                new StringFilter<>("Customer ID", cust -> cust.getCustID()),
+                new StringFilter<>("Name", cust -> cust.getName()),
+                new StringFilter<>("Email", cust -> cust.getContact().getEmail()),
+                new StringFilter<>("Mobile No.", cust -> cust.getContact().getMobileNo()),
+                new StringFilter<>("Bill To Address", cust -> cust.getBillToAddr().getLocationName())
+        );
+
+        List<Customer> customers = CustomerService.getAllCustomers();
+
+        ((MFXTableView<Customer>) tblVw).setItems(FXCollections.observableList(customers));
+
+        ((MFXTableView<Customer>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<Customer>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    Customer customer = (((MFXTableView<Customer>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(customer.getCustID());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            System.out.println(customer.getCustID());
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+    }
+
+    private void forStaff() {
+
+        // Staff ID
+        MFXTableColumn<Staff> staffIDCol = new MFXTableColumn<>("Staff ID", true, Comparator.comparing(staff -> staff.getStaffID()));
+        // Name
+        MFXTableColumn<Staff> staffNmCol = new MFXTableColumn<>("Name", true, Comparator.comparing(staff -> staff.getName()));
+        // Mobile No
+        MFXTableColumn<Staff> mobNoCol = new MFXTableColumn<>("Mobile No.", true, Comparator.comparing(staff -> staff.getContact().getMobileNo()));
+        // Office Phone Number
+        MFXTableColumn<Staff> offPhNoCol = new MFXTableColumn<>("Office Phone No.", true, Comparator.comparing(staff -> staff.getContact().getOffPhNo()));
+        // Occupation
+        MFXTableColumn<Staff> occupationCol = new MFXTableColumn<>("Occupation", true, Comparator.comparing(staff -> staff.getOccupation()));
+        // Role
+        MFXTableColumn<Staff> roleCol = new MFXTableColumn<>("Role", true, Comparator.comparing(staff -> staff.getRole()));
+
+        // Staff ID
+        staffIDCol.setRowCellFactory(staff -> new MFXTableRowCell<>(s -> s.getStaffID()));
+        // Name
+        staffNmCol.setRowCellFactory(staff -> new MFXTableRowCell<>(s -> s.getName()));
+        // Mobile No
+        mobNoCol.setRowCellFactory(staff -> new MFXTableRowCell<>(s -> s.getContact().getMobileNo()));
+        // Office Phone Number
+        offPhNoCol.setRowCellFactory(staff -> new MFXTableRowCell<>(s -> s.getContact().getOffPhNo()));
+        // Occupation
+        occupationCol.setRowCellFactory(staff -> new MFXTableRowCell<>(s -> s.getOccupation()));
+        // Role
+        roleCol.setRowCellFactory(staff -> new MFXTableRowCell<>(s -> s.getRole()));
+
+        ((MFXTableView<Staff>) tblVw).getTableColumns().addAll(
+                staffIDCol,
+                staffNmCol,
+                mobNoCol,
+                offPhNoCol,
+                occupationCol,
+                roleCol);
+
+        ((MFXTableView<Staff>) tblVw).getFilters().addAll(
+                new StringFilter<>("Staff ID", staff -> staff.getStaffID()),
+                new StringFilter<>("Name", staff -> staff.getName()),
+                new StringFilter<>("Mobile No.", staff -> staff.getContact().getMobileNo()),
+                new StringFilter<>("Office Phone No.", staff -> staff.getContact().getOffPhNo()),
+                new StringFilter<>("Occupation", staff -> staff.getOccupation()),
+                new StringFilter<>("Role", staff -> staff.getRole())
+        );
+
+        List<Staff> staffs = StaffService.getAllStaff();
+
+        ((MFXTableView<Staff>) tblVw).setItems(FXCollections.observableList(staffs));
+
+        ((MFXTableView<Staff>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<Staff>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    Staff staff = (((MFXTableView<Staff>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(staff.getStaffID());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            System.out.println(staff.getStaffID());
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+
+        System.out.println("done go through function");
+
     }
 
     private void forQuotation() {
@@ -141,7 +284,7 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
                 new StringFilter<>("Sales Person ID", quot -> quot.getSalesPerson().getStaffID()),
                 new StringFilter<>("Sales Person Name", quot -> quot.getSalesPerson().getName()),
                 new StringFilter<>("Quotation Validity Date", quot -> quot.getQuotValidityDate().toString()),
-                new StringFilter<>("Required Delivery Date", quot -> quot.getRequiredDeliveryDate().toString()),
+                new DateFilter<>("Required Delivery Date", quot -> quot.getRequiredDeliveryDate()),
                 new DoubleFilter<>("Gross", quot -> quot.getGross().doubleValue()),
                 new DoubleFilter<>("Discount", quot -> quot.getDiscount().doubleValue()),
                 new DoubleFilter<>("Sub Total", quot -> quot.getSubTotal().doubleValue()),
@@ -248,7 +391,7 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @Override
-    public void alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
+    public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

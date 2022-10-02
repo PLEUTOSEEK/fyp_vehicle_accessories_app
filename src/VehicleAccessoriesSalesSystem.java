@@ -4,10 +4,11 @@
  */
 
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 /**
@@ -23,6 +24,7 @@ public class VehicleAccessoriesSalesSystem extends Application {
         try {
             Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(targetFXMLPath));
             Scene scene = new Scene(root);
+            //primaryStage.initStyle(StageStyle.TRANSPARENT);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {
@@ -37,4 +39,13 @@ public class VehicleAccessoriesSalesSystem extends Application {
         launch(args);
     }
 
+    public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerTxt);
+        alert.setContentText(contentTxt);
+
+        alert.showAndWait();
+        return alert.getResult();
+    }
 }

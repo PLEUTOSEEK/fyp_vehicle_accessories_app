@@ -16,14 +16,13 @@ import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import io.github.palexdev.materialfx.utils.SwingFXUtils;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -33,6 +32,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -130,6 +130,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private ImageView imgAvatarImg;
 
+    private Customer custInDraft;
+
     /**
      * Initializes the controller class.
      */
@@ -159,81 +161,21 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 return;
             }
 
-            //<editor-fold defaultstate="collapsed" desc="Customer constructor">
-            Customer customer = new Customer(
-                    new Timestamp(System.currentTimeMillis()),
-                    new Timestamp(System.currentTimeMillis()),
-                    ImageUtils.toByteArray(SwingFXUtils.fromFXImage(this.imgAvatarImg.getImage(), null), "png"),
-                    this.txtName.getText(),
-                    this.cmbGender.getSelectedText(),
-                    (Date) new SimpleDateFormat("MMM dd, yyyy").parse(this.dtDOB.getText()),
-                    this.txtIC.getText(),
-                    this.cmbMaritalStatus.getText(),
-                    this.cmbNationality.getText(),
-                    this.cmbHonorifics.getText(),
-                    new Address(
-                            new Timestamp(System.currentTimeMillis()),
-                            new Timestamp(System.currentTimeMillis()),
-                            "", // Address ID
-                            this.txtResidentialAddrLocationName.getText(),
-                            this.txtResidentialAddrAddress.getText(),
-                            this.txtResidentialAddrCity.getText(),
-                            this.txtResidentialAddrPostalCode.getText(),
-                            this.cmbResidentialAddrState.getText(),
-                            this.cmbResidentialAddrCountry.getText()
-                    ),
-                    new Address(
-                            new Timestamp(System.currentTimeMillis()),
-                            new Timestamp(System.currentTimeMillis()),
-                            "", // Address ID
-                            this.txtCorAddrLocationName.getText(),
-                            this.txtCorAddrAddress.getText(),
-                            this.txtCorAddrCity.getText(),
-                            this.txtCorAddrPostalCode.getText(),
-                            this.cmbCorAddrState.getText(),
-                            this.cmbCorAddrCountry.getText()
-                    ),
-                    new Contact(
-                            this.txtEmail.getText(),
-                            this.txtMobileNo.getText(),
-                            this.txtExt.getText(),
-                            this.txtOffPhNo.getText(),
-                            this.txtHomePhNo.getText()
-                    ),
-                    this.txtOccupation.getText(),
-                    this.cmbRace.getText(),
-                    this.cmbReligion.getText(),
-                    this.cmbStatus.getText(),
-                    "", // Customer ID
-                    this.cmbBankAccProvider.getText(),
-                    this.txtBankAccNo.getText(),
-                    new Address(
-                            new Timestamp(System.currentTimeMillis()),
-                            new Timestamp(System.currentTimeMillis()),
-                            "", // Address ID
-                            this.txtBillToAddrLocationName.getText(),
-                            this.txtBillToAddrAddress.getText(),
-                            this.txtBillToAddrCity.getText(),
-                            this.txtBillToAddrPostalCode.getText(),
-                            this.cmbBillToAddrState.getText(),
-                            this.cmbBillToAddrCountry.getText()
-                    ),
-                    null, // collect Addresses
-                    this.cmbCustType.getText()
-            );
-            //</editor-fold>
+            custInDraft = prepareCustomerInforToObj();
 
-            Validator validateWithDB = CustomerService.saveCustomer(customer);
+            if (this.passObj.getCrud().equals(BasicObjs.create)) {
+                CustomerService.saveNewCustomer(custInDraft);
 
-            if (validateWithDB.containsErrors()) {
-                alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validateWithDB.createStringBinding().getValue());
-                return;
-            } else {
-                // alert successful insert to database
-                alertDialog(Alert.AlertType.INFORMATION, "Information", "Create Success Message", customer.getCustID() + " created");
-                // clear all fields for another customer creation
-                clearAllFieldsValue();
+            } else if (this.passObj.getCrud().equals(BasicObjs.update)) {
+                CustomerService.updateCustomer(custInDraft);
             }
+
+            /*
+            // alert successful insert to database
+            alertDialog(Alert.AlertType.INFORMATION, "Information", "Create Success Message", customer.getCustID() + " created");
+            // clear all fields for another customer creation
+            clearAllFieldsValue();
+             */
         }
     }
 
@@ -289,29 +231,221 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
     public void inputValidation() {
         List<MFXTextField> listOfControls = new ArrayList<MFXTextField>();
         ValidationUtils<MFXTextField> validationUtils = new ValidationUtils<>();
+        int characterLimit = 0;
         //================================
         listOfControls.add(this.txtName);
-        validationUtils.validationCreator(validator, listOfControls, "Name - Required Field", ValidationUtils.isNotEmpty);
-        validationUtils.validationCreator(validator, listOfControls, "Name - Only Aphabet and Space are allow", ValidationUtils.isAlphaSpace);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Name - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Name - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Name - Only Aphabet and Space are allow", ValidationUtils.isAlphaSpace);
         listOfControls.clear();
         //================================
         listOfControls.add(this.cmbGender);
-        validationUtils.validationCreator(validator, listOfControls, "Gender - Required Field", ValidationUtils.isNotEmpty);
+        characterLimit = 30;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Gender - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
         listOfControls.clear();
         //================================
+        listOfControls.add(this.dtDOB);
+        characterLimit = 100;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Date of birth - cannot be after current date" + characterLimit + " characters", ValidationUtils.isBeforeCurrentDate);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtIC);
+        characterLimit = 100;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "IC - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbMaritalStatus);
+        characterLimit = 50;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Marital Status - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbNationality);
+        characterLimit = 100;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Nationality - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbHonorifics);
+        characterLimit = 100;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Honorifics - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Honorifics - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtEmail);
+        characterLimit = 50;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Email - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtMobileNo);
+        characterLimit = 50;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Mobile No - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Mobile No - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtExt);
+        characterLimit = 50;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Extension No - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtOffPhNo);
+        characterLimit = 50;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Office Phone No - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Office Phone No - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtHomePhNo);
+        characterLimit = 100;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Home Phone No - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Home Phone No - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtOccupation);
+        characterLimit = 100;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Occupation - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbRace);
+        characterLimit = 50;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Race - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbReligion);
+        characterLimit = 50;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Religion - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbBankAccProvider);
+        characterLimit = 100;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Bank Account Provider - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtBankAccNo);
+        characterLimit = 100;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Bank Account Number - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbCustType);
+        characterLimit = 50;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Customer Type - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Customer Type - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbStatus);
+        characterLimit = 30;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Status - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Status - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtBillToAddrLocationName);
+        characterLimit = 500;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Bill To Address Location Name - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Bill To Address Location Name - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtBillToAddrAddress);
+        characterLimit = 1000;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Bill To Address - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Bill To Address - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtBillToAddrCity);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Bill To Address City - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Bill To Address City - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtBillToAddrPostalCode);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Bill To Address Postal Code - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Bill To Address Postal Code - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbBillToAddrState);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Bill To Address State - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Bill To Address State - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbBillToAddrCountry);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, 0, false, "Bill To Address Country - Required Field", ValidationUtils.isNotEmpty);
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Bill To Address Country - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtResidentialAddrLocationName);
+        characterLimit = 500;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address Location Name - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtResidentialAddrAddress);
+        characterLimit = 1000;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtResidentialAddrCity);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address City - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtResidentialAddrPostalCode);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address Postal Code - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbResidentialAddrState);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address State - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbResidentialAddrCountry);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address Country - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtCorAddrLocationName);
+        characterLimit = 500;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address Location Name - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtCorAddrAddress);
+        characterLimit = 1000;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtCorAddrCity);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address City - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.txtCorAddrPostalCode);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address Postal Code - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbCorAddrState);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address State - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
+        //================================
+        listOfControls.add(this.cmbCorAddrCountry);
+        characterLimit = 200;
+        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address Country - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
+        listOfControls.clear();
         //...
+        //Note: Addresses still haven't figure out how to put
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Alert Dialog Creator">
     @Override
-    public void alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
+    public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(headerTxt);
         alert.setContentText(contentTxt);
 
         alert.showAndWait();
+        return alert.getResult();
     }
     //</editor-fold>
 
@@ -369,4 +503,60 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
+    private Customer prepareCustomerInforToObj() throws IOException {
+        Customer customer = new Customer();
+
+        Address billToAddr = new Address();
+        billToAddr.setLocationName(this.txtBillToAddrLocationName.getText());
+        billToAddr.setAddress(this.txtBillToAddrAddress.getText());
+        billToAddr.setCity(this.txtBillToAddrCity.getText());
+        billToAddr.setPostalCode(this.txtBillToAddrPostalCode.getText());
+        billToAddr.setState(this.cmbBillToAddrState.getText());
+        billToAddr.setCountry(this.cmbBillToAddrCountry.getText());
+        customer.setBillToAddr(billToAddr);
+
+        Address residentialAddr = new Address();
+        billToAddr.setLocationName(this.txtResidentialAddrLocationName.getText());
+        billToAddr.setAddress(this.txtResidentialAddrAddress.getText());
+        billToAddr.setCity(this.txtResidentialAddrCity.getText());
+        billToAddr.setPostalCode(this.txtResidentialAddrPostalCode.getText());
+        billToAddr.setState(this.cmbResidentialAddrState.getText());
+        billToAddr.setCountry(this.cmbResidentialAddrCountry.getText());
+        customer.setResidentialAddr(residentialAddr);
+
+        Address corrAddr = new Address();
+        corrAddr.setLocationName(this.txtCorAddrLocationName.getText());
+        corrAddr.setAddress(this.txtCorAddrAddress.getText());
+        corrAddr.setCity(this.txtCorAddrCity.getText());
+        corrAddr.setPostalCode(this.txtCorAddrPostalCode.getText());
+        corrAddr.setState(this.cmbCorAddrState.getText());
+        corrAddr.setCountry(this.cmbCorAddrCountry.getText());
+        customer.setCorAddr(corrAddr);
+
+        Contact contact = new Contact();
+        contact.setEmail(this.txtEmail.getText());
+        contact.setMobileNo(this.txtMobileNo.getText());
+        contact.setExt(this.txtExt.getText());
+        contact.setOffPhNo(this.txtOffPhNo.getText());
+        contact.setHomePhNo(this.txtHomePhNo.getText());
+        customer.setContact(contact);
+
+        customer.setAvatarImg(ImageUtils.imgViewToByte(this.imgAvatarImg));
+        customer.setName(this.txtName.getText());
+        customer.setGender(this.cmbGender.getText());
+        customer.setDOB(this.dtDOB.getValue() == null ? null : (java.sql.Date) Date.from(Instant.from(this.dtDOB.getValue().atStartOfDay(ZoneId.systemDefault())))); //https://stackoverflow.com/questions/20446026/get-value-from-date-picker
+        customer.setIC(this.txtIC.getText());
+        customer.setMaritalStatus(this.cmbMaritalStatus.getText());
+        customer.setNationality(this.cmbNationality.getText());
+        customer.setHonorifics(this.cmbHonorifics.getText());
+        customer.setOccupation(this.txtOccupation.getText());
+        customer.setRace(this.cmbRace.getText());
+        customer.setReligion(this.cmbReligion.getText());
+        customer.setReligion(this.cmbReligion.getText());
+        customer.setBankAccNo(this.txtBankAccNo.getText());
+        customer.setCustType(this.cmbCustType.getText());
+        customer.setStatus(this.cmbStatus.getText());
+
+        return customer;
+    }
 }

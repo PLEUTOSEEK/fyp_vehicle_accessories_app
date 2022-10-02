@@ -9,9 +9,11 @@ package Utils;
  *
  * @author Tee Zhuo Xuan
  */
+import io.github.palexdev.materialfx.utils.SwingFXUtils;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import javafx.scene.image.ImageView;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import org.apache.commons.codec.binary.Base64;
@@ -75,4 +77,19 @@ public class ImageUtils {
 
         return bi;
     }
+
+    public static byte[] imgViewToByte(ImageView imgView) throws IOException {
+        BufferedImage bImage = SwingFXUtils.fromFXImage(imgView.getImage(), null);
+        if (bImage != null) {
+            ByteArrayOutputStream s = new ByteArrayOutputStream();
+
+            ImageIO.write(bImage, "png", s);
+            byte[] res = s.toByteArray();
+
+            s.close(); //especially if you are using a different output stream.
+            return res;
+        }
+        return null;
+    }
+
 }

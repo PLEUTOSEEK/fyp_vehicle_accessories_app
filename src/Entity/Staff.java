@@ -21,6 +21,7 @@ public class Staff extends Person {
     private String password;
     private String role;
     private String accountStatus; // haven't put in class diagram
+    private boolean isFrozen;
 
     public Staff() {
         this(null, null, null, "", "", null, "", "", "", "", null, null, null, "", "", "", "", null, null, null, null, "", "", "", "");
@@ -85,4 +86,29 @@ public class Staff extends Person {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
+    public boolean getIsFrozen() {
+        return isFrozen;
+    }
+
+    public void setIsFrozen(boolean isFrozen) {
+        this.isFrozen = isFrozen;
+    }
+
 }

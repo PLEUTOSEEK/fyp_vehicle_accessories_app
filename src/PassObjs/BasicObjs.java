@@ -16,12 +16,17 @@ public class BasicObjs {
 
     public static final String forward = "F";
     public static final String back = "B";
+    public static final String create = "create";
+    public static final String read = "read";
+    public static final String update = "update";
+    public static final String delete = "delete";
 
     private Staff loginStaff;
     private Staff staff;
     private Object obj;
     private DoublyLinkedList<String> fxmlPaths = new DoublyLinkedList<>();
     private String passDirection;
+    private String crud;
 
     public BasicObjs() {
     }
@@ -34,6 +39,17 @@ public class BasicObjs {
         //</editor-fold>
         this.staff = staff;
         this.obj = obj;
+    }
+
+    public BasicObjs(Object obj, String crud) {
+        //<editor-fold defaultstate="collapsed" desc="comment">
+        /*
+        1. HomePage_UI.fxml
+         */
+        //</editor-fold>
+        this.staff = staff;
+        this.obj = obj;
+        this.crud = crud;
     }
 
     public Staff getLoginStaff() {
@@ -74,6 +90,14 @@ public class BasicObjs {
 
     public void setPassDirection(String passDirection) {
         this.passDirection = passDirection;
+    }
+
+    public String getCrud() {
+        return crud;
+    }
+
+    public void setCrud(String crud) {
+        this.crud = crud;
     }
 
 }

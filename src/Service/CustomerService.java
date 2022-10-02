@@ -4,8 +4,10 @@
  */
 package Service;
 
+import DAO.CustomerDAO;
 import Entity.Customer;
-import net.synedra.validatorfx.Validator;
+import static Service.StaffService.generateID;
+import java.util.List;
 
 /**
  *
@@ -13,11 +15,17 @@ import net.synedra.validatorfx.Validator;
  */
 public class CustomerService {
 
-    public static Validator saveCustomer(Customer customer) {
-        return null;
+    public static String saveNewCustomer(Customer customer) {
+        customer.setCustID(generateID());
+        return CustomerDAO.saveNewCustomer(customer);
     }
 
-    private static void validateWithDB(Customer customer) {
+    public static String updateCustomer(Customer customer) {
+        return CustomerDAO.updateCustomer(customer);
+    }
+
+    public static List<Customer> getAllCustomers() {
+        return CustomerDAO.getAllCustomers();
 
     }
 

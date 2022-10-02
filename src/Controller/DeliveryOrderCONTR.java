@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -114,7 +115,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @Override
-    public void alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
+    public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

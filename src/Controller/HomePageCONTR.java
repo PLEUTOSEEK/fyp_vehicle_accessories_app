@@ -27,6 +27,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
@@ -119,7 +120,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goToCreateStaffUI(ActionEvent event) {
-        switchScene("View/Staff_UI.fxml", new BasicObjs(new Staff()), BasicObjs.forward);
+        switchScene("View/Staff_UI.fxml", new BasicObjs(new Staff(), BasicObjs.create), BasicObjs.forward);
     }
 
     @FXML
@@ -134,7 +135,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goToCreateCustUI(ActionEvent event) {
-        switchScene("View/Customer_UI.fxml", new BasicObjs(new Customer()), BasicObjs.forward);
+        switchScene("View/Customer_UI.fxml", new BasicObjs(new Customer(), BasicObjs.create), BasicObjs.forward);
     }
 
     @FXML
@@ -149,7 +150,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goToCreateCIUI(ActionEvent event) {
-        switchScene("View/CustomerInquiry_UI.fxml", new BasicObjs(new CustomerInquiry()), BasicObjs.forward);
+        switchScene("View/CustomerInquiry_UI.fxml", new BasicObjs(new CustomerInquiry(), BasicObjs.create), BasicObjs.forward);
     }
 
     @FXML
@@ -164,7 +165,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goToCreateQuotationUI(ActionEvent event) {
-        switchScene("View/Quotations.fxml", new BasicObjs(new Quotation()), BasicObjs.forward);
+        switchScene("View/Quotations.fxml", new BasicObjs(new Quotation(), BasicObjs.create), BasicObjs.forward);
     }
 
     @FXML
@@ -179,7 +180,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goToCreateSOUI(ActionEvent event) {
-        switchScene("View/SalesOrder_UI.fxml", new BasicObjs(new SalesOrder()), BasicObjs.forward);
+        switchScene("View/SalesOrder_UI.fxml", new BasicObjs(new SalesOrder(), BasicObjs.create), BasicObjs.forward);
 
     }
 
@@ -200,7 +201,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goToCreateTOUI(ActionEvent event) {
-        switchScene("View/TransferOrder_UI.fxml", new BasicObjs(new TransferOrder()), BasicObjs.forward);
+        switchScene("View/TransferOrder_UI.fxml", new BasicObjs(new TransferOrder(), BasicObjs.create), BasicObjs.forward);
     }
 
     @FXML
@@ -215,7 +216,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goToCreateRDN(ActionEvent event) {
-        switchScene("View/ReturnDeliveryNote_UI.fxml", new BasicObjs(new ReturnDeliveryNote()), BasicObjs.forward);
+        switchScene("View/ReturnDeliveryNote_UI.fxml", new BasicObjs(new ReturnDeliveryNote(), BasicObjs.create), BasicObjs.forward);
     }
 
     @FXML
@@ -230,7 +231,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goToCreateInvoiceUI(ActionEvent event) {
-        switchScene("View/Invoice_UI.fxml", new BasicObjs(new Invoice()), BasicObjs.forward);
+        switchScene("View/Invoice_UI.fxml", new BasicObjs(new Invoice(), BasicObjs.create), BasicObjs.forward);
     }
 
     @FXML
@@ -240,7 +241,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goToCreatePaymentUI(ActionEvent event) {
-        switchScene("View/Payment_UI.fxml", new BasicObjs(new Receipt()), BasicObjs.forward);
+        switchScene("View/Payment_UI.fxml", new BasicObjs(new Receipt(), BasicObjs.create), BasicObjs.forward);
 
     }
 
@@ -329,7 +330,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @Override
-    public void alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
+    public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
