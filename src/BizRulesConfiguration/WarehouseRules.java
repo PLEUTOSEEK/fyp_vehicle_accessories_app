@@ -4,10 +4,29 @@
  */
 package BizRulesConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Tee Zhuo Xuan
  */
 public class WarehouseRules {
 
+    private List<String> shipmentTerms;
+
+    public void AccountingRules() {
+        shipmentTerms = new ArrayList<>();
+
+        shipmentTerms.add("EXW");
+        shipmentTerms.add("DDP");
+    }
+
+    public List<String> getShipmentTerms() {
+        return shipmentTerms;
+    }
+
+    public void setShipmentTerms(List<String> shipmentTerms) {
+        this.shipmentTerms = shipmentTerms;
+    }
 }

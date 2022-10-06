@@ -191,34 +191,37 @@ public class CustomerDAO {
         String query = "";
         ResultSet rs = null;
 
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        customer.setModifiedDateTime(timestamp);
+
         try {
             conn = SQLDatabaseConnection.openConn();
 
             query = "UPDATE Customer SET"
-                    + "Bill_To_Addr = ? "
-                    + "Avatar_Img = ? "
-                    + "Name = ? "
-                    + "Gender = ? "
-                    + "DOB = ? "
-                    + "IC = ? "
-                    + "Marital_Status = ? "
-                    + "Nationality = ? "
-                    + "Honorifics = ? "
-                    + "Residential_Address = ? "
-                    + "Corresponding_Address = ? "
-                    + "Email = ? "
-                    + "Mobile_No = ? "
-                    + "Extension_No = ? "
-                    + "Office_Phone_No = ? "
-                    + "Home_Phone_No = ? "
-                    + "Occupation = ? "
-                    + "Race = ? "
-                    + "Religion = ? "
-                    + "Bank_Acc_Provider = ? "
-                    + "Bank_Acc_No = ? "
-                    + "Customer_Type = ? "
-                    + "Status = ? "
-                    + "Created_Date = ? "
+                    + "Bill_To_Addr = ?, "
+                    + "Avatar_Img = ?, "
+                    + "Name = ?, "
+                    + "Gender = ?, "
+                    + "DOB = ?, "
+                    + "IC = ?, "
+                    + "Marital_Status = ?, "
+                    + "Nationality = ?, "
+                    + "Honorifics = ?, "
+                    + "Residential_Address = ?, "
+                    + "Corresponding_Address = ?, "
+                    + "Email = ?, "
+                    + "Mobile_No = ?, "
+                    + "Extension_No = ?, "
+                    + "Office_Phone_No = ?, "
+                    + "Home_Phone_No = ?, "
+                    + "Occupation = ?, "
+                    + "Race = ?, "
+                    + "Religion = ?, "
+                    + "Bank_Acc_Provider = ?, "
+                    + "Bank_Acc_No = ?, "
+                    + "Customer_Type = ?, "
+                    + "Status = ?, "
+                    + "Created_Date = ?, "
                     + "Modified_Date_Time = ? "
                     + "WHERE Customer_ID = ?";
             ps = conn.prepareStatement(query);

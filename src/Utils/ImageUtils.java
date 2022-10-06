@@ -9,16 +9,21 @@ package Utils;
  *
  * @author Tee Zhuo Xuan
  */
+import adt.DoublyLinkedList;
 import io.github.palexdev.materialfx.utils.SwingFXUtils;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import org.apache.commons.codec.binary.Base64;
 
 public class ImageUtils {
+
+    public static final String DELIMETER = "Gg5EyteKazS78TPFZ7D8";
 
     // convert BufferedImage to byte[]
     public static byte[] toByteArray(BufferedImage bi, String format)
@@ -92,4 +97,62 @@ public class ImageUtils {
         return null;
     }
 
+    public static Image byteToImg(byte[] bytes) throws IOException {
+
+        if (bytes == null) {
+            return null;
+        } else {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+            ImageIO.write((RenderedImage) toBufferedImage(bytes), "png", out);
+            out.flush();
+
+            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+            return new javafx.scene.image.Image(in);
+        }
+
+    }
+
+    public static DoublyLinkedList<String> splitImgStr(String imgStr) {
+        String[] splittedImgStr = imgStr.split(DELIMETER);
+
+        DoublyLinkedList<String> processedSplittedImgStr = new DoublyLinkedList<>();
+
+        for (String str : splittedImgStr) {
+            processedSplittedImgStr.addLast(str);
+        }
+
+        return processedSplittedImgStr;
+    }
+
+    public static String concatImgStr(DoublyLinkedList<String> processedSplittedImgStr) {
+
+        String[] imgStrArr = new String[processedSplittedImgStr.getLength()];
+        imgStrArr = processedSplittedImgStr.toArray(imgStrArr);
+        return String.join(DELIMETER, imgStrArr);
+
+    }
+
+    public static byte[] bufferedImgToByte(BufferedImage bi) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bi, "png", baos);
+        byte[] byteArr = baos.toByteArray();
+        return byteArr;
+    }
+
+    public static String byteToEncodedStr(byte[] byteArr) {
+        if (byteArr == null) {
+            return null;
+        } else {
+            return Base64.encodeBase64String(byteArr);
+        }
+    }
+
+    public static byte[] encodedStrToByte(String encodedStr) {
+        if (encodedStr == null) {
+            return null;
+        } else {
+            return Base64.decodeBase64(encodedStr);
+        }
+    }
 }

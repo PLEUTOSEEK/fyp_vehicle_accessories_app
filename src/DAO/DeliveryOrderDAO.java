@@ -8,7 +8,6 @@ import Entity.DeliveryOrder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -86,7 +85,7 @@ public class DeliveryOrderDAO {
                 deliveryOrder.setStatus(rs.getString("DO_Status"));
                 deliveryOrder.setCreatedDate(rs.getTimestamp("DO_Created_Date"));
                 deliveryOrder.setActualCreatedDateTime(rs.getTimestamp("DO_Actual_Created_Date"));
-                deliveryOrder.setSignedDocPic(Base64.decodeBase64(rs.getString("DO_Signed_Doc_Pic")));
+                deliveryOrder.setSignedDocPic(rs.getString("DO_Signed_Doc_Pic"));
                 deliveryOrder.setModifiedDateTime(rs.getTimestamp("DO_Modified_Date_Time"));
                 return deliveryOrder;
             } else {

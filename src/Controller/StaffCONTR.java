@@ -5,12 +5,14 @@
 package Controller;
 
 import BizRulesConfiguration.StaffRules;
+import DAO.AddressDAO;
 import DAO.StaffDAO;
 import Entity.Address;
 import Entity.Contact;
 import Entity.Place;
 import Entity.Staff;
 import PassObjs.BasicObjs;
+import Service.AddressService;
 import Service.StaffService;
 import Utils.ImageUtils;
 import Utils.ValidationUtils;
@@ -30,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -44,8 +48,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javax.imageio.ImageIO;
 import net.synedra.validatorfx.Validator;
 
@@ -59,6 +63,7 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
     private BasicObjs passObj;
     private Validator validator = new Validator();
     private Staff staffInDraft;
+    private final String newWindow = "New Window";
 
     @FXML
     private MFXCircleToggleNode btnBack;
@@ -140,6 +145,10 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
     private MFXButton btnUploadImage;
 
     StaffRules staffRules = new StaffRules();
+    @FXML
+    private MFXCircleToggleNode ctnWorkPlaceSelection;
+    @FXML
+    private MFXCircleToggleNode ctnReportToSelection;
 
     /**
      * Initializes the controller class.
@@ -157,9 +166,124 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 inputValidation();
 
                 receiveData();
+
+                if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
+                    try {
+                        fieldFillIn();
+                    } catch (IOException ex) {
+                        Logger.getLogger(StaffCONTR.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (passObj.getCrud().equals(BasicObjs.read)) {
+                    isViewMode(true);
+                }
             }
         }
         );
+    }
+
+    private void isViewMode(boolean disable) { // if true
+        if (disable == true) {
+            this.btnSave.setText("Update");
+        } else {
+            this.btnSave.setText("Save");
+        }
+        this.btnDiscard.setDisable(disable);
+        this.txtStaffID.setDisable(disable);
+        this.dtDOB.setDisable(disable); // date view mode
+        this.cmbHonorifics.setDisable(disable);
+        this.txtName.setDisable(disable);
+        this.cmbGender.setDisable(disable);
+        this.cmbMaritalStatus.setDisable(disable);
+        this.txtIC.setDisable(disable);
+        this.cmbNationality.setDisable(disable);
+        this.cmbRace.setDisable(disable);
+        this.cmbReligion.setDisable(disable);
+        this.txtMobileNo.setDisable(disable);
+        this.txtEmail.setDisable(disable);
+        this.txtExt.setDisable(disable);
+        this.txtOffPhNo.setDisable(disable);
+        this.txtHomePhNo.setDisable(disable);
+        this.btnUploadImage.setDisable(disable);
+        this.cmbStatus.setDisable(disable);
+
+        this.txtResidentialAddrLocationName.setDisable(disable);
+        this.txtResidentialAddrAddress.setDisable(disable);
+        this.txtResidentialAddrCity.setDisable(disable);
+        this.txtResidentialAddrPostalCode.setDisable(disable);
+        this.cmbResidentialAddrState.setDisable(disable);
+        this.cmbResidentialAddrCountry.setDisable(disable);
+
+        this.txtCorAddrLocationName.setDisable(disable);
+        this.txtCorAddrAddress.setDisable(disable);
+        this.txtCorAddrCity.setDisable(disable);
+        this.txtCorAddrPostalCode.setDisable(disable);
+        this.cmbCorAddrState.setDisable(disable);
+        this.cmbCorAddrCountry.setDisable(disable);
+
+        this.cmbEmpType.setDisable(disable);
+        this.txtWorkPlaceID.setDisable(disable);
+        this.txtReportTo.setDisable(disable);
+        this.dtEntryDate.setDisable(disable);
+        this.txtOccupation.setDisable(disable);
+        this.cmbRole.setDisable(disable);
+
+        this.ctnReportToSelection.setDisable(disable);
+        this.ctnWorkPlaceSelection.setDisable(disable);
+        // set all column become diable
+    }
+
+    private void fieldFillIn() throws IOException {
+        if (passObj.getObj() != null) {
+            //fill all data column with object information
+            Staff staff = (Staff) passObj.getObj();
+
+            this.txtStaffID.setText(staff.getStaffID());
+            this.cmbHonorifics.setText(staff.getHonorifics());
+            this.txtName.setText(staff.getName());
+            this.cmbGender.setText(staff.getGender());
+            this.cmbMaritalStatus.setText(staff.getMaritalStatus());
+            this.dtDOB.setValue(Instant.ofEpochMilli(staff.getDOB().getTime())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
+            this.txtIC.setText(staff.getIC());
+            this.cmbNationality.setText(staff.getNationality());
+            this.cmbRace.setText(staff.getRace());
+            this.cmbReligion.setText(staff.getReligion());
+            this.txtMobileNo.setText(staff.getContact().getMobileNo());
+            this.txtEmail.setText(staff.getContact().getEmail());
+            this.txtExt.setText(staff.getContact().getExt());
+            this.txtOffPhNo.setText(staff.getContact().getOffPhNo());
+            this.txtHomePhNo.setText(staff.getContact().getHomePhNo());
+            this.cmbStatus.setText(staff.getStatus());
+
+            this.txtResidentialAddrLocationName.setText(staff.getResidentialAddr().getLocationName());
+            this.txtResidentialAddrAddress.setText(staff.getResidentialAddr().getAddress());
+            this.txtResidentialAddrCity.setText(staff.getResidentialAddr().getCity());
+            this.txtResidentialAddrPostalCode.setText(staff.getResidentialAddr().getPostalCode());
+            this.cmbResidentialAddrState.setText(staff.getResidentialAddr().getState());
+            this.cmbResidentialAddrCountry.setText(staff.getResidentialAddr().getCountry());
+
+            this.txtCorAddrLocationName.setText(staff.getCorAddr().getLocationName());
+            this.txtCorAddrAddress.setText(staff.getCorAddr().getAddress());
+            this.txtCorAddrCity.setText(staff.getCorAddr().getCity());
+            this.txtCorAddrPostalCode.setText(staff.getCorAddr().getPostalCode());
+            this.cmbCorAddrState.setText(staff.getCorAddr().getState());
+            this.cmbCorAddrCountry.setText(staff.getCorAddr().getCountry());
+
+            this.cmbEmpType.setText(staff.getEmpType());
+            this.txtWorkPlaceID.setText(staff.getWorkPlace().getPlaceID());
+            this.txtReportTo.setText(staff.getReportTo().getStaffID());
+            this.dtEntryDate.setValue(Instant.ofEpochMilli(staff.getEntryDate().getTime())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
+            this.txtOccupation.setText(staff.getOccupation());
+            this.cmbRole.setText(staff.getRole());
+
+            BufferedImage bi = ImageUtils.toBufferedImage(staff.getAvatarImg());
+            Image img = SwingFXUtils.toFXImage(bi, null);
+            this.imgAvatarImg.setImage(img);
+        }
     }
 
     private void initializeComboSelections() {
@@ -173,22 +297,6 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
         //((MFXComboBox<String>) this).setItems(FXCollections.observableList(staffRules.getAccStatuses()));
         ((MFXComboBox<String>) this.cmbRole).setItems(FXCollections.observableList(staffRules.getRoles()));
         ((MFXComboBox<String>) this.cmbEmpType).setItems(FXCollections.observableList(staffRules.getEmpTypes()));
-    }
-
-    @FXML
-    private void goBackPrevious(MouseEvent event) {
-        if (event.isPrimaryButtonDown() == true) {
-            ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
-                    "Warning",
-                    "Validation Message",
-                    "Record haven't been saved.\nAre you sure you want to continue?");
-
-            if (alertBtnClicked == ButtonType.OK) {
-                switchScene(passObj.getFxmlPaths().getLast().toString(), new BasicObjs(), BasicObjs.back);
-            } else if (alertBtnClicked == ButtonType.CANCEL) {
-                //nothing need to do, remain same page
-            }
-        }
     }
 
     @Override
@@ -530,28 +638,26 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @FXML
-    private void discard(MouseEvent event) {
+    private void goBackPrevious(MouseEvent event) {
         if (event.isPrimaryButtonDown() == true) {
-
-            ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
-                    "Warning",
-                    "Validation Message",
-                    "Once discarded, new data provided for current record will be gone.\nAre you sure you want to continue?");
-
-            if (alertBtnClicked == ButtonType.OK) {
-                switchScene(passObj.getFxmlPaths().getLast().toString(), new BasicObjs(), BasicObjs.back);
-            } else if (alertBtnClicked == ButtonType.CANCEL) {
-                //nothing need to do, remain same page
+            if (event.isPrimaryButtonDown() == true) {
+                quitWindow("Warning", "Validation Message", "Record haven't been saved.\nAre you sure you want to continue?");
             }
         }
     }
 
-    private void directClose(WindowEvent e) {
+    @FXML
+    private void discardCurrentData(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            quitWindow("Warning", "Validation Message", "Record will be discarded.\nAre you sure you want to continue?");
+        }
+    }
 
+    private void quitWindow(String title, String headerTxt, String contentTxt) {
         ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
-                "Warning",
-                "Validation Message",
-                "Data unsaved.\nAre you sure you want to continue?");
+                title,
+                headerTxt,
+                contentTxt);
 
         if (alertBtnClicked == ButtonType.OK) {
             switchScene(passObj.getFxmlPaths().getLast().toString(), new BasicObjs(), BasicObjs.back);
@@ -564,6 +670,11 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
     private void saveStaff(MouseEvent event) throws IOException {
         if (event.isPrimaryButtonDown() == true) {
 
+            if (!this.btnSave.getText().equals("Save")) {
+                isViewMode(false);
+                return;
+            }
+
             if (validator.containsErrors()) {
                 alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
@@ -572,8 +683,14 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
             staffInDraft = prepareStaffInforToObj();
 
             if (this.passObj.getCrud().equals(BasicObjs.create)) {
+                staffInDraft.getResidentialAddr().setAddressID(AddressDAO.saveNewAddress(staffInDraft.getResidentialAddr()));
+                staffInDraft.getCorAddr().setAddressID(AddressDAO.saveNewAddress(staffInDraft.getCorAddr()));
                 StaffService.saveNewStaff(staffInDraft);
-            } else if (this.passObj.getCrud().equals(BasicObjs.update)) {
+            } else if (this.passObj.getCrud().equals(BasicObjs.update) || this.passObj.getCrud().equals(BasicObjs.read)) {
+
+                AddressService.updateAddress(staffInDraft.getResidentialAddr());
+                AddressService.updateAddress(staffInDraft.getResidentialAddr());
+
                 StaffService.updateStaff(staffInDraft);
             }
         }
@@ -581,6 +698,7 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
 
     private Staff prepareStaffInforToObj() throws IOException {
         Staff staff = new Staff();
+        staff.setStaffID(this.txtStaffID.getText());
         staff.setAvatarImg(ImageUtils.imgViewToByte(this.imgAvatarImg));
         staff.setName(this.txtName.getText());
         staff.setGender(this.cmbGender.getText());
@@ -637,4 +755,61 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
 
         return staff;
     }
+
+    @FXML
+    private void openReportToSelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new Staff());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtReportTo.setText(((Staff) receiveObj.getObj()).getStaffID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+        }
+    }
+
+    @FXML
+    private void openWorkPlaceSelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new Place());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtWorkPlaceID.setText(((Place) receiveObj.getObj()).getPlaceID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+        }
+    }
+
 }

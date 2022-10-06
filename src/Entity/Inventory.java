@@ -33,4 +33,52 @@ public class Inventory extends Entity {
         this.ttlQty = ttlQty;
     }
 
+    public String getInventoryID() {
+        return inventoryID;
+    }
+
+    public void setInventoryID(String inventoryID) {
+        this.inventoryID = inventoryID;
+    }
+
+    public Place getStorePlace() {
+        return storePlace;
+    }
+
+    public void setStorePlace(Place storePlace) {
+        this.storePlace = storePlace;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public Integer getReservedQty() {
+        return reservedQty;
+    }
+
+    public void setReservedQty(Integer reservedQty) {
+        this.reservedQty = reservedQty;
+    }
+
+    public Integer getReadyQty() {
+        return readyQty;
+    }
+
+    public void setReadyQty(Integer readyQty) {
+        this.readyQty = readyQty;
+    }
+
+    public Integer getTtlQty() {
+        return ttlQty;
+    }
+
+    public void setTtlQty(Integer ttlQty) {
+        this.ttlQty = ttlQty;
+    }
+
 }

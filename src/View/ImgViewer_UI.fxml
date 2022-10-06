@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" stylesheets="@../Material/css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ImageViewer_UI">
+   <children>
+      <MFXScrollPane prefHeight="1000.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <GridPane prefHeight="747.0" prefWidth="1196.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <MFXCircleToggleNode fx:id="btnNext" onMousePressed="#goForward" prefHeight="87.0" prefWidth="67.0" size="25.0" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="ANGLE_RIGHT" size="35" />
+                     </graphic>
+                  </MFXCircleToggleNode>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="650.0" stroke="#5e24c3" strokeType="INSIDE" width="700.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                  <ImageView fx:id="imgDocs" fitHeight="650.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                     <image>
+                        <Image url="@../../../../../Downloads/Picture1.png" />
+                     </image>
+                  </ImageView>
+                  <MFXCircleToggleNode fx:id="btnPrevious" onMousePressed="#goBackPrevious" prefHeight="87.0" prefWidth="67.0" size="25.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="ANGLE_LEFT" size="35" />
+                     </graphic>
+                  </MFXCircleToggleNode>
+                  <MFXButton id="custom" fx:id="btnRemove" minHeight="27.0" minWidth="70.0" onMousePressed="#removeCurrentImage" text="Remove" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
+                  <MFXButton fx:id="btnUploadImg" buttonType="RAISED" minHeight="27.0" minWidth="70.0" onMousePressed="#uploadImage" styleClass="outline-button" text="Upload" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
+                  <MFXButton fx:id="btnDone" buttonType="RAISED" minHeight="27.0" minWidth="70.0" onMousePressed="#saveImages" styleClass="outline-button" text="Done" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
+               </children>
+            </GridPane>
+         </content>
+      </MFXScrollPane>
+   </children>
+</AnchorPane>

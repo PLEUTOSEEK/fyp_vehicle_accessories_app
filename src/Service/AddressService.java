@@ -5,6 +5,7 @@
 package Service;
 
 import DAO.AddressDAO;
+import Entity.Address;
 import Structures.CodeStructure;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -44,6 +45,16 @@ public class AddressService {
             newIDStruct.setSeqNum(String.format("%03d", 1));
         }
         return CodeStructure.structToStr(newIDStruct);
+
+    }
+
+    public static String updateAddress(Address addr) {
+        return AddressDAO.updateAddress(addr);
+    }
+
+    public static String saveNewAddress(Address addr) {
+        addr.setAddressID(generateID());
+        return AddressDAO.saveNewAddress(addr);
 
     }
 }

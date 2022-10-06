@@ -3,15 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Service/CustomerService.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/DAO/QuotationDAO.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Utils/DateFilter.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/EntityOverviewCONTR.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/DAO/CustomerDAO.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Entity/Quotation.java</file>
+            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/CollectorCONTR.java</file>
+            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Entity/Document.java</file>
+            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/CustomerInquiryCONTR.java</file>
+            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Utils/ImageUtils.java</file>
+            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Service/ImageViewerService.java</file>
+            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Entity/CustomerInquiry.java</file>
             <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/CustomerCONTR.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/StaffCONTR.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/DAO/StaffDAO.java</file>
+            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/ImageViewer_UI.java</file>
+            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/DAO/CustomerInquiryDAO.java</file>
         </group>
     </open-files>
 </project-private>

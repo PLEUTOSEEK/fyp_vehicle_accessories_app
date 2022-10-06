@@ -27,7 +27,7 @@ public class TransferOrder<T> extends Document {
         this(null, null, "", null, null, "", null, null, "", null, null, null, null, null);
     }
 
-    public TransferOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, Staff PIC, Place destination, String reqType, T reqTypeRef, List<Item> items, Staff issuedBy, Staff transferBy, Customer itemReceivedBy) {
+    public TransferOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Staff PIC, Place destination, String reqType, T reqTypeRef, List<Item> items, Staff issuedBy, Staff transferBy, Customer itemReceivedBy) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.PIC = PIC;
         this.destination = destination;

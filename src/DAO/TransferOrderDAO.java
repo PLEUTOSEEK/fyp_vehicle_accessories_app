@@ -9,7 +9,6 @@ import Entity.TransferOrder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -56,7 +55,7 @@ public class TransferOrderDAO {
             ps.setString(9, transferOrder.getStatus());
             ps.setTimestamp(10, transferOrder.getCreatedDate());
             ps.setTimestamp(11, transferOrder.getActualCreatedDateTime());
-            ps.setString(12, Base64.encodeBase64String(transferOrder.getSignedDocPic()));
+            ps.setString(12, transferOrder.getSignedDocPic());
             ps.setTimestamp(13, transferOrder.getModifiedDateTime());
 
             ps.execute();
@@ -109,7 +108,7 @@ public class TransferOrderDAO {
                 transferOrder.setStatus(rs.getString("TO_Status"));
                 transferOrder.setCreatedDate(rs.getTimestamp("TO_Created_Date"));
                 transferOrder.setActualCreatedDateTime(rs.getTimestamp(rs.getString("TO_Actual_Created_Date")));
-                transferOrder.setSignedDocPic(Base64.decodeBase64(rs.getString("TO_Signed_Doc_Pic")));
+                transferOrder.setSignedDocPic(rs.getString("TO_Signed_Doc_Pic"));
                 transferOrder.setModifiedDateTime(rs.getTimestamp("TO_Modified_Date_Time"));
                 return transferOrder;
             } else {

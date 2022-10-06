@@ -216,8 +216,6 @@ public class StaffDAO {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         //pre-preparation before perform saving staff data
-        staff.getResidentialAddr().setAddressID(AddressDAO.saveNewAddress(staff.getResidentialAddr()));
-        staff.getCorAddr().setAddressID(AddressDAO.saveNewAddress(staff.getCorAddr()));
         staff.setCreatedDate(timestamp);
         staff.setModifiedDateTime(timestamp);
         staff.setIsFrozen(false);

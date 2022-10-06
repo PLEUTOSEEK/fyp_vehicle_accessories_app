@@ -14,10 +14,10 @@ public class Document extends Entity {
 
     protected String code;
     protected Timestamp actualCreatedDateTime;
-    protected byte[] signedDocPic;
+    protected String signedDocPic; // prev iously is byte[]
     protected String status;
 
-    public Document(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status) {
+    public Document(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status) {
         super(createdDateTime, modifiedDateTime);
         this.code = code;
         this.actualCreatedDateTime = actualCreatedDateTime;
@@ -41,11 +41,11 @@ public class Document extends Entity {
         this.actualCreatedDateTime = actualCreatedDateTime;
     }
 
-    public byte[] getSignedDocPic() {
+    public String getSignedDocPic() {
         return signedDocPic;
     }
 
-    public void setSignedDocPic(byte[] signedDocPic) {
+    public void setSignedDocPic(String signedDocPic) {
         this.signedDocPic = signedDocPic;
     }
 

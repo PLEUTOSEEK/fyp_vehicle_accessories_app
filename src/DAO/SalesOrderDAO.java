@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -78,7 +77,7 @@ public class SalesOrderDAO {
             ps.setString(20, salesOrder.getStatus());
             ps.setTimestamp(21, salesOrder.getCreatedDate());
             ps.setTimestamp(22, salesOrder.getActualCreatedDateTime());
-            ps.setString(23, Base64.encodeBase64String(salesOrder.getSignedDocPic()));
+            ps.setString(23, salesOrder.getSignedDocPic());
             ps.setTimestamp(24, salesOrder.getModifiedDateTime());
             ps.execute();
             return true;
@@ -139,7 +138,7 @@ public class SalesOrderDAO {
                 salesOrder.setStatus(rs.getString("SO_Status"));
                 salesOrder.setCreatedDate(rs.getTimestamp("SO_Created_Date"));
                 salesOrder.setActualCreatedDateTime(rs.getTimestamp("SO_Actual_Created_Date"));
-                salesOrder.setSignedDocPic(Base64.decodeBase64(rs.getString("SO_Signed_Doc_Pic")));
+                salesOrder.setSignedDocPic(rs.getString("SO_Signed_Doc_Pic"));
                 salesOrder.setModifiedDateTime(rs.getTimestamp("SO_Modified_Date_Time"));
 
                 return salesOrder;

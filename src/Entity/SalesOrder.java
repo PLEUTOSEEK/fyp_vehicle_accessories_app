@@ -39,7 +39,7 @@ public class SalesOrder extends Document {
         this(null, null, "", null, null, "", null, null, "", null, "", "", null, "", null, "", "", null, null, null, null, null, null, null, null);
     }
 
-    public SalesOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, Customer billToCust, CollectAddress deliverToCust, String custPOReference, Quotation quotRef, String referenceType, String reference, Staff salesPerson, String currencyCode, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy, Staff releasedAVerifiedBy, Customer customerSignature) {
+    public SalesOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Customer billToCust, CollectAddress deliverToCust, String custPOReference, Quotation quotRef, String referenceType, String reference, Staff salesPerson, String currencyCode, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy, Staff releasedAVerifiedBy, Customer customerSignature) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.billToCust = billToCust;
         this.deliverToCust = deliverToCust;

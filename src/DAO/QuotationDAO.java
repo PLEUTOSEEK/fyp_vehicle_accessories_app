@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import Entity.Quotation;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,10 +12,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.codec.binary.Base64;
-
-import Entity.Quotation;
 
 /**
  *
@@ -83,7 +80,7 @@ public class QuotationDAO {
             ps.setString(20, quotation.getStatus());
             ps.setTimestamp(21, quotation.getCreatedDate());
             ps.setTimestamp(22, quotation.getActualCreatedDateTime());
-            ps.setString(23, Base64.encodeBase64String(quotation.getSignedDocPic())); // need to change to encoded 64 string
+            ps.setString(23, quotation.getSignedDocPic()); // need to change to encoded 64 string
             ps.setTimestamp(24, quotation.getModifiedDateTime());
 
             ps.execute();
@@ -121,14 +118,14 @@ public class QuotationDAO {
             ps.setString(1, code);
 
             rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 quotation = new Quotation(
                         rs.getTimestamp("QUOT_Created_Date"),
                         rs.getTimestamp("QUOT_Modified_Date_Time"),
                         rs.getString("QUOT_Quot_ID"),
                         rs.getTimestamp("QUOT_Actual_Created_Date"),
-                        Base64.decodeBase64(rs.getString("signedDocPic")),
+                        rs.getString("signedDocPic"),
                         rs.getString("QUOT_Status"),
                         CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("QUOT_CI_ID")),
                         rs.getString("QUOT_Reference_Type"),
@@ -229,7 +226,7 @@ public class QuotationDAO {
                         rs.getTimestamp("QUOT_Modified_Date_Time"),
                         rs.getString("QUOT_Quot_ID"),
                         rs.getTimestamp("QUOT_Actual_Created_Date"),
-                        rs.getString("QUOT_Signed_Doc_Pic") == null ? null : Base64.decodeBase64(rs.getString("QUOT_Signed_Doc_Pic")),
+                        rs.getString("QUOT_Signed_Doc_Pic"),
                         rs.getString("QUOT_Status"),
                         CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("QUOT_CI_ID")),
                         rs.getString("QUOT_Reference_Type"),

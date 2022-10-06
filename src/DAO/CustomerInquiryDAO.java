@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -17,7 +16,7 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class CustomerInquiryDAO {
 
-    public static boolean saveNewCustomerInquiry(CustomerInquiry customerInquiry) throws SQLException {
+    public static String saveNewCustomerInquiry(CustomerInquiry customerInquiry) throws SQLException {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -67,14 +66,14 @@ public class CustomerInquiryDAO {
             ps.setString(16, customerInquiry.getStatus());
             ps.setTimestamp(17, customerInquiry.getCreatedDate());
             ps.setTimestamp(18, customerInquiry.getActualCreatedDateTime());
-            ps.setString(19, Base64.encodeBase64String(customerInquiry.getSignedDocPic())); // need to change to encoded 64 string
+            ps.setString(19, customerInquiry.getSignedDocPic()); // need to change to encoded 64 string
             ps.setTimestamp(20, customerInquiry.getModifiedDateTime());
             ps.execute();
 
-            return true;
+            return customerInquiry.getCode();
 
         } catch (Exception e) {
-            return false;
+            return null;
         } finally {
             try {
                 ps.close();
@@ -111,7 +110,7 @@ public class CustomerInquiryDAO {
                         rs.getTimestamp("Modified_Date_Time"),
                         rs.getString("CI_ID"),
                         rs.getTimestamp("CI_Actual_Created_Date"),
-                        rs.getString("CI_Signed_Doc_Pic") == null ? null : Base64.decodeBase64(rs.getString("CI_Signed_Doc_Pic")),
+                        rs.getString("CI_Signed_Doc_Pic"),
                         rs.getString("CI_Status"),
                         rs.getString("CI_Reference_Type"),
                         rs.getString("CI_Reference"),
@@ -150,7 +149,7 @@ public class CustomerInquiryDAO {
         }
     }
 
-    public static String getLatestCode(String code) throws SQLException {
+    public static String getLatestCode() throws SQLException {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -170,6 +169,76 @@ public class CustomerInquiryDAO {
 
             return latestCode;
 
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static String updateCustomerInquiry(CustomerInquiry customerInquiry) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE CustomerInquiry SET "
+                    + "Reference_Type = ?, "
+                    + "Reference = ?, "
+                    + "Bill_Tp_Cust = ?, "
+                    + "Deliver_To = ?, "
+                    + "Sales_Person = ?, "
+                    + "Currency_Code = ?, "
+                    + "Required_Delivery_Date = ?, "
+                    + "Payment_Term = ?, "
+                    + "Shipment_Term = ?, "
+                    + "Gross = ?, "
+                    + "Discount = ?, "
+                    + "Sub_Total = ?, "
+                    + "Nett = ?, "
+                    + "issued_By = ?, "
+                    + "Status = ?, "
+                    + "Created_Date = ?, "
+                    + "Actual_Created_date = ?, "
+                    + "Signed_Doc_Pic = ?, "
+                    + "Modified_Date_Time = ? "
+                    + "WHERE CI_ID = ? ";
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, customerInquiry.getReferenceType());
+            ps.setString(2, customerInquiry.getReference());
+            ps.setString(3, customerInquiry.getBillToCust().getCustID());
+            ps.setString(4, customerInquiry.getDeliverToCust().getCollectAddrID());
+            ps.setString(5, customerInquiry.getSalesPerson().getStaffID());
+            ps.setString(6, customerInquiry.getCurrencyCode());
+            ps.setDate(7, customerInquiry.getRequiredDeliveryDate());
+            ps.setString(8, customerInquiry.getPymtTerm());
+            ps.setString(9, customerInquiry.getShipmentTerm());
+            ps.setBigDecimal(10, customerInquiry.getGross());
+            ps.setBigDecimal(11, customerInquiry.getDiscount());
+            ps.setBigDecimal(12, customerInquiry.getSubTotal());
+            ps.setBigDecimal(13, customerInquiry.getNett());
+            ps.setString(14, customerInquiry.getIssuedBy().getStaffID());
+            ps.setString(15, customerInquiry.getStatus());
+            ps.setTimestamp(16, customerInquiry.getCreatedDate());
+            ps.setTimestamp(17, customerInquiry.getActualCreatedDateTime());
+            ps.setString(18, customerInquiry.getSignedDocPic()); // need to change to encoded 64 string
+            ps.setTimestamp(19, customerInquiry.getModifiedDateTime());
+            ps.setString(20, customerInquiry.getCode());
+
+            ps.execute();
+            return customerInquiry.getCode();
         } catch (Exception e) {
             return null;
         } finally {

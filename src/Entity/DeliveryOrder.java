@@ -31,7 +31,7 @@ public class DeliveryOrder extends Document {
         this(null, null, "", null, null, "", null, null, null, null, "", "", null, null, null, null, null);
     }
 
-    public DeliveryOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, Place deliverFr, SalesOrder SO, Date deliveryDate, ReturnDeliveryNote RDN, String referenceType, String reference, List<Item> items, Staff issuedBy, Staff releasedAVerifiedBy, Staff deliveryBy, Customer itemReceivedBy) {
+    public DeliveryOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Place deliverFr, SalesOrder SO, Date deliveryDate, ReturnDeliveryNote RDN, String referenceType, String reference, List<Item> items, Staff issuedBy, Staff releasedAVerifiedBy, Staff deliveryBy, Customer itemReceivedBy) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.deliverFr = deliverFr;
         this.SO = SO;

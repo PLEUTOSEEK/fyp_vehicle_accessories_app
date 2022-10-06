@@ -13,14 +13,14 @@ import java.sql.Timestamp;
 public class CollectAddress extends Entity {
 
     private String collectAddrID;
-    private Customer customerID;
+    private Customer customer;
     private Person person;
     private Address addr;
 
     public CollectAddress(Timestamp createdDateTime, Timestamp modifiedDateTime, String collectAddrID, Customer customerID, Person person, Address addr) {
         super(createdDateTime, modifiedDateTime);
         this.collectAddrID = collectAddrID;
-        this.customerID = customerID;
+        this.customer = customerID;
         this.person = person;
         this.addr = addr;
     }
@@ -53,4 +53,22 @@ public class CollectAddress extends Entity {
         this.addr = addr;
     }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CollectAddress) {
+            CollectAddress collAddr = ((CollectAddress) obj);
+            if (this.getCollectAddrID().equals(collAddr.getCollectAddrID())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -35,7 +35,7 @@ public class CustomerInquiry extends Document {
         this(null, null, "", null, null, "", "", "", null, null, "", null, "", "", null, null, null, null, null, null, null);
     }
 
-    public CustomerInquiry(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, String referenceType, String reference, Customer billToCust, CollectAddress deliverToCust, String currencyCode, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, Staff salesPerson, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy) {
+    public CustomerInquiry(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, String referenceType, String reference, Customer billToCust, CollectAddress deliverToCust, String currencyCode, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, Staff salesPerson, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.referenceType = referenceType;
         this.reference = reference;

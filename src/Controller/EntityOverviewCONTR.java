@@ -76,9 +76,9 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
         if (this.passObj.getObj() instanceof Quotation) {
             forQuotation();
         } else if (this.passObj.getObj() instanceof Customer) {
-
+            forCustomer();
         } else if (this.passObj.getObj() instanceof Staff) {
-
+            forStaff();
         }
     }
 
@@ -136,6 +136,10 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
                             System.out.println(customer.getCustID());
+                            BasicObjs passObjs = new BasicObjs();
+                            passObjs.setObj(customer);
+                            passObjs.setCrud(BasicObjs.read);
+                            switchScene("View/Customer_UI.fxml", passObjs, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -204,6 +208,10 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
                             System.out.println(staff.getStaffID());
+                            BasicObjs passObjs = new BasicObjs();
+                            passObjs.setObj(staff);
+                            passObjs.setCrud(BasicObjs.read);
+                            switchScene("View/Staff_UI.fxml", passObjs, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }

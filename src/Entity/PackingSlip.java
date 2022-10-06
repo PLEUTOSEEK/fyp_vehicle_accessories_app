@@ -17,7 +17,7 @@ public class PackingSlip extends Document {
     private TransferOrder TO;
     private List<Item> items;
 
-    public PackingSlip(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, Staff PIC, TransferOrder TO, List<Item> items) {
+    public PackingSlip(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Staff PIC, TransferOrder TO, List<Item> items) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.PIC = PIC;
         this.TO = TO;

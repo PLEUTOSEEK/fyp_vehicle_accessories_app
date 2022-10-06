@@ -15,6 +15,10 @@ public class Entity {
     protected Timestamp createdDateTime;
     protected Timestamp modifiedDateTime;
 
+    public Entity() {
+
+    }
+
     public Entity(Timestamp createdDateTime, Timestamp modifiedDateTime) {
         this.createdDateTime = createdDateTime;
         this.modifiedDateTime = modifiedDateTime;

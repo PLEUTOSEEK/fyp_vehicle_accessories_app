@@ -28,7 +28,7 @@ public class Receipt extends Document {
         this(null, null, "", null, null, "", null, "", "", null, new BigDecimal("0.00"), new BigDecimal("0.00"), new BigDecimal("0.00"), new BigDecimal("0.00"), null);
     }
 
-    public Receipt(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, byte[] signedDocPic, String status, Invoice INV, String referenceType, String reference, List<Item> items, BigDecimal ttlPayable, BigDecimal paidAmt, BigDecimal paidAmtPrev, BigDecimal balUnpaid, Customer customerSignature) {
+    public Receipt(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Invoice INV, String referenceType, String reference, List<Item> items, BigDecimal ttlPayable, BigDecimal paidAmt, BigDecimal paidAmtPrev, BigDecimal balUnpaid, Customer customerSignature) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.INV = INV;
         this.referenceType = referenceType;

@@ -5,7 +5,6 @@
 package DAO;
 
 import Entity.Address;
-import Service.AddressService;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,7 +34,7 @@ public class AddressDAO {
 
             rs = ps.executeQuery();
 
-            while (rs.next()) {
+            if (rs.next()) {
                 addr = new Address(
                         rs.getTimestamp("ADDR_Created_Date"),
                         rs.getTimestamp("ADDR_Modified_Date_Time"),
@@ -67,14 +66,11 @@ public class AddressDAO {
         }
     }
 
-    static String saveNewAddress(Address address) {
+    public static String saveNewAddress(Address address) {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
 
-        if (address.getAddressID() == null) {
-            address.setAddressID(AddressService.generateID());
-        }
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         address.setCreatedDate(timestamp);
@@ -146,6 +142,58 @@ public class AddressDAO {
 
             //return object
             return latestCode;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static String updateAddress(Address addr) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        addr.setModifiedDateTime(timestamp);
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE Address SET "
+                    + "Location_Name = ?, "
+                    + "Address = ?, "
+                    + "City = ?, "
+                    + "Postal_Code = ?, "
+                    + "State = ?, "
+                    + "Country = ?, "
+                    + "Created_Date = ?, "
+                    + "Modified_Date_Time = ? "
+                    + "WHERE "
+                    + "Address_ID = ?";
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, addr.getLocationName());
+            ps.setString(2, addr.getAddress());
+            ps.setString(3, addr.getCity());
+            ps.setString(4, addr.getPostalCode());
+            ps.setString(5, addr.getState());
+            ps.setString(6, addr.getCountry());
+            ps.setTimestamp(7, addr.getCreatedDate());
+            ps.setTimestamp(8, addr.getModifiedDateTime());
+            ps.setString(9, addr.getAddressID());
+
+            ps.execute();
+            return addr.getAddressID();
         } catch (Exception e) {
             return null;
         } finally {

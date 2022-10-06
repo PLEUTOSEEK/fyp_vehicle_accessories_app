@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane id="AnchorPane" prefHeight="168.0" prefWidth="1279.0" stylesheets="@../Material/css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SalesOrderPSSelectCONTR">
+   <children>
+      <GridPane layoutX="30.0" layoutY="50.0" prefHeight="98.0" prefWidth="1127.0" stylesheets="@../../css/Buttons.css" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="40.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="212.99998168945314" minWidth="10.0" prefWidth="205.20000610351562" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="213.80002441406248" minWidth="10.0" prefWidth="212.39999389648438" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="206.00003662109373" minWidth="10.0" prefWidth="201.19998779296873" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="129.0" minWidth="0.0" prefWidth="103.39996337890625" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="201.60000000000002" minWidth="10.0" prefWidth="136.39997558593745" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="227.20001220703125" minWidth="10.0" prefWidth="177.20002441406245" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="24.0" minHeight="10.0" prefHeight="14.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="64.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="24.0" minHeight="1.0" prefHeight="18.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <MFXTextField alignment="CENTER_RIGHT" floatingText="Remarks" prefHeight="49.0" prefWidth="172.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <MFXTextField alignment="CENTER_RIGHT" floatingText="Quantity" prefHeight="49.0" prefWidth="71.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <MFXTextField alignment="CENTER_RIGHT" floatingText="Unit Price" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <MFXDatePicker alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Delivery Date" minHeight="47.0" minWidth="136.0" prefHeight="47.0" prefWidth="151.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+            <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+               <padding>
+                  <Insets bottom="1.0" />
+               </padding>
+               <graphic>
+                  <FontAwesomeIconView glyphName="LIST" />
+               </graphic>
+               <GridPane.margin>
+                  <Insets right="20.0" top="5.0" />
+               </GridPane.margin>
+            </MFXCircleToggleNode>
+            <MFXButton minWidth="50.0" styleClass="outline-button" text="Confirm" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets top="15.0" />
+               </GridPane.margin>
+            </MFXButton>
+            <MFXButton id="custom" minHeight="27.0" minWidth="70.0" text="Cancel" GridPane.columnIndex="6" GridPane.rowIndex="2" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets top="15.0" />
+               </GridPane.margin>
+            </MFXButton>
+            <MFXTextField alignment="CENTER_RIGHT" floatingText="Product ID" prefHeight="50.0" prefWidth="135.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+               <padding>
+                  <Insets bottom="1.0" />
+               </padding>
+               <graphic>
+                  <FontAwesomeIconView glyphName="LIST" />
+               </graphic>
+               <GridPane.margin>
+                  <Insets right="20.0" top="5.0" />
+               </GridPane.margin>
+            </MFXCircleToggleNode>
+            <MFXTextField alignment="CENTER_RIGHT" floatingText="Product ID" prefHeight="50.0" prefWidth="135.0" GridPane.rowIndex="1" />
+            <MFXComboBox floatingText="Disc. %" prefHeight="40.0" prefWidth="102.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </GridPane>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</AnchorPane>

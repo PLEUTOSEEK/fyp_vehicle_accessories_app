@@ -456,12 +456,12 @@
                                                       <Insets left="15.0" right="15.0" />
                                                    </padding>
                                                 </Label>
-                                                <MFXTextField fx:id="txtWorkPlaceID" alignment="CENTER_RIGHT" floatingText="Work Place ID" prefHeight="49.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                <MFXTextField fx:id="txtWorkPlaceID" alignment="CENTER_RIGHT" editable="false" floatingText="Work Place ID" prefHeight="49.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                                <MFXCircleToggleNode fx:id="ctnWorkPlaceSelection" graphicTextGap="2.0" onMousePressed="#openWorkPlaceSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                                                    <graphic>
                                                       <FontAwesomeIconView glyphName="LIST" />
                                                    </graphic>
@@ -480,12 +480,12 @@
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXComboBox>
-                                                <MFXTextField fx:id="txtReportTo" alignment="CENTER_RIGHT" floatingText="Report To" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                <MFXTextField fx:id="txtReportTo" alignment="CENTER_RIGHT" editable="false" floatingText="Report To" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXCircleToggleNode graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                                <MFXCircleToggleNode fx:id="ctnReportToSelection" graphicTextGap="2.0" onMousePressed="#openReportToSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
                                                    <graphic>
                                                       <FontAwesomeIconView glyphName="LIST" />
                                                    </graphic>
@@ -530,7 +530,7 @@
         </MFXScrollPane>
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c1c1ec" height="53.0" layoutX="3.0" layoutY="728.0" stroke="#cdc7d9" strokeType="INSIDE" width="1515.0" />
         <MFXButton fx:id="btnSave" buttonType="RAISED" layoutX="1430.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" onMousePressed="#saveStaff" styleClass="outline-button" text="Save" />
-        <MFXButton id="custom" fx:id="btnDiscard" layoutX="1331.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" onMousePressed="#discard" text="Discard" />
+        <MFXButton id="custom" fx:id="btnDiscard" layoutX="1331.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" onMousePressed="#discardCurrentData" text="Discard" />
     </children>
    <stylesheets>
       <URL value="@../Material/css/Buttons.css" />
