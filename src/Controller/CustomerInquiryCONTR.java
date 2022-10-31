@@ -5,6 +5,7 @@
 package Controller;
 
 import BizRulesConfiguration.AccountingRules;
+import BizRulesConfiguration.SalesRules;
 import BizRulesConfiguration.WarehouseRules;
 import Entity.CollectAddress;
 import Entity.Customer;
@@ -37,7 +38,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -54,6 +54,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
@@ -124,13 +125,20 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
     private MFXTableView<?> tblVw;
     @FXML
     private Label lblImgStrs;
+
     private CustomerInquiry customerInquiryInDraft;
 
     AccountingRules accRules = new AccountingRules();
+
     WarehouseRules warehouseRules = new WarehouseRules();
-    private List<Item> newItems = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
+
+    SalesRules salesRules = new SalesRules();
+
     private List<Item> items = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
+    private List<Item> tempItems = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
+
     private static List<String> rowSelected = new ArrayList<>();
+
     @FXML
     private ImageView imgDocs;
 
@@ -140,9 +148,13 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        setupItemTable();
+
         Platform.runLater(new Runnable() {
+
             @Override
             public void run() {
+
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
@@ -155,8 +167,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                     }
 
                     // haven't verify the same product ID, must have different delivery date
-                    items = ItemService.getItemsByCIID(((CustomerInquiry) passObj.getObj()).getCode());
-                    setupItemTable(items);
+                    items.addAll(ItemService.getItemsByCIID(((CustomerInquiry) passObj.getObj()).getCode()));
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read)) {
@@ -164,10 +175,10 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 }
             }
         });
+
     }
 
-    public void setupItemTable(List<Item> items) {
-
+    public void setupItemTable() {
         // Product ID
         MFXTableColumn<Item> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(item -> item.getProduct().getProdID()));
         // Inventory ID
@@ -206,6 +217,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         // Delivery Date
         dlvrDtCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getDlvrDate()));
 
+        ((MFXTableView<Item>) tblVw).getTableColumns().clear();
         ((MFXTableView<Item>) tblVw).getTableColumns().addAll(
                 prodIDCol,
                 inventoryIDCol,
@@ -215,6 +227,8 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 discCol,
                 dlvrDtCol
         );
+
+        ((MFXTableView<Item>) tblVw).getFilters().clear();
 
         ((MFXTableView<Item>) tblVw).getFilters().addAll(
                 new StringFilter<>("Product ID", item -> item.getProduct().getProdID()),
@@ -227,8 +241,11 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 new DoubleFilter<>("Incl. Amount", item -> item.getInclTaxAmt().doubleValue()),
                 new DateFilter<>("Delivery Date", item -> item.getDlvrDate())
         );
-
-        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableList(items));
+        tempItems.addAll(items);
+        ((MFXTableView<Item>) tblVw).getItems().clear();
+        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
+        tempItems.clear();
+        System.out.println(items.size() + "--------");
 
         ((MFXTableView<CollectAddress>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
             @Override
@@ -240,11 +257,11 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            System.out.println(item.getProduct().getProdID());
+                            System.out.println(item.getProduct().getProdID() + "This is product ID");
                             // action here
                             Parent root;
                             try {
-                                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/SalesDocsPSSelect.fxml"));
+                                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/SalesDocsPSSelect_UI.fxml"));
                                 Stage stage = new Stage();
                                 stage.initModality(Modality.WINDOW_MODAL);
                                 stage.initOwner(btnBack.getScene().getWindow());
@@ -262,16 +279,15 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     Item catchedItem = new Item();
+                                    catchedItem = (Item) receiveObj.getObj();
 
                                     if (!items.contains(catchedItem)) {
                                         items.add(catchedItem);
-                                        newItems.add(catchedItem);
                                     } else {
                                         items.set(items.indexOf(item), catchedItem);
-                                        newItems.set(newItems.indexOf(item), catchedItem);
                                     }
 
-                                    setupItemTable(items);
+                                    setupItemTable();
 
                                 }
                             } catch (IOException e) {
@@ -279,10 +295,12 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                             }
                         }
                         rowSelected.clear();
+
                     }
                 }
             }
         });
+
     }
 
     private void isViewMode(boolean disable) {
@@ -303,12 +321,19 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         this.cmbPymtTerm.setDisable(disable);
         this.cmbShipTerm.setDisable(disable);
         this.cmbStatus.setDisable(disable);
+        this.txtGross.setDisable(disable);
+        this.txtDiscount.setDisable(disable);
+        this.txtSubTtl.setDisable(disable);
+        this.txtNett.setDisable(disable);
+        this.txtIssuedBy.setDisable(disable);
 
         this.ctnBillToSelection.setDisable(disable);
         this.ctnDeliverToSelection.setDisable(disable);
         this.ctnIssuedBySelection.setDisable(disable);
         this.ctnSalesPersonSelection.setDisable(disable);
 
+        this.tblVw.setDisable(disable);
+        this.btnAdd.setDisable(disable);
     }
 
     private void fieldFillIn() throws IOException {
@@ -337,6 +362,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
             this.txtNett.setText(customerInquiry.getNett().toString());
 
             this.txtIssuedBy.setText(customerInquiry.getIssuedBy().getStaffID());
+            this.lblImgStrs.setText(customerInquiry.getSignedDocPic());
             this.imgDocs.setImage(ImageUtils.byteToImg(ImageUtils.encodedStrToByte(((String) ImageUtils.splitImgStr(customerInquiry.getSignedDocPic()).getFirst()))));
         }
     }
@@ -345,6 +371,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         ((MFXComboBox<String>) this.cmbCurrencyCode).setItems(FXCollections.observableList(accRules.getCurrencyCodes()));
         ((MFXComboBox<String>) this.cmbPymtTerm).setItems(FXCollections.observableList(accRules.getPymtTerms()));
         ((MFXComboBox<String>) this.cmbShipTerm).setItems(FXCollections.observableList(warehouseRules.getShipmentTerms()));
+        ((MFXComboBox<SalesRules.CIStatus>) this.cmbStatus).setItems(FXCollections.observableList(salesRules.getCiStatuses()));
     }
 
     @FXML
@@ -417,7 +444,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         customerInquiry.setCreatedDate(this.dtRefDate.getValue() == null ? null : Timestamp.valueOf(this.dtRefDate.getValue().atStartOfDay()));
         customerInquiry.setReferenceType(this.txtRefType.getText());
         customerInquiry.setReference(this.txtRef.getText());
-        customerInquiry.setRequiredDeliveryDate(this.dtReqDuireDeliveryDate.getValue() == null ? null : (java.sql.Date) Date.from(Instant.from(this.dtReqDuireDeliveryDate.getValue().atStartOfDay(ZoneId.systemDefault()))));
+        customerInquiry.setRequiredDeliveryDate(this.dtReqDuireDeliveryDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtReqDuireDeliveryDate.getValue()));
         customerInquiry.setCurrencyCode(this.cmbCurrencyCode.getText());
         customerInquiry.setPymtTerm(this.cmbPymtTerm.getText());
         customerInquiry.setShipmentTerm(this.cmbShipTerm.getText());
@@ -433,6 +460,8 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         customerInquiry.setIssuedBy(issuedBy);
 
         customerInquiry.setSignedDocPic(this.lblImgStrs.getText());
+
+        customerInquiry.setItems(items);
 
         return customerInquiry;
     }
@@ -546,7 +575,13 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerTxt);
+        alert.setContentText(contentTxt);
+
+        alert.showAndWait();
+        return alert.getResult();
     }
 
     @FXML
@@ -580,6 +615,14 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private void openDeliverToSelection(MouseEvent event) {
         if (event.isPrimaryButtonDown() == true) {
+            if (this.txtBillTo.getText().isEmpty()) {
+                alertDialog(Alert.AlertType.INFORMATION,
+                        "Information",
+                        "Prerequisite Condition",
+                        "Must fill in deliver to column, before select customer signature");
+                return;
+            }
+
             Parent root;
             try {
                 root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
@@ -589,14 +632,18 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 stage.setScene(new Scene(root));
 
                 BasicObjs passObj = new BasicObjs();
-                passObj.setObj(new CollectAddress());
+                CollectAddress cllctAddr = new CollectAddress();
+
+                cllctAddr.setCustomer(new Customer());
+                cllctAddr.getCustomer().setCustID(this.txtBillTo.getText());
+                passObj.setObj(cllctAddr);
 
                 stage.setUserData(passObj);
                 stage.showAndWait();
 
                 if (stage.getUserData() != null) {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
-                    this.txtDeliverTo.setText(((CollectAddress) receiveObj.getObj()).getCollectAddrID());
+                    this.txtIssuedBy.setText(((CollectAddress) receiveObj.getObj()).getCollectAddrID());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -666,15 +713,16 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         // action here
         Parent root;
         try {
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/ImageViewer_UI.fxml"));
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/ImgViewers_UI.fxml"));
+
             Stage stage = new Stage();
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(btnBack.getScene().getWindow());
             stage.setScene(new Scene(root));
 
             BasicObjs passObj = new BasicObjs();
-            passObj.setObj(this.passObj.getObj());
 
+            passObj.setObj(this.lblImgStrs.getText());
             stage.setUserData(passObj);
             stage.showAndWait();
 
@@ -683,8 +731,53 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
                 BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                 String catchedImagesStr = new String();
-                catchedImagesStr = (String) catchedImagesStr;
+                catchedImagesStr = (String) receiveObj.getObj();
+
+                String splittedImgStrFirst = (String) ImageUtils.splitImgStr(catchedImagesStr).getFirst();
+                byte[] decodedByteFirst = ImageUtils.encodedStrToByte(splittedImgStrFirst);
+                Image imageFirst = ImageUtils.byteToImg(decodedByteFirst);
+                this.imgDocs.setImage(imageFirst);
                 this.lblImgStrs.setText(catchedImagesStr);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void addProductItem(MouseEvent event) {
+        // action here
+
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/SalesDocsPSSelect_UI.fxml"));
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(btnBack.getScene().getWindow());
+            stage.setScene(new Scene(root));
+
+            BasicObjs passObj = new BasicObjs();
+            passObj.setCrud(BasicObjs.create);
+            passObj.setObj(new Item());
+            stage.setUserData(passObj);
+            stage.showAndWait();
+
+            // if have any change on the selected collect address
+            if (stage.getUserData() != null) {
+
+                BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                Item catchedItem = new Item();
+                catchedItem = (Item) receiveObj.getObj();
+
+                if (!items.contains(catchedItem)) {
+                    items.add(catchedItem);
+                } else {
+                    items.set(items.indexOf(catchedItem), catchedItem);
+                }
+
+                setupItemTable();
+
             }
         } catch (IOException e) {
             e.printStackTrace();

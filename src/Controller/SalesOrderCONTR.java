@@ -5,7 +5,12 @@
 package Controller;
 
 import PassObjs.BasicObjs;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXDatePicker;
+import io.github.palexdev.materialfx.controls.MFXTableView;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -16,7 +21,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
@@ -29,6 +36,72 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
     private BasicObjs passObj;
     @FXML
     private MFXCircleToggleNode btnBack;
+    @FXML
+    private AnchorPane AnchorPane;
+    @FXML
+    private MFXCircleToggleNode ctnBillToSelection;
+    @FXML
+    private MFXTextField txtBillTo;
+    @FXML
+    private MFXTextField txtSOID;
+    @FXML
+    private MFXTextField txtDeliverTo;
+    @FXML
+    private MFXDatePicker dtRefDate;
+    @FXML
+    private MFXTextField txtCustPORef;
+    @FXML
+    private MFXTextField txtQuotRef;
+    @FXML
+    private MFXTextField txtRef;
+    @FXML
+    private MFXTextField txtRefType;
+    @FXML
+    private MFXComboBox<?> cmbCurrencyCode;
+    @FXML
+    private MFXComboBox<?> cmbPymtTerm;
+    @FXML
+    private MFXComboBox<?> cmbShipmentTerm;
+    @FXML
+    private MFXCircleToggleNode ctnDeliverToSelection;
+    @FXML
+    private MFXTextField txtSalesPerson;
+    @FXML
+    private MFXCircleToggleNode ctnSalesPersonSelection;
+    @FXML
+    private MFXComboBox<?> cmbStatus;
+    @FXML
+    private MFXDatePicker dtReqDlvrDate;
+    @FXML
+    private MFXTableView<?> tblVw;
+    @FXML
+    private MFXButton btnAddItem;
+    @FXML
+    private MFXTextField txtSubTtl;
+    @FXML
+    private MFXTextField txtNett;
+    @FXML
+    private MFXTextField txtDiscount;
+    @FXML
+    private MFXTextField txtGross;
+    @FXML
+    private MFXTextField txtIssuedBy;
+    @FXML
+    private MFXCircleToggleNode ctnIssuedBySelection;
+    @FXML
+    private MFXTextField txtReleeaseAVerifiedBy;
+    @FXML
+    private MFXCircleToggleNode ctnReleasedAVerifiedBySelection;
+    @FXML
+    private ImageView imgDocs;
+    @FXML
+    private MFXTextField txtCustSignature;
+    @FXML
+    private MFXCircleToggleNode ctnCustSignatureSelection;
+    @FXML
+    private MFXButton btnSave;
+    @FXML
+    private MFXButton btnDiscard;
 
     /**
      * Initializes the controller class.

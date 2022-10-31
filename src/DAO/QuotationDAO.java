@@ -9,7 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +25,9 @@ public class QuotationDAO {
         PreparedStatement ps = null;
         String query = "";
 
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        quotation.setActualCreatedDateTime(timestamp);
+        quotation.setModifiedDateTime(timestamp);
         try {
             conn = SQLDatabaseConnection.openConn();
 
@@ -61,7 +64,7 @@ public class QuotationDAO {
             ps.setString(1, quotation.getCode());
             ps.setString(2, quotation.getCI().getCode());
             ps.setString(3, quotation.getReferenceType());
-            ps.setNull(4, Types.VARCHAR);
+            ps.setString(4, quotation.getReference());
             ps.setString(5, quotation.getBillToCust().getCustID());
             ps.setString(6, quotation.getDeliverToCust().getCollectAddrID());
             ps.setString(7, quotation.getSalesPerson().getStaffID());
@@ -254,6 +257,88 @@ public class QuotationDAO {
 
         } catch (Exception e) {
             return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static boolean updateQuotation(Quotation quotation) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        quotation.setModifiedDateTime(timestamp);
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE Quotation SET"
+                    + "CI_ID = ?, "
+                    + "Reference_Type = ?, "
+                    + "Reference = ?, "
+                    + "Bill_To_Cust = ?, "
+                    + "Deliver_To = ?, "
+                    + "Sales_Person = ?, "
+                    + "Currency_Code = ?, "
+                    + "Quot_Validity_Date = ?, "
+                    + "Required_Delivery_Date = ?, "
+                    + "Payment_Term = ?, "
+                    + "Shipment_Term = ?, "
+                    + "Gross = ?, "
+                    + "Discount = ?, "
+                    + "Sub_Total = ?, "
+                    + "Nett = ?, "
+                    + "Issued_By = ?, "
+                    + "Released_And_Verified_By = ?, "
+                    + "Customer_Signed = ?, "
+                    + "Status = ?, "
+                    + "Created_Date = ?, "
+                    + "Actual_Created_Date = ?, "
+                    + "Signed_Doc_Pic = ?, "
+                    + "Modified_Date_Time = ?"
+                    + "WHERE "
+                    + "Quot_ID = ?";
+
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, quotation.getCI().getCode());
+            ps.setString(2, quotation.getReferenceType());
+            ps.setString(3, quotation.getReference());
+            ps.setString(4, quotation.getBillToCust().getCustID());
+            ps.setString(5, quotation.getDeliverToCust().getCollectAddrID());
+            ps.setString(6, quotation.getSalesPerson().getStaffID());
+            ps.setString(7, quotation.getCurrencyCode());
+            ps.setDate(8, quotation.getQuotValidityDate());
+            ps.setDate(9, quotation.getRequiredDeliveryDate());
+            ps.setString(10, quotation.getPymtTerm());
+            ps.setString(11, quotation.getShipmentTerm());
+            ps.setBigDecimal(12, quotation.getGross());
+            ps.setBigDecimal(13, quotation.getDiscount());
+            ps.setBigDecimal(14, quotation.getSubTotal());
+            ps.setBigDecimal(15, quotation.getNett());
+            ps.setString(16, quotation.getIssuedBy().getStaffID());
+            ps.setString(17, quotation.getReleasedAVerifiedBy().getStaffID());
+            ps.setString(18, quotation.getCustomerSignature().getCollectAddrID());
+            ps.setString(19, quotation.getStatus());
+            ps.setTimestamp(20, quotation.getCreatedDate());
+            ps.setTimestamp(21, quotation.getActualCreatedDateTime());
+            ps.setString(22, quotation.getSignedDocPic()); // need to change to encoded 64 string
+            ps.setTimestamp(23, quotation.getModifiedDateTime());
+            ps.setString(24, quotation.getCode());
+
+            ps.execute();
+            return true;
+        } catch (Exception e) {
+            return false;
         } finally {
             try {
                 ps.close();

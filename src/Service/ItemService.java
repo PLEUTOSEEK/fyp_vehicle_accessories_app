@@ -18,4 +18,8 @@ public class ItemService {
         return ItemDAO.getItemsByCode(code);
     }
 
+    public static List<Item> getItemByQuotID(String code) {
+        return ItemDAO.getItemsByCode(code);
+    }
+
 }

@@ -15,8 +15,9 @@ public class AccountingRules {
 
     private List<String> pymtTerms;
     private List<String> currencyCodes;
+    private double taxRate;
 
-    public void AccountingRules() {
+    public AccountingRules() {
         pymtTerms = new ArrayList<>();
         currencyCodes = new ArrayList<>();
 
@@ -28,6 +29,16 @@ public class AccountingRules {
         pymtTerms.add("COD");
 
         currencyCodes.add("MYR");
+        System.out.println(currencyCodes.toString());
+        taxRate = 6;
+    }
+
+    public double getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTaxRate(double taxRate) {
+        this.taxRate = taxRate;
     }
 
     public List<String> getPymtTerms() {

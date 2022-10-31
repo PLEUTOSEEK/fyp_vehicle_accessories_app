@@ -91,7 +91,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label fx:id="lblImgStrs" text="Label" visible="false" GridPane.columnIndex="2" />
+                  <Label fx:id="lblImgStrs" visible="false" GridPane.columnIndex="2" />
                   <TitledPane animated="false" collapsible="false" prefHeight="726.0" prefWidth="1457.0" text="Header" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2" GridPane.valignment="TOP">
                      <content>
                         <AnchorPane prefHeight="197.0" prefWidth="1426.0">
@@ -127,13 +127,13 @@
                                     </MFXCircleToggleNode>
                                     <MFXTextField fx:id="txtBillTo" alignment="CENTER_RIGHT" floatingText="Bill To" minWidth="145.0" prefWidth="145.0" GridPane.rowIndex="3" />
                                     <MFXTextField fx:id="txtCIID" alignment="CENTER_RIGHT" editable="false" floatingText="Customer Inquiry ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.rowIndex="1" />
-                                    <MFXTextField fx:id="txtDeliverTo" alignment="CENTER_RIGHT" floatingText="Deliver To" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="zx" GridPane.rowIndex="4" />
+                                    <MFXTextField fx:id="txtDeliverTo" alignment="CENTER_RIGHT" floatingText="Deliver To" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.rowIndex="4" />
                                     <MFXDatePicker fx:id="dtRefDate" alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Reference Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <MFXTextField fx:id="txtRef" alignment="CENTER_RIGHT" floatingText="Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                    <MFXTextField fx:id="txtRefType" alignment="CENTER_RIGHT" floatingText="Reference Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="aaa" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                    <MFXComboBox fx:id="cmbCurrencyCode" alignment="CENTER_RIGHT" floatingText="Currency Code" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="sd" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                                    <MFXComboBox fx:id="cmbPymtTerm" alignment="CENTER_RIGHT" floatingText="Payment Term" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="xc" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                                    <MFXComboBox fx:id="cmbShipTerm" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Shipment Term" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" selectable="true" text="zx" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                                    <MFXTextField fx:id="txtRef" alignment="CENTER_RIGHT" floatingText="Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                    <MFXTextField fx:id="txtRefType" alignment="CENTER_RIGHT" floatingText="Reference Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <MFXComboBox fx:id="cmbCurrencyCode" alignment="CENTER_RIGHT" floatingText="Currency Code" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                    <MFXComboBox fx:id="cmbPymtTerm" alignment="CENTER_RIGHT" floatingText="Payment Term" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                                    <MFXComboBox fx:id="cmbShipTerm" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Shipment Term" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" selectable="true" GridPane.columnIndex="4" GridPane.rowIndex="4" />
                                     <MFXCircleToggleNode fx:id="ctnDeliverToSelection" graphicTextGap="2.0" onMousePressed="#openDeliverToSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
                                        <graphic>
                                           <FontAwesomeIconView glyphName="LIST" />
@@ -151,7 +151,7 @@
                                           <FontAwesomeIconView glyphName="LIST" />
                                        </graphic>
                                     </MFXCircleToggleNode>
-                                    <MFXComboBox fx:id="cmbStatus" alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" text="sd" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                    <MFXComboBox fx:id="cmbStatus" alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                     <MFXDatePicker fx:id="dtReqDuireDeliveryDate" alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Required Delivery Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                  </children>
                               </GridPane>
@@ -192,7 +192,7 @@
                                  </rowConstraints>
                                  <children>
                                     <MFXTableView fx:id="tblVw" prefHeight="349.0" prefWidth="1400.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" GridPane.valignment="TOP" />
-                                    <MFXButton fx:id="btnAdd" buttonType="RAISED" minHeight="27.0" minWidth="70.0" styleClass="outline-button" text="Add" GridPane.columnIndex="12" GridPane.halignment="RIGHT">
+                                    <MFXButton fx:id="btnAdd" buttonType="RAISED" minHeight="27.0" minWidth="70.0" onMousePressed="#addProductItem" styleClass="outline-button" text="Add" GridPane.columnIndex="12" GridPane.halignment="RIGHT">
                                        <GridPane.margin>
                                           <Insets right="1.0" />
                                        </GridPane.margin>

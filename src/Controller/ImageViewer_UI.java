@@ -4,7 +4,6 @@
  */
 package Controller;
 
-import Entity.CustomerInquiry;
 import PassObjs.BasicObjs;
 import Service.ImageViewerService;
 import Utils.ImageUtils;
@@ -58,14 +57,17 @@ public class ImageViewer_UI implements Initializable, BasicCONTRFunc {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
 
                 receiveData();
-                CustomerInquiry customerInquiry = (CustomerInquiry) passObj.getObj();
-                images = ImageUtils.splitImgStr(customerInquiry.getSignedDocPic());
+
+                String imgStrs = (String) passObj.getObj();
+                images = ImageUtils.splitImgStr(imgStrs);
                 imageViewerService.setImages(images);
+
                 try {
                     imgDocs.setImage(imageViewerService.getFirst(images));
                 } catch (IOException ex) {
@@ -128,6 +130,7 @@ public class ImageViewer_UI implements Initializable, BasicCONTRFunc {
         Stage stage = (Stage) btnDone.getScene().getWindow();
         BasicObjs passObj = new BasicObjs();
         passObj.setObj(ImageUtils.concatImgStr(images));
+        System.out.println("saveImages - " + passObj.getObj().toString());
         stage.setUserData(passObj);
         stage.close();
     }
@@ -160,7 +163,7 @@ public class ImageViewer_UI implements Initializable, BasicCONTRFunc {
     @Override
     public void receiveData() {
         // Step 1
-        Stage stage = (Stage) btnUploadImg.getScene().getWindow();
+        Stage stage = (Stage) btnDone.getScene().getWindow();
         // Step 2
         if (stage.getUserData() != null) {
             passObj = (BasicObjs) stage.getUserData();

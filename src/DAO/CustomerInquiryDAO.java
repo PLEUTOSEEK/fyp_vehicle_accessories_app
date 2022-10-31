@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  *
@@ -21,6 +22,11 @@ public class CustomerInquiryDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        customerInquiry.setActualCreatedDateTime(timestamp);
+        customerInquiry.setModifiedDateTime(timestamp);
+
         try {
             conn = SQLDatabaseConnection.openConn();
 
@@ -190,6 +196,9 @@ public class CustomerInquiryDAO {
         PreparedStatement ps = null;
         String query = "";
 
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        customerInquiry.setModifiedDateTime(timestamp);
+
         try {
             conn = SQLDatabaseConnection.openConn();
 
@@ -236,6 +245,43 @@ public class CustomerInquiryDAO {
             ps.setString(18, customerInquiry.getSignedDocPic()); // need to change to encoded 64 string
             ps.setTimestamp(19, customerInquiry.getModifiedDateTime());
             ps.setString(20, customerInquiry.getCode());
+
+            ps.execute();
+            return customerInquiry.getCode();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static String updateCustomerInquiryStatus(CustomerInquiry customerInquiry) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        customerInquiry.setModifiedDateTime(timestamp);
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE CustomerInquiry SET "
+                    + "Status = ? "
+                    + "WHERE CI_ID = ? ";
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, customerInquiry.getStatus());
+            ps.setString(2, customerInquiry.getCode());
 
             ps.execute();
             return customerInquiry.getCode();

@@ -63,9 +63,13 @@ public class QuotationService {
         return QuotationDAO.getAllQuotation();
     }
 
-    public static void saveNewQuotation(Quotation quotation) throws SQLException {
+    public static boolean saveNewQuotation(Quotation quotation) throws SQLException {
         quotation.setCode(generateID());
-        QuotationDAO.saveNewQuotation(quotation);
+        return QuotationDAO.saveNewQuotation(quotation);
+    }
+
+    public static boolean updateQuotation(Quotation quotation) {
+        return QuotationDAO.updateQuotation(quotation);
     }
 
 }

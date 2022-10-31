@@ -65,4 +65,8 @@ public class CollectAddressService {
 
     }
 
+    public static List<CollectAddress> getAllCollectAddress() {
+        return CollectAddressDAO.getAllCollectAddress();
+    }
+
 }

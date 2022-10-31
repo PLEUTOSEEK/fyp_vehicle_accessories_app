@@ -100,6 +100,7 @@ public class ImageUtils {
     public static Image byteToImg(byte[] bytes) throws IOException {
 
         if (bytes == null) {
+            System.out.println("byteToImg - byte is null");
             return null;
         } else {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -114,19 +115,27 @@ public class ImageUtils {
     }
 
     public static DoublyLinkedList<String> splitImgStr(String imgStr) {
+        if (imgStr == null) {
+            return new DoublyLinkedList<>();
+        }
+
         String[] splittedImgStr = imgStr.split(DELIMETER);
 
         DoublyLinkedList<String> processedSplittedImgStr = new DoublyLinkedList<>();
 
         for (String str : splittedImgStr) {
-            processedSplittedImgStr.addLast(str);
+            if (!str.isEmpty()) {
+                processedSplittedImgStr.addLast(str);
+            }
         }
 
         return processedSplittedImgStr;
     }
 
     public static String concatImgStr(DoublyLinkedList<String> processedSplittedImgStr) {
-
+        if (processedSplittedImgStr.getLength() == 0) {
+            return "";
+        }
         String[] imgStrArr = new String[processedSplittedImgStr.getLength()];
         imgStrArr = processedSplittedImgStr.toArray(imgStrArr);
         return String.join(DELIMETER, imgStrArr);

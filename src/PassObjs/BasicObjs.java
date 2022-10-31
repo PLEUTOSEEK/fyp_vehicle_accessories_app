@@ -39,6 +39,7 @@ public class BasicObjs {
         //</editor-fold>
         this.staff = staff;
         this.obj = obj;
+
     }
 
     public BasicObjs(Object obj, String crud) {

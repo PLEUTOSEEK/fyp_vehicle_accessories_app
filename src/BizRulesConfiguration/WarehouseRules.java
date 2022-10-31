@@ -15,7 +15,7 @@ public class WarehouseRules {
 
     private List<String> shipmentTerms;
 
-    public void AccountingRules() {
+    public WarehouseRules() {
         shipmentTerms = new ArrayList<>();
 
         shipmentTerms.add("EXW");

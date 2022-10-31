@@ -39,6 +39,7 @@ import net.synedra.validatorfx.Validator;
  */
 public class CollectorCONTR implements Initializable, BasicCONTRFunc {
 
+    //<editor-fold defaultstate="collapsed" desc="data fields">
     private BasicObjs passObj;
     @FXML
     private MFXCircleToggleNode btnBack;
@@ -117,6 +118,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private MFXComboBox<?> cmbCollectAddrCountry;
     private Validator validator = new Validator();
+    //</editor-fold>
 
     /**
      * Initializes the controller class.

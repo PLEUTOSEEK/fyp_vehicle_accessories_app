@@ -57,4 +57,12 @@ public class CustomerInquiryService {
         return CodeStructure.structToStr(newIDStruct);
 
     }
+
+    public static CustomerInquiry getCustomerInquiryByCode(String code) throws SQLException {
+        return CustomerInquiryDAO.getCustomerInquiryByCode(code);
+    }
+
+    public static String updateCustomerInquiryStatus(CustomerInquiry ci) {
+        return CustomerInquiryDAO.updateCustomerInquiryStatus(ci);
+    }
 }

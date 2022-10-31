@@ -4,9 +4,11 @@
  */
 package Controller;
 
+import Entity.CollectAddress;
 import Entity.Place;
 import Entity.Staff;
 import PassObjs.BasicObjs;
+import Service.CollectAddressService;
 import Service.PlaceService;
 import Service.StaffService;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -68,6 +70,8 @@ public class InnerEntitySelectCONTR implements Initializable {
             forPlace();
         } else if (this.passObj.getObj() instanceof Staff) {
             forStaff();
+        } else if (this.passObj.getObj() instanceof CollectAddress) {
+            forCollectAddress();
         }
     }
 
@@ -207,7 +211,95 @@ public class InnerEntitySelectCONTR implements Initializable {
             }
         });
 
-        System.out.println("done go through function");
+    }
+
+    private void forCollectAddress() {
+        // Collect Address ID
+        // Collector Name
+        // Collector Email
+        // Collector Mobile Number
+        // Collector Office Number
+        // Customer Name
+        // Address
+
+        // Collect Address ID
+        MFXTableColumn<CollectAddress> cllctAddrIDCol = new MFXTableColumn<>("Collect Address ID", true, Comparator.comparing(cllct -> cllct.getCollectAddrID()));
+        // Collector Name
+        MFXTableColumn<CollectAddress> cllctAddrNameCol = new MFXTableColumn<>("Collector Name", true, Comparator.comparing(cllct -> cllct.getPerson().getName()));
+        // Collector Email
+        MFXTableColumn<CollectAddress> cllctAddrEmailCol = new MFXTableColumn<>("Email", true, Comparator.comparing(cllct -> cllct.getPerson().getContact().getEmail()));
+        // Collector Mobile Number
+        MFXTableColumn<CollectAddress> cllctAddrMobNoCol = new MFXTableColumn<>("Mobile No.", true, Comparator.comparing(cllct -> cllct.getPerson().getContact().getMobileNo()));
+        // Collector Office Number
+        MFXTableColumn<CollectAddress> cllctAddrOffNoCol = new MFXTableColumn<>("Office No.", true, Comparator.comparing(cllct -> cllct.getPerson().getContact().getOffPhNo()));
+        // Customer Name
+        MFXTableColumn<CollectAddress> cllctAddrCustNmCol = new MFXTableColumn<>("Customer Name", true, Comparator.comparing(cllct -> cllct.getCustomer().getName()));
+        // Address
+        MFXTableColumn<CollectAddress> cllctAddrAddrCol = new MFXTableColumn<>("Collect Address", true, Comparator.comparing(cllct -> cllct.getAddr().getAddress()));
+
+        // Collect Address ID
+        cllctAddrIDCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getCollectAddrID()));
+        // Collector Name
+        cllctAddrNameCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getPerson().getName()));
+        // Collector Email
+        cllctAddrEmailCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getPerson().getContact().getEmail()));
+        // Collector Mobile Number
+        cllctAddrMobNoCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getPerson().getContact().getMobileNo()));
+        // Collector Office Number
+        cllctAddrOffNoCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getPerson().getContact().getOffPhNo()));
+        // Customer Name
+        cllctAddrCustNmCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getCustomer().getName()));
+        // Address
+        cllctAddrAddrCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getAddr().getAddress()));
+
+        ((MFXTableView<CollectAddress>) tblVw).getTableColumns().addAll(
+                cllctAddrIDCol,
+                cllctAddrNameCol,
+                cllctAddrEmailCol,
+                cllctAddrMobNoCol,
+                cllctAddrOffNoCol,
+                cllctAddrCustNmCol,
+                cllctAddrAddrCol);
+
+        ((MFXTableView<CollectAddress>) tblVw).getFilters().addAll(
+                new StringFilter<>("Collect Address ID", c -> c.getCollectAddrID()),
+                new StringFilter<>("Collector Name", c -> c.getPerson().getName()),
+                new StringFilter<>("Email", c -> c.getPerson().getContact().getEmail()),
+                new StringFilter<>("Mobile No.", c -> c.getPerson().getContact().getMobileNo()),
+                new StringFilter<>("Office Phone No.", c -> c.getPerson().getContact().getOffPhNo()),
+                new StringFilter<>("Customer Name", c -> c.getCustomer().getName()),
+                new StringFilter<>("Collect Address", c -> c.getAddr().getAddress())
+        );
+        List<CollectAddress> collectAddresses;
+        if (((CollectAddress) passObj.getObj()).getCustomer() != null) {
+            collectAddresses = CollectAddressService.getCollectAddressByCustID(((CollectAddress) passObj.getObj()).getCustomer().getCustID());
+        } else {
+            collectAddresses = CollectAddressService.getAllCollectAddress();
+        }
+
+        ((MFXTableView<CollectAddress>) tblVw).setItems(FXCollections.observableList(collectAddresses));
+
+        ((MFXTableView<CollectAddress>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<CollectAddress>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    CollectAddress cllctAddr = (((MFXTableView<CollectAddress>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(cllctAddr.getCollectAddrID());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            Stage stage = (Stage) btnCancel.getScene().getWindow();
+                            BasicObjs passObj = new BasicObjs();
+                            passObj.setObj(cllctAddr);
+                            stage.setUserData(passObj);
+                            stage.close();
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
     }
 
     public void receiveData() {

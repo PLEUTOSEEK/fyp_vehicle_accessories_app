@@ -4,8 +4,10 @@
  */
 package Entity;
 
+import BizRulesConfiguration.AccountingRules;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.Objects;
 
 /**
  *
@@ -75,11 +77,8 @@ public class Item {
     }
 
     public BigDecimal getExclTaxAmt() {
+        exclTaxAmt = BigDecimal.valueOf(Double.valueOf(qty) * unitPrice.doubleValue());
         return exclTaxAmt;
-    }
-
-    public void setExclTaxAmt(BigDecimal exclTaxAmt) {
-        this.exclTaxAmt = exclTaxAmt;
     }
 
     public BigDecimal getDiscAmt() {
@@ -91,17 +90,44 @@ public class Item {
     }
 
     public BigDecimal getInclTaxAmt() {
+        AccountingRules accRules = new AccountingRules();
+        inclTaxAmt = BigDecimal.valueOf((exclTaxAmt.doubleValue() - discAmt.doubleValue()) * (1 + (accRules.getTaxRate() / 100.0)));
         return inclTaxAmt;
+    }
+
+    public void setExclTaxAmt(BigDecimal exclTaxAmt) {
+        this.exclTaxAmt = exclTaxAmt;
     }
 
     public void setInclTaxAmt(BigDecimal inclTaxAmt) {
         this.inclTaxAmt = inclTaxAmt;
     }
 
+//    @Override
+//    public boolean equals(Object obj) {
+//        System.out.println("I am in equals");
+//        if (obj instanceof CollectAddress) {
+//            Item item = ((Item) obj);
+//            if (this.getProduct().getProdID().equals(item.getProduct().getProdID())
+//                    && this.getDlvrDate().equals(item.getDlvrDate())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 43 * hash + Objects.hashCode(this.product);
+        hash = 43 * hash + Objects.hashCode(this.dlvrDate);
+        return hash;
+    }
+
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof CollectAddress) {
-            Item item = ((Item) obj);
+        System.out.println("I am in equals");
+        if (obj instanceof Item) {
+            Item item = (Item) obj;
             if (this.getProduct().getProdID().equals(item.getProduct().getProdID())
                     && this.getDlvrDate().equals(item.getDlvrDate())) {
                 return true;
@@ -109,5 +135,4 @@ public class Item {
         }
         return false;
     }
-
 }

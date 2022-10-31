@@ -1,0 +1,94 @@
+1. Initialize
+- Make the combo list have default options for user to select
+- Make every data field have input validation control to prevent dirty data get in
+- Receive the data from previous page (Majorly is current login staff and what main entity used in this page
+- Understand the purpose of current UI is use for create, update or read
+    - IF it is read or update
+        - auto field in the document information to respective data fields column
+    AND
+    (
+    Because documents are having relationship that one document could refer back to the other document
+    e.g. The quotation could refer to customer inquiry to save time on fill in the same information
+    HENCE in this example
+    Main Entity = Quotation
+    Reference Entity = Customer Inquiry
+    )
+    THEREFORE,
+    Note: Items = product and service that consist within the specific document
+    - IF the main entity pass in from previous page
+        - Get items from the main entity by document code
+    - ELSE IF the reference entity pass in from previous page
+        - Get items from the reference entity by document code
+
+- IF it is read ONLY
+    - make all data fields column disable from edit, to prevent any accidentally change been made
+
+2. Initialize Combo Selections
+- take all the static or dynamic options and import into respective combo box for user to make selection without typing
+(e.g. Currency Code will have MYR, Dollar etc; to make user life easy they could jjust select without typing, this could also help the programmer get rid of the dirty data [miss spelling])
+
+3. Field Fill In
+There is 2 situation [main entity/ reference entity]
+- IF main entity pass in
+    - Make the data field in with main entity information
+- ELSE IF reference entity pass in
+    - Make the data field in with reference entity information
+
+4. Is View Mode
+- IF is view mode equals to true
+    - set all data fields column become NOT editable
+    - the save button text change to update (It is because allow the user to click it and change to editable mode
+- ELSE IF is view mode equals to false
+    - set all data fields column become editable
+    - perform to save action
+
+5. Go Back Previous
+- pop data loss alert to user
+    - IF user confirm the data loss alert
+        - Discard all data modified and go back to previous page
+    - ELSE IF user cancel the data loss alert
+        - remain on this page and take nothing action
+
+6. Discard Current Data
+- IF discard button was clicked
+    - pop data loss alert to user
+    - IF user confirm the data loss alert
+        - Discard all data modified and go back to previous page
+    - ELSE IF user cancel the data loss alert
+        - remain on this page and take nothing action
+
+7. Quit Window
+- use to act as utils methods to support method [Go Back Previous & Discard Current Data] to exit the current page
+
+8. Switch Scene
+- Using DoublyLinkedList concept to understand the previous page is what [FXML], and redirect user back to previous page
+OR
+- capture current page information and redirect user to further/ forward page
+
+9. Send Data
+- before go back previous page, or go further/forward page, pass the necessary data to the page that going to reach to ensure the proper function of the page
+
+10. Receive Data
+- When just enter current page, catch the necessary from previous page to ensure proper function of the current page
+
+11. Input Validation
+- Work as defend line to prevent dirty data get in that going to corrupt the function or mess up the data records
+
+12. Clear All Field Value
+- Make all of the data fields column become blank again
+
+13. Alert Dialog
+- Use to generate alert window to notice the user
+
+14. Open ??? Selection
+- Use to get into the inner entity selection to allow user direct select document that want to refer without manual type in the ID or code of the document. By going this way could save memory from check whether the code or ID are correct or not
+
+15. Prepare Entity into Obj
+- All the information in presentation layer are consider as scatter/ unorganized
+- THEREFORE, it is necessary to use respective entity to group all the scatter information in one container easy for perform further CRUD
+
+15. Save ??? Entity
+- Allow the entity be save into the database
+- This function will cooperate with service and DAO layer to perform complete create or update data record into the database at respective tables
+
+

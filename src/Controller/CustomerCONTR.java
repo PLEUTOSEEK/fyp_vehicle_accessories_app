@@ -156,6 +156,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
     private MFXButton btnAdd;
 
     private List<CollectAddress> newCollectAddresses = new ArrayList<>(); // use to know which address been update, and perform update action for those modified address
+    private List<CollectAddress> tempCollectAddresses = new ArrayList<>(); // use to know which address been update, and perform update action for those modified address
     private List<CollectAddress> collectAddresses = new ArrayList<>(); // use to know which address been update, and perform update action for those modified address
     @FXML
     private MFXTableView<?> tblVw;
@@ -179,7 +180,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                     try {
                         fieldFillIn();
                         collectAddresses = CollectAddressService.getCollectAddressByCustID(((Customer) passObj.getObj()).getCustID());
-                        setupCollectAddressTable(collectAddresses);
+                        setupCollectAddressTable();
                     } catch (IOException ex) {
                         Logger.getLogger(CustomerCONTR.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -192,7 +193,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         });
     }
 
-    private void setupCollectAddressTable(List<CollectAddress> collectAddresses) {
+    private void setupCollectAddressTable() {
         // Collect Address ID
         MFXTableColumn<CollectAddress> collAddrIDCol = new MFXTableColumn<>("Collect Address ID", true, Comparator.comparing(collAddr -> collAddr.getCollectAddrID()));
         // Location Name
@@ -223,6 +224,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         // Mobile Number
         mobNoCol.setRowCellFactory(collectAddress -> new MFXTableRowCell<>(collAddr -> collAddr.getPerson().getContact().getMobileNo()));
 
+        ((MFXTableView<CollectAddress>) tblVw).getTableColumns().clear();
         ((MFXTableView<CollectAddress>) tblVw).getTableColumns().addAll(
                 collAddrIDCol,
                 locationNmCol,
@@ -233,6 +235,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 mobNoCol
         );
 
+        ((MFXTableView<CollectAddress>) tblVw).getFilters().clear();
         ((MFXTableView<CollectAddress>) tblVw).getFilters().addAll(
                 new StringFilter<>("Collect Address ID", collAddr -> collAddr.getCollectAddrID()),
                 new StringFilter<>("Location Name", collAddr -> collAddr.getAddr().getLocationName()),
@@ -243,7 +246,10 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 new StringFilter<>("Mobile No.", collAddr -> collAddr.getPerson().getContact().getMobileNo())
         );
 
+        tempCollectAddresses.addAll(collectAddresses);
+        ((MFXTableView<CollectAddress>) tblVw).getItems().clear();
         ((MFXTableView<CollectAddress>) tblVw).setItems(FXCollections.observableList(collectAddresses));
+        tempCollectAddresses.clear();
 
         ((MFXTableView<CollectAddress>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
             @Override
@@ -277,16 +283,15 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     CollectAddress catchedCollectAddress = new CollectAddress();
+                                    catchedCollectAddress = (CollectAddress) receiveObj.getObj();
 
-                                    if (catchedCollectAddress.getCollectAddrID().isEmpty()) {
+                                    if (!collectAddresses.contains(catchedCollectAddress)) {
                                         collectAddresses.add(catchedCollectAddress);
-                                        newCollectAddresses.add(catchedCollectAddress);
                                     } else {
                                         collectAddresses.set(collectAddresses.indexOf(collectAddress), catchedCollectAddress);
-                                        newCollectAddresses.set(newCollectAddresses.indexOf(collectAddress), catchedCollectAddress);
                                     }
 
-                                    setupCollectAddressTable(collectAddresses);
+                                    setupCollectAddressTable();
 
                                 }
                             } catch (IOException e) {

@@ -39,7 +39,7 @@ public class ImageViewerService {
 
     public Image getFirst(DoublyLinkedList<String> images) throws IOException {
         currentIndex = 1;
-
+        System.out.println(images.getLength() + "getFirst - I am zero");
         if (images.getLength() == 0) {
             return null;
         } else {
