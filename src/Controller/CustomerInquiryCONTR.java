@@ -334,6 +334,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
         this.tblVw.setDisable(disable);
         this.btnAdd.setDisable(disable);
+        this.imgDocs.setDisable(disable);
     }
 
     private void fieldFillIn() throws IOException {

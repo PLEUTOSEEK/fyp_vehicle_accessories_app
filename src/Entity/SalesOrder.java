@@ -33,13 +33,13 @@ public class SalesOrder extends Document {
     private BigDecimal nett;
     private Staff issuedBy;
     private Staff releasedAVerifiedBy;
-    private Customer customerSignature;
+    private CollectAddress customerSignature;
 
     public SalesOrder() {
         this(null, null, "", null, null, "", null, null, "", null, "", "", null, "", null, "", "", null, null, null, null, null, null, null, null);
     }
 
-    public SalesOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Customer billToCust, CollectAddress deliverToCust, String custPOReference, Quotation quotRef, String referenceType, String reference, Staff salesPerson, String currencyCode, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy, Staff releasedAVerifiedBy, Customer customerSignature) {
+    public SalesOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Customer billToCust, CollectAddress deliverToCust, String custPOReference, Quotation quotRef, String referenceType, String reference, Staff salesPerson, String currencyCode, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy, Staff releasedAVerifiedBy, CollectAddress customerSignature) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.billToCust = billToCust;
         this.deliverToCust = deliverToCust;
@@ -206,11 +206,11 @@ public class SalesOrder extends Document {
         this.releasedAVerifiedBy = releasedAVerifiedBy;
     }
 
-    public Customer getCustomerSignature() {
+    public CollectAddress getCustomerSignature() {
         return customerSignature;
     }
 
-    public void setCustomerSignature(Customer customerSignature) {
+    public void setCustomerSignature(CollectAddress customerSignature) {
         this.customerSignature = customerSignature;
     }
 

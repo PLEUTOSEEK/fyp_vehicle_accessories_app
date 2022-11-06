@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class QuotationDAO {
 
-    public static boolean saveNewQuotation(Quotation quotation) throws SQLException {
+    public static String saveNewQuotation(Quotation quotation) throws SQLException {
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -55,9 +55,9 @@ public class QuotationDAO {
                     + "Created_Date, "
                     + "Actual_Created_Date, "
                     + "Signed_Doc_Pic, "
-                    + "Modified_Date_Time"
-                    + ")"
-                    + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + "Modified_Date_Time "
+                    + ") "
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             ps = conn.prepareStatement(query);
             // bind parameter
@@ -87,9 +87,9 @@ public class QuotationDAO {
             ps.setTimestamp(24, quotation.getModifiedDateTime());
 
             ps.execute();
-            return true;
+            return quotation.getCode();
         } catch (Exception e) {
-            return false;
+            return null;
         } finally {
             try {
                 ps.close();
@@ -271,7 +271,7 @@ public class QuotationDAO {
         }
     }
 
-    public static boolean updateQuotation(Quotation quotation) {
+    public static String updateQuotation(Quotation quotation) {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -336,9 +336,113 @@ public class QuotationDAO {
             ps.setString(24, quotation.getCode());
 
             ps.execute();
-            return true;
+            return quotation.getCode();
         } catch (Exception e) {
-            return false;
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static String updateQuotationStatus(Quotation quotation) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        quotation.setModifiedDateTime(timestamp);
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE Quotation SET "
+                    + "Status = ? "
+                    + "WHERE QUOT_ID = ? ";
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, quotation.getStatus());
+            ps.setString(2, quotation.getCode());
+
+            ps.execute();
+            return quotation.getCode();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static Quotation getQuotationByID(String code) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        List<Quotation> quots = new ArrayList<>();
+        Quotation quotation = new Quotation();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT * FROM View_Retrieve_All_Quotation WHERE QUOT_Quot_ID = ?";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            ps.setString(1, code);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                quotation = new Quotation(
+                        rs.getTimestamp("QUOT_Created_Date"),
+                        rs.getTimestamp("QUOT_Modified_Date_Time"),
+                        rs.getString("QUOT_Quot_ID"),
+                        rs.getTimestamp("QUOT_Actual_Created_Date"),
+                        rs.getString("QUOT_Signed_Doc_Pic"),
+                        rs.getString("QUOT_Status"),
+                        CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("QUOT_CI_ID")),
+                        rs.getString("QUOT_Reference_Type"),
+                        rs.getString("QUOT_Reference"),
+                        CustomerDAO.getCustomerByID(rs.getString("QUOT_Bill_To_Cust")),
+                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Deliver_To")),
+                        StaffDAO.getStaffByID(rs.getString("QUOT_Sales_Person")),
+                        rs.getString("QUOT_Currency_Code"),
+                        rs.getDate("QUOT_Quot_Validity_Date"),
+                        rs.getDate("QUOT_Required_Delivery_Date"),
+                        rs.getString("QUOT_Payment_Term"),
+                        rs.getString("QUOT_Shipment_Term"),
+                        rs.getBigDecimal("QUOT_Gross"),
+                        rs.getBigDecimal("QUOT_Discount"),
+                        rs.getBigDecimal("QUOT_Sub_Total"),
+                        rs.getBigDecimal("QUOT_Nett"),
+                        StaffDAO.getStaffByID(rs.getString("QUOT_Issued_By")),
+                        StaffDAO.getStaffByID(rs.getString("QUOT_Released_And_Verified_By")),
+                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Customer_Signed"))
+                );
+
+            }
+
+            //return object
+            return quotation;
+
+        } catch (Exception e) {
+            return null;
         } finally {
             try {
                 ps.close();

@@ -5,6 +5,7 @@
 package Entity;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  *
@@ -74,11 +75,28 @@ public class Inventory extends Entity {
     }
 
     public Integer getTtlQty() {
-        return ttlQty;
+        return this.reservedQty + this.readyQty;
     }
 
-    public void setTtlQty(Integer ttlQty) {
-        this.ttlQty = ttlQty;
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Inventory other = (Inventory) obj;
+        return Objects.equals(this.inventoryID, other.inventoryID);
     }
 
 }

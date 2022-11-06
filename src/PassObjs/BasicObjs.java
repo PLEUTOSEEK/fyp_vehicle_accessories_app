@@ -6,6 +6,8 @@ package PassObjs;
 
 import Entity.Staff;
 import adt.DoublyLinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -24,6 +26,7 @@ public class BasicObjs {
     private Staff loginStaff;
     private Staff staff;
     private Object obj;
+    private List<Object> objs = new ArrayList<>();
     private DoublyLinkedList<String> fxmlPaths = new DoublyLinkedList<>();
     private String passDirection;
     private String crud;
@@ -99,6 +102,14 @@ public class BasicObjs {
 
     public void setCrud(String crud) {
         this.crud = crud;
+    }
+
+    public List<Object> getObjs() {
+        return objs;
+    }
+
+    public void setObjs(List<Object> objs) {
+        this.objs = objs;
     }
 
 }

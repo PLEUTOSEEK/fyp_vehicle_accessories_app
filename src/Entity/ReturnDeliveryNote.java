@@ -45,4 +45,92 @@ public class ReturnDeliveryNote extends Document {
         this.itemReceivedBy = itemReceivedBy;
     }
 
+    public SalesOrder getSO() {
+        return SO;
+    }
+
+    public void setSO(SalesOrder SO) {
+        this.SO = SO;
+    }
+
+    public Place getCollBackTo() {
+        return collBackTo;
+    }
+
+    public void setCollBackTo(Place collBackTo) {
+        this.collBackTo = collBackTo;
+    }
+
+    public CollectAddress getCollBckFr() {
+        return collBckFr;
+    }
+
+    public void setCollBckFr(CollectAddress collBckFr) {
+        this.collBckFr = collBckFr;
+    }
+
+    public Date getCollectDate() {
+        return collectDate;
+    }
+
+    public void setCollectDate(Date collectDate) {
+        this.collectDate = collectDate;
+    }
+
+    public String getInspectorMsg() {
+        return inspectorMsg;
+    }
+
+    public void setInspectorMsg(String inspectorMsg) {
+        this.inspectorMsg = inspectorMsg;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    public Staff getIssuedBy() {
+        return issuedBy;
+    }
+
+    public void setIssuedBy(Staff issuedBy) {
+        this.issuedBy = issuedBy;
+    }
+
+    public Staff getInspectedBy() {
+        return inspectedBy;
+    }
+
+    public void setInspectedBy(Staff inspectedBy) {
+        this.inspectedBy = inspectedBy;
+    }
+
+    public Staff getCollectBackBy() {
+        return collectBackBy;
+    }
+
+    public void setCollectBackBy(Staff collectBackBy) {
+        this.collectBackBy = collectBackBy;
+    }
+
+    public Person getItemPassedBackBy() {
+        return itemPassedBackBy;
+    }
+
+    public void setItemPassedBackBy(Person itemPassedBackBy) {
+        this.itemPassedBackBy = itemPassedBackBy;
+    }
+
+    public Staff getItemReceivedBy() {
+        return itemReceivedBy;
+    }
+
+    public void setItemReceivedBy(Staff itemReceivedBy) {
+        this.itemReceivedBy = itemReceivedBy;
+    }
+
 }

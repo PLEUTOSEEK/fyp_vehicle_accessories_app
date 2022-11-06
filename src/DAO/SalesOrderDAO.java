@@ -8,6 +8,7 @@ import Entity.SalesOrder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +18,15 @@ import java.util.List;
  */
 public class SalesOrderDAO {
 
-    public static boolean saveNewSalesOrder(SalesOrder salesOrder) {
+    public static String saveNewSalesOrder(SalesOrder salesOrder) {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        salesOrder.setActualCreatedDateTime(timestamp);
+        salesOrder.setModifiedDateTime(timestamp);
 
         try {
             conn = SQLDatabaseConnection.openConn();
@@ -73,16 +78,17 @@ public class SalesOrderDAO {
             ps.setBigDecimal(16, salesOrder.getNett());
             ps.setString(17, salesOrder.getIssuedBy().getStaffID());
             ps.setString(18, salesOrder.getReleasedAVerifiedBy().getStaffID());
-            ps.setString(19, salesOrder.getCustomerSignature().getCustID());
+            ps.setString(19, salesOrder.getCustomerSignature().getCollectAddrID());
             ps.setString(20, salesOrder.getStatus());
             ps.setTimestamp(21, salesOrder.getCreatedDate());
             ps.setTimestamp(22, salesOrder.getActualCreatedDateTime());
             ps.setString(23, salesOrder.getSignedDocPic());
             ps.setTimestamp(24, salesOrder.getModifiedDateTime());
             ps.execute();
-            return true;
+
+            return salesOrder.getCode();
         } catch (Exception e) {
-            return false;
+            return null;
         } finally {
             try {
                 ps.close();
@@ -97,7 +103,7 @@ public class SalesOrderDAO {
         }
     }
 
-    public static SalesOrder getSalesOrderByCode(String code) {
+    public static SalesOrder getSalesOrderByID(String code) {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -134,7 +140,7 @@ public class SalesOrderDAO {
                 salesOrder.setNett(rs.getBigDecimal("SO_Nett"));
                 salesOrder.setIssuedBy(StaffDAO.getStaffByID(rs.getString("SO_Issued_By")));
                 salesOrder.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("SO_Released_AnVerified_By")));
-                salesOrder.setCustomerSignature(CustomerDAO.getCustomerByID(rs.getString("SO_Customer_Signed")));
+                salesOrder.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("SO_Customer_Signed")));
                 salesOrder.setStatus(rs.getString("SO_Status"));
                 salesOrder.setCreatedDate(rs.getTimestamp("SO_Created_Date"));
                 salesOrder.setActualCreatedDateTime(rs.getTimestamp("SO_Actual_Created_Date"));
@@ -224,6 +230,130 @@ public class SalesOrderDAO {
 
             //return object
             return SOs;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static String updateSalesOrder(SalesOrder so) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        so.setModifiedDateTime(timestamp);
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE SalesOrder SET "
+                    + "Quot_ID = ?, "
+                    + "Bill_To_Cust = ?, "
+                    + "Deliver_To = ?, "
+                    + "Cust_PO_Reference = ?, "
+                    + "Reference_Type = ?, "
+                    + "Reference = ?, "
+                    + "Sales_Person = ?, "
+                    + "Currency_Code = ?, "
+                    + "Required_Delivery_Date = ?, "
+                    + "Payment_Term = ?, "
+                    + "Shipment_Term = ?, "
+                    + "Gross = ?, "
+                    + "Discount = ?, "
+                    + "Sub_Total = ?, "
+                    + "Nett = ?, "
+                    + "Issued_By = ?, "
+                    + "Released_AnVerified_By = ?, "
+                    + "Customer_Signed = ?, "
+                    + "Status = ?, "
+                    + "Created_Date = ?, "
+                    + "Actual_Created_Date = ?, "
+                    + "Signed_Doc_Pic = ?, "
+                    + "Modified_Date_Time = ? "
+                    + "WHERE "
+                    + "SO_ID = ? ";
+
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, so.getQuotRef().getCode());
+            ps.setString(2, so.getBillToCust().getCustID());
+            ps.setString(3, so.getDeliverToCust().getCollectAddrID());
+            ps.setString(4, so.getCustPOReference());
+            ps.setString(5, so.getReference());
+            ps.setString(6, so.getReference());
+            ps.setString(7, so.getSalesPerson().getStaffID());
+            ps.setString(8, so.getCurrencyCode());
+            ps.setDate(9, so.getRequiredDeliveryDate());
+            ps.setString(10, so.getPymtTerm());
+            ps.setString(11, so.getShipmentTerm());
+            ps.setBigDecimal(12, so.getGross());
+            ps.setBigDecimal(13, so.getDiscount());
+            ps.setBigDecimal(14, so.getSubTotal());
+            ps.setBigDecimal(15, so.getNett());
+            ps.setString(16, so.getIssuedBy().getStaffID());
+            ps.setString(17, so.getReleasedAVerifiedBy().getStaffID());
+            ps.setString(18, so.getCustomerSignature().getCollectAddrID());
+            ps.setString(19, so.getStatus());
+            ps.setTimestamp(20, so.getCreatedDate());
+            ps.setTimestamp(21, so.getActualCreatedDateTime());
+            ps.setString(22, so.getSignedDocPic());
+            ps.setTimestamp(23, so.getModifiedDateTime());
+            ps.setString(24, so.getCode());
+
+            ps.execute();
+            return so.getCode();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static String updateSalesOrderStatus(SalesOrder salesOrder) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        salesOrder.setModifiedDateTime(timestamp);
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE SalesOrder SET "
+                    + "Status = ? "
+                    + "WHERE "
+                    + "SO_ID = ? ";
+
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, salesOrder.getStatus());
+            ps.setString(2, salesOrder.getCode());
+
+            ps.execute();
+            return salesOrder.getCode();
         } catch (Exception e) {
             return null;
         } finally {

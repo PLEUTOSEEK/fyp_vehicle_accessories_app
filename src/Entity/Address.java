@@ -91,4 +91,22 @@ public class Address extends Entity {
         this.country = country;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Item) {
+            Address addr = (Address) obj;
+            if (this.locationName.toLowerCase().equals(addr.locationName.toLowerCase())
+                    && this.address.toLowerCase().equals(addr.address.toLowerCase())
+                    && this.city.toLowerCase().equals(addr.city.toLowerCase())
+                    && this.postalCode.toLowerCase().equals(addr.postalCode.toLowerCase())
+                    && this.state.toLowerCase().equals(addr.state.toLowerCase())
+                    && this.country.toLowerCase().equals(addr.country.toLowerCase())) {
+
+                return true;
+
+            }
+        }
+
+        return false;
+    }
 }

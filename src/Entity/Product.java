@@ -6,6 +6,7 @@ package Entity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  *
@@ -16,18 +17,23 @@ public class Product extends Entity {
     private String prodID;
     private String prodName;
     private String partNo;
+    private String uom; // Unit Of Measure
     private String description;
     private String color;
     private BigDecimal sellPrice;
     private BigDecimal MSRP;
-    private int maxLvl;
-    private int avgLvl;
-    private int minLvl;
-    private int dangerLvl;
-    private int reorderLvl;
+    private Integer maxLvl;
+    private Integer avgLvl;
+    private Integer minLvl;
+    private Integer dangerLvl;
+    private Integer reorderLvl;
 
     public Product() {
 
+    }
+
+    public Product(String prodID) {
+        this.prodID = prodID;
     }
 
     public Product(Timestamp createdDateTime, Timestamp modifiedDateTime) {
@@ -101,44 +107,76 @@ public class Product extends Entity {
         this.MSRP = MSRP;
     }
 
-    public int getMaxLvl() {
+    public String getUom() {
+        return uom;
+    }
+
+    public void setUom(String uom) {
+        this.uom = uom;
+    }
+
+    public Integer getMaxLvl() {
         return maxLvl;
     }
 
-    public void setMaxLvl(int maxLvl) {
+    public void setMaxLvl(Integer maxLvl) {
         this.maxLvl = maxLvl;
     }
 
-    public int getAvgLvl() {
+    public Integer getAvgLvl() {
         return avgLvl;
     }
 
-    public void setAvgLvl(int avgLvl) {
+    public void setAvgLvl(Integer avgLvl) {
         this.avgLvl = avgLvl;
     }
 
-    public int getMinLvl() {
+    public Integer getMinLvl() {
         return minLvl;
     }
 
-    public void setMinLvl(int minLvl) {
+    public void setMinLvl(Integer minLvl) {
         this.minLvl = minLvl;
     }
 
-    public int getDangerLvl() {
+    public Integer getDangerLvl() {
         return dangerLvl;
     }
 
-    public void setDangerLvl(int dangerLvl) {
+    public void setDangerLvl(Integer dangerLvl) {
         this.dangerLvl = dangerLvl;
     }
 
-    public int getReorderLvl() {
+    public Integer getReorderLvl() {
         return reorderLvl;
     }
 
-    public void setReorderLvl(int reorderLvl) {
+    public void setReorderLvl(Integer reorderLvl) {
         this.reorderLvl = reorderLvl;
     }
 
+    public String getPartNoDesc() {
+        return this.partNo + " " + this.description;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Product other = (Product) obj;
+        return Objects.equals(this.prodID, other.prodID);
+    }
 }

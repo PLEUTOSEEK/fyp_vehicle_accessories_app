@@ -274,13 +274,12 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getItems().clear();
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
         tempItems.clear();
-        System.out.println(items.size() + "--------");
 
-        ((MFXTableView<CollectAddress>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+        ((MFXTableView<Item>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
 
-                if (((MFXTableView<CollectAddress>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                if (((MFXTableView<Item>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
                     Item item = (((MFXTableView<Item>) tblVw).getSelectionModel().getSelectedValues().get(0));
                     rowSelected.add(item.getProduct().getProdID());
 
@@ -303,7 +302,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                                 stage.setUserData(passObj);
                                 stage.showAndWait();
 
-                                // if have any change on the selected collect address
+                                // if have any change on the selected item
                                 if (stage.getUserData() != null) {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
@@ -399,8 +398,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                 this.txtReleasedAVerifiedBy.setText("");
                 this.txtCustSignature.setText("");
 
-                this.lblImgStr.setText(customerInquiry.getSignedDocPic());
-                this.imgDocs.setImage(ImageUtils.byteToImg(ImageUtils.encodedStrToByte(((String) ImageUtils.splitImgStr(customerInquiry.getSignedDocPic()).getFirst()))));
+                this.lblImgStr.setText("");
+                this.imgDocs.setImage(null);
 
                 items.clear();
                 items.addAll(ItemService.getItemsByCIID(customerInquiry.getCode()));
@@ -448,6 +447,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
         this.tblVw.setDisable(disable);
         this.btnAdd.setDisable(disable);
+        this.imgDocs.setDisable(disable);
+
     }
 
     @FXML
@@ -550,6 +551,60 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
         alert.showAndWait();
         return alert.getResult();
+    }
+
+    private Quotation prepareQuotationToObj() {
+        Quotation quotation = new Quotation();
+
+        quotation.setCode(this.txtQuotID.getText());
+
+        CustomerInquiry customerInquiry = new CustomerInquiry();
+        customerInquiry.setCode(this.txtCIRef.getText());
+        quotation.setCI(customerInquiry);
+
+        Staff salesPerson = new Staff();
+        salesPerson.setStaffID(this.txtSalesPerson.getText());
+        quotation.setSalesPerson(salesPerson);
+
+        Customer billTo = new Customer();
+        billTo.setCustID(this.txtBillTo.getText());
+        quotation.setBillToCust(billTo);
+
+        CollectAddress deliverTo = new CollectAddress();
+        deliverTo.setCollectAddrID(this.txtDeliverTo.getText());
+        quotation.setDeliverToCust(deliverTo);
+
+        quotation.setCreatedDate(this.dtRefDate.getValue() == null ? null : Timestamp.valueOf(this.dtRefDate.getValue().atStartOfDay()));
+        quotation.setReferenceType(this.txtRefType.getText());
+        quotation.setReference(this.txtRef.getText());
+        quotation.setQuotValidityDate(this.dtQuotValidDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtQuotValidDate.getValue()));
+        quotation.setRequiredDeliveryDate(this.dtReqDlvrDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtReqDlvrDate.getValue()));
+        quotation.setCurrencyCode(this.cmbCurrencyCode.getText());
+        quotation.setPymtTerm(this.cmbPymtTerm.getText());
+        quotation.setShipmentTerm(this.cmbShipmentTerm.getText());
+        quotation.setStatus(this.cmbStatus.getText());
+
+        quotation.setGross(new BigDecimal(this.txtGross.getText()));
+        quotation.setDiscount(new BigDecimal(this.txtDiscount.getText()));
+        quotation.setSubTotal(new BigDecimal(this.txtSubTtl.getText()));
+        quotation.setNett(new BigDecimal(this.txtNett.getText()));
+
+        Staff issuedBy = new Staff();
+        issuedBy.setStaffID(this.txtIssuedBy.getText());
+        quotation.setIssuedBy(issuedBy);
+
+        Staff releasedAVerifiedBy = new Staff();
+        releasedAVerifiedBy.setStaffID(this.txtReleasedAVerifiedBy.getText());
+        quotation.setReleasedAVerifiedBy(releasedAVerifiedBy);
+
+        CollectAddress customerSignature = new CollectAddress();
+        customerSignature.setCollectAddrID(this.txtCustSignature.getText());
+        quotation.setCustomerSignature(customerSignature);
+
+        quotation.setSignedDocPic(this.lblImgStr.getText());
+
+        quotation.setItems(items);
+        return quotation;
     }
 
     @FXML
@@ -870,59 +925,6 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
-    private Quotation prepareQuotationToObj() {
-        Quotation q = new Quotation();
-
-        q.setCode(this.txtQuotID.getText());
-
-        CustomerInquiry customerInquiry = new CustomerInquiry();
-        customerInquiry.setCode(this.txtCIRef.getText());
-        q.setCI(customerInquiry);
-
-        Staff salesPerson = new Staff();
-        salesPerson.setStaffID(this.txtSalesPerson.getText());
-        q.setSalesPerson(salesPerson);
-
-        Customer billTo = new Customer();
-        billTo.setCustID(this.txtBillTo.getText());
-        q.setBillToCust(billTo);
-
-        CollectAddress collectAddr = new CollectAddress();
-        collectAddr.setCollectAddrID(this.txtDeliverTo.getText());
-        q.setDeliverToCust(collectAddr);
-
-        q.setCreatedDate(this.dtRefDate.getValue() == null ? null : Timestamp.valueOf(this.dtRefDate.getValue().atStartOfDay()));
-        q.setReferenceType(this.txtRefType.getText());
-        q.setReference(this.txtRef.getText());
-        q.setQuotValidityDate(this.dtQuotValidDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtQuotValidDate.getValue()));
-        q.setRequiredDeliveryDate(this.dtReqDlvrDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtReqDlvrDate.getValue()));
-        q.setCurrencyCode(this.cmbCurrencyCode.getText());
-        q.setPymtTerm(this.cmbPymtTerm.getText());
-        q.setShipmentTerm(this.cmbShipmentTerm.getText());
-        q.setStatus(this.cmbStatus.getText());
-
-        q.setGross(new BigDecimal(this.txtGross.getText()));
-        q.setDiscount(new BigDecimal(this.txtDiscount.getText()));
-        q.setSubTotal(new BigDecimal(this.txtSubTtl.getText()));
-        q.setNett(new BigDecimal(this.txtNett.getText()));
-
-        Staff issuedBy = new Staff();
-        issuedBy.setStaffID(this.txtIssuedBy.getText());
-        q.setIssuedBy(issuedBy);
-
-        Staff releasedAVerifiedBy = new Staff();
-        releasedAVerifiedBy.setStaffID(this.txtReleasedAVerifiedBy.getText());
-        q.setIssuedBy(releasedAVerifiedBy);
-
-        collectAddr.setCollectAddrID(this.txtCustSignature.getText());
-        q.setCustomerSignature(collectAddr);
-
-        q.setSignedDocPic(this.lblImgStr.getText());
-
-        q.setItems(items);
-        return q;
-    }
-
     @FXML
     private void saveQuotation(MouseEvent event) throws SQLException {
         if (event.isPrimaryButtonDown() == true) {
@@ -947,7 +949,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
             }
 
             if (!this.txtCIRef.getText().isEmpty()) {
-                quotInDraft.getCI().setStatus("Completed");
+                quotInDraft.getCI().setStatus(SalesRules.CIStatus.COMPLETED.toString());
                 CustomerInquiryService.updateCustomerInquiryStatus(quotInDraft.getCI());
             }
 

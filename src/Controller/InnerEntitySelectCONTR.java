@@ -5,16 +5,22 @@
 package Controller;
 
 import Entity.CollectAddress;
+import Entity.CustomerInquiry;
 import Entity.Place;
+import Entity.Quotation;
 import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.CollectAddressService;
+import Service.CustomerInquiryService;
 import Service.PlaceService;
+import Service.QuotationService;
 import Service.StaffService;
+import Utils.DateFilter;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import io.github.palexdev.materialfx.filter.DoubleFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import java.net.URL;
 import java.util.ArrayList;
@@ -72,6 +78,8 @@ public class InnerEntitySelectCONTR implements Initializable {
             forStaff();
         } else if (this.passObj.getObj() instanceof CollectAddress) {
             forCollectAddress();
+        } else if (this.passObj.getObj() instanceof Quotation) {
+            forQuotation();
         }
     }
 
@@ -270,7 +278,9 @@ public class InnerEntitySelectCONTR implements Initializable {
                 new StringFilter<>("Customer Name", c -> c.getCustomer().getName()),
                 new StringFilter<>("Collect Address", c -> c.getAddr().getAddress())
         );
+
         List<CollectAddress> collectAddresses;
+
         if (((CollectAddress) passObj.getObj()).getCustomer() != null) {
             collectAddresses = CollectAddressService.getCollectAddressByCustID(((CollectAddress) passObj.getObj()).getCustomer().getCustID());
         } else {
@@ -300,6 +310,204 @@ public class InnerEntitySelectCONTR implements Initializable {
                 }
             }
         });
+    }
+
+    private void forCustomerInquiry() {
+        // CI ID
+        // Bill To Customer Name
+        // Deliver To Address
+        // Sales Person Name
+        // Nett
+        // Status
+        // Created Date
+
+        // CI ID
+        MFXTableColumn<CustomerInquiry> ciIDCol = new MFXTableColumn<>("Customer Inquiry ID", true, Comparator.comparing(ci -> ci.getCode()));
+        // Bill To Customer Name
+        MFXTableColumn<CustomerInquiry> billToCol = new MFXTableColumn<>("Bill To Customer Name", true, Comparator.comparing(ci -> ci.getBillToCust().getName()));
+        // Deliver To Address
+        MFXTableColumn<CustomerInquiry> deliverToCol = new MFXTableColumn<>("Deliver To Address", true, Comparator.comparing(ci -> ci.getDeliverToCust().getAddr().getAddress()));
+        // Sales Person Name
+        MFXTableColumn<CustomerInquiry> salesPersonCol = new MFXTableColumn<>("Sales Person Name", true, Comparator.comparing(ci -> ci.getSalesPerson().getName()));
+        // Nett
+        MFXTableColumn<CustomerInquiry> nettCol = new MFXTableColumn<>("Nett", true, Comparator.comparing(ci -> ci.getNett()));
+        // Status
+        MFXTableColumn<CustomerInquiry> statusCol = new MFXTableColumn<>("Status", true, Comparator.comparing(ci -> ci.getStatus()));
+        // Created Date
+        MFXTableColumn<CustomerInquiry> createdDtCol = new MFXTableColumn<>("Reference Date", true, Comparator.comparing(ci -> ci.getCreatedDate()));
+
+        // CI ID
+        ciIDCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getCode()));
+        // Bill To Customer Name
+        billToCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getBillToCust().getName()));
+        // Deliver To Address
+        deliverToCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getDeliverToCust().getAddr().getAddress()));
+        // Sales Person Name
+        salesPersonCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getSalesPerson().getName()));
+        // Nett
+        nettCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getNett()));
+        // Status
+        statusCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getStatus()));
+        // Created Date
+        createdDtCol.setRowCellFactory(cllct -> new MFXTableRowCell<>(c -> c.getCreatedDate()));
+
+        ((MFXTableView<CustomerInquiry>) tblVw).getTableColumns().addAll(
+                ciIDCol,
+                billToCol,
+                deliverToCol,
+                salesPersonCol,
+                nettCol,
+                statusCol,
+                createdDtCol);
+
+        ((MFXTableView<CustomerInquiry>) tblVw).getFilters().addAll(
+                new StringFilter<>("Customer Inquiry ID", c -> c.getCode()),
+                new StringFilter<>("Bill To Customer Name", c -> c.getBillToCust().getName()),
+                new StringFilter<>("Deliver To Address", c -> c.getDeliverToCust().getAddr().getAddress()),
+                new StringFilter<>("Sales Person Name", c -> c.getSalesPerson().getName()),
+                new DoubleFilter<>("Nett", c -> c.getNett().doubleValue()),
+                new StringFilter<>("Status", c -> c.getStatus()),
+                new DateFilter<>("Reference Date", c -> c.getCreatedDate())
+        );
+
+        //5
+        List<CustomerInquiry> customerInquiries = CustomerInquiryService.getAllCustomerInquiry();
+
+        //6
+        ((MFXTableView<CustomerInquiry>) tblVw).setItems(FXCollections.observableList(customerInquiries));
+        //7
+
+        ((MFXTableView<CustomerInquiry>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<CustomerInquiry>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    CustomerInquiry customerInquiry = (((MFXTableView<CustomerInquiry>) tblVw).getSelectionModel().getSelectedValues().get(0));
+
+                    rowSelected.add(customerInquiry.getCode());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            Stage stage = (Stage) btnCancel.getScene().getWindow();
+                            BasicObjs passObj = new BasicObjs();
+                            passObj.setObj(customerInquiry);
+                            stage.setUserData(passObj);
+                            stage.close();
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void forQuotation() {
+        //1
+
+        MFXTableColumn<Quotation> quotIDCol = new MFXTableColumn<>("Quotation ID", true, Comparator.comparing(quot -> quot.getCode()));
+        MFXTableColumn<Quotation> ciCol = new MFXTableColumn<>("Cusrtomer Inquiry ID", true, Comparator.comparing(quot -> quot.getCI() == null ? "" : quot.getCI().getCode()));
+        MFXTableColumn<Quotation> refTypeCol = new MFXTableColumn<>("Reference Type", true, Comparator.comparing(quot -> quot.getReferenceType()));
+        MFXTableColumn<Quotation> refCol = new MFXTableColumn<>("Reference", true, Comparator.comparing(quot -> quot.getReference()));
+        MFXTableColumn<Quotation> billToIDCol = new MFXTableColumn<>("Bill To Customer ID", true, Comparator.comparing(quot -> quot.getBillToCust().getCustID()));
+        MFXTableColumn<Quotation> billToNmCol = new MFXTableColumn<>("Bill To Customer Name", true, Comparator.comparing(quot -> quot.getBillToCust().getName()));
+        MFXTableColumn<Quotation> deliverToIDCol = new MFXTableColumn<>("Deliver To Customer ID", true, Comparator.comparing(quot -> quot.getDeliverToCust().getCollectAddrID()));
+        MFXTableColumn<Quotation> deliverToNmCol = new MFXTableColumn<>("Deliver To Customer Name", true, Comparator.comparing(quot -> quot.getDeliverToCust().getPerson().getName()));
+        MFXTableColumn<Quotation> salesPersonIDCol = new MFXTableColumn<>("Sales Person ID", true, Comparator.comparing(quot -> quot.getSalesPerson().getStaffID()));
+        MFXTableColumn<Quotation> salesPersonNmCol = new MFXTableColumn<>("Sales Person Name", true, Comparator.comparing(quot -> quot.getSalesPerson().getName()));
+        MFXTableColumn<Quotation> quotValDtCol = new MFXTableColumn<>("Quotation Validity Date", true, Comparator.comparing(quot -> quot.getQuotValidityDate()));
+        MFXTableColumn<Quotation> reqDlvrDtCol = new MFXTableColumn<>("Required Delivery Date", true, Comparator.comparing(quot -> quot.getRequiredDeliveryDate()));
+        MFXTableColumn<Quotation> grossDtCol = new MFXTableColumn<>("Gross", true, Comparator.comparing(quot -> quot.getGross()));
+        MFXTableColumn<Quotation> discDtCol = new MFXTableColumn<>("Discount", true, Comparator.comparing(quot -> quot.getDiscount()));
+        MFXTableColumn<Quotation> subTtlDtCol = new MFXTableColumn<>("Sub Total", true, Comparator.comparing(quot -> quot.getSubTotal()));
+        MFXTableColumn<Quotation> nettDtCol = new MFXTableColumn<>("Nett", true, Comparator.comparing(quot -> quot.getNett()));
+
+        //2
+        quotIDCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getCode()));
+        ciCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getCI() == null ? "" : quot.getCI().getCode()));
+        refTypeCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getReferenceType()));
+        refCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getReference()));
+        billToIDCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getBillToCust().getCustID()));
+        billToNmCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getBillToCust().getName()));
+        deliverToIDCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getDeliverToCust().getCollectAddrID()));
+        deliverToNmCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getDeliverToCust().getPerson().getName()));
+        salesPersonIDCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getSalesPerson().getStaffID()));
+        salesPersonNmCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getSalesPerson().getName()));
+        quotValDtCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getQuotValidityDate()));
+        reqDlvrDtCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getRequiredDeliveryDate()));
+        grossDtCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getGross()));
+        discDtCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getDiscount()));
+        subTtlDtCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getSubTotal()));
+        nettDtCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getNett()));
+
+        //3
+        ((MFXTableView<Quotation>) tblVw).getTableColumns().addAll(quotIDCol,
+                ciCol,
+                refTypeCol,
+                refCol,
+                billToIDCol,
+                billToNmCol,
+                deliverToIDCol,
+                deliverToNmCol,
+                salesPersonIDCol,
+                salesPersonNmCol,
+                quotValDtCol,
+                reqDlvrDtCol,
+                grossDtCol,
+                discDtCol,
+                subTtlDtCol,
+                nettDtCol);
+
+        //4
+        ((MFXTableView<Quotation>) tblVw).getFilters().addAll(
+                new StringFilter<>("Quotation ID", quot -> quot.getCode()),
+                new StringFilter<>("Customer Inquiry ID", quot -> quot.getCI().getCode()),
+                new StringFilter<>("Reference Type", quot -> quot.getReferenceType()),
+                new StringFilter<>("Reference", quot -> quot.getReference()),
+                new StringFilter<>("Bill To Customer ID", quot -> quot.getBillToCust().getCustID()),
+                new StringFilter<>("Bill To Customer Name", quot -> quot.getBillToCust().getName()),
+                new StringFilter<>("Deliver To Customer ID", quot -> quot.getDeliverToCust().getCollectAddrID()),
+                new StringFilter<>("Deliver To Customer Name", quot -> quot.getDeliverToCust().getPerson().getName()),
+                new StringFilter<>("Sales Person ID", quot -> quot.getSalesPerson().getStaffID()),
+                new StringFilter<>("Sales Person Name", quot -> quot.getSalesPerson().getName()),
+                new StringFilter<>("Quotation Validity Date", quot -> quot.getQuotValidityDate().toString()),
+                new DateFilter<>("Required Delivery Date", quot -> quot.getRequiredDeliveryDate()),
+                new DoubleFilter<>("Gross", quot -> quot.getGross().doubleValue()),
+                new DoubleFilter<>("Discount", quot -> quot.getDiscount().doubleValue()),
+                new DoubleFilter<>("Sub Total", quot -> quot.getSubTotal().doubleValue()),
+                new DoubleFilter<>("Nett", quot -> quot.getNett().doubleValue())
+        );
+
+        //5
+        List<Quotation> quots = QuotationService.getAllQuotation();
+
+        //6
+        ((MFXTableView<Quotation>) tblVw).setItems(FXCollections.observableList(quots));
+        //7
+
+        ((MFXTableView<Quotation>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<Quotation>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    Quotation quotation = (((MFXTableView<Quotation>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(quotation.getCode());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            Stage stage = (Stage) btnCancel.getScene().getWindow();
+                            BasicObjs passObj = new BasicObjs();
+                            passObj.setObj(quotation);
+                            stage.setUserData(passObj);
+                            stage.close();
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+
+        System.out.println("done go through function");
     }
 
     public void receiveData() {

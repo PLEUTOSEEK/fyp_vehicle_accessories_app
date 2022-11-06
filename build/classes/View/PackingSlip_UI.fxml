@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.TransferOrderCONTR">
+<AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PackingSlipCONTR">
     <children>
         <MFXScrollPane minHeight="785.0" minWidth="1532.0" prefHeight="786.0" prefWidth="1533.0" styleClass="grid-pane" stylesheets="@../Material/css/PaneBackgroundColor.css" trackColor="#828282" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <content>
@@ -92,8 +92,8 @@
                                     <children>
                                         <GridPane layoutX="6.0" minHeight="110.0" minWidth="707.0" prefHeight="110.0" prefWidth="1378.0">
                                             <columnConstraints>
-                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="216.00001220703126" minWidth="10.0" prefWidth="188.99998168945314" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="186.39999389648438" minWidth="0.0" prefWidth="86.80004882812503" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="221.39998779296874" minWidth="10.0" prefWidth="211.80001220703124" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="186.39999389648438" minWidth="0.0" prefWidth="61.399987792968744" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="795.0" minWidth="10.0" prefWidth="189.39996337890625" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="713.9996826171875" minWidth="0.0" prefWidth="80.800048828125" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="945.2" minWidth="10.0" prefWidth="839.1999511718751" />
@@ -104,8 +104,16 @@
                                                 <RowConstraints maxHeight="293.6000213623047" minHeight="0.0" prefHeight="56.40000915527344" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <MFXTextField fx:id="txtASD" alignment="CENTER_RIGHT" editable="false" floatingText="Packing Slip ID" minHeight="47.0" minWidth="158.0" prefHeight="47.0" prefWidth="158.0" GridPane.rowIndex="1" />
-                                                <MFXTextField alignment="CENTER_RIGHT" floatingText="Transfer Order Reference" minWidth="158.0" prefHeight="50.0" prefWidth="158.0" GridPane.rowIndex="2" />
+                                                <MFXTextField fx:id="txtPSID" alignment="CENTER_RIGHT" editable="false" floatingText="Packing Slip ID" minHeight="47.0" minWidth="158.0" prefHeight="47.0" prefWidth="158.0" GridPane.rowIndex="1" />
+                                                <MFXTextField fx:id="txtTORef" alignment="CENTER_RIGHT" editable="false" floatingText="Transfer Order Reference" minWidth="158.0" prefHeight="50.0" prefWidth="158.0" GridPane.rowIndex="2" />
+                                    <MFXCircleToggleNode fx:id="ctnTOSelection" graphicTextGap="2.0" onMousePressed="#openTOSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <graphic>
+                                          <FontAwesomeIconView glyphName="LIST" />
+                                       </graphic>
+                                       <padding>
+                                          <Insets bottom="1.0" top="10.0" />
+                                       </padding>
+                                    </MFXCircleToggleNode>
                                             </children>
                                         </GridPane>
                                     </children>
@@ -144,8 +152,8 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <MFXTableView prefHeight="383.0" prefWidth="1368.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" GridPane.valignment="TOP" />
-                                                <MFXButton buttonType="RAISED" minHeight="27.0" minWidth="70.0" styleClass="outline-button" text="Add" GridPane.columnIndex="12" GridPane.halignment="RIGHT">
+                                                <MFXTableView fx:id="tblVw" prefHeight="383.0" prefWidth="1368.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" GridPane.valignment="TOP" />
+                                                <MFXButton fx:id="btnAdd" buttonType="RAISED" minHeight="27.0" minWidth="70.0" onMousePressed="#addProductItem" styleClass="outline-button" text="Add" GridPane.columnIndex="12" GridPane.halignment="RIGHT">
                                                     <GridPane.margin>
                                                         <Insets right="1.0" />
                                                     </GridPane.margin>
@@ -174,8 +182,8 @@
             </content>
         </MFXScrollPane>
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c1c1ec" height="53.0" layoutX="3.0" layoutY="728.0" stroke="#cdc7d9" strokeType="INSIDE" width="1515.0" />
-        <MFXButton buttonType="RAISED" layoutX="1430.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" styleClass="outline-button" text="Save" />
-        <MFXButton id="custom" layoutX="1331.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" text="Discard" />
+        <MFXButton fx:id="btnSave" buttonType="RAISED" layoutX="1430.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" onMousePressed="#savePS" styleClass="outline-button" text="Save" />
+        <MFXButton id="custom" fx:id="btnDiscard" layoutX="1331.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" onMousePressed="#discardCurrentData" text="Discard" />
     </children>
    <stylesheets>
       <URL value="@../Material/css/Buttons.css" />

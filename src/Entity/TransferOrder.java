@@ -6,6 +6,7 @@ package Entity;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -21,13 +22,13 @@ public class TransferOrder<T> extends Document {
     private List<Item> items;
     private Staff issuedBy;
     private Staff transferBy;
-    private Customer itemReceivedBy;
+    private Staff itemReceivedBy;
 
     public TransferOrder() {
         this(null, null, "", null, null, "", null, null, "", null, null, null, null, null);
     }
 
-    public TransferOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Staff PIC, Place destination, String reqType, T reqTypeRef, List<Item> items, Staff issuedBy, Staff transferBy, Customer itemReceivedBy) {
+    public TransferOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Staff PIC, Place destination, String reqType, T reqTypeRef, List<Item> items, Staff issuedBy, Staff transferBy, Staff itemReceivedBy) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.PIC = PIC;
         this.destination = destination;
@@ -95,12 +96,34 @@ public class TransferOrder<T> extends Document {
         this.transferBy = transferBy;
     }
 
-    public Customer getItemReceivedBy() {
+    public Staff getItemReceivedBy() {
         return itemReceivedBy;
     }
 
-    public void setItemReceivedBy(Customer itemReceivedBy) {
+    public void setItemReceivedBy(Staff itemReceivedBy) {
         this.itemReceivedBy = itemReceivedBy;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        System.out.println("this is equals from TransferOrder.java line 115");
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TransferOrder<?> other = (TransferOrder<?>) obj;
+        return Objects.equals(this.code, other.code);
     }
 
 }

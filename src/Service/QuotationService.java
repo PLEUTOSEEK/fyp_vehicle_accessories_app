@@ -63,13 +63,21 @@ public class QuotationService {
         return QuotationDAO.getAllQuotation();
     }
 
-    public static boolean saveNewQuotation(Quotation quotation) throws SQLException {
+    public static String saveNewQuotation(Quotation quotation) throws SQLException {
         quotation.setCode(generateID());
         return QuotationDAO.saveNewQuotation(quotation);
     }
 
-    public static boolean updateQuotation(Quotation quotation) {
+    public static String updateQuotation(Quotation quotation) {
         return QuotationDAO.updateQuotation(quotation);
+    }
+
+    public static String updateQuotationStatus(Quotation quotation) {
+        return QuotationDAO.updateQuotationStatus(quotation);
+    }
+
+    public static Quotation getQuotationByID(String code) {
+        return QuotationDAO.getQuotationByID(code);
     }
 
 }

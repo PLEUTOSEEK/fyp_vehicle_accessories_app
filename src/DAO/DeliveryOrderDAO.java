@@ -72,16 +72,20 @@ public class DeliveryOrderDAO {
 
             if (rs.next()) {
                 deliveryOrder.setCode(rs.getString("DO_DO_ID"));
-                deliveryOrder.setSO(SalesOrderDAO.getSalesOrderByCode(rs.getString("DO_SO_ID")));
-                deliveryOrder.setRDN(ReturnDeliveryNoteDAO.getReturnDeliveryNoteByCode(rs.getString("DO_RDN_ID")));
                 deliveryOrder.setReferenceType(rs.getString("DO_Reference_Type"));
-                deliveryOrder.setReference(rs.getString("DO_Reference"));
+
+                if (deliveryOrder.getReferenceType().equals("RDN")) {
+                    deliveryOrder.setReference(TransferOrderDAO.getTransferOrderByCode(rs.getString("DO_Reference")));
+                } else if (deliveryOrder.getReferenceType().equals("TO")) {
+                    deliveryOrder.setReference(ReturnDeliveryNoteDAO.getReturnDeliveryNoteByCode(rs.getString("DO_Reference")));
+                }
+
                 deliveryOrder.setDeliverFr(PlaceDAO.getPlaceByID(rs.getString("DO_Company_Address_ID")));
                 deliveryOrder.setDeliveryDate(rs.getDate("DO_Delivery_Date"));
                 deliveryOrder.setIssuedBy(StaffDAO.getStaffByID(rs.getString("DO_Issued_By")));
                 deliveryOrder.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("DO_Released_And_Verified_By")));
                 deliveryOrder.setDeliveryBy(StaffDAO.getStaffByID(rs.getString("DO_Delivery_By")));
-                deliveryOrder.setItemReceivedBy(CustomerDAO.getCustomerByID(rs.getString("DO_Item_Received_By")));
+                deliveryOrder.setItemReceivedBy(CollectAddressDAO.getCollectAddressByID(rs.getString("DO_Item_Received_By")));
                 deliveryOrder.setStatus(rs.getString("DO_Status"));
                 deliveryOrder.setCreatedDate(rs.getTimestamp("DO_Created_Date"));
                 deliveryOrder.setActualCreatedDateTime(rs.getTimestamp("DO_Actual_Created_Date"));

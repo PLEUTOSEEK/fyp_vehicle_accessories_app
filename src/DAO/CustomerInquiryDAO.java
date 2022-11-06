@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -285,6 +287,66 @@ public class CustomerInquiryDAO {
 
             ps.execute();
             return customerInquiry.getCode();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static List<CustomerInquiry> getAllCustomerInquiry() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        CustomerInquiry customerInquiry = new CustomerInquiry();
+        List<CustomerInquiry> customerInquiries = new ArrayList<>();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT * FROM View_Retrieve_All_CustomerInquriy";
+            ps = conn.prepareStatement(query);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                customerInquiries.add(new CustomerInquiry(
+                        rs.getTimestamp("Created_Date"),
+                        rs.getTimestamp("Modified_Date_Time"),
+                        rs.getString("CI_ID"),
+                        rs.getTimestamp("CI_Actual_Created_Date"),
+                        rs.getString("CI_Signed_Doc_Pic"),
+                        rs.getString("CI_Status"),
+                        rs.getString("CI_Reference_Type"),
+                        rs.getString("CI_Reference"),
+                        CustomerDAO.getCustomerByID(rs.getString("CI_Bill_To_Cust")),
+                        CollectAddressDAO.getCollectAddressByID(rs.getString("CI_Deliver_To")),
+                        rs.getString("CI_Currency_Code"),
+                        rs.getDate("CI_Required_Delivery_Date"),
+                        rs.getString("CI_Payment_Term"),
+                        rs.getString("CI_Shipment_Term"),
+                        StaffDAO.getStaffByID("CI_Sales_Person"),
+                        null,
+                        rs.getBigDecimal("CI_Gross"),
+                        rs.getBigDecimal("CI_Discount"),
+                        rs.getBigDecimal("CI_Sub_Total"),
+                        rs.getBigDecimal("CI_Nett"),
+                        StaffDAO.getStaffByID(rs.getString("CI_Issued_By"))
+                ));
+            }
+
+            return customerInquiries;
+
         } catch (Exception e) {
             return null;
         } finally {

@@ -38,7 +38,6 @@ public class InventoryDAO {
                 inventory.setProduct(ProductDAO.getProductByID(rs.getString("Product_ID")));
                 inventory.setReservedQty(rs.getInt("Reserved_Qty"));
                 inventory.setReadyQty(rs.getInt("Ready_Qty"));
-                inventory.setTtlQty(rs.getInt("Total_Qty"));
                 inventory.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
             }
 

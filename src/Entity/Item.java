@@ -13,12 +13,15 @@ import java.util.Objects;
  *
  * @author Tee Zhuo Xuan
  */
-public class Item {
+public class Item<E> implements Cloneable {
 
     private Product product;
     private Inventory inventory;
+    private E refDoc;
+    private String reason;
     private String remark;
     private Integer qty;
+    private Integer oriQty;
     private BigDecimal unitPrice;
     private Date dlvrDate;
     private BigDecimal exclTaxAmt;
@@ -44,6 +47,14 @@ public class Item {
         this.inventory = inventory;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     public String getRemark() {
         return remark;
     }
@@ -58,6 +69,14 @@ public class Item {
 
     public void setQty(Integer qty) {
         this.qty = qty;
+    }
+
+    public Integer getOriQty() {
+        return oriQty;
+    }
+
+    public void setOriQty(Integer oriQty) {
+        this.oriQty = oriQty;
     }
 
     public BigDecimal getUnitPrice() {
@@ -118,21 +137,49 @@ public class Item {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 43 * hash + Objects.hashCode(this.product);
-        hash = 43 * hash + Objects.hashCode(this.dlvrDate);
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        System.out.println("I am in equals");
-        if (obj instanceof Item) {
-            Item item = (Item) obj;
-            if (this.getProduct().getProdID().equals(item.getProduct().getProdID())
-                    && this.getDlvrDate().equals(item.getDlvrDate())) {
-                return true;
-            }
+        if (this == obj) {
+            return true;
         }
-        return false;
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Item<?> other = (Item<?>) obj;
+        if (!Objects.equals(this.product, other.product)) {
+            return false;
+        }
+        if (!Objects.equals(this.inventory, other.inventory)) {
+            return false;
+        }
+        return Objects.equals(this.dlvrDate, other.dlvrDate);
+    }
+
+    public E getRefDoc() {
+        return refDoc;
+    }
+
+    public void setRefDoc(E refDoc) {
+        this.refDoc = refDoc;
+    }
+
+    @Override
+    public Item clone() {
+        Item clonedItem = null;
+        try {
+            clonedItem = (Item) super.clone();
+            clonedItem.setDlvrDate(this.dlvrDate == null ? null : (Date) this.dlvrDate.clone());
+
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return clonedItem;
     }
 }

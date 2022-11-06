@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.List;
 
 /**
  *
@@ -64,5 +65,9 @@ public class CustomerInquiryService {
 
     public static String updateCustomerInquiryStatus(CustomerInquiry ci) {
         return CustomerInquiryDAO.updateCustomerInquiryStatus(ci);
+    }
+
+    public static List<CustomerInquiry> getAllCustomerInquiry() {
+        return CustomerInquiryDAO.getAllCustomerInquiry();
     }
 }

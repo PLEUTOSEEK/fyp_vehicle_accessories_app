@@ -52,4 +52,8 @@ public class SalesRules {
         return quotStatuses;
     }
 
+    public List<SOStatus> getSOStatuses() {
+        return soStatuses;
+    }
+
 }
