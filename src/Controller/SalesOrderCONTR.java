@@ -70,11 +70,7 @@ import net.synedra.validatorfx.Validator;
  */
 public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
-    private BasicObjs passObj;
-
-    private Validator validator = new Validator();
-//<editor-fold defaultstate="collapsed" desc="fields">
-
+    //<editor-fold defaultstate="collapsed" desc="fields">
     @FXML
     private MFXCircleToggleNode btnBack;
     @FXML
@@ -148,6 +144,10 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private Label lblImgStrs;
 //</editor-fold>
+
+    private BasicObjs passObj;
+
+    private Validator validator = new Validator();
 
     AccountingRules accRules = new AccountingRules();
 

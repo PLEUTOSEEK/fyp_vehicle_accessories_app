@@ -15,7 +15,6 @@ import Entity.Staff;
 import Entity.TransferOrder;
 import PassObjs.BasicObjs;
 import Service.ItemService;
-import Service.RDNService;
 import Service.SalesOrderService;
 import Service.TransferOrderService;
 import Utils.ImageUtils;
@@ -142,11 +141,6 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 inputValidation();
                 receiveData();
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
-                    try {
-                        fieldFillIn();
-                    } catch (IOException ex) {
-                        java.util.logging.Logger.getLogger(TransferOrderCONTR.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                    }
 
                     if (passObj.getObj() instanceof SalesOrder) {
                         //transfer order compulsory must based on SO to generate for Order-To-Cash Process
@@ -154,13 +148,19 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
                     } else if (passObj.getObj() instanceof ReturnDeliveryNote) {
                         //transfer order compulsory must based on SO to generate for Order-To-Cash Process
-                        itemsNotYetTransfer.addAll(RDNService.getItemByRDNID(((ReturnDeliveryNote) passObj.getObj()).getCode()));
+                        itemsNotYetTransfer.addAll(ItemService.getItemByRDNID(((ReturnDeliveryNote) passObj.getObj()).getCode()));
                     }
 
-                    //deep copy
+                    try {
+                        fieldFillIn();
+                    } catch (IOException ex) {
+                        java.util.logging.Logger.getLogger(TransferOrderCONTR.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    }
+
                     for (Item i : itemsNotYetTransfer) {
                         items.add(i.clone());
                     }
+
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read)) {
@@ -326,8 +326,6 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 SalesOrder so = (SalesOrder) passObj.getObj();
                 this.txtRef.setText(so.getCode());
 
-                items.clear();
-                itemsNotYetTransfer.clear();
                 itemsNotYetTransfer.addAll(ItemService.getItemBySOID(so.getCode()));
 
                 for (Item i : itemsNotYetTransfer) {
@@ -345,11 +343,6 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 itemsNotYetTransfer.clear();
                 itemsNotYetTransfer.addAll(ItemService.getItemByRDNID(rdn.getCode()));
 
-                for (Item i : itemsNotYetTransfer) {
-                    items.add(i.clone());
-                }
-
-                this.setupItemTable();
             } else if (passObj.getObj() instanceof TransferOrder) {
                 TransferOrder to = (TransferOrder) passObj.getObj();
                 this.txtTOID.setText(to.getCode());
@@ -502,6 +495,8 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
         this.txtTransferBy.clear();
         this.txtItemReceivedBy.clear();
 
+        items.clear();
+        itemsNotYetTransfer.clear();
         return true;
     }
 
@@ -517,9 +512,9 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private TransferOrder prepareTransferOrderToObj() {
-        TransferOrder to = new TransferOrder();
+        TransferOrder transferOrder = new TransferOrder();
 
-        to.setCode(this.txtTOID.getText());
+        transferOrder.setCode(this.txtTOID.getText());
 
         Staff PIC = new Staff();
         PIC.setStaffID(this.txtPIC.getText());
@@ -530,36 +525,36 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
         if (this.passObj.getObj() instanceof SalesOrder) {
             SalesOrder salesOrder = new SalesOrder();
             salesOrder.setCode(this.txtRef.getText());
-            to.setReqTypeRef(salesOrder);
+            transferOrder.setReqTypeRef(salesOrder);
         } else if (this.passObj.getObj() instanceof ReturnDeliveryNote) {
             ReturnDeliveryNote rdn = new ReturnDeliveryNote();
             rdn.setCode(this.txtRef.getText());
-            to.setReqTypeRef(rdn);
+            transferOrder.setReqTypeRef(rdn);
         }
 
-        to.setCreatedDate(this.dtRefDate.getValue() == null ? null : Timestamp.valueOf(this.dtRefDate.getValue().atStartOfDay()));
-        to.setReqType(this.cmbRefType.getText());
-        to.setReqTypeRef(this.txtRef.getText());
+        transferOrder.setCreatedDate(this.dtRefDate.getValue() == null ? null : Timestamp.valueOf(this.dtRefDate.getValue().atStartOfDay()));
+        transferOrder.setReqType(this.cmbRefType.getText());
+        transferOrder.setReqTypeRef(this.txtRef.getText());
 
-        to.setStatus(this.cmbStatus.getText());
+        transferOrder.setStatus(this.cmbStatus.getText());
 
         Staff issuedBy = new Staff();
         issuedBy.setStaffID(this.txtIssuedBy.getText());
-        to.setIssuedBy(issuedBy);
+        transferOrder.setIssuedBy(issuedBy);
 
         Staff transferBy = new Staff();
         transferBy.setStaffID(this.txtTransferBy.getText());
-        to.setIssuedBy(transferBy);
+        transferOrder.setIssuedBy(transferBy);
 
         Staff itemReceivedBy = new Staff();
         itemReceivedBy.setStaffID(this.txtItemReceivedBy.getText());
-        to.setIssuedBy(itemReceivedBy);
+        transferOrder.setIssuedBy(itemReceivedBy);
 
-        to.setSignedDocPic(this.lblImgStrs.getText());
+        transferOrder.setSignedDocPic(this.lblImgStrs.getText());
 
-        to.setItems(items);
+        transferOrder.setItems(items);
 
-        return to;
+        return transferOrder;
     }
 
     @FXML

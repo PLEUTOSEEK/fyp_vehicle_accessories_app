@@ -5,12 +5,16 @@
 package Controller;
 
 import BizRulesConfiguration.WarehouseRules;
+import Entity.CollectAddress;
 import Entity.Item;
+import Entity.Place;
 import Entity.ReturnDeliveryNote;
 import Entity.SalesOrder;
+import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.ItemService;
 import Service.RDNService;
+import Utils.ImageUtils;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
@@ -23,6 +27,9 @@ import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -38,11 +45,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.synedra.validatorfx.Validator;
 
 /**
  *
@@ -50,7 +60,6 @@ import javafx.stage.Stage;
  */
 public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
-    private BasicObjs passObj;
     //<editor-fold defaultstate="collapsed" desc="fields">
     @FXML
     private MFXCircleToggleNode btnBack;
@@ -79,14 +88,6 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private MFXButton btnAdd;
     @FXML
-    private MFXTextField txtSubTtl;
-    @FXML
-    private MFXTextField txtNett;
-    @FXML
-    private MFXTextField txtDiscount;
-    @FXML
-    private MFXTextField txtGross;
-    @FXML
     private MFXTextField txtIssuedBy;
     @FXML
     private MFXCircleToggleNode ctnIssuedBySelection;
@@ -101,7 +102,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private MFXCircleToggleNode ctnCllctBckBySelection;
     @FXML
-    private MFXTextField itemPassedBckBy;
+    private MFXTextField txtItemPassedBckBy;
     @FXML
     private MFXCircleToggleNode ctnItemPassedBckBySelection;
     @FXML
@@ -114,7 +115,13 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     private MFXButton btnDiscard;
     @FXML
     private TextArea txtInspectorMsg;
+    @FXML
+    private Label lblImgStrs;
 //</editor-fold>
+
+    private BasicObjs passObj;
+
+    private Validator validator = new Validator();
 
     private WarehouseRules warehouseRules = new WarehouseRules();
 
@@ -143,23 +150,25 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                 receiveData();
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
+
+                    if (passObj.getObj() instanceof ReturnDeliveryNote) {
+                        itemsNotYetReturn.addAll(ItemService.getItemByRDNID(((ReturnDeliveryNote) passObj.getObj()).getCode()));
+
+                    } else if (passObj.getObj() instanceof SalesOrder) {
+                        itemsNotYetReturn.addAll(ItemService.getReturnableItemsBySO(((SalesOrder) passObj.getObj()).getCode()));
+                    }
+
                     try {
                         fieldFillIn();
                     } catch (IOException ex) {
                         java.util.logging.Logger.getLogger(TransferOrderCONTR.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     }
 
-                    if (passObj.getObj() instanceof ReturnDeliveryNote) {
-                        itemsNotYetReturn.addAll(RDNService.getItemByRDNID(((ReturnDeliveryNote) passObj.getObj()).getCode()));
-
-                    } else if (passObj.getObj() instanceof SalesOrder) {
-                        itemsNotYetReturn.addAll(ItemService.getReturnableItemsBySO(((SalesOrder) passObj.getObj()).getCode()));
-                    }
-
                     //deep copy
                     for (Item i : itemsNotYetReturn) {
                         items.add(i.clone());
                     }
+
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read)) {
@@ -320,11 +329,71 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private void fieldFillIn() throws IOException {
+        clearAllFieldsValue();
+        if (passObj.getObj() != null) {
+            if (passObj.getObj() instanceof ReturnDeliveryNote) {
+                ReturnDeliveryNote rdn = new ReturnDeliveryNote();
+                this.txtRDNID.setText(rdn.getCode());
+                this.txtCllctBckFr.setText(rdn.getCollBckFr().getCollectAddrID());
+                this.txtCllctBckTo.setText(rdn.getCollBackTo().getPlaceID());
+                this.dtRefDate.setValue(Instant.ofEpochMilli(rdn.getCreatedDate().getTime())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate());
+                this.txtSORef.setText(rdn.getSO() == null ? "" : rdn.getSO().getCode());
+                this.dtCllctDate.setValue(Instant.ofEpochMilli(rdn.getCollectDate().getTime())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate());
+                this.cmbStatus.setText(rdn.getStatus());
+                this.txtInspectorMsg.setText(rdn.getInspectorMsg());
 
+                this.txtIssuedBy.setText(rdn.getIssuedBy() == null ? "" : rdn.getIssuedBy().getStaffID());
+                this.txtInspectedBy.setText(rdn.getInspectedBy() == null ? "" : rdn.getInspectedBy().getStaffID());
+                this.txtCollectBackBy.setText(rdn.getCollectBackBy() == null ? "" : rdn.getCollectBackBy().getStaffID());
+                this.txtItemPassedBckBy.setText(rdn.getItemPassedBackBy() == null ? "" : rdn.getItemPassedBackBy().getCollectAddrID());
+                this.txtItemReceivedBy.setText(rdn.getItemReceivedBy() == null ? "" : rdn.getItemReceivedBy().getStaffID());
+
+            } else if (passObj.getObj() instanceof SalesOrder) {
+
+                SalesOrder salesOrder = new SalesOrder();
+                this.txtSORef.setText(salesOrder.getCode());
+            }
+        }
     }
 
     private void isViewMode(boolean disable) {
+        if (disable == true) {
+            this.btnSave.setText("Update");
+        } else {
+            this.btnSave.setText("Save");
+        }
 
+        this.txtRDNID.setDisable(disable);
+        this.txtCllctBckFr.setDisable(disable);
+        this.txtCllctBckTo.setDisable(disable);
+        this.dtRefDate.setDisable(disable);
+        this.txtSORef.setDisable(disable);
+        this.dtCllctDate.setDisable(disable);
+        this.cmbStatus.setDisable(disable);
+        this.txtInspectorMsg.setDisable(disable);
+
+        this.ctnCllctBckFrSelection.setDisable(disable);
+        this.ctnCllctBckToSelection.setDisable(disable);
+        this.ctnSORefSelection.setDisable(disable);
+
+        this.btnAdd.setDisable(disable);
+        this.tblVw.setDisable(disable);
+
+        this.txtIssuedBy.setDisable(disable);
+        this.txtInspectedBy.setDisable(disable);
+        this.txtCollectBackBy.setDisable(disable);
+        this.txtItemPassedBckBy.setDisable(disable);
+        this.txtItemReceivedBy.setDisable(disable);
+
+        this.ctnIssuedBySelection.setDisable(disable);
+        this.ctnInspectedBySelection.setDisable(disable);
+        this.ctnCllctBckBySelection.setDisable(disable);
+        this.ctnItemPassedBckBySelection.setDisable(disable);
+        this.ctnItemReceivedBySelection.setDisable(disable);
     }
 
     @FXML
@@ -415,7 +484,21 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public boolean clearAllFieldsValue() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.txtRDNID.clear();
+        this.txtCllctBckFr.clear();
+        this.txtCllctBckTo.clear();
+        this.dtRefDate.clear();
+        this.txtSORef.clear();
+        this.dtCllctDate.clear();
+        this.cmbStatus.clear();
+        this.txtInspectorMsg.clear();
+        this.txtIssuedBy.clear();
+        this.txtInspectedBy.clear();
+        this.txtCollectBackBy.clear();
+        this.txtItemPassedBckBy.clear();
+        this.txtItemReceivedBy.clear();
+
+        return true;
     }
 
     @Override
@@ -430,27 +513,268 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private ReturnDeliveryNote prepareTransferOrderToObj() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        ReturnDeliveryNote rdn = new ReturnDeliveryNote();
+        rdn.setCode(this.txtRDNID.getText());
+
+        CollectAddress collectBckFr = new CollectAddress();
+        collectBckFr.setCollectAddrID(this.txtCllctBckTo.getText());
+        rdn.setCollBckFr(collectBckFr);
+
+        Place collBackTo = new Place();
+        collBackTo.setPlaceID(this.txtCllctBckTo.getText());
+        rdn.setCollBackTo(collBackTo);
+
+        rdn.setCreatedDate(this.dtRefDate.getValue() == null ? null : Timestamp.valueOf(this.dtRefDate.getValue().atStartOfDay()));
+
+        SalesOrder salesOrder = new SalesOrder();
+        salesOrder.setCode(this.txtSORef.getText());
+        rdn.setSO(salesOrder);
+
+        rdn.setCollectDate(this.dtCllctDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtCllctDate.getValue()));
+        rdn.setStatus(this.cmbStatus.getText());
+
+        rdn.setInspectorMsg(this.txtInspectorMsg.getText());
+
+        Staff issuedBy = new Staff();
+        issuedBy.setStaffID(this.txtIssuedBy.getText());
+        rdn.setIssuedBy(issuedBy);
+
+        Staff inspectedBy = new Staff();
+        inspectedBy.setStaffID(this.txtInspectedBy.getText());
+        rdn.setInspectedBy(inspectedBy);
+
+        Staff collectBackBy = new Staff();
+        collectBackBy.setStaffID(this.txtCollectBackBy.getText());
+        rdn.setCollectBackBy(collectBackBy);
+
+        CollectAddress itemPassedBackBy = new CollectAddress();
+        itemPassedBackBy.setCollectAddrID(this.txtItemPassedBckBy.getText());
+        rdn.setItemPassedBackBy(itemPassedBackBy);
+
+        Staff itemReceivedBy = new Staff();
+        itemReceivedBy.setStaffID(this.txtItemReceivedBy.getText());
+        rdn.setItemReceivedBy(itemReceivedBy);
+
+        return rdn;
     }
 
     @FXML
     private void openIssuedBySelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new Staff());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtIssuedBy.setText(((Staff) receiveObj.getObj()).getStaffID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+        }
     }
 
     @FXML
     private void openInspectedBySelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new Staff());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtIssuedBy.setText(((Staff) receiveObj.getObj()).getStaffID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+        }
     }
 
     @FXML
     private void openCllctBckBySelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new Staff());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtIssuedBy.setText(((Staff) receiveObj.getObj()).getStaffID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+        }
     }
 
     @FXML
     private void openItemPassedBckBySelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new CollectAddress());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtItemReceivedBy.setText(((CollectAddress) receiveObj.getObj()).getCollectAddrID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+        }
     }
 
     @FXML
     private void openItemReceivedBySelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new Staff());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtIssuedBy.setText(((Staff) receiveObj.getObj()).getStaffID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+        }
+    }
+
+    @FXML
+    private void openSORefSelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+
+            ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
+                    "Confirmation",
+                    "Modified Data Loss Alert",
+                    "All modified data will be overwrite with selected Sales Order Information. Please select OK to proceed.");
+
+            if (alertBtnClicked != ButtonType.OK) {
+                return;
+            }
+
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new SalesOrder());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    SalesOrder so = (SalesOrder) receiveObj.getObj();
+
+                    // condition to check SO status haven't implemented
+                    this.passObj.setObj(so);
+                    this.fieldFillIn();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+        }
+    }
+
+    @FXML
+    private void goImgViewer(MouseEvent event) {
+        // action here
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/ImgViewers_UI.fxml"));
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(btnBack.getScene().getWindow());
+            stage.setScene(new Scene(root));
+
+            BasicObjs passObj = new BasicObjs();
+
+            passObj.setObj(this.lblImgStrs.getText());
+            stage.setUserData(passObj);
+            stage.showAndWait();
+
+            // if have any change on the selected collect address
+            if (stage.getUserData() != null) {
+
+                BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                String catchedImagesStr = new String();
+                catchedImagesStr = (String) receiveObj.getObj();
+
+                String splittedImgStrFirst = (String) ImageUtils.splitImgStr(catchedImagesStr).getFirst();
+                byte[] decodedByteFirst = ImageUtils.encodedStrToByte(splittedImgStrFirst);
+                Image imageFirst = ImageUtils.byteToImg(decodedByteFirst);
+                this.imgDocs.setImage(imageFirst);
+                this.lblImgStrs.setText(catchedImagesStr);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -490,6 +814,33 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void saveRDN(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+
+            if (!this.btnSave.getText().equals("Save")) {
+                isViewMode(false);
+                return;
+            }
+
+            if (validator.containsErrors()) {
+                alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
+                return;
+            }
+
+            rdnInDraft = this.prepareTransferOrderToObj();
+
+            if (this.txtRDNID.getText().isEmpty()) {
+                RDNService.saveNewRDN(rdnInDraft);
+
+            } else if (this.passObj.getCrud().equals(BasicObjs.update)) {
+                RDNService.updateRDN(rdnInDraft);
+            }
+
+            updateSOStatus();
+        }
+    }
+
+    private void updateSOStatus() {
+
     }
 
 }

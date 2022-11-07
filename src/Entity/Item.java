@@ -22,6 +22,7 @@ public class Item<E> implements Cloneable {
     private String remark;
     private Integer qty;
     private Integer oriQty;
+    private Integer qtyNotYetBill;
     private BigDecimal unitPrice;
     private Date dlvrDate;
     private BigDecimal exclTaxAmt;
@@ -77,6 +78,14 @@ public class Item<E> implements Cloneable {
 
     public void setOriQty(Integer oriQty) {
         this.oriQty = oriQty;
+    }
+
+    public Integer getQtyNotYetBill() {
+        return qtyNotYetBill;
+    }
+
+    public void setQtyNotYetBill(Integer qtyNotYetBill) {
+        this.qtyNotYetBill = qtyNotYetBill;
     }
 
     public BigDecimal getUnitPrice() {

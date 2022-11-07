@@ -23,14 +23,14 @@ public class ReturnDeliveryNote extends Document {
     private Staff issuedBy;
     private Staff inspectedBy;
     private Staff collectBackBy;
-    private Person itemPassedBackBy;
+    private CollectAddress itemPassedBackBy;
     private Staff itemReceivedBy;
 
     public ReturnDeliveryNote() {
         this(null, null, "", null, null, "", null, null, null, null, "", null, null, null, null, null, null);
     }
 
-    public ReturnDeliveryNote(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, SalesOrder SO, Place collBackTo, CollectAddress collBckFr, Date collectDate, String inspectorMsg, List<Item> items, Staff issuedBy, Staff inspectedBy, Staff collectBackBy, Person itemPassedBackBy, Staff itemReceivedBy) {
+    public ReturnDeliveryNote(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, SalesOrder SO, Place collBackTo, CollectAddress collBckFr, Date collectDate, String inspectorMsg, List<Item> items, Staff issuedBy, Staff inspectedBy, Staff collectBackBy, CollectAddress itemPassedBackBy, Staff itemReceivedBy) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.SO = SO;
         this.collBackTo = collBackTo;
@@ -117,11 +117,11 @@ public class ReturnDeliveryNote extends Document {
         this.collectBackBy = collectBackBy;
     }
 
-    public Person getItemPassedBackBy() {
+    public CollectAddress getItemPassedBackBy() {
         return itemPassedBackBy;
     }
 
-    public void setItemPassedBackBy(Person itemPassedBackBy) {
+    public void setItemPassedBackBy(CollectAddress itemPassedBackBy) {
         this.itemPassedBackBy = itemPassedBackBy;
     }
 
