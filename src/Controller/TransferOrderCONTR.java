@@ -63,9 +63,7 @@ import net.synedra.validatorfx.Validator;
  * @author Tee Zhuo Xuan
  */
 public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
-
-    private BasicObjs passObj;
-    private Validator validator = new Validator();
+    //<editor-fold defaultstate="collapsed" desc="fields">
 
     @FXML
     private MFXCircleToggleNode btnBack;
@@ -73,7 +71,6 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
     private MFXTextField txtTOID;
     @FXML
     private MFXDatePicker dtRefDate;
-
     @FXML
     private MFXTextField txtPIC;
     @FXML
@@ -114,6 +111,12 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
     private MFXButton btnDiscard;
     @FXML
     private Label lblImgStrs;
+//</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="util declarations">
+    private BasicObjs passObj;
+
+    private Validator validator = new Validator();
 
     private WarehouseRules warehouseRules = new WarehouseRules();
 
@@ -126,6 +129,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
     private static List<String> rowSelected = new ArrayList<>();
 
     private TransferOrder toInDraft;
+//</editor-fold>
 
     /**
      * Initializes the controller class.
@@ -137,28 +141,42 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
+
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
-
-                    if (passObj.getObj() instanceof SalesOrder) {
-                        //transfer order compulsory must based on SO to generate for Order-To-Cash Process
-                        itemsNotYetTransfer.addAll(ItemService.getItemBySOID(((SalesOrder) passObj.getObj()).getCode()));
-
-                    } else if (passObj.getObj() instanceof ReturnDeliveryNote) {
-                        //transfer order compulsory must based on SO to generate for Order-To-Cash Process
-                        itemsNotYetTransfer.addAll(ItemService.getItemByRDNID(((ReturnDeliveryNote) passObj.getObj()).getCode()));
-                    }
-
                     try {
                         fieldFillIn();
                     } catch (IOException ex) {
                         java.util.logging.Logger.getLogger(TransferOrderCONTR.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     }
 
-                    for (Item i : itemsNotYetTransfer) {
-                        items.add(i.clone());
+                    if (passObj.getObj() instanceof TransferOrder) {
+
+                        TransferOrder to = (TransferOrder) passObj.getObj();
+
+                        if (to.getReqTypeRef() instanceof SalesOrder) {
+
+                            itemsNotYetTransfer.addAll(ItemService.getItemBySOID(((SalesOrder) to.getReqTypeRef()).getCode()));
+
+                        } else if (to.getReqTypeRef() instanceof ReturnDeliveryNote) {
+
+                            itemsNotYetTransfer.addAll(ItemService.getItemByRDNID(((ReturnDeliveryNote) to.getReqTypeRef()).getCode()));
+
+                        }
+
+                        items.addAll(ItemService.getItemByTOID(to.getCode()));
+
+                    } else if (passObj.getObj() instanceof SalesOrder) {
+
+                        itemsNotYetTransfer.addAll(ItemService.getItemBySOID(((SalesOrder) passObj.getObj()).getCode()));
+
+                    } else if (passObj.getObj() instanceof ReturnDeliveryNote) {
+
+                        itemsNotYetTransfer.addAll(ItemService.getItemByRDNID(((ReturnDeliveryNote) passObj.getObj()).getCode()));
+
                     }
 
                 }
@@ -173,6 +191,11 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
     private void initializeComboSelections() {
         ((MFXComboBox<String>) this.cmbRefType).setItems(FXCollections.observableList(warehouseRules.getRefTypeForTO()));
         ((MFXComboBox<TOStatus>) this.cmbStatus).setItems(FXCollections.observableList(warehouseRules.getToStatuses()));
+
+        this.cmbRefType.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            this.txtRef.clear();
+        });
+
     }
 
     private void setupItemTable() {
@@ -183,26 +206,26 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
         // Source
 
         // Product ID
-        MFXTableColumn<Item> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(item -> item.getProduct().getProdID()));
+        MFXTableColumn<Item> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(item -> item.getProduct() == null ? null : item.getProduct().getProdID()));
         // Part No
-        MFXTableColumn<Item> partNoCol = new MFXTableColumn<>("Part No.", true, Comparator.comparing(item -> item.getProduct().getPartNo()));
+        MFXTableColumn<Item> partNoCol = new MFXTableColumn<>("Part No.", true, Comparator.comparing(item -> item.getProduct() == null ? null : item.getProduct().getPartNo()));
         // Qty
         MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Qty", true, Comparator.comparing(item -> item.getQty()));
         // UOM
-        MFXTableColumn<Item> uomCol = new MFXTableColumn<>("UOM", true, Comparator.comparing(item -> item.getProduct().getUom()));
+        MFXTableColumn<Item> uomCol = new MFXTableColumn<>("UOM", true, Comparator.comparing(item -> item.getProduct() == null ? null : item.getProduct().getUom()));
         // Source
-        MFXTableColumn<Item> sourceCol = new MFXTableColumn<>("Source", true, Comparator.comparing(item -> item.getInventory().getInventoryID()));
+        MFXTableColumn<Item> sourceCol = new MFXTableColumn<>("Source", true, Comparator.comparing(item -> item.getInventory() == null ? null : item.getInventory().getInventoryID()));
 
         // Product ID
-        prodIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct().getProdID()));
+        prodIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? null : item.getProduct().getProdID()));
         // Part No
-        partNoCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct().getPartNo()));
+        partNoCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? null : item.getProduct().getPartNo()));
         // Qty
         qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getQty()));
         // UOM
-        uomCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct().getUom()));
+        uomCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? null : item.getProduct().getUom()));
         // Source
-        sourceCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getInventory().getInventoryID()));
+        sourceCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getInventory() == null ? null : item.getInventory().getInventoryID()));
 
         ((MFXTableView<Item>) tblVw).getTableColumns().clear();
 
@@ -218,11 +241,11 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getFilters().clear();
 
         ((MFXTableView<Item>) tblVw).getFilters().addAll(
-                new StringFilter<>("Product ID", item -> item.getProduct().getProdID()),
-                new StringFilter<>("Part No.", item -> item.getProduct().getPartNo()),
+                new StringFilter<>("Product ID", item -> item.getProduct() == null ? null : item.getProduct().getProdID()),
+                new StringFilter<>("Part No.", item -> item.getProduct() == null ? null : item.getProduct().getPartNo()),
                 new IntegerFilter<>("Qty", item -> item.getQty()),
-                new StringFilter<>("UOM", item -> item.getProduct().getUom()),
-                new StringFilter<>("Source", item -> item.getInventory().getInventoryID())
+                new StringFilter<>("UOM", item -> item.getProduct() == null ? null : item.getProduct().getUom()),
+                new StringFilter<>("Source", item -> item.getInventory() == null ? null : item.getInventory().getInventoryID())
         );
 
         tempItems.addAll(items);
@@ -240,7 +263,6 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            System.out.println(item.getProduct().getProdID() + "This is product ID");
                             // action here
                             Parent root;
                             try {
@@ -252,6 +274,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
                                 BasicObjs passObj = new BasicObjs();
                                 passObj.setObj(item);
+                                passObj.setObjs((List<Object>) (Object) itemsNotYetTransfer);
                                 passObj.setCrud(BasicObjs.read);
 
                                 stage.setUserData(passObj);
@@ -326,29 +349,17 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 SalesOrder so = (SalesOrder) passObj.getObj();
                 this.txtRef.setText(so.getCode());
 
-                itemsNotYetTransfer.addAll(ItemService.getItemBySOID(so.getCode()));
-
-                for (Item i : itemsNotYetTransfer) {
-                    items.add(i.clone());
-                }
-
-                this.setupItemTable();
-
             } else if (passObj.getObj() instanceof ReturnDeliveryNote) {
 
                 ReturnDeliveryNote rdn = (ReturnDeliveryNote) passObj.getObj();
                 this.txtRef.setText(rdn.getCode());
 
-                items.clear();
-                itemsNotYetTransfer.clear();
-                itemsNotYetTransfer.addAll(ItemService.getItemByRDNID(rdn.getCode()));
-
             } else if (passObj.getObj() instanceof TransferOrder) {
                 TransferOrder to = (TransferOrder) passObj.getObj();
                 this.txtTOID.setText(to.getCode());
-                this.txtPIC.setText(to.getPIC().getStaffID());
-                this.txtDestination.setText(to.getDestination().getPlaceID());
-                this.dtRefDate.setValue(Instant.ofEpochMilli(to.getCreatedDate().getTime())
+                this.txtPIC.setText(to.getPIC() == null ? "" : to.getPIC().getStaffID());
+                this.txtDestination.setText(to.getDestination() == null ? "" : to.getDestination().getPlaceID());
+                this.dtRefDate.setValue(to.getCreatedDate() == null ? null : Instant.ofEpochMilli(to.getCreatedDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
                 this.cmbRefType.setText(to.getReqType());
@@ -360,9 +371,9 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 }
 
                 this.cmbStatus.setText(to.getStatus());
-                this.txtIssuedBy.setText(to.getIssuedBy().getStaffID());
-                this.txtTransferBy.setText(to.getTransferBy().getStaffID());
-                this.txtItemReceivedBy.setText(to.getItemReceivedBy().getStaffID());
+                this.txtIssuedBy.setText(to.getIssuedBy() == null ? "" : to.getIssuedBy().getStaffID());
+                this.txtTransferBy.setText(to.getTransferBy() == null ? "" : to.getTransferBy().getStaffID());
+                this.txtItemReceivedBy.setText(to.getItemReceivedBy() == null ? "" : to.getItemReceivedBy().getStaffID());
             }
 
         }
@@ -378,6 +389,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
         this.txtTOID.setDisable(disable);
         this.txtPIC.setDisable(disable);
         this.txtDestination.setDisable(disable);
+        this.cmbRefType.setDisable(disable);
         this.txtRef.setDisable(disable);
         this.cmbStatus.setDisable(disable);
         this.txtIssuedBy.setDisable(disable);
@@ -484,7 +496,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public boolean clearAllFieldsValue() {
-        this.txtTOID.clear();
+        // this.txtTOID.clear();
         this.txtPIC.clear();
         this.txtDestination.clear();
         this.dtRefDate.clear();
@@ -576,12 +588,12 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
                 if (stage.getUserData() != null) {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
-                    this.txtIssuedBy.setText(((Staff) receiveObj.getObj()).getStaffID());
+                    this.txtPIC.setText(((Staff) receiveObj.getObj()).getStaffID());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -610,7 +622,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -660,19 +672,48 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
                     if (receiveObj.getObj() instanceof ReturnDeliveryNote) {
                         // later done RDN just come back
-                    } else if (receiveObj.getObj() instanceof SalesOrder) {
-                        SalesOrder so = (SalesOrder) receiveObj.getObj();
+                        ReturnDeliveryNote rdn = (ReturnDeliveryNote) receiveObj.getObj();
 
-                        if (!so.getStatus().equals(SalesRules.CIStatus.COMPLETED)) {
-                            this.txtRef.setText(so.getCode());
-                            this.passObj.setObj(so);
+                        if (rdn.getStatus().equals(WarehouseRules.RDNStatus.NEW)) {
+                            this.passObj.setObj(rdn);
                             //this.passObj.setObj(SalesOrderService.getSOByID(so.getCode()));
                             fieldFillIn();
+
+                            itemsNotYetTransfer.addAll(ItemService.getItemByRDNID(rdn.getCode()));
+
+                            for (Item i : itemsNotYetTransfer) {
+                                items.add(i.clone());
+                            }
+
+                            setupItemTable();
+
                         } else {
                             alertDialog(Alert.AlertType.INFORMATION,
                                     "Information",
                                     "Document Blocked Message",
-                                    "Sales Order with COMPLETED status are not allowed to become any document reference.");
+                                    "RDN without NEW status are not allowed to become any document reference.");
+                        }
+                    } else if (receiveObj.getObj() instanceof SalesOrder) {
+                        SalesOrder so = (SalesOrder) receiveObj.getObj();
+
+                        if (so.getStatus().equals(SalesRules.SOStatus.NEW)) {
+                            this.passObj.setObj(so);
+                            //this.passObj.setObj(SalesOrderService.getSOByID(so.getCode()));
+                            fieldFillIn();
+
+                            itemsNotYetTransfer.addAll(ItemService.getItemBySOID(so.getCode()));
+
+                            for (Item i : itemsNotYetTransfer) {
+                                items.add(i.clone());
+                            }
+
+                            setupItemTable();
+
+                        } else {
+                            alertDialog(Alert.AlertType.INFORMATION,
+                                    "Information",
+                                    "Document Blocked Message",
+                                    "Sales Order without NEW status are not allowed to become any document reference.");
                         }
                     }
 
@@ -680,17 +721,24 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
     @FXML
     private void addProductItem(MouseEvent event) {
-// must based on SO
-// Inner Select SO's Items
+
+        if (this.txtRef.getText().isEmpty()) {
+            alertDialog(Alert.AlertType.INFORMATION,
+                    "Information",
+                    "Prerequisite Condition",
+                    "Must fill in Reference Document column, before add item");
+            return;
+        }
+
         Parent root;
         try {
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelectWithItemsProvided_UI.fxml"));
 
             Stage stage = new Stage();
             stage.initModality(Modality.WINDOW_MODAL);
@@ -698,11 +746,22 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             stage.setScene(new Scene(root));
 
             BasicObjs passObj = new BasicObjs();
+
             passObj.setCrud(BasicObjs.create);
 
-            Item<SalesOrder> item = new Item();
-            item.setRefDoc((SalesOrder) this.passObj.getObj());
+            Item item = new Item();
+            if (this.cmbRefType.getText().equals("RDN")) {
+                ReturnDeliveryNote rdn = new ReturnDeliveryNote();
+                rdn.setCode(this.txtRef.getText());
+                item.setRefDoc(rdn);
+            } else if (this.cmbRefType.getText().equals("SO")) {
+                SalesOrder so = new SalesOrder();
+                so.setCode(this.txtRef.getText());
+                item.setRefDoc(so);
+            }
+
             passObj.setObj(item);
+            passObj.setObjs((List<Object>) (Object) itemsNotYetTransfer);
 
             stage.setUserData(passObj);
             stage.showAndWait();
@@ -745,7 +804,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -773,7 +832,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -801,7 +860,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -864,37 +923,35 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 TransferOrderService.updateTO(toInDraft);
             }
 
-            updateRefDocStatus();
+            for (int i = 0; i < toInDraft.getItems().size(); i++) {
+                Item item = ((Item) toInDraft.getItems().get(i));
+                item.setOriQty(item.getQty());
+            }
+
+            ItemService.updateItemsByDoc(toInDraft.getItems(), toInDraft.getCode());
+
+            updateRefDoc();
         }
 
     }
 
-    private void updateRefDocStatus() {
-        if (!this.txtTOID.getText().isEmpty()) {
-            //if the quotation is after add (not import document, before get in this UI)
-            if (toInDraft.getReqTypeRef() == null) {
+    private void updateRefDoc() throws SQLException {
+        if (!this.txtRef.getText().isEmpty()) {
 
-                if (this.passObj.getObj() instanceof ReturnDeliveryNote) {
+            if (toInDraft.getReqTypeRef() instanceof ReturnDeliveryNote) {
 
-                    toInDraft.setReqTypeRef(new ReturnDeliveryNote());
-                    ((ReturnDeliveryNote) toInDraft.getReqTypeRef()).setCode(this.txtRef.getText());
+                ReturnDeliveryNote rdn = (ReturnDeliveryNote) toInDraft.getReqTypeRef();
 
-                } else if (this.passObj.getObj() instanceof SalesOrder) {
+                ItemService.updateItemsByDoc(this.itemsNotYetTransfer, rdn.getCode());
 
-                    toInDraft.setReqTypeRef(new SalesOrder());
-                    ((SalesOrder) toInDraft.getReqTypeRef()).setCode(this.txtRef.getText());
+            } else if (toInDraft.getReqTypeRef() instanceof SalesOrder) {
 
-                }
-            }
+                SalesOrder salesOrder = (SalesOrder) toInDraft.getReqTypeRef();
 
-            if (this.passObj.getObj() instanceof ReturnDeliveryNote) {
+                salesOrder.setStatus(SalesRules.SOStatus.IN_PROGRESS.toString());
+                SalesOrderService.updateSalesOrderStatus(salesOrder);
 
-                // ((ReturnDeliveryNote) toInDraft.getReqTypeRef()).setStatus(SalesRules.SOStatus.IN_PROGRESS.toString());
-                // RDNService.updateRDNStatus((ReturnDeliveryNote) toInDraft.getReqTypeRef());
-            } else if (this.passObj.getObj() instanceof SalesOrder) {
-
-                ((ReturnDeliveryNote) toInDraft.getReqTypeRef()).setStatus(SalesRules.SOStatus.IN_PROGRESS.toString());
-                SalesOrderService.updateSalesOrderStatus((SalesOrder) toInDraft.getReqTypeRef());
+                ItemService.updateItemsByDoc(this.itemsNotYetTransfer, salesOrder.getCode());
 
             }
         }

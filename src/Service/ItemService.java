@@ -6,6 +6,7 @@ package Service;
 
 import DAO.ItemDAO;
 import Entity.Item;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,8 +36,20 @@ public class ItemService {
         return ItemDAO.getItemsByCode(code);
     }
 
+    public static Collection<? extends Item> getItemsByINVID(String code) {
+        return ItemDAO.getItemsByCode(code);
+    }
+
     public static List<Item> getReturnableItemsBySO(String code) {
         return ItemDAO.getReturnableItemsBySO(code);
+    }
+
+    public static Collection<? extends Item> getItemNotYetBillBySO(String code) {
+        return ItemDAO.getItemNotYetBillBySO(code);
+    }
+
+    public static boolean updateItemsByDoc(List<Item> newItems, String code) throws SQLException {
+        return ItemDAO.updateItemsByDoc(newItems, code);
     }
 
 }

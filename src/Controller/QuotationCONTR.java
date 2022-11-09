@@ -70,10 +70,7 @@ import net.synedra.validatorfx.Validator;
  */
 public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
-    private BasicObjs passObj;
-
-    private Validator validator = new Validator();
-
+    //<editor-fold defaultstate="collapsed" desc="fields">
     @FXML
     private MFXCircleToggleNode btnBack;
     @FXML
@@ -140,13 +137,16 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
     private MFXButton btnSave;
     @FXML
     private MFXButton btnDiscard;
-
     @FXML
     private MFXCircleToggleNode ctnCIRefSelection;
     @FXML
     private Label lblImgStr;
+    //</editor-fold>
 
-    private Quotation quotInDraft;
+    //<editor-fold defaultstate="collapsed" desc="util declarations">
+    private BasicObjs passObj;
+
+    private Validator validator = new Validator();
 
     AccountingRules accRules = new AccountingRules();
 
@@ -159,6 +159,9 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
     private List<Item> tempItems = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
 
     private static List<String> rowSelected = new ArrayList<>();
+
+    private Quotation quotInDraft;
+    //</editor-fold>
 
     /**
      * Initializes the controller class.
@@ -209,13 +212,11 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
     public void setupItemTable() {
         // Product ID
-        MFXTableColumn<Item> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(item -> item.getProduct().getProdID()));
-        // Inventory ID
-        MFXTableColumn<Item> inventoryIDCol = new MFXTableColumn<>("Inventory ID", true, Comparator.comparing(item -> item.getInventory().getInventoryID()));
+        MFXTableColumn<Item> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(item -> item.getProduct() == null ? "" : item.getProduct().getProdID()));
         // Remarks
         MFXTableColumn<Item> remarksCol = new MFXTableColumn<>("Remarks", true, Comparator.comparing(item -> item.getRemark()));
         // Quantity
-        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getQty()));
+        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getOriQty()));
         // Unit Price
         MFXTableColumn<Item> unitPriceCol = new MFXTableColumn<>("Unit Price", true, Comparator.comparing(item -> item.getUnitPrice()));
         // Excl. Amount
@@ -228,9 +229,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         MFXTableColumn<Item> dlvrDtCol = new MFXTableColumn<>("Delivery Date", true, Comparator.comparing(item -> item.getDlvrDate()));
 
         // Product ID
-        prodIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct().getProdID()));
-        // Inventory ID
-        inventoryIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getInventory().getInventoryID()));
+        prodIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? "" : item.getProduct().getProdID()));
         // Remarks
         remarksCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getRemark()));
         // Quantity
@@ -249,7 +248,6 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getTableColumns().clear();
         ((MFXTableView<Item>) tblVw).getTableColumns().addAll(
                 prodIDCol,
-                inventoryIDCol,
                 remarksCol,
                 qtyCol,
                 unitPriceCol,
@@ -260,8 +258,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getFilters().clear();
 
         ((MFXTableView<Item>) tblVw).getFilters().addAll(
-                new StringFilter<>("Product ID", item -> item.getProduct().getProdID()),
-                new StringFilter<>("Inventory ID", item -> item.getInventory().getInventoryID()),
+                new StringFilter<>("Product ID", item -> item.getProduct() == null ? "" : item.getProduct().getProdID()),
                 new StringFilter<>("Remark", item -> item.getRemark()),
                 new IntegerFilter<>("Quantity", item -> item.getQty()),
                 new DoubleFilter<>("Unit Price", item -> item.getUnitPrice().doubleValue()),
@@ -270,6 +267,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                 new DoubleFilter<>("Incl. Amount", item -> item.getInclTaxAmt().doubleValue()),
                 new DateFilter<>("Delivery Date", item -> item.getDlvrDate())
         );
+
         tempItems.addAll(items);
         ((MFXTableView<Item>) tblVw).getItems().clear();
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
@@ -280,12 +278,12 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
             public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
 
                 if (((MFXTableView<Item>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+
                     Item item = (((MFXTableView<Item>) tblVw).getSelectionModel().getSelectedValues().get(0));
                     rowSelected.add(item.getProduct().getProdID());
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            System.out.println(item.getProduct().getProdID() + "This is product ID");
                             // action here
                             Parent root;
                             try {
@@ -307,7 +305,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     Item catchedItem = new Item();
-                                    catchedItem = (Item) receiveObj.getObj();
+                                    catchedItem = ((Item) receiveObj.getObj()).clone();
 
                                     if (!items.contains(catchedItem)) {
                                         items.add(catchedItem);
@@ -332,23 +330,25 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private void fieldFillIn() throws IOException {
+        clearAllFieldsValue();
+
         if (passObj.getObj() != null) {
             if (passObj.getObj() instanceof Quotation) {
                 Quotation quotation = (Quotation) passObj.getObj();
                 this.txtQuotID.setText(quotation.getCode());
-                this.txtSalesPerson.setText(quotation.getSalesPerson().getStaffID());
-                this.txtBillTo.setText(quotation.getBillToCust().getCustID());
-                this.txtDeliverTo.setText(quotation.getDeliverToCust().getCollectAddrID());
-                this.dtRefDate.setValue(Instant.ofEpochMilli(quotation.getCreatedDate().getTime())
+                this.txtSalesPerson.setText(quotation.getSalesPerson() == null ? "" : quotation.getSalesPerson().getStaffID());
+                this.txtBillTo.setText(quotation.getBillToCust() == null ? "" : quotation.getBillToCust().getCustID());
+                this.txtDeliverTo.setText(quotation.getDeliverToCust() == null ? "" : quotation.getDeliverToCust().getCollectAddrID());
+                this.dtRefDate.setValue(quotation.getCreatedDate() == null ? null : Instant.ofEpochMilli(quotation.getCreatedDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
-                this.txtCIRef.setText(quotation.getCI().getCode());
+                this.txtCIRef.setText(quotation.getCI() == null ? "" : quotation.getCI().getCode());
                 this.txtRefType.setText(quotation.getReferenceType());
                 this.txtRef.setText(quotation.getReference());
-                this.dtQuotValidDate.setValue(Instant.ofEpochMilli(quotation.getQuotValidityDate().getTime())
+                this.dtQuotValidDate.setValue(quotation.getQuotValidityDate() == null ? null : Instant.ofEpochMilli(quotation.getQuotValidityDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
-                this.dtReqDlvrDate.setValue(Instant.ofEpochMilli(quotation.getRequiredDeliveryDate().getTime())
+                this.dtReqDlvrDate.setValue(quotation.getRequiredDeliveryDate() == null ? null : Instant.ofEpochMilli(quotation.getRequiredDeliveryDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
                 this.cmbCurrencyCode.setText(quotation.getCurrencyCode());
@@ -356,54 +356,38 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                 this.cmbShipmentTerm.setText(quotation.getShipmentTerm());
                 this.cmbStatus.setText(quotation.getStatus());
 
-                this.txtGross.setText(quotation.getGross().toString());
-                this.txtDiscount.setText(quotation.getDiscount().toString());
-                this.txtSubTtl.setText(quotation.getSubTotal().toString());
-                this.txtNett.setText(quotation.getNett().toString());
+                this.txtGross.setText(quotation.getGross() == null ? "" : quotation.getGross().toString());
+                this.txtDiscount.setText(quotation.getDiscount() == null ? "" : quotation.getDiscount().toString());
+                this.txtSubTtl.setText(quotation.getSubTotal() == null ? "" : quotation.getSubTotal().toString());
+                this.txtNett.setText(quotation.getNett() == null ? "" : quotation.getNett().toString());
 
-                this.txtIssuedBy.setText(quotation.getIssuedBy().getStaffID());
-                this.txtReleasedAVerifiedBy.setText(quotation.getReleasedAVerifiedBy().getStaffID());
-                this.txtCustSignature.setText(quotation.getCustomerSignature().getCollectAddrID());
+                this.txtIssuedBy.setText(quotation.getIssuedBy() == null ? "" : quotation.getIssuedBy().getStaffID());
+                this.txtReleasedAVerifiedBy.setText(quotation.getReleasedAVerifiedBy() == null ? "" : quotation.getReleasedAVerifiedBy().getStaffID());
+                this.txtCustSignature.setText(quotation.getCustomerSignature() == null ? "" : quotation.getCustomerSignature().getCollectAddrID());
 
                 this.lblImgStr.setText(quotation.getSignedDocPic());
-                this.imgDocs.setImage(ImageUtils.byteToImg(ImageUtils.encodedStrToByte(((String) ImageUtils.splitImgStr(quotation.getSignedDocPic()).getFirst()))));
+                this.imgDocs.setImage(ImageUtils.byteToImg(ImageUtils.encodedStrToByte(((String) ImageUtils.splitImgStr(quotation.getSignedDocPic().isEmpty() == true ? null : quotation.getSignedDocPic()).getFirst()))));
 
             } else if (passObj.getObj() instanceof CustomerInquiry) {
+
                 CustomerInquiry customerInquiry = (CustomerInquiry) passObj.getObj();
-                this.txtQuotID.setText("");
-                this.txtSalesPerson.setText(customerInquiry.getSalesPerson().getStaffID());
-                this.txtBillTo.setText(customerInquiry.getBillToCust().getCustID());
-                this.txtDeliverTo.setText(customerInquiry.getDeliverToCust().getCollectAddrID());
-                this.dtRefDate.setValue(Instant.ofEpochMilli(customerInquiry.getCreatedDate().getTime())
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate());
+
+                this.txtSalesPerson.setText(customerInquiry.getSalesPerson() == null ? "" : customerInquiry.getSalesPerson().getStaffID());
+                this.txtBillTo.setText(customerInquiry.getBillToCust() == null ? "" : customerInquiry.getBillToCust().getCustID());
+                this.txtDeliverTo.setText(customerInquiry.getDeliverToCust() == null ? "" : customerInquiry.getDeliverToCust().getCollectAddrID());
                 this.txtCIRef.setText(customerInquiry.getCode());
-                this.txtRefType.setText(customerInquiry.getReferenceType());
-                this.txtRef.setText(customerInquiry.getReference());
-                this.dtQuotValidDate.setValue(null);
-                this.dtReqDlvrDate.setValue(Instant.ofEpochMilli(customerInquiry.getRequiredDeliveryDate().getTime())
+                this.dtReqDlvrDate.setValue(customerInquiry.getRequiredDeliveryDate() == null ? null : Instant.ofEpochMilli(customerInquiry.getRequiredDeliveryDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
                 this.cmbCurrencyCode.setText(customerInquiry.getCurrencyCode());
                 this.cmbPymtTerm.setText(customerInquiry.getPymtTerm());
                 this.cmbShipmentTerm.setText(customerInquiry.getShipmentTerm());
-                this.cmbStatus.setText(customerInquiry.getStatus());
 
-                this.txtGross.setText(customerInquiry.getGross().toString());
-                this.txtDiscount.setText(customerInquiry.getDiscount().toString());
-                this.txtSubTtl.setText(customerInquiry.getSubTotal().toString());
-                this.txtNett.setText(customerInquiry.getNett().toString());
+                this.txtGross.setText(customerInquiry.getGross() == null ? "" : customerInquiry.getGross().toString());
+                this.txtDiscount.setText(customerInquiry.getDiscount() == null ? "" : customerInquiry.getDiscount().toString());
+                this.txtSubTtl.setText(customerInquiry.getSubTotal() == null ? "" : customerInquiry.getSubTotal().toString());
+                this.txtNett.setText(customerInquiry.getNett() == null ? "" : customerInquiry.getNett().toString());
 
-                this.txtIssuedBy.setText(customerInquiry.getIssuedBy().getStaffID());
-                this.txtReleasedAVerifiedBy.setText("");
-                this.txtCustSignature.setText("");
-
-                this.lblImgStr.setText("");
-                this.imgDocs.setImage(null);
-
-                items.clear();
-                items.addAll(ItemService.getItemsByCIID(customerInquiry.getCode()));
-                setupItemTable();
             }
 
         }
@@ -416,6 +400,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
             this.btnSave.setText("Save");
         }
 
+        this.txtQuotID.clear();
         this.txtSalesPerson.setDisable(disable);
         this.txtBillTo.setDisable(disable);
         this.txtDeliverTo.setDisable(disable);
@@ -539,7 +524,36 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public boolean clearAllFieldsValue() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        //this.txtQuotID.clear();
+        this.txtSalesPerson.clear();
+        this.txtBillTo.clear();
+        this.txtDeliverTo.clear();
+        this.dtRefDate.clear();
+        this.txtCIRef.clear();
+        this.txtRefType.clear();
+        this.txtRef.clear();
+        this.dtQuotValidDate.clear();
+        this.dtReqDlvrDate.clear();
+        this.cmbCurrencyCode.clear();
+        this.cmbPymtTerm.clear();
+        this.cmbShipmentTerm.clear();
+        this.cmbStatus.clear();
+
+        this.txtGross.clear();
+        this.txtDiscount.clear();
+        this.txtSubTtl.clear();
+        this.txtNett.clear();
+
+        this.txtIssuedBy.clear();
+        this.txtReleasedAVerifiedBy.clear();
+        this.txtCustSignature.clear();
+
+        this.lblImgStr.setText("");
+        this.imgDocs.setImage(null);
+
+        this.items.clear();
+
+        return true;
     }
 
     @Override
@@ -627,11 +641,12 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                 if (stage.getUserData() != null) {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                     this.txtBillTo.setText(((Customer) receiveObj.getObj()).getCustID());
+                    this.txtDeliverTo.clear();
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
         }
     }
 
@@ -666,12 +681,12 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
                 if (stage.getUserData() != null) {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
-                    this.txtIssuedBy.setText(((CollectAddress) receiveObj.getObj()).getCollectAddrID());
+                    this.txtDeliverTo.setText(((CollectAddress) receiveObj.getObj()).getCollectAddrID());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -700,7 +715,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -736,22 +751,26 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                     CustomerInquiry customerInquiry = (CustomerInquiry) receiveObj.getObj();
 
-                    if (!customerInquiry.getStatus().equals(SalesRules.CIStatus.COMPLETED)) {
-                        this.txtCIRef.setText(customerInquiry.getCode());
-                        passObj.setObj(CustomerInquiryService.getCustomerInquiryByCode(customerInquiry.getCode()));
+                    if (customerInquiry.getStatus().equals(SalesRules.CIStatus.NEW)) {
+                        this.passObj.setObj(customerInquiry.getCode());
+
                         fieldFillIn();
+
+                        items.addAll(ItemService.getItemsByCIID(customerInquiry.getCode()));
+
+                        setupItemTable();
                     } else {
                         alertDialog(Alert.AlertType.INFORMATION,
                                 "Information",
                                 "Document Blocked Message",
-                                "Customer Inquiry with COMPLETED status are not allowed to become any document reference.");
+                                "Customer Inquiry without NEW status are not allowed to become any document reference.");
                     }
 
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -779,7 +798,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -807,7 +826,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -842,12 +861,12 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
                 if (stage.getUserData() != null) {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
-                    this.txtIssuedBy.setText(((CollectAddress) receiveObj.getObj()).getCollectAddrID());
+                    this.txtCustSignature.setText(((CollectAddress) receiveObj.getObj()).getCollectAddrID());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -876,7 +895,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                 String catchedImagesStr = new String();
                 catchedImagesStr = (String) receiveObj.getObj();
 
-                String splittedImgStrFirst = (String) ImageUtils.splitImgStr(catchedImagesStr).getFirst();
+                String splittedImgStrFirst = (String) ImageUtils.splitImgStr(catchedImagesStr.isEmpty() == true ? null : catchedImagesStr).getFirst();
                 byte[] decodedByteFirst = ImageUtils.encodedStrToByte(splittedImgStrFirst);
                 Image imageFirst = ImageUtils.byteToImg(decodedByteFirst);
                 this.imgDocs.setImage(imageFirst);
@@ -909,7 +928,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
                 BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                 Item catchedItem = new Item();
-                catchedItem = (Item) receiveObj.getObj();
+                catchedItem = ((Item) receiveObj.getObj()).clone();
 
                 if (!items.contains(catchedItem)) {
                     items.add(catchedItem);
@@ -942,17 +961,27 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
             quotInDraft = prepareQuotationToObj();
 
             if (this.txtQuotID.getText().isEmpty()) {
-                QuotationService.saveNewQuotation(quotInDraft);
+                quotInDraft.setCode(QuotationService.saveNewQuotation(quotInDraft));
 
             } else if (this.passObj.getCrud().equals(BasicObjs.update)) {
                 QuotationService.updateQuotation(quotInDraft);
             }
 
-            if (!this.txtCIRef.getText().isEmpty()) {
-                quotInDraft.getCI().setStatus(SalesRules.CIStatus.COMPLETED.toString());
-                CustomerInquiryService.updateCustomerInquiryStatus(quotInDraft.getCI());
+            for (Item i : quotInDraft.getItems()) {
+                i.setOriQty(i.getQty());
             }
 
+            ItemService.updateItemsByDoc(quotInDraft.getItems(), quotInDraft.getCode());
+
+            updateRefDoc();
+
+        }
+    }
+
+    private void updateRefDoc() {
+        if (!this.txtCIRef.getText().isEmpty()) {
+            quotInDraft.getCI().setStatus(SalesRules.CIStatus.COMPLETED.toString());
+            CustomerInquiryService.updateCustomerInquiryStatus(quotInDraft.getCI());
         }
     }
 

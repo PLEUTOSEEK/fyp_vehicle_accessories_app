@@ -280,9 +280,11 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
             this.txtOccupation.setText(staff.getOccupation());
             this.cmbRole.setText(staff.getRole());
 
-            BufferedImage bi = ImageUtils.toBufferedImage(staff.getAvatarImg());
-            Image img = SwingFXUtils.toFXImage(bi, null);
-            this.imgAvatarImg.setImage(img);
+            this.imgAvatarImg.setImage(ImageUtils.byteToImg(
+                    ImageUtils.encodedStrToByte(
+                            staff.getAvatarImg().isEmpty() == true
+                            ? null : staff.getAvatarImg()
+                    )));
         }
     }
 
@@ -699,7 +701,7 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
     private Staff prepareStaffInforToObj() throws IOException {
         Staff staff = new Staff();
         staff.setStaffID(this.txtStaffID.getText());
-        staff.setAvatarImg(ImageUtils.imgViewToByte(this.imgAvatarImg));
+        staff.setAvatarImg(this.imgAvatarImg.getImage() == null ? "" : ImageUtils.byteToEncodedStr(ImageUtils.imgToByte(this.imgAvatarImg.getImage())));
         staff.setName(this.txtName.getText());
         staff.setGender(this.cmbGender.getText());
         staff.setDOB(this.dtDOB.getValue() == null ? null : (java.sql.Date) Date.from(Instant.from(this.dtDOB.getValue().atStartOfDay(ZoneId.systemDefault())))); //https://stackoverflow.com/questions/20446026/get-value-from-date-picker

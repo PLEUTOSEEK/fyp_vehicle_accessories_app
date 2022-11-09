@@ -4,7 +4,6 @@
  */
 package DAO;
 
-import BizRulesConfiguration.WarehouseRules;
 import Entity.PackingSlip;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -207,6 +206,65 @@ public class PackingSlipDAO {
         }
     }
 
+    public static List<PackingSlip> getPSsBySOID(String code) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+
+        List<PackingSlip> packingSlips = new ArrayList<>();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT "
+                    + "    PackingSlip.PS_ID,"
+                    + "    TransferOrder.TO_ID,"
+                    + "    PackingSlip.Status,"
+                    + "     "
+                    + "FROM "
+                    + "    PackingSlip INNER JOIN "
+                    + "    TransferOrder "
+                    + "    ON PackingSlip.TO_ID = TransferOrder.TO_ID INNER JOIN "
+                    + "    SalesOrder "
+                    + "    ON TransferOrder.Req_Type_Ref = SalesOrder.SO_ID "
+                    + "WHERE "
+                    + "    SalesOrder.SO_ID = ? "
+                    + "    AND TransferOrder.[Status] = 'TRANFERRED' ";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            ps.setString(1, code);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                PackingSlip packingSlip = new PackingSlip();
+                packingSlip.setCode(rs.getString("PS_ID"));
+                packingSlip.setTO(rs.getString("TO_ID").isEmpty() ? null : TransferOrderDAO.getTransferOrderByCode(rs.getString("TO_ID")));
+                packingSlip.setStatus(rs.getString("Status"));
+
+                packingSlips.add(packingSlip);
+            }
+
+            //return object
+            return packingSlips;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
     public static boolean updatePackingSlipsStatus(List<PackingSlip> packingSlips) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -227,7 +285,7 @@ public class PackingSlipDAO {
             int i = 0;
 
             for (PackingSlip packingSlip : packingSlips) {
-                ps.setString(1, WarehouseRules.PSStatus.REFERED.toString());
+                ps.setString(1, packingSlip.getStatus());
                 ps.setString(2, packingSlip.getDO().getCode());
                 ps.setString(3, packingSlip.getCode());
 

@@ -21,6 +21,7 @@ import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -67,8 +68,9 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
     private MFXButton btnDiscard;
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="support declaration">
+    //<editor-fold defaultstate="collapsed" desc="util declarations">
     private BasicObjs passObj;
+
     private Validator validator = new Validator();
 
     private List<Item> itemsNotYetPack = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
@@ -104,10 +106,6 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                     //transfer order compulsory must based on SO to generate for Order-To-Cash Process
                     itemsNotYetPack.addAll(ItemService.getItemByTOID(((TransferOrder) passObj.getObj()).getCode()));
 
-                    //deep copy
-                    for (Item i : itemsNotYetPack) {
-                        items.add(i.clone());
-                    }
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read)) {
@@ -119,16 +117,16 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
     private void setupItemTable() {
         // Product ID
-        MFXTableColumn<Item> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(item -> item.getProduct().getProdID()));
+        MFXTableColumn<Item> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(item -> item.getProduct() == null ? null : item.getProduct().getProdID()));
         // Part No
-        MFXTableColumn<Item> partNoCol = new MFXTableColumn<>("Part No.", true, Comparator.comparing(item -> item.getProduct().getPartNo()));
+        MFXTableColumn<Item> partNoCol = new MFXTableColumn<>("Part No.", true, Comparator.comparing(item -> item.getProduct() == null ? null : item.getProduct().getPartNo()));
         // Qty
         MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Qty", true, Comparator.comparing(item -> item.getQty()));
 
         // Product ID
-        prodIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct().getProdID()));
+        prodIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? null : item.getProduct().getProdID()));
         // Part No
-        partNoCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct().getPartNo()));
+        partNoCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? null : item.getProduct().getPartNo()));
         // Qty
         qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getQty()));
 
@@ -143,8 +141,8 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getFilters().clear();
 
         ((MFXTableView<Item>) tblVw).getFilters().addAll(
-                new StringFilter<>("Product ID", item -> item.getProduct().getProdID()),
-                new StringFilter<>("Part No.", item -> item.getProduct().getPartNo()),
+                new StringFilter<>("Product ID", item -> item.getProduct() == null ? null : item.getProduct().getProdID()),
+                new StringFilter<>("Part No.", item -> item.getProduct() == null ? null : item.getProduct().getPartNo()),
                 new IntegerFilter<>("Qty", item -> item.getQty())
         );
 
@@ -176,6 +174,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
                                 BasicObjs passObj = new BasicObjs();
                                 passObj.setObj(item);
+                                passObj.setObjs((List<Object>) (Object) itemNotYetPack);
                                 passObj.setCrud(BasicObjs.read);
 
                                 stage.setUserData(passObj);
@@ -204,7 +203,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
     private void adjustItemsNotYetPack(Item catchedItem) {
 
-        //=============\
+        //=============
         if (catchedItem.getProduct() == null) {
             Item itemInTO = itemsNotYetPack.get(itemsNotYetPack.indexOf(catchedItem));
             Item itemInPS = (Item) items.get(items.indexOf(catchedItem));
@@ -248,22 +247,12 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                 TransferOrder to = (TransferOrder) passObj.getObj();
                 this.txtTORef.setText(to.getCode());
 
-                items.clear();
-                itemsNotYetPack.clear();
-                itemsNotYetPack.addAll(ItemService.getItemByTOID(to.getCode()));
-
-                for (Item i : itemsNotYetPack) {
-                    items.add(i.clone());
-                }
-
-                this.setupItemTable();
-
             } else if (passObj.getObj() instanceof PackingSlip) {
 
                 PackingSlip ps = (PackingSlip) passObj.getObj();
 
                 this.txtPSID.setText(ps.getCode());
-                this.txtTORef.setText(ps.getTO().getCode());
+                this.txtTORef.setText(ps.getTO() == null ? "" : ps.getTO().getCode());
             }
 
         }
@@ -335,8 +324,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @Override
-    public BasicObjs sendData(BasicObjs passObj, String direction
-    ) {
+    public BasicObjs sendData(BasicObjs passObj, String direction) {
         switch (direction) {
             case BasicObjs.forward:
                 passObj.getFxmlPaths().addLast("View/PackingSlip_UI.fxml");
@@ -375,16 +363,17 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public boolean clearAllFieldsValue() {
-        this.txtPSID.clear();
+        //this.txtPSID.clear();
         this.txtTORef.clear();
 
+        items.clear();
+        this.itemsNotYetPack.clear();
         return true;
     }
 
     @Override
     public ButtonType alertDialog(Alert.AlertType alertType, String title,
-            String headerTxt, String contentTxt
-    ) {
+            String headerTxt, String contentTxt) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(headerTxt);
@@ -440,30 +429,40 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                     TransferOrder to = (TransferOrder) receiveObj.getObj();
 
-                    if (!to.getStatus().equals(WarehouseRules.TOStatus.TRANSFERING) && !to.getStatus().equals(WarehouseRules.TOStatus.TRANFERRED)) { // check Document Reference already or not
-                        this.txtTORef.setText(to.getCode());
+                    if (to.getStatus().equals(WarehouseRules.TOStatus.NEW)) { // check Document Reference already or not
                         this.passObj.setObj(to);
                         fieldFillIn();
+
+                        itemsNotYetPack.addAll(ItemService.getItemByTOID(to.getCode()));
+
                     } else {
                         alertDialog(Alert.AlertType.INFORMATION,
                                 "Information",
                                 "Document Blocked Message",
-                                "Transfer Order in Transfering/ Tramsfered status are not allowed to become any document reference.");
+                                "Transfer Order without NEW status are not allowed to become any document reference.");
                     }
 
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
     @FXML
     private void addProductItem(MouseEvent event) {
+        if (this.txtTORef.getText().isEmpty()) {
+            alertDialog(Alert.AlertType.INFORMATION,
+                    "Information",
+                    "Prerequisite Condition",
+                    "Must fill in Reference Document column, before add item");
+            return;
+        }
+
         Parent root;
         try {
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelectWithItemsProvided_UI.fxml"));
 
             Stage stage = new Stage();
             stage.initModality(Modality.WINDOW_MODAL);
@@ -474,8 +473,11 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
             passObj.setCrud(BasicObjs.create);
 
             Item<TransferOrder> item = new Item();
-            item.setRefDoc((TransferOrder) this.passObj.getObj());
+            TransferOrder transferOrder = new TransferOrder();
+            transferOrder.setCode(this.txtTORef.getText());
+            item.setRefDoc(transferOrder);
             passObj.setObj(item);
+            passObj.setObjs((List<Object>) (Object) itemsNotYetPack);
 
             stage.setUserData(passObj);
             stage.showAndWait();
@@ -495,7 +497,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @FXML
-    private void savePS(MouseEvent event) {
+    private void savePS(MouseEvent event) throws SQLException {
         if (event.isPrimaryButtonDown() == true) {
 
             if (!this.btnSave.getText().equals("Save")) {
@@ -511,14 +513,30 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
             packingSlipInDraft = this.preparePackingSlipToObj();
 
             if (this.txtPSID.getText().isEmpty()) {
-                PackingSlipService.saveNewPackingSlip(packingSlipInDraft);
+                packingSlipInDraft.setCode(PackingSlipService.saveNewPackingSlip(packingSlipInDraft));
 
             } else {
                 PackingSlipService.updatePackingSlip(packingSlipInDraft);
             }
 
-            // packing slip no need update the refer document (TO) status
+            for (Item i : packingSlipInDraft.getItems()) {
+                i.setOriQty(i.getQty());
+            }
+
+            ItemService.updateItemsByDoc(packingSlipInDraft.getItems(), packingSlipInDraft.getCode());
+
+            updateRefDoc();
         }
     }
 
+    private void updateRefDoc() throws SQLException {
+        if (!this.txtTORef.getText().isEmpty()) {
+
+            TransferOrder to = packingSlipInDraft.getTO();
+
+            ItemService.updateItemsByDoc(this.itemsNotYetPack, to.getCode());
+
+            // packing slip no need update the refer document (TO) status
+        }
+    }
 }

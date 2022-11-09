@@ -4,13 +4,14 @@
  */
 package Controller;
 
+import BizRulesConfiguration.SalesRules;
 import BizRulesConfiguration.WarehouseRules;
 import Entity.CollectAddress;
 import Entity.DeliveryOrder;
 import Entity.PackingSlip;
 import Entity.Place;
+import Entity.SalesOrder;
 import Entity.Staff;
-import Entity.TransferOrder;
 import PassObjs.BasicObjs;
 import Service.DeliveryOrderService;
 import Service.PackingSlipService;
@@ -70,8 +71,6 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private MFXDatePicker dtRefDate;
     @FXML
-    private MFXTextField txtRef;
-    @FXML
     private MFXTextField txtDeliverFrom;
     @FXML
     private MFXCircleToggleNode ctnDeliverFromSelection;
@@ -79,8 +78,6 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     private MFXComboBox<?> cmbStatus;
     @FXML
     private MFXDatePicker dtDlvrDt;
-    private MFXCircleToggleNode ctnSORefSelection;
-    private MFXCircleToggleNode ctnRDNRefSelection;
     @FXML
     private MFXButton btnAdd;
     @FXML
@@ -114,11 +111,12 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private Label lblImgStrs;
     @FXML
-    private MFXCircleToggleNode ctnDocSelection;
+    private MFXCircleToggleNode ctnSOSelection;
     @FXML
-    private MFXComboBox<?> cmbRefType;
-//</editor-fold>
+    private MFXTextField txtSORef;
 
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="util declarations">
     private BasicObjs passObj;
 
     private Validator validator = new Validator();
@@ -136,6 +134,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     private MFXTextField txtTORef;
 
     private DeliveryOrder doInDraft;
+    //</editor-fold>
 
     /**
      * Initializes the controller class.
@@ -161,14 +160,15 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
                     // haven't verify the same product ID, must have different delivery date
                     if (passObj.getObj() instanceof DeliveryOrder) {
-                        packingSlipsNotYetDeliver.addAll(PackingSlipService.getPSsByDOID(((DeliveryOrder) passObj.getObj()).getCode()));
-                    } else if (passObj.getObj() instanceof TransferOrder) {
-                        packingSlipsNotYetDeliver.addAll(PackingSlipService.getPSsByTOID(((TransferOrder) passObj.getObj()).getCode()));
+                        DeliveryOrder deliveryOrder = (DeliveryOrder) passObj.getObj();
+
+                        packingSlipsNotYetDeliver.addAll(PackingSlipService.getPSsBySOID(deliveryOrder.getSo().getCode()));
+                        packingSlips.addAll(PackingSlipService.getPSsByDOID(deliveryOrder.getCode()));
+
+                    } else if (passObj.getObj() instanceof SalesOrder) {
+                        packingSlipsNotYetDeliver.addAll(PackingSlipService.getPSsBySOID(((SalesOrder) passObj.getObj()).getCode()));
                     }
 
-                    for (PackingSlip i : packingSlipsNotYetDeliver) {
-                        packingSlips.add(i.clone());
-                    }
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read)) {
@@ -230,6 +230,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
                                 BasicObjs passObj = new BasicObjs();
                                 passObj.setObj(packingSlip);
+                                passObj.setObjs((List<Object>) (Object) packingSlipsNotYetDeliver);
                                 passObj.setCrud(BasicObjs.read);
 
                                 stage.setUserData(passObj);
@@ -268,7 +269,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     private void adjustPackingSlipNotYetDeliver(PackingSlip catchedPackingSlip) {
         //  SO = TO
         //  TO = DO
-        if (catchedPackingSlip.getTO() == null) {
+        if (catchedPackingSlip.getTO() == null) {//remove
 
             PackingSlip packingSlipInTO = packingSlipsNotYetDeliver.get(packingSlipsNotYetDeliver.indexOf(catchedPackingSlip));
 
@@ -311,31 +312,24 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
                 DeliveryOrder d = (DeliveryOrder) passObj.getObj();
 
                 this.txtDOID.setText(d.getCode());
-                this.txtDeliverFrom.setText(d.getDeliverFr().getPlaceID());
-                this.dtDlvrDt.setValue(Instant.ofEpochMilli(d.getDeliveryDate().getTime())
+                this.txtDeliverFrom.setText(d.getDeliverFr() == null ? "" : d.getDeliverFr().getPlaceID());
+                this.dtDlvrDt.setValue(d.getDeliveryDate() == null ? null : Instant.ofEpochMilli(d.getDeliveryDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
-                this.dtRefDate.setValue(Instant.ofEpochMilli(d.getCreatedDate().getTime())
+                this.dtRefDate.setValue(d.getCreatedDate() == null ? null : Instant.ofEpochMilli(d.getCreatedDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
-
-                this.cmbRefType.setText(d.getReferenceType());
+                this.txtSORef.setText(d.getSo() == null ? "" : d.getSo().getCode());
                 this.cmbStatus.setText(d.getStatus());
 
-                this.txtIssuedBy.setText(d.getIssuedBy().getStaffID());
-                this.txtReleasedAVerifiedBy.setText(d.getReleasedAVerifiedBy().getStaffID());
-                this.txtDeliveryBy.setText(d.getDeliveryBy().getStaffID());
-                this.txtItemReceivedBy.setText(d.getItemReceivedBy().getCollectAddrID());
+                this.txtIssuedBy.setText(d.getIssuedBy() == null ? "" : d.getIssuedBy().getStaffID());
+                this.txtReleasedAVerifiedBy.setText(d.getReleasedAVerifiedBy() == null ? "" : d.getReleasedAVerifiedBy().getStaffID());
+                this.txtDeliveryBy.setText(d.getDeliveryBy() == null ? "" : d.getDeliveryBy().getStaffID());
+                this.txtItemReceivedBy.setText(d.getItemReceivedBy() == null ? "" : d.getItemReceivedBy().getCollectAddrID());
 
-                this.txtRef.setText(((TransferOrder) d.getReference()).getCode());
-                setupPackingTable();
-            } else if (passObj.getObj() instanceof TransferOrder) {
-                TransferOrder to = (TransferOrder) passObj.getObj();
-                this.txtTORef.setText(to.getCode());
-
-                packingSlips.clear();
-                packingSlips.addAll(PackingSlipService.getPSsByTOID(to.getCode()));
-                setupPackingTable();
+            } else if (passObj.getObj() instanceof SalesOrder) {
+                SalesOrder salesOrder = (SalesOrder) passObj.getObj();
+                this.txtSORef.setText(salesOrder.getCode());
             }
 
         }
@@ -351,15 +345,12 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
         this.txtDeliverFrom.setDisable(disable);
         this.dtDlvrDt.setDisable(disable);
         this.dtRefDate.setDisable(disable);
-        this.cmbRefType.setDisable(disable);
-        this.txtRef.setDisable(disable);
+        this.txtSORef.setDisable(disable);
         this.cmbStatus.setDisable(disable);
 
         this.ctnDeliverFromSelection.setDisable(disable);
-        this.ctnSORefSelection.setDisable(disable);
-        this.ctnRDNRefSelection.setDisable(disable);
+        this.ctnSOSelection.setDisable(disable);
 
-        this.btnAdd.setDisable(disable);
         this.txtIssuedBy.setDisable(disable);
         this.txtReleasedAVerifiedBy.setDisable(disable);
         this.txtDeliveryBy.setDisable(disable);
@@ -370,7 +361,9 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
         this.ctnDeliveryBySelection.setDisable(disable);
         this.ctnItemReceivedBySelection.setDisable(disable);
 
+        this.btnAdd.setDisable(disable);
         this.psTblVw.setDisable(disable);
+        this.imgDocs.setImage(null);
     }
 
     @FXML
@@ -461,12 +454,11 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public boolean clearAllFieldsValue() {
-        this.txtDOID.clear();
+        //this.txtDOID.clear();
         this.txtDeliverFrom.clear();
         this.dtDlvrDt.clear();
         this.dtRefDate.clear();
-        this.cmbRefType.clear();
-        this.txtRef.clear();
+        this.txtSORef.clear();
         this.cmbStatus.clear();
         this.txtIssuedBy.clear();
         this.txtReleasedAVerifiedBy.clear();
@@ -475,6 +467,8 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
         this.imgDocs.setImage(null);
 
+        packingSlips.clear();
+        packingSlipsNotYetDeliver.clear();
         return true;
     }
 
@@ -500,12 +494,10 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
         d.setDeliveryDate(this.dtDlvrDt.getValue() == null ? null : java.sql.Date.valueOf(this.dtDlvrDt.getValue()));
         d.setCreatedDate(this.dtRefDate.getValue() == null ? null : Timestamp.valueOf(this.dtRefDate.getValue().atStartOfDay()));
 
-        TransferOrder toRef = new TransferOrder();
-        toRef.setCode(this.txtRef.getText());
-        d.setReference(toRef);
+        SalesOrder soRef = new SalesOrder();
+        soRef.setCode(this.txtSORef.getText());
+        d.setSo(soRef);
 
-        d.setReferenceType(this.cmbRefType.getText());
-        d.setReference(this.txtRef.getText());
         d.setStatus(this.cmbStatus.getText());
 
         Staff issuedBy = new Staff();
@@ -525,7 +517,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
         d.setItemReceivedBy(itemReceivedBy);
 
         d.setSignedDocPic(this.lblImgStrs.getText());
-        d.setItems(packingSlips);
+        d.setPackingSlips(packingSlips);
         return d;
     }
 
@@ -554,21 +546,13 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
     @FXML
-    private void openDocSelection(MouseEvent event) {
+    private void openSOSelection(MouseEvent event) {
         if (event.isPrimaryButtonDown() == true) {
-
-            if (this.cmbRefType.getText().isEmpty()) {
-                alertDialog(Alert.AlertType.INFORMATION,
-                        "Information",
-                        "Prerequisite Condition",
-                        "Must fill in doc type column, before select reference");
-                return;
-            }
 
             ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
                     "Confirmation",
@@ -589,7 +573,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
                 BasicObjs passObj = new BasicObjs();
 
-                passObj.setObj(new TransferOrder());
+                passObj.setObj(new SalesOrder());
 
                 stage.setUserData(passObj);
                 stage.showAndWait();
@@ -598,26 +582,27 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
 
-                    TransferOrder to = (TransferOrder) receiveObj.getObj();
+                    SalesOrder so = (SalesOrder) receiveObj.getObj();
 
-                    if (!to.getStatus().equals(WarehouseRules.TOStatus.TRANFERRED)
-                            && !to.getStatus().equals(WarehouseRules.TOStatus.TRANSFERING)) {
-                        this.txtRef.setText(to.getCode());
-                        this.passObj.setObj(to);
-                        //this.passObj.setObj(SalesOrderService.getSOByID(so.getCode()));
+                    if (!so.getStatus().equals(SalesRules.SOStatus.COMPLETED)
+                            && !so.getStatus().equals(SalesRules.SOStatus.ON_HOLD)) {
+
+                        this.passObj.setObj(so);
+
                         fieldFillIn();
+
                     } else {
                         alertDialog(Alert.AlertType.INFORMATION,
                                 "Information",
                                 "Document Blocked Message",
-                                "Transfer Order with TRANFERRED/ TRANSFERING status are not allowed to become any document reference.");
+                                "Sales Order with COMPLETED/ ON_HOLD status are not allowed to become any document reference.");
                     }
 
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -645,7 +630,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -673,7 +658,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -701,7 +686,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -730,7 +715,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
+
         }
     }
 
@@ -773,15 +758,9 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private void addProductItem(MouseEvent event) {
 
-        addPackingSlips();
-    }
-
-    private void addPackingSlips() {
-// must based on SO
-// Inner Select SO's Items
         Parent root;
         try {
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelectWithItemsProvided_UI.fxml"));
 
             Stage stage = new Stage();
             stage.initModality(Modality.WINDOW_MODAL);
@@ -790,10 +769,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
-
-            PackingSlip packingSlip = new PackingSlip();
-            packingSlip.setTO((TransferOrder) this.passObj.getObj());
-            passObj.setObj(packingSlip);
+            passObj.setObjs((List<Object>) (Object) packingSlipsNotYetDeliver);
 
             stage.setUserData(passObj);
             stage.showAndWait();
@@ -805,8 +781,14 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
                 PackingSlip catchedPackingSlip = new PackingSlip();
                 catchedPackingSlip = ((PackingSlip) receiveObj.getObj()).clone();
 
-                adjustPackingSlipNotYetDeliver(catchedPackingSlip);
-
+                if (!catchedPackingSlip.getStatus().equals(WarehouseRules.PSStatus.REFERED.toString())) {
+                    adjustPackingSlipNotYetDeliver(catchedPackingSlip);
+                } else {
+                    alertDialog(Alert.AlertType.INFORMATION,
+                            "Information",
+                            "Document Blocked Message",
+                            "Packing Slip with REFERED status are not allowed to become any document reference.");
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -830,23 +812,21 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
             }
 
             doInDraft = this.prepareDeliveryOrderToObj();
-            String deliveryOrderID;
 
             if (this.txtDOID.getText().isEmpty()) {
-                deliveryOrderID = DeliveryOrderService.saveNewDeliveryOrder(doInDraft);
+                doInDraft.setCode(DeliveryOrderService.saveNewDeliveryOrder(doInDraft));
 
             } else {
-                deliveryOrderID = DeliveryOrderService.updateDeliveryOrder(doInDraft);
+                DeliveryOrderService.updateDeliveryOrder(doInDraft);
             }
 
-            if (deliveryOrderID != null) {
-                doInDraft.setCode(deliveryOrderID);
+            packingSlips.forEach(e -> {
+                e.setDO(doInDraft);
+                e.setStatus(WarehouseRules.PSStatus.REFERED.toString());
+            });
 
-                packingSlips.forEach(e -> e.setDO(doInDraft));
-
-                // update packing slip status to all referred
-                PackingSlipService.updatePackingSlipsStatus(packingSlips);
-            }
+            // update packing slip status to all referred
+            PackingSlipService.updatePackingSlipsStatus(packingSlips);
 
         }
     }

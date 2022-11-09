@@ -14,7 +14,7 @@ public class Document extends Entity {
 
     protected String code;
     protected Timestamp actualCreatedDateTime;
-    protected String signedDocPic; // prev iously is byte[]
+    protected String signedDocPic; // previously is byte[]
     protected String status;
 
     public Document(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status) {

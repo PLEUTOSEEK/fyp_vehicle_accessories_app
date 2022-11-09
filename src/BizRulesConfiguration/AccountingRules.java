@@ -5,6 +5,7 @@
 package BizRulesConfiguration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,8 +14,14 @@ import java.util.List;
  */
 public class AccountingRules {
 
+    public enum InvoiceStatus {
+        NEW,
+        PARTIALLY_PAID,
+        COMPLETED
+    }
     private List<String> pymtTerms;
     private List<String> currencyCodes;
+    private List<InvoiceStatus> invoiceStatuses;
     private double taxRate;
 
     public AccountingRules() {
@@ -29,8 +36,8 @@ public class AccountingRules {
         pymtTerms.add("COD");
 
         currencyCodes.add("MYR");
-        System.out.println(currencyCodes.toString());
         taxRate = 6;
+        invoiceStatuses = Arrays.asList(InvoiceStatus.values());
     }
 
     public double getTaxRate() {
@@ -55,5 +62,13 @@ public class AccountingRules {
 
     public void setCurrencyCodes(List<String> currencyCodes) {
         this.currencyCodes = currencyCodes;
+    }
+
+    public List<InvoiceStatus> getInvoiceStatuses() {
+        return invoiceStatuses;
+    }
+
+    public void setInvoiceStatuses(List<InvoiceStatus> invoiceStatuses) {
+        this.invoiceStatuses = invoiceStatuses;
     }
 }

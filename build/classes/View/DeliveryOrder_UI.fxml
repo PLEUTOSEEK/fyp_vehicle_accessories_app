@@ -13,7 +13,6 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -26,7 +25,7 @@
     <children>
         <MFXScrollPane minHeight="785.0" minWidth="1532.0" prefHeight="786.0" prefWidth="1533.0" styleClass="grid-pane" stylesheets="@../../css/PaneBackgroundColor.css" trackColor="#828282" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <content>
-                <GridPane minHeight="900.0" minWidth="1511.0" prefHeight="1691.0" prefWidth="1516.0">
+                <GridPane minHeight="900.0" minWidth="1511.0" onMousePressed="#openSOSelection" prefHeight="1691.0" prefWidth="1516.0">
                     <columnConstraints>
                         <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -115,7 +114,7 @@
                                             <children>
                                                 <MFXTextField fx:id="txtDOID" alignment="CENTER_RIGHT" editable="false" floatingText="Delivery Order ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.rowIndex="1" />
                                                 <MFXDatePicker fx:id="dtRefDate" alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Reference Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <MFXTextField fx:id="txtRef" alignment="CENTER_RIGHT" floatingText="Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                <MFXTextField fx:id="txtSORef" alignment="CENTER_RIGHT" floatingText="SO Ref." minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                 <MFXTextField fx:id="txtDeliverFrom" alignment="CENTER_RIGHT" editable="false" floatingText="Deliver From" minWidth="145.0" prefWidth="145.0" GridPane.rowIndex="2" />
                                                 <MFXCircleToggleNode fx:id="ctnDeliverFromSelection" graphicTextGap="2.0" onMousePressed="#openDeliverFromSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                                                     <padding>
@@ -127,7 +126,7 @@
                                                 </MFXCircleToggleNode>
                                                 <MFXComboBox fx:id="cmbStatus" alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                                 <MFXDatePicker fx:id="dtDlvrDt" alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Delivery Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.rowIndex="3" />
-                                    <MFXCircleToggleNode fx:id="ctnDocSelection" graphicTextGap="2.0" onMousePressed="#openDocSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                    <MFXCircleToggleNode fx:id="ctnSOSelection" graphicTextGap="2.0" onMousePressed="#openSOSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                                        <padding>
                                           <Insets bottom="1.0" top="10.0" />
                                        </padding>
@@ -135,7 +134,6 @@
                                           <FontAwesomeIconView glyphName="LIST" />
                                        </graphic>
                                     </MFXCircleToggleNode>
-                                    <MFXComboBox fx:id="cmbRefType" alignment="CENTER_RIGHT" floatingText="Ref. Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                             </children>
                                         </GridPane>
                                     </children>
@@ -248,9 +246,6 @@
                                                     </GridPane.margin>
                                                 </MFXCircleToggleNode>
                                                 <ImageView fx:id="imgDocs" fitHeight="89.0" fitWidth="89.0" onMousePressed="#goImgViewer" pickOnBounds="true" preserveRatio="true" styleClass="image" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                                                    <image>
-                                                        <Image url="@../../../../Pictures/Screenshots/Screenshot%20(11).png" />
-                                                    </image>
                                                     <cursor>
                                                         <Cursor fx:constant="HAND" />
                                                     </cursor>

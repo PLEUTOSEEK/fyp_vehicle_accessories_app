@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import Entity.Address;
 import Entity.Contact;
 import Entity.Customer;
 import java.sql.Connection;
@@ -12,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -42,7 +42,7 @@ public class CustomerDAO {
                 customer = new Customer(
                         rs.getTimestamp("CUST_Created_Date"),
                         rs.getTimestamp("CUST_Modified_Date_Time"),
-                        rs.getString("CUST_Avatar_Img") == null ? null : Base64.decodeBase64(rs.getString("CUST_Avatar_Img")),
+                        rs.getString("CUST_Avatar_Img"),
                         rs.getString("CUST_Name"),
                         rs.getString("CUST_Gender"),
                         rs.getDate("CUST_DOB"),
@@ -141,7 +141,7 @@ public class CustomerDAO {
 
             ps.setString(1, customer.getCustID());
             ps.setString(2, customer.getBillToAddr().getAddressID());
-            ps.setString(3, Base64.encodeBase64String(customer.getAvatarImg()));
+            ps.setString(3, customer.getAvatarImg());
             ps.setString(4, customer.getName());
             ps.setString(5, customer.getGender());
             ps.setDate(6, customer.getDOB());
@@ -230,7 +230,7 @@ public class CustomerDAO {
             rs = ps.executeQuery();
 
             ps.setString(1, customer.getBillToAddr().getAddressID());
-            ps.setString(2, Base64.encodeBase64String(customer.getAvatarImg()));
+            ps.setString(2, customer.getAvatarImg());
             ps.setString(3, customer.getName());
             ps.setString(4, customer.getGender());
             ps.setDate(5, customer.getDOB());
@@ -325,7 +325,7 @@ public class CustomerDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "";
+            query = "SELECT * FROM View_Retrieve_All_Customer";
             ps = conn.prepareStatement(query);
 
             // bind parameter
@@ -335,7 +335,7 @@ public class CustomerDAO {
                 customer = new Customer(
                         rs.getTimestamp("CUST_Created_Date"),
                         rs.getTimestamp("CUST_Modified_Date_Time"),
-                        rs.getString("CUST_Avatar_Img") == null ? null : Base64.decodeBase64(rs.getString("CUST_Avatar_Img")),
+                        rs.getString("CUST_Avatar_Img"),
                         rs.getString("CUST_Name"),
                         rs.getString("CUST_Gender"),
                         rs.getDate("CUST_DOB"),
@@ -343,8 +343,8 @@ public class CustomerDAO {
                         rs.getString("CUST_Marital_Status"),
                         rs.getString("CUST_Nationality"),
                         rs.getString("CUST_Honorifics"),
-                        AddressDAO.getAddressByID(rs.getString("CUST_Residential_Address")),
-                        AddressDAO.getAddressByID(rs.getString("CUST_Corresponding_Address")),
+                        new Address(rs.getString("CUST_Residential_Address")),
+                        new Address(rs.getString("CUST_Corresponding_Address")),
                         new Contact(
                                 rs.getString("CUST_Email"),
                                 rs.getString("CUST_Mobile_No"),

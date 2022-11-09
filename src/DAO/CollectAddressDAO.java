@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import Entity.Address;
 import Entity.CollectAddress;
 import Entity.Contact;
 import Entity.Person;
@@ -13,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -52,7 +52,7 @@ public class CollectAddressDAO {
                         new Person(
                                 null,
                                 null,
-                                Base64.decodeBase64(rs.getString("COLL_Avatar_Img")),
+                                rs.getString("COLL_Avatar_Img"),
                                 rs.getString("COLL_Name"),
                                 rs.getString("COLL_Gender"),
                                 rs.getDate("COLL_DOB"),
@@ -138,7 +138,7 @@ public class CollectAddressDAO {
             ps.setString(1, collectAddr.getCollectAddrID());
             ps.setString(2, collectAddr.getAddr().getAddressID());
             ps.setString(3, collectAddr.getCustomer().getCustID());
-            ps.setString(4, Base64.encodeBase64String(collectAddr.getPerson().getAvatarImg()));
+            ps.setString(4, collectAddr.getPerson().getAvatarImg());
             ps.setString(5, collectAddr.getPerson().getName());
             ps.setString(6, collectAddr.getPerson().getGender());
             ps.setDate(7, collectAddr.getPerson().getDOB());
@@ -217,7 +217,7 @@ public class CollectAddressDAO {
             // bind parameter
             ps.setString(1, collAddr.getAddr().getAddressID());
             ps.setString(2, collAddr.getCustomer().getCustID());
-            ps.setString(3, Base64.encodeBase64String(collAddr.getPerson().getAvatarImg()));
+            ps.setString(3, collAddr.getPerson().getAvatarImg());
             ps.setString(4, collAddr.getPerson().getName());
             ps.setString(5, collAddr.getPerson().getGender());
             ps.setDate(6, collAddr.getPerson().getDOB());
@@ -283,7 +283,7 @@ public class CollectAddressDAO {
                         new Person(
                                 null,
                                 null,
-                                Base64.decodeBase64(rs.getString("COLL_Avatar_Img")),
+                                rs.getString("COLL_Avatar_Img"),
                                 rs.getString("COLL_Name"),
                                 rs.getString("COLL_Gender"),
                                 rs.getDate("COLL_DOB"),
@@ -291,8 +291,8 @@ public class CollectAddressDAO {
                                 rs.getString("COLL_Marital_Status"),
                                 rs.getString("COLL_Nationality"),
                                 rs.getString("COLL_Honorifics"),
-                                AddressDAO.getAddressByID(rs.getString("COLL_Residential_Address")),
-                                AddressDAO.getAddressByID(rs.getString("COLL_Corresponding_Address")),
+                                new Address(rs.getString("COLL_Residential_Address")),
+                                new Address(rs.getString("COLL_Corresponding_Address")),
                                 new Contact(
                                         rs.getString("COLL_Email"),
                                         rs.getString("COLL_Mobile_No"),

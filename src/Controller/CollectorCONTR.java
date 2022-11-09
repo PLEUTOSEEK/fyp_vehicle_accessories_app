@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -133,7 +135,11 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 receiveData();
 
                 if (passObj.getCrud().equals(BasicObjs.read)) {
-                    fieldFillIn();
+                    try {
+                        fieldFillIn();
+                    } catch (IOException ex) {
+                        Logger.getLogger(CollectorCONTR.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     isViewMode(true);
                 }
             }
@@ -186,7 +192,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
         this.cmbCollectAddrCountry.setDisable(disable);
     }
 
-    private void fieldFillIn() {
+    private void fieldFillIn() throws IOException {
         if (passObj.getObj() != null) {
             CollectAddress collAddr = (CollectAddress) passObj.getObj();
 
@@ -229,6 +235,13 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
             this.txtCollectAddrPostalCode.setText(collAddr.getAddr().getPostalCode());
             this.cmbCollectAddrState.setText(collAddr.getAddr().getState());
             this.cmbCollectAddrCountry.setText(collAddr.getAddr().getCountry());
+
+            this.imgAvatarImg.setImage(ImageUtils.byteToImg(
+                    ImageUtils.encodedStrToByte(
+                            collAddr.getPerson().getAvatarImg().isEmpty() == true
+                            ? null : collAddr.getPerson().getAvatarImg()
+                    )));
+
         }
     }
 //<editor-fold defaultstate="collapsed" desc="comment">
@@ -528,7 +541,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
         contact.setHomePhNo(this.txtHomePhNo.getText());
         collAddr.getPerson().setContact(contact);
 
-        collAddr.getPerson().setAvatarImg(ImageUtils.imgViewToByte(this.imgAvatarImg));
+        collAddr.getPerson().setAvatarImg(this.imgAvatarImg.getImage() == null ? "" : ImageUtils.byteToEncodedStr(ImageUtils.imgToByte(this.imgAvatarImg.getImage())));
         collAddr.getPerson().setName(this.txtName.getText());
         collAddr.getPerson().setGender(this.cmbGender.getText());
         collAddr.getPerson().setDOB(this.dtDOB.getValue() == null ? null : (java.sql.Date) Date.from(Instant.from(this.dtDOB.getValue().atStartOfDay(ZoneId.systemDefault())))); //https://stackoverflow.com/questions/20446026/get-value-from-date-picker

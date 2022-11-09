@@ -30,7 +30,15 @@ public class PlaceDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "";
+            query = "SELECT   [Place_ID] "
+                    + "      ,[Place_Name] "
+                    + "      ,[Address_ID] "
+                    + "      ,[Description] "
+                    + "      ,[Email] "
+                    + "      ,[Office_Phone_No] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM Place";
             ps = conn.prepareStatement(query);
 
             // bind parameter
@@ -39,21 +47,14 @@ public class PlaceDAO {
             while (rs.next()) {
                 place = new Place();
 
-                place = new Place(
-                        rs.getTimestamp("PLACE_Created_Date"),
-                        rs.getTimestamp("PLACE_Modified_Date_Time"),
-                        rs.getString("PLACE_Place_ID"),
-                        rs.getString("PLACE_Place_Name"),
-                        AddressDAO.getAddressByID(rs.getString("PLACE_Address_ID")),
-                        rs.getString("PLACE_Description"),
-                        new Contact(
-                                rs.getString("PLACE_Email"),
-                                null,
-                                null,
-                                rs.getString("PLACE_Office_Phone_No"),
-                                null
-                        ));
-
+                place.setPlaceID(rs.getString("Place_ID"));
+                place.setPlaceName(rs.getString("Place_Name"));
+                place.setPlaceAddr(AddressDAO.getAddressByID(rs.getString("Address_ID")));
+                place.setDescription(rs.getString("place"));
+                place.setContact(new Contact());
+                place.getContact().setEmail(rs.getString("Email"));
+                place.setCreatedDate(rs.getTimestamp("Created_Date"));
+                place.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
                 places.add(place);
             }
 

@@ -13,28 +13,26 @@ import java.util.List;
  * @author Tee Zhuo Xuan
  */
 // multi purpose document
-public class DeliveryOrder<T> extends Document {
+public class DeliveryOrder extends Document {
 
     private Place deliverFr; // company = Thir Shen
     private Date deliveryDate;
-    private String referenceType; // understand the refernce is belong to what type of source document
-    private T reference; // RDN / TO
-    private List<T> items;
+    private SalesOrder so; // RDN / TO
+    private List<PackingSlip> packingSlips;
     private Staff issuedBy;
     private Staff releasedAVerifiedBy;
     private Staff deliveryBy;
     private CollectAddress itemReceivedBy;
 
     public DeliveryOrder() {
-        this(null, null, "", null, null, "", null, null, "", null, null, null, null, null);
+        this(null, null, "", null, null, "", null, null, null, null, null, null, null);
     }
 
-    public DeliveryOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Place deliverFr, Date deliveryDate, String referenceType, T reference, Staff issuedBy, Staff releasedAVerifiedBy, Staff deliveryBy, CollectAddress itemReceivedBy) {
+    public DeliveryOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Place deliverFr, Date deliveryDate, SalesOrder salesOrder, Staff issuedBy, Staff releasedAVerifiedBy, Staff deliveryBy, CollectAddress itemReceivedBy) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.deliverFr = deliverFr;
         this.deliveryDate = deliveryDate;
-        this.referenceType = referenceType;
-        this.reference = reference;
+        this.so = salesOrder;
         this.issuedBy = issuedBy;
         this.releasedAVerifiedBy = releasedAVerifiedBy;
         this.deliveryBy = deliveryBy;
@@ -57,28 +55,20 @@ public class DeliveryOrder<T> extends Document {
         this.deliveryDate = deliveryDate;
     }
 
-    public String getReferenceType() {
-        return referenceType;
+    public SalesOrder getSo() {
+        return so;
     }
 
-    public void setReferenceType(String referenceType) {
-        this.referenceType = referenceType;
+    public void setSo(SalesOrder so) {
+        this.so = so;
     }
 
-    public T getReference() {
-        return reference;
+    public List<PackingSlip> getPackingSlips() {
+        return packingSlips;
     }
 
-    public void setReference(T reference) {
-        this.reference = reference;
-    }
-
-    public List<T> getItems() {
-        return items;
-    }
-
-    public void setItems(List<T> items) {
-        this.items = items;
+    public void setPackingSlips(List<PackingSlip> items) {
+        this.packingSlips = items;
     }
 
     public Staff getIssuedBy() {

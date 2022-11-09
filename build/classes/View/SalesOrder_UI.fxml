@@ -13,7 +13,6 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -206,10 +205,10 @@
                                                         <Insets right="1.0" />
                                                     </GridPane.margin>
                                                 </MFXButton>
-                                                <MFXTextField fx:id="txtSubTtl" alignment="CENTER_RIGHT" editable="false" floatingText="Sub. Total" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="8" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                                <MFXTextField fx:id="txtNett" alignment="CENTER_RIGHT" editable="false" floatingText="Nett (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="201.0" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                                <MFXTextField fx:id="txtDiscount" alignment="CENTER_RIGHT" editable="false" floatingText="Discount" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                                <MFXTextField fx:id="txtGross" alignment="CENTER_RIGHT" editable="false" floatingText="Gross (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtSubTtl" alignment="CENTER_RIGHT" editable="false" floatingText="Sub. Total" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="0.00" GridPane.columnIndex="8" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtNett" alignment="CENTER_RIGHT" editable="false" floatingText="Nett (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="201.0" text="0.00" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtDiscount" alignment="CENTER_RIGHT" editable="false" floatingText="Discount" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="0.00" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                <MFXTextField fx:id="txtGross" alignment="CENTER_RIGHT" editable="false" floatingText="Gross (Incl. Tax)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" text="0.00" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8" />
                                             </children>
                                         </GridPane>
                                     </children>
@@ -279,9 +278,6 @@
                                        </GridPane.margin>
                                     </MFXCircleToggleNode>
                                     <ImageView fx:id="imgDocs" fitHeight="89.0" fitWidth="89.0" onMousePressed="#goImgViewer" pickOnBounds="true" preserveRatio="true" styleClass="image" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                                       <image>
-                                          <Image url="@../../../../Pictures/Screenshots/Screenshot%20(11).png" />
-                                       </image>
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -295,6 +291,11 @@
                                           <FontAwesomeIconView glyphName="LIST" />
                                        </graphic>
                                     </MFXCircleToggleNode>
+                                    <ImageView fx:id="imgDocs1" fitHeight="89.0" fitWidth="89.0" layoutX="1311.0" layoutY="22.0" onMousePressed="#goImgViewer" pickOnBounds="true" preserveRatio="true" styleClass="image">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </ImageView>
                                  </children>
                               </GridPane>
                            </children>

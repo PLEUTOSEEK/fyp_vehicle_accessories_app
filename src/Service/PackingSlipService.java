@@ -6,6 +6,7 @@ package Service;
 
 import DAO.PackingSlipDAO;
 import Entity.PackingSlip;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -32,6 +33,10 @@ public class PackingSlipService {
 
     public static boolean updatePackingSlipsStatus(List<PackingSlip> packingSlips) {
         return PackingSlipDAO.updatePackingSlipsStatus(packingSlips);
+    }
+
+    public static Collection<? extends PackingSlip> getPSsBySOID(String code) {
+        return PackingSlipDAO.getPSsBySOID(code);
     }
 
 }

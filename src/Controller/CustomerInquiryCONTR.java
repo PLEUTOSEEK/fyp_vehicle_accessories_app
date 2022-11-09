@@ -68,9 +68,7 @@ import net.synedra.validatorfx.Validator;
  */
 public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
-    private BasicObjs passObj;
-    private Validator validator = new Validator();
-
+    //<editor-fold defaultstate="collapsed" desc="fields">
     @FXML
     private MFXCircleToggleNode btnBack;
     @FXML
@@ -125,6 +123,14 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
     private MFXTableView<?> tblVw;
     @FXML
     private Label lblImgStrs;
+    @FXML
+    private ImageView imgDocs;
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="util declarations">
+    private BasicObjs passObj;
+
+    private Validator validator = new Validator();
 
     private CustomerInquiry customerInquiryInDraft;
 
@@ -135,12 +141,11 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
     SalesRules salesRules = new SalesRules();
 
     private List<Item> items = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
+
     private List<Item> tempItems = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
 
     private static List<String> rowSelected = new ArrayList<>();
-
-    @FXML
-    private ImageView imgDocs;
+    //</editor-fold>
 
     /**
      * Initializes the controller class.
@@ -148,7 +153,6 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        setupItemTable();
 
         Platform.runLater(new Runnable() {
 
@@ -160,14 +164,15 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 receiveData();
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
+
                     try {
                         fieldFillIn();
                     } catch (IOException ex) {
                         Logger.getLogger(CustomerInquiryCONTR.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
-                    // haven't verify the same product ID, must have different delivery date
                     items.addAll(ItemService.getItemsByCIID(((CustomerInquiry) passObj.getObj()).getCode()));
+
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read)) {
@@ -176,13 +181,13 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
             }
         });
 
+        setupItemTable();
+
     }
 
     public void setupItemTable() {
         // Product ID
-        MFXTableColumn<Item> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(item -> item.getProduct().getProdID()));
-        // Inventory ID
-        MFXTableColumn<Item> inventoryIDCol = new MFXTableColumn<>("Inventory ID", true, Comparator.comparing(item -> item.getInventory().getInventoryID()));
+        MFXTableColumn<Item> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(item -> item.getProduct() == null ? "" : item.getProduct().getProdID()));
         // Remarks
         MFXTableColumn<Item> remarksCol = new MFXTableColumn<>("Remarks", true, Comparator.comparing(item -> item.getRemark()));
         // Quantity
@@ -199,9 +204,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         MFXTableColumn<Item> dlvrDtCol = new MFXTableColumn<>("Delivery Date", true, Comparator.comparing(item -> item.getDlvrDate()));
 
         // Product ID
-        prodIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct().getProdID()));
-        // Inventory ID
-        inventoryIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getInventory().getInventoryID()));
+        prodIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? "" : item.getProduct().getProdID()));
         // Remarks
         remarksCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getRemark()));
         // Quantity
@@ -220,7 +223,6 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getTableColumns().clear();
         ((MFXTableView<Item>) tblVw).getTableColumns().addAll(
                 prodIDCol,
-                inventoryIDCol,
                 remarksCol,
                 qtyCol,
                 unitPriceCol,
@@ -231,8 +233,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getFilters().clear();
 
         ((MFXTableView<Item>) tblVw).getFilters().addAll(
-                new StringFilter<>("Product ID", item -> item.getProduct().getProdID()),
-                new StringFilter<>("Inventory ID", item -> item.getInventory().getInventoryID()),
+                new StringFilter<>("Product ID", item -> item.getProduct() == null ? "" : item.getProduct().getProdID()),
                 new StringFilter<>("Remark", item -> item.getRemark()),
                 new IntegerFilter<>("Quantity", item -> item.getQty()),
                 new DoubleFilter<>("Unit Price", item -> item.getUnitPrice().doubleValue()),
@@ -241,23 +242,23 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 new DoubleFilter<>("Incl. Amount", item -> item.getInclTaxAmt().doubleValue()),
                 new DateFilter<>("Delivery Date", item -> item.getDlvrDate())
         );
+
         tempItems.addAll(items);
         ((MFXTableView<Item>) tblVw).getItems().clear();
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
         tempItems.clear();
-        System.out.println(items.size() + "--------");
 
         ((MFXTableView<CollectAddress>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
 
                 if (((MFXTableView<CollectAddress>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+
                     Item item = (((MFXTableView<Item>) tblVw).getSelectionModel().getSelectedValues().get(0));
                     rowSelected.add(item.getProduct().getProdID());
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            System.out.println(item.getProduct().getProdID() + "This is product ID");
                             // action here
                             Parent root;
                             try {
@@ -279,7 +280,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     Item catchedItem = new Item();
-                                    catchedItem = (Item) receiveObj.getObj();
+                                    catchedItem = ((Item) receiveObj.getObj()).clone();
 
                                     if (!items.contains(catchedItem)) {
                                         items.add(catchedItem);
@@ -301,6 +302,39 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
             }
         });
 
+    }
+
+    private void fieldFillIn() throws IOException {
+        clearAllFieldsValue();
+
+        if (passObj.getObj() != null) {
+            CustomerInquiry customerInquiry = (CustomerInquiry) passObj.getObj();
+            this.txtCIID.setText(customerInquiry.getCode());
+            this.txtSalesPerson.setText(customerInquiry.getSalesPerson() == null ? "" : customerInquiry.getSalesPerson().getStaffID());
+            this.txtBillTo.setText(customerInquiry.getBillToCust() == null ? "" : customerInquiry.getBillToCust().getCustID());
+            this.txtDeliverTo.setText(customerInquiry.getDeliverToCust() == null ? "" : customerInquiry.getDeliverToCust().getCollectAddrID());
+            this.dtRefDate.setValue(customerInquiry.getCreatedDate() == null ? null : Instant.ofEpochMilli(customerInquiry.getCreatedDate().getTime())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
+            this.txtRefType.setText(customerInquiry.getReferenceType());
+            this.txtRef.setText(customerInquiry.getReference());
+            this.dtReqDuireDeliveryDate.setValue(customerInquiry.getRequiredDeliveryDate() == null ? null : Instant.ofEpochMilli(customerInquiry.getRequiredDeliveryDate().getTime())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
+            this.cmbCurrencyCode.setText(customerInquiry.getCurrencyCode());
+            this.cmbPymtTerm.setText(customerInquiry.getPymtTerm());
+            this.cmbShipTerm.setText(customerInquiry.getShipmentTerm());
+            this.cmbStatus.setText(customerInquiry.getStatus());
+
+            this.txtGross.setText(customerInquiry.getGross() == null ? "" : customerInquiry.getGross().toString());
+            this.txtDiscount.setText(customerInquiry.getDiscount() == null ? "" : customerInquiry.getDiscount().toString());
+            this.txtSubTtl.setText(customerInquiry.getSubTotal() == null ? "" : customerInquiry.getSubTotal().toString());
+            this.txtNett.setText(customerInquiry.getNett() == null ? "" : customerInquiry.getNett().toString());
+
+            this.txtIssuedBy.setText(customerInquiry.getIssuedBy() == null ? "" : customerInquiry.getIssuedBy().getStaffID());
+            this.lblImgStrs.setText(customerInquiry.getSignedDocPic());
+            this.imgDocs.setImage(ImageUtils.byteToImg(ImageUtils.encodedStrToByte(((String) ImageUtils.splitImgStr(customerInquiry.getSignedDocPic().isEmpty() == true ? null : customerInquiry.getSignedDocPic()).getFirst()))));
+        }
     }
 
     private void isViewMode(boolean disable) {
@@ -337,37 +371,6 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         this.imgDocs.setDisable(disable);
     }
 
-    private void fieldFillIn() throws IOException {
-        if (passObj.getObj() != null) {
-            CustomerInquiry customerInquiry = (CustomerInquiry) passObj.getObj();
-            this.txtCIID.setText(customerInquiry.getCode());
-            this.txtSalesPerson.setText(customerInquiry.getSalesPerson().getStaffID());
-            this.txtBillTo.setText(customerInquiry.getBillToCust().getCustID());
-            this.txtDeliverTo.setText(customerInquiry.getDeliverToCust().getCollectAddrID());
-            this.dtRefDate.setValue(Instant.ofEpochMilli(customerInquiry.getCreatedDate().getTime())
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate());
-            this.txtRefType.setText(customerInquiry.getReferenceType());
-            this.txtRef.setText(customerInquiry.getReference());
-            this.dtReqDuireDeliveryDate.setValue(Instant.ofEpochMilli(customerInquiry.getRequiredDeliveryDate().getTime())
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate());
-            this.cmbCurrencyCode.setText(customerInquiry.getCurrencyCode());
-            this.cmbPymtTerm.setText(customerInquiry.getPymtTerm());
-            this.cmbShipTerm.setText(customerInquiry.getShipmentTerm());
-            this.cmbStatus.setText(customerInquiry.getStatus());
-
-            this.txtGross.setText(customerInquiry.getGross().toString());
-            this.txtDiscount.setText(customerInquiry.getDiscount().toString());
-            this.txtSubTtl.setText(customerInquiry.getSubTotal().toString());
-            this.txtNett.setText(customerInquiry.getNett().toString());
-
-            this.txtIssuedBy.setText(customerInquiry.getIssuedBy().getStaffID());
-            this.lblImgStrs.setText(customerInquiry.getSignedDocPic());
-            this.imgDocs.setImage(ImageUtils.byteToImg(ImageUtils.encodedStrToByte(((String) ImageUtils.splitImgStr(customerInquiry.getSignedDocPic()).getFirst()))));
-        }
-    }
-
     private void initializeComboSelections() {
         ((MFXComboBox<String>) this.cmbCurrencyCode).setItems(FXCollections.observableList(accRules.getCurrencyCodes()));
         ((MFXComboBox<String>) this.cmbPymtTerm).setItems(FXCollections.observableList(accRules.getPymtTerms()));
@@ -400,71 +403,6 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         } else if (alertBtnClicked == ButtonType.CANCEL) {
             //nothing need to do, remain same page
         }
-    }
-
-    @FXML
-    private void saveCustomerInquiry(MouseEvent event) throws SQLException {
-        if (event.isPrimaryButtonDown() == true) {
-
-            if (!this.btnSave.getText().equals("Save")) {
-                isViewMode(false);
-                return;
-            }
-
-            if (validator.containsErrors()) {
-                alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
-                return;
-            }
-
-            customerInquiryInDraft = prepareCustomerInquiryToObj();
-            if (this.passObj.getCrud().equals(BasicObjs.create)) {
-                CustomerInquiryService.saveNewCustomerInquiry(customerInquiryInDraft);
-
-            } else if (this.passObj.getCrud().equals(BasicObjs.update)) {
-                CustomerInquiryService.updateCustomerInquiry(customerInquiryInDraft);
-            }
-        }
-    }
-
-    private CustomerInquiry prepareCustomerInquiryToObj() {
-        CustomerInquiry customerInquiry = new CustomerInquiry();
-        customerInquiry.setCode(this.txtCIID.getText());
-
-        Staff salesPerson = new Staff();
-        salesPerson.setStaffID(this.txtSalesPerson.getText());
-        customerInquiry.setSalesPerson(salesPerson);
-
-        Customer billTo = new Customer();
-        billTo.setCustID(this.txtBillTo.getText());
-        customerInquiry.setBillToCust(billTo);
-
-        CollectAddress collectAddr = new CollectAddress();
-        collectAddr.setCollectAddrID(this.txtDeliverTo.getText());
-        customerInquiry.setDeliverToCust(collectAddr);
-
-        customerInquiry.setCreatedDate(this.dtRefDate.getValue() == null ? null : Timestamp.valueOf(this.dtRefDate.getValue().atStartOfDay()));
-        customerInquiry.setReferenceType(this.txtRefType.getText());
-        customerInquiry.setReference(this.txtRef.getText());
-        customerInquiry.setRequiredDeliveryDate(this.dtReqDuireDeliveryDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtReqDuireDeliveryDate.getValue()));
-        customerInquiry.setCurrencyCode(this.cmbCurrencyCode.getText());
-        customerInquiry.setPymtTerm(this.cmbPymtTerm.getText());
-        customerInquiry.setShipmentTerm(this.cmbShipTerm.getText());
-        customerInquiry.setStatus(this.cmbStatus.getText());
-
-        customerInquiry.setGross(new BigDecimal(this.txtGross.getText()));
-        customerInquiry.setDiscount(new BigDecimal(this.txtDiscount.getText()));
-        customerInquiry.setSubTotal(new BigDecimal(this.txtSubTtl.getText()));
-        customerInquiry.setNett(new BigDecimal(this.txtNett.getText()));
-
-        Staff issuedBy = new Staff();
-        issuedBy.setStaffID(this.txtIssuedBy.getText());
-        customerInquiry.setIssuedBy(issuedBy);
-
-        customerInquiry.setSignedDocPic(this.lblImgStrs.getText());
-
-        customerInquiry.setItems(items);
-
-        return customerInquiry;
     }
 
     @Override
@@ -571,7 +509,30 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public boolean clearAllFieldsValue() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        //this.txtCIID.clear();
+        this.txtSalesPerson.clear();
+        this.txtBillTo.clear();
+        this.txtDeliverTo.clear();
+        this.dtRefDate.clear();
+        this.txtRefType.clear();
+        this.txtRef.clear();
+        this.dtReqDuireDeliveryDate.clear();
+        this.cmbCurrencyCode.clear();
+        this.cmbPymtTerm.clear();
+        this.cmbShipTerm.clear();
+        this.cmbStatus.clear();
+
+        this.txtGross.clear();
+        this.txtDiscount.clear();
+        this.txtSubTtl.clear();
+        this.txtNett.clear();
+
+        this.txtIssuedBy.clear();
+        this.lblImgStrs.setText("");
+        this.imgDocs.setImage(null);
+
+        this.items.clear();
+        return true;
     }
 
     @Override
@@ -583,6 +544,47 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
         alert.showAndWait();
         return alert.getResult();
+    }
+
+    private CustomerInquiry prepareCustomerInquiryToObj() {
+        CustomerInquiry customerInquiry = new CustomerInquiry();
+        customerInquiry.setCode(this.txtCIID.getText());
+
+        Staff salesPerson = new Staff();
+        salesPerson.setStaffID(this.txtSalesPerson.getText());
+        customerInquiry.setSalesPerson(salesPerson);
+
+        Customer billTo = new Customer();
+        billTo.setCustID(this.txtBillTo.getText());
+        customerInquiry.setBillToCust(billTo);
+
+        CollectAddress collectAddr = new CollectAddress();
+        collectAddr.setCollectAddrID(this.txtDeliverTo.getText());
+        customerInquiry.setDeliverToCust(collectAddr);
+
+        customerInquiry.setCreatedDate(this.dtRefDate.getValue() == null ? null : Timestamp.valueOf(this.dtRefDate.getValue().atStartOfDay()));
+        customerInquiry.setReferenceType(this.txtRefType.getText());
+        customerInquiry.setReference(this.txtRef.getText());
+        customerInquiry.setRequiredDeliveryDate(this.dtReqDuireDeliveryDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtReqDuireDeliveryDate.getValue()));
+        customerInquiry.setCurrencyCode(this.cmbCurrencyCode.getText());
+        customerInquiry.setPymtTerm(this.cmbPymtTerm.getText());
+        customerInquiry.setShipmentTerm(this.cmbShipTerm.getText());
+        customerInquiry.setStatus(this.cmbStatus.getText());
+
+        customerInquiry.setGross(new BigDecimal(this.txtGross.getText()));
+        customerInquiry.setDiscount(new BigDecimal(this.txtDiscount.getText()));
+        customerInquiry.setSubTotal(new BigDecimal(this.txtSubTtl.getText()));
+        customerInquiry.setNett(new BigDecimal(this.txtNett.getText()));
+
+        Staff issuedBy = new Staff();
+        issuedBy.setStaffID(this.txtIssuedBy.getText());
+        customerInquiry.setIssuedBy(issuedBy);
+
+        customerInquiry.setSignedDocPic(this.lblImgStrs.getText());
+
+        customerInquiry.setItems(items);
+
+        return customerInquiry;
     }
 
     @FXML
@@ -605,11 +607,11 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 if (stage.getUserData() != null) {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                     this.txtBillTo.setText(((Customer) receiveObj.getObj()).getCustID());
+                    this.txtDeliverTo.clear();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
         }
     }
 
@@ -644,12 +646,11 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
                 if (stage.getUserData() != null) {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
-                    this.txtIssuedBy.setText(((CollectAddress) receiveObj.getObj()).getCollectAddrID());
+                    this.txtDeliverTo.setText(((CollectAddress) receiveObj.getObj()).getCollectAddrID());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
         }
     }
 
@@ -677,7 +678,6 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
         }
     }
 
@@ -705,7 +705,6 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //switchScene("View/InnerEntitySelect_UI.fxml", new BasicObjs(new Place()), BasicObjs.forward, "Dialog");
         }
     }
 
@@ -782,6 +781,33 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void saveCustomerInquiry(MouseEvent event) throws SQLException {
+        if (event.isPrimaryButtonDown() == true) {
+
+            if (!this.btnSave.getText().equals("Save")) {
+                isViewMode(false);
+                return;
+            }
+
+            if (validator.containsErrors()) {
+                alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
+                return;
+            }
+
+            customerInquiryInDraft = prepareCustomerInquiryToObj();
+
+            if (this.passObj.getCrud().equals(BasicObjs.create)) {
+                customerInquiryInDraft.setCode(CustomerInquiryService.saveNewCustomerInquiry(customerInquiryInDraft));;
+
+            } else if (this.passObj.getCrud().equals(BasicObjs.update)) {
+                CustomerInquiryService.updateCustomerInquiry(customerInquiryInDraft);
+            }
+
+            ItemService.updateItemsByDoc(customerInquiryInDraft.getItems(), customerInquiryInDraft.getCode());
         }
     }
 

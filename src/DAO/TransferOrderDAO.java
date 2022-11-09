@@ -84,7 +84,7 @@ public class TransferOrderDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        TransferOrder<SalesOrder> transferOrder = new TransferOrder<>();
+        TransferOrder transferOrder = new TransferOrder<>();
 
         try {
             conn = SQLDatabaseConnection.openConn();
@@ -101,7 +101,13 @@ public class TransferOrderDAO {
             if (rs.next()) {
                 transferOrder.setCode(rs.getString("TO_TO_ID"));
                 transferOrder.setReqType(rs.getString("TO_Req_Type"));
-                transferOrder.setReqTypeRef(SalesOrderDAO.getSalesOrderByID(rs.getString("TO_Req_Type_Ref")));
+
+                if (rs.getString("TO_Req_Type").equals("SO")) {
+                    transferOrder.setReqTypeRef(SalesOrderDAO.getSalesOrderByID(rs.getString("TO_Req_Type_Ref")));
+                } else if (rs.getString("TO_Req_Type").equals("RDN")) {
+                    transferOrder.setReqTypeRef(ReturnDeliveryNoteDAO.getReturnDeliveryNoteByCode(rs.getString("TO_Req_Type_Ref")));
+                }
+
                 transferOrder.setPIC(StaffDAO.getStaffByID(rs.getString("TO_Person_In_Charge")));
                 transferOrder.setDestination(PlaceDAO.getPlaceByID(rs.getString("TO_Destination")));
                 transferOrder.setIssuedBy(StaffDAO.getStaffByID(rs.getString("TO_Issued_By")));

@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  */
 public class Person extends Entity {
 
-    protected byte[] avatarImg;
+    protected String avatarImg; //previously is byte[]
     protected String name;
     protected String gender;
     protected Date DOB; // date of birth
@@ -29,7 +29,7 @@ public class Person extends Entity {
     protected String religion;
     protected String status;
 
-    public Person(Timestamp createdDateTime, Timestamp modifiedDateTime, byte[] avatarImg, String name, String gender, Date DOB, String IC, String maritalStatus, String nationality, String honorifics, Address residentialAddr, Address corAddr, Contact contact, String occupation, String race, String religion, String status) {
+    public Person(Timestamp createdDateTime, Timestamp modifiedDateTime, String avatarImg, String name, String gender, Date DOB, String IC, String maritalStatus, String nationality, String honorifics, Address residentialAddr, Address corAddr, Contact contact, String occupation, String race, String religion, String status) {
         super(createdDateTime, modifiedDateTime);
         this.avatarImg = avatarImg;
         this.name = name;
@@ -48,11 +48,11 @@ public class Person extends Entity {
         this.status = status;
     }
 
-    public byte[] getAvatarImg() {
+    public String getAvatarImg() {
         return avatarImg;
     }
 
-    public void setAvatarImg(byte[] avatarImg) {
+    public void setAvatarImg(String avatarImg) {
         this.avatarImg = avatarImg;
     }
 

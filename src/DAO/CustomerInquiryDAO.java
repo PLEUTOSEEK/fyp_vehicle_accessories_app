@@ -5,6 +5,7 @@
 package DAO;
 
 import Entity.CustomerInquiry;
+import Entity.Staff;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -320,6 +321,11 @@ public class CustomerInquiryDAO {
             rs = ps.executeQuery();
 
             while (rs.next()) {
+
+                Staff issuedBy = new Staff();
+
+                issuedBy.setStaffID(rs.getString("CI_Issued_By"));
+
                 customerInquiries.add(new CustomerInquiry(
                         rs.getTimestamp("Created_Date"),
                         rs.getTimestamp("Modified_Date_Time"),
@@ -341,8 +347,9 @@ public class CustomerInquiryDAO {
                         rs.getBigDecimal("CI_Discount"),
                         rs.getBigDecimal("CI_Sub_Total"),
                         rs.getBigDecimal("CI_Nett"),
-                        StaffDAO.getStaffByID(rs.getString("CI_Issued_By"))
-                ));
+                        issuedBy)
+                );
+
             }
 
             return customerInquiries;

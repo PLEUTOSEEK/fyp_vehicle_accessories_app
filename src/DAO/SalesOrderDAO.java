@@ -4,7 +4,10 @@
  */
 package DAO;
 
+import Entity.CollectAddress;
+import Entity.Quotation;
 import Entity.SalesOrder;
+import Entity.Staff;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -208,7 +211,7 @@ public class SalesOrderDAO {
         }
     }
 
-    public static List<SalesOrder> getAllData() {
+    public static List<SalesOrder> getAllSalesOrder() {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -218,14 +221,74 @@ public class SalesOrderDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "";
+            query = "SELECT  [SO_ID] "
+                    + "      ,[Quot_ID] "
+                    + "      ,[Bill_To_Cust] "
+                    + "      ,[Deliver_To] "
+                    + "      ,[Cust_PO_Reference] "
+                    + "      ,[Reference_Type] "
+                    + "      ,[Reference] "
+                    + "      ,[Sales_Person] "
+                    + "      ,[Currency_Code] "
+                    + "      ,[Required_Delivery_Date] "
+                    + "      ,[Payment_Term] "
+                    + "      ,[Shipment_Term] "
+                    + "      ,[Gross] "
+                    + "      ,[Discount] "
+                    + "      ,[Sub_Total] "
+                    + "      ,[Nett] "
+                    + "      ,[Issued_By] "
+                    + "      ,[Released_And_Verified_By] "
+                    + "      ,[Customer_Signed] "
+                    + "      ,[Status] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Actual_Created_Date] "
+                    + "      ,[Signed_Doc_Pic] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM SalesOrder";
             ps = conn.prepareStatement(query);
 
             // bind parameter
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                SOs.add(new SalesOrder());
+                SalesOrder so = new SalesOrder();
+
+                so.setCode(rs.getString("SO_ID"));
+                so.setQuotRef(new Quotation());
+                so.getQuotRef().setCode(rs.getString("Quot_ID"));
+                so.setBillToCust(CustomerDAO.getCustomerByID(rs.getString("Bill_To_Cust")));
+                so.setDeliverToCust(CollectAddressDAO.getCollectAddressByID(rs.getString("Deliver_To")));
+                so.setCustPOReference(rs.getString("Cust_PO_Reference"));
+                so.setReferenceType(rs.getString("Reference_Type"));
+                so.setReference(rs.getString("Reference"));
+                so.setSalesPerson(StaffDAO.getStaffByID(rs.getString("Sales_Person")));
+                so.setCurrencyCode(rs.getString("Currency_Code"));
+                so.setRequiredDeliveryDate(rs.getDate("Required_Delivery_Date"));
+                so.setPymtTerm(rs.getString("Payment_Term"));
+                so.setShipmentTerm(rs.getString("Shipment_Term"));
+
+                so.setGross(rs.getBigDecimal("Gross"));
+                so.setDiscount(rs.getBigDecimal("Discount"));
+                so.setSubTotal(rs.getBigDecimal("Sub_Total"));
+                so.setNett(rs.getBigDecimal("Nett"));
+
+                so.setIssuedBy(new Staff());
+                so.getIssuedBy().setStaffID("Issued_By");
+
+                so.setReleasedAVerifiedBy(new Staff());
+                so.getReleasedAVerifiedBy().setStaffID("Released_And_Verified_By");
+
+                so.setCustomerSignature(new CollectAddress());
+                so.getCustomerSignature().setCollectAddrID(rs.getString("Customer_Signed"));
+
+                so.setStatus(rs.getString("Status"));
+                so.setCreatedDate(rs.getTimestamp("Created_Date"));
+                so.setActualCreatedDateTime(rs.getTimestamp("Actual_Created_Date"));
+                so.setSignedDocPic(rs.getString("Signed_Doc_Pic"));
+                so.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+
+                SOs.add(so);
             }
 
             //return object

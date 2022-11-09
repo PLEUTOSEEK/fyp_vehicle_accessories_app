@@ -9,7 +9,6 @@ import Entity.Item;
 import Entity.Product;
 import PassObjs.BasicObjs;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -35,23 +34,14 @@ import net.synedra.validatorfx.Validator;
  */
 public class SalesOrderPSSelectCONTR implements Initializable {
 
-    @FXML
     private MFXTextField txtRemarks;
     @FXML
     private MFXTextField txtQuantity;
-    @FXML
     private MFXTextField txtUnitPrice;
-    @FXML
     private MFXDatePicker dtDeliveryDate;
-    @FXML
-    private MFXCircleToggleNode openProductSelection;
-    @FXML
     private MFXTextField txtInventoryID;
     @FXML
-    private MFXCircleToggleNode openInventorySelection;
-    @FXML
     private MFXTextField txtProdID;
-    @FXML
     private MFXComboBox<?> cmbDiscountAmount;
     @FXML
     private MFXButton btnConfirm;
@@ -61,6 +51,10 @@ public class SalesOrderPSSelectCONTR implements Initializable {
     private BasicObjs passObj;
 
     private Validator validator = new Validator();
+    @FXML
+    private MFXButton btnCancel1;
+    @FXML
+    private MFXTextField txtProdID1;
 
     /**
      * Initializes the controller class.

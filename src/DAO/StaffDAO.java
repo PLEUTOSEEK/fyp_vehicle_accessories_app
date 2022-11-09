@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -40,7 +39,7 @@ public class StaffDAO {
 
             if (rs.next()) {
                 staff.setStaffID(rs.getString("STAFF_Staff_ID"));
-                staff.setAvatarImg(Base64.decodeBase64(rs.getString("STAFF_Avatar_Img")));
+                staff.setAvatarImg(rs.getString("STAFF_Avatar_Img"));
                 staff.setName(rs.getString("STAFF_Name"));
                 staff.setGender(rs.getString("STAFF_Gender"));
                 staff.setDOB(rs.getDate("STAFF_DOB"));
@@ -158,7 +157,7 @@ public class StaffDAO {
                 staff = new Staff(
                         rs.getTimestamp("STAFF_Created_Date"),
                         rs.getTimestamp("STAFF_Modified_Date_Time"),
-                        rs.getString("STAFF_Avatar_Img") == null ? null : Base64.decodeBase64(rs.getString("STAFF_Avatar_Img")),
+                        rs.getString("STAFF_Avatar_Img"),
                         rs.getString("STAFF_Name"),
                         rs.getString("STAFF_Gender"),
                         rs.getDate("STAFF_DOB"),
@@ -256,7 +255,7 @@ public class StaffDAO {
             ps = conn.prepareStatement(query);
             // bind parameter
             ps.setString(1, staff.getStaffID());
-            ps.setString(2, Base64.encodeBase64String(staff.getAvatarImg()));
+            ps.setString(2, staff.getAvatarImg());
             ps.setString(3, staff.getName());
             ps.setString(4, staff.getGender());
             ps.setDate(5, staff.getDOB());
@@ -386,7 +385,7 @@ public class StaffDAO {
                     + "Staff_ID = ? ";
             ps = conn.prepareStatement(query);
             // bind parameter
-            ps.setString(1, Base64.encodeBase64String(staff.getAvatarImg()));
+            ps.setString(1, staff.getAvatarImg());
             ps.setString(2, staff.getName());
             ps.setString(3, staff.getGender());
             ps.setDate(4, staff.getDOB());
@@ -450,10 +449,13 @@ public class StaffDAO {
             rs = ps.executeQuery();
 
             while (rs.next()) {
+                Staff reportTo = new Staff();
+                reportTo.setStaffID(rs.getString("STAFF_Report_To"));
+
                 staff = new Staff(
                         rs.getTimestamp("STAFF_Created_Date"),
                         rs.getTimestamp("STAFF_Modified_Date_Time"),
-                        rs.getString("STAFF_Avatar_Img") == null ? null : Base64.decodeBase64(rs.getString("STAFF_Avatar_Img")),
+                        rs.getString("STAFF_Avatar_Img"),
                         rs.getString("STAFF_Name"),
                         rs.getString("STAFF_Gender"),
                         rs.getDate("STAFF_DOB"),
@@ -461,8 +463,8 @@ public class StaffDAO {
                         rs.getString("STAFF_Marital_Status"),
                         rs.getString("STAFF_Nationality"),
                         rs.getString("STAFF_Honorifics"),
-                        AddressDAO.getAddressByID(rs.getString("STAFF_Residential_Address")),
-                        AddressDAO.getAddressByID(rs.getString("STAFF_Corresponding_Address")),
+                        new Address(rs.getString("STAFF_Residential_Address")),
+                        new Address(rs.getString("STAFF_Corresponding_Address")),
                         new Contact(rs.getString("STAFF_Email"),
                                 rs.getString("STAFF_Mobile_No"),
                                 rs.getString("STAFF_Extension_No"),
@@ -473,9 +475,9 @@ public class StaffDAO {
                         rs.getString("STAFF_Religion"),
                         rs.getString("STAFF_Status"),
                         rs.getString("STAFF_Staff_ID"),
-                        PlaceDAO.getPlaceByID(rs.getString("STAFF_Work_Place")),
+                        new Place(rs.getString("STAFF_Work_Place")),
                         rs.getDate("STAFF_Entry_Date"),
-                        StaffDAO.getStaffByID(rs.getString("STAFF_Report_To")), // recursive break suspected
+                        reportTo, // recursive break suspected
                         rs.getString("STAFF_Employee_Type"),
                         rs.getString("STAFF_Password"),
                         rs.getString("STAFF_Role"),

@@ -21,7 +21,7 @@ public class Customer extends Person {
     private List<CollectAddress> dlvrAddrs;
     private String custType; // organization or personal
 
-    public Customer(Timestamp createdDateTime, Timestamp modifiedDateTime, byte[] avatarImg, String name, String gender, Date DOB, String IC, String maritalStatus, String nationality, String honorifics, Address residentialAddr, Address corAddr, Contact contact, String occupation, String race, String religion, String status, String custID, String bankAccProvider, String bankAccNo, Address billToAddr, List<CollectAddress> dlvrAddrs, String custType) {
+    public Customer(Timestamp createdDateTime, Timestamp modifiedDateTime, String avatarImg, String name, String gender, Date DOB, String IC, String maritalStatus, String nationality, String honorifics, Address residentialAddr, Address corAddr, Contact contact, String occupation, String race, String religion, String status, String custID, String bankAccProvider, String bankAccNo, Address billToAddr, List<CollectAddress> dlvrAddrs, String custType) {
         super(createdDateTime, modifiedDateTime, avatarImg, name, gender, DOB, IC, maritalStatus, nationality, honorifics, residentialAddr, corAddr, contact, occupation, race, religion, status);
         this.custID = custID;
         this.bankAccProvider = bankAccProvider;

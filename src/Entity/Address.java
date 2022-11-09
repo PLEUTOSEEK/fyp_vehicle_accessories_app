@@ -31,6 +31,10 @@ public class Address extends Entity {
         this.country = country;
     }
 
+    public Address(String addressID) {
+        this.addressID = addressID;
+    }
+
     public Address() {
         this(null, null, "", "", "", "", "", "", "");
     }

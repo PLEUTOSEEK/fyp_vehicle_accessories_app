@@ -154,11 +154,106 @@ public class ItemDAO {
                 item.setInventory(InventoryDAO.getInventoryByID(rs.getString("Inventory_ID")));
                 item.setRemark(rs.getString("Remark"));
                 item.setQty(rs.getInt("Qty"));
+                item.setOriQty(rs.getInt("Ori_Qty"));
                 item.setUnitPrice(rs.getBigDecimal("Unit_Price"));
                 item.setDlvrDate(rs.getDate("Delivery_Date"));
                 item.setExclTaxAmt(rs.getBigDecimal("Excl_Amount"));
                 item.setDiscAmt(rs.getBigDecimal("Discount_Amount"));
                 item.setInclTaxAmt(rs.getBigDecimal("Incl_Amount"));
+                items.add(item);
+            }
+
+            //return object
+            return items;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static List<Item> getItemNotYetBillBySO(String code) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+
+        List<Item> items = new ArrayList<>();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT "
+                    + "    SO_SO_ID, "
+                    + "    SO_ITEM_PROD_ID, "
+                    + "    SO_ITEM_INVENTORY_ID, "
+                    + "    SO_ITEM_DELIVERY_DATE, "
+                    + "    SO_ITEM_UNIT_PRICE, "
+                    + "    SO_ITEM_QTY, "
+                    + "    INV_ITEM_QTY, "
+                    + "    (SO_ITEM_QTY - ISNULL(INV_ITEM_QTY, 0)) AS ITEM_NOT_YET_BILL "
+                    + "FROM "
+                    + "( "
+                    + "    SELECT "
+                    + "        SO_ID AS SO_SO_ID, "
+                    + "        Item.Prod_ID AS SO_ITEM_PROD_ID, "
+                    + "        Item.Inventory_ID AS SO_ITEM_INVENTORY_ID, "
+                    + "        Item.Delivery_Date AS SO_ITEM_DELIVERY_DATE, "
+                    + "        Item.Unit_Price AS SO_ITEM_UNIT_PRICE, "
+                    + "        Item.Qty AS SO_ITEM_QTY "
+                    + "    FROM "
+                    + "        SalesOrder "
+                    + "        INNER JOIN Item "
+                    + "        ON SalesOrder.SO_ID = Item.Ref_Doc_ID "
+                    + ") AS SO_ITEMS "
+                    + "LEFT JOIN "
+                    + "( "
+                    + "    SELECT "
+                    + "        Item.Prod_ID AS INV_ITEM_PROD_ID, "
+                    + "        Item.Inventory_ID AS INV_ITEM_INVENTORY_ID, "
+                    + "        Item.Delivery_Date AS INV_ITEM_DELIVERY_DATE, "
+                    + "        SUM(Item.Qty) AS INV_ITEM_QTY "
+                    + "    FROM "
+                    + "        Invoice "
+                    + "        INNER JOIN Item "
+                    + "        ON Invoice.INV_ID = Item.Ref_Doc_ID "
+                    + "    WHERE  "
+                    + "        Invoice.SO_ID = ? "
+                    + "    GROUP BY "
+                    + "        Item.Prod_ID, "
+                    + "        Item.Inventory_ID, "
+                    + "        Item.Delivery_Date "
+                    + ") AS INV_ITEMS "
+                    + "ON "
+                    + "    SO_ITEMS.SO_ITEM_PROD_ID = INV_ITEMS.INV_ITEM_PROD_ID AND "
+                    + "    SO_ITEMS.SO_ITEM_INVENTORY_ID = INV_ITEMS.INV_ITEM_INVENTORY_ID AND "
+                    + "    SO_ITEMS.SO_ITEM_DELIVERY_DATE = INV_ITEMS.INV_ITEM_DELIVERY_DATE ";
+
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            ps.setString(1, code);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Item item = new Item();
+
+                item.setProduct(ProductDAO.getProductByID(rs.getString("SO_ITEM_PROD_ID")));
+                item.setInventory(InventoryDAO.getInventoryByID(rs.getString("SO_ITEM_INVENTORY_ID")));
+                item.setDlvrDate(rs.getDate("SO_ITEM_DELIVERY_DATE"));
+                item.setUnitPrice(rs.getBigDecimal("SO_ITEM_UNIT_PRICE"));
+                item.setQty(rs.getInt("ITEM_NOT_YET_BILL"));
+                item.setOriQty(item.getQty());
+
                 items.add(item);
             }
 

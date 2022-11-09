@@ -23,8 +23,6 @@ import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.StringFilter;
-import io.github.palexdev.materialfx.utils.SwingFXUtils;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
@@ -48,7 +46,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
@@ -566,9 +563,11 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
 
             this.cmbStatus.setText(customer.getStatus());
 
-            BufferedImage bi = ImageUtils.toBufferedImage(customer.getAvatarImg());
-            Image img = SwingFXUtils.toFXImage(bi, null);
-            this.imgAvatarImg.setImage(img);
+            this.imgAvatarImg.setImage(ImageUtils.byteToImg(
+                    ImageUtils.encodedStrToByte(
+                            customer.getAvatarImg().isEmpty() == true
+                            ? null : customer.getAvatarImg()
+                    )));
         }
     }
 
@@ -870,7 +869,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         contact.setHomePhNo(this.txtHomePhNo.getText());
         customer.setContact(contact);
 
-        customer.setAvatarImg(ImageUtils.imgViewToByte(this.imgAvatarImg));
+        customer.setAvatarImg(this.imgAvatarImg.getImage() == null ? "" : ImageUtils.byteToEncodedStr(ImageUtils.imgToByte(this.imgAvatarImg.getImage())));
         customer.setName(this.txtName.getText());
         customer.setGender(this.cmbGender.getText());
         customer.setDOB(this.dtDOB.getValue() == null ? null : (java.sql.Date) Date.from(Instant.from(this.dtDOB.getValue().atStartOfDay(ZoneId.systemDefault())))); //https://stackoverflow.com/questions/20446026/get-value-from-date-picker

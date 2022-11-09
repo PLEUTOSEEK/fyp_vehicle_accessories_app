@@ -18,6 +18,10 @@ public class Place extends Entity {
     private String description;
     private Contact contact;
 
+    public Place(String placeID) {
+        this.placeID = placeID;
+    }
+
     public Place() {
         this(null, null, "", "", null, "", null);
     }

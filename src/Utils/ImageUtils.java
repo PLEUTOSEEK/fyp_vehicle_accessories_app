@@ -16,7 +16,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import org.apache.commons.codec.binary.Base64;
@@ -83,8 +82,12 @@ public class ImageUtils {
         return bi;
     }
 
-    public static byte[] imgViewToByte(ImageView imgView) throws IOException {
-        BufferedImage bImage = SwingFXUtils.fromFXImage(imgView.getImage(), null);
+    public static byte[] imgToByte(Image image) throws IOException {
+        if (image == null) {
+            return null;
+        }
+
+        BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
         if (bImage != null) {
             ByteArrayOutputStream s = new ByteArrayOutputStream();
 
@@ -100,7 +103,6 @@ public class ImageUtils {
     public static Image byteToImg(byte[] bytes) throws IOException {
 
         if (bytes == null) {
-            System.out.println("byteToImg - byte is null");
             return null;
         } else {
             ByteArrayOutputStream out = new ByteArrayOutputStream();

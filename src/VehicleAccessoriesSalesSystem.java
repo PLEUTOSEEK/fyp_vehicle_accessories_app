@@ -19,7 +19,7 @@ public class VehicleAccessoriesSalesSystem extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        String targetFXMLPath = "View/HomePage_UI.fxml";
+        String targetFXMLPath = "View/FXML.fxml";
 
         try {
             Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(targetFXMLPath));

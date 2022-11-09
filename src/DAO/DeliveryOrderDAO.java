@@ -72,13 +72,8 @@ public class DeliveryOrderDAO {
 
             if (rs.next()) {
                 deliveryOrder.setCode(rs.getString("DO_DO_ID"));
-                deliveryOrder.setReferenceType(rs.getString("DO_Reference_Type"));
 
-                if (deliveryOrder.getReferenceType().equals("RDN")) {
-                    deliveryOrder.setReference(TransferOrderDAO.getTransferOrderByCode(rs.getString("DO_Reference")));
-                } else if (deliveryOrder.getReferenceType().equals("TO")) {
-                    deliveryOrder.setReference(ReturnDeliveryNoteDAO.getReturnDeliveryNoteByCode(rs.getString("DO_Reference")));
-                }
+                deliveryOrder.setSo(SalesOrderDAO.getSalesOrderByID(rs.getString("DO_Reference")));
 
                 deliveryOrder.setDeliverFr(PlaceDAO.getPlaceByID(rs.getString("DO_Company_Address_ID")));
                 deliveryOrder.setDeliveryDate(rs.getDate("DO_Delivery_Date"));

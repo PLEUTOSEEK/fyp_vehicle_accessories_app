@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.List;
 
 /**
  *
@@ -58,13 +59,17 @@ public class SalesOrderService {
         return SalesOrderDAO.updateSalesOrder(so);
     }
 
-    public static Object getSOByID(String code) {
+    public static SalesOrder getSOByID(String code) {
         return SalesOrderDAO.getSalesOrderByID(code);
 
     }
 
     public static String updateSalesOrderStatus(SalesOrder salesOrder) {
         return SalesOrderDAO.updateSalesOrderStatus(salesOrder);
+    }
+
+    public static List<SalesOrder> getAllSalesOrders() {
+        return SalesOrderDAO.getAllSalesOrder();
     }
 
 }
