@@ -290,7 +290,6 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            System.out.println(item.getProduct().getProdID() + "This is product ID");
                             // action here
                             Parent root;
                             try {
@@ -314,7 +313,9 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                                     Item catchedItem = new Item();
                                     catchedItem = ((Item) receiveObj.getObj()).clone();
 
-                                    if (!items.contains(catchedItem)) {
+                                    if (catchedItem == null) { // remove
+                                        items.remove(item);
+                                    } else if (!items.contains(catchedItem)) {
                                         items.add(catchedItem);
                                     } else {
                                         items.set(items.indexOf(item), catchedItem);

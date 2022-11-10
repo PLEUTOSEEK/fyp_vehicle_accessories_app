@@ -243,16 +243,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
                                     PackingSlip catchedPackingSlip = new PackingSlip();
                                     catchedPackingSlip = ((PackingSlip) receiveObj.getObj()).clone();
 
-                                    if (!catchedPackingSlip.getStatus().equals(WarehouseRules.PSStatus.REFERED.toString())) {
-
-                                        adjustPackingSlipNotYetDeliver(catchedPackingSlip);
-
-                                    } else {
-                                        alertDialog(Alert.AlertType.INFORMATION,
-                                                "Information",
-                                                "Document Blocked Message",
-                                                "Packing Slip in Referred status are not allowed to become any document reference.");
-                                    }
+                                    adjustPackingSlipNotYetDeliver(catchedPackingSlip, packingSlip);
 
                                 }
                             } catch (IOException e) {
@@ -266,16 +257,16 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
         });
     }
 
-    private void adjustPackingSlipNotYetDeliver(PackingSlip catchedPackingSlip) {
+    private void adjustPackingSlipNotYetDeliver(PackingSlip catchedPackingSlip, PackingSlip packingSlip) {
         //  SO = TO
         //  TO = DO
-        if (catchedPackingSlip.getTO() == null) {//remove
+        if (catchedPackingSlip == null) {//remove
 
-            PackingSlip packingSlipInTO = packingSlipsNotYetDeliver.get(packingSlipsNotYetDeliver.indexOf(catchedPackingSlip));
+            PackingSlip packingSlipInTO = packingSlipsNotYetDeliver.get(packingSlipsNotYetDeliver.indexOf(packingSlip));
 
             packingSlipInTO.setStatus(WarehouseRules.PSStatus.NOT_YET_REFERED.toString());
 
-            packingSlips.remove(catchedPackingSlip);
+            packingSlips.remove(packingSlip);
 
         } else if (!packingSlips.contains(catchedPackingSlip)) { //add
 
@@ -769,6 +760,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
+            passObj.setObj(new DeliveryOrder());
             passObj.setObjs((List<Object>) (Object) packingSlipsNotYetDeliver);
 
             stage.setUserData(passObj);
@@ -782,7 +774,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
                 catchedPackingSlip = ((PackingSlip) receiveObj.getObj()).clone();
 
                 if (!catchedPackingSlip.getStatus().equals(WarehouseRules.PSStatus.REFERED.toString())) {
-                    adjustPackingSlipNotYetDeliver(catchedPackingSlip);
+                    adjustPackingSlipNotYetDeliver(catchedPackingSlip, null);
                 } else {
                     alertDialog(Alert.AlertType.INFORMATION,
                             "Information",

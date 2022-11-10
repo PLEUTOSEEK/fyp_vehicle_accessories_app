@@ -188,7 +188,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                                     catchedItem = ((Item) receiveObj.getObj()).clone();
 
                                     // remember to perform slow change for qty move to original quantity on UI [View/TOPSSelect_UI.fxml]
-                                    adjustItemsNotYetPack(catchedItem);
+                                    adjustItemsNotYetPack(catchedItem, item);
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -201,15 +201,15 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
         });
     }
 
-    private void adjustItemsNotYetPack(Item catchedItem) {
+    private void adjustItemsNotYetPack(Item catchedItem, Item item) {
 
         //=============
-        if (catchedItem.getProduct() == null) {
-            Item itemInTO = itemsNotYetPack.get(itemsNotYetPack.indexOf(catchedItem));
-            Item itemInPS = (Item) items.get(items.indexOf(catchedItem));
+        if (catchedItem == null) {
+            Item itemInSO = itemsNotYetPack.get(itemsNotYetPack.indexOf(item));
+            Item itemInTO = (Item) items.get(items.indexOf(item));
 
-            itemInTO.setQty(itemInTO.getQty() + itemInPS.getQty());
-            items.remove(catchedItem);
+            itemInSO.setQty(itemInSO.getQty() + itemInTO.getQty());
+            items.remove(item);
         } else if (!items.contains(catchedItem)) { //add
             items.add(catchedItem);
 
@@ -471,12 +471,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
-
-            Item<TransferOrder> item = new Item();
-            TransferOrder transferOrder = new TransferOrder();
-            transferOrder.setCode(this.txtTORef.getText());
-            item.setRefDoc(transferOrder);
-            passObj.setObj(item);
+            passObj.setObj(new PackingSlip());
             passObj.setObjs((List<Object>) (Object) itemsNotYetPack);
 
             stage.setUserData(passObj);
@@ -488,7 +483,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                 BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                 Item catchedItem = (Item) receiveObj.getObj();
 
-                adjustItemsNotYetPack(catchedItem);
+                adjustItemsNotYetPack(catchedItem, null);
 
             }
         } catch (IOException e) {

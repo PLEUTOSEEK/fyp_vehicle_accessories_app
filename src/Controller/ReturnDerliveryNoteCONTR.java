@@ -258,7 +258,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                             // action here
                             Parent root;
                             try {
-                                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/TOPSSelect_UI.fxml"));
+                                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/RDNPSSelect_UI.fxml"));
                                 Stage stage = new Stage();
                                 stage.initModality(Modality.WINDOW_MODAL);
                                 stage.initOwner(btnBack.getScene().getWindow());
@@ -279,7 +279,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                                     Item catchedItem = new Item();
                                     catchedItem = ((Item) receiveObj.getObj()).clone();
 
-                                    adjustItemsNotYetTransfer(catchedItem);
+                                    adjustItemsNotYetTransfer(catchedItem, item);
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -293,13 +293,13 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
     }
 
-    private void adjustItemsNotYetTransfer(Item catchedItem) {
-        if (catchedItem.getProduct() == null) {//remove
-            Item itemInReturnable = itemsNotYetReturn.get(itemsNotYetReturn.indexOf(catchedItem));
-            Item itemInRDN = (Item) items.get(items.indexOf(catchedItem));
+    private void adjustItemsNotYetTransfer(Item catchedItem, Item item) {
+        if (catchedItem == null) {//remove
+            Item itemInReturnable = itemsNotYetReturn.get(itemsNotYetReturn.indexOf(item));
+            Item itemInRDN = (Item) items.get(items.indexOf(item));
 
             itemInReturnable.setQty(itemInReturnable.getQty() + itemInRDN.getQty());
-            items.remove(catchedItem);
+            items.remove(item);
         } else if (!items.contains(catchedItem)) { //add
             items.add(catchedItem);
 
@@ -794,6 +794,13 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private void addProductItem(MouseEvent event
     ) {
+        if (this.txtSORef.getText().isEmpty()) {
+            alertDialog(Alert.AlertType.INFORMATION,
+                    "Information",
+                    "Prerequisite Condition",
+                    "Must fill in Reference Document column, before add item");
+            return;
+        }
         Parent root;
         try {
             root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelectWithItemsProvided_UI.fxml"));
@@ -805,12 +812,9 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
-
-            Item<ReturnDeliveryNote> item = new Item();
-            item.setRefDoc((ReturnDeliveryNote) this.passObj.getObj());
-
-            passObj.setObj(item);
+            passObj.setObj(new ReturnDeliveryNote());
             passObj.setObjs((List<Object>) (Object) itemsNotYetReturn);
+
             stage.setUserData(passObj);
             stage.showAndWait();
 
@@ -820,7 +824,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                 BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                 Item catchedItem = ((Item) receiveObj.getObj()).clone();
 
-                adjustItemsNotYetTransfer(catchedItem);
+                adjustItemsNotYetTransfer(catchedItem, null);
 
             }
         } catch (IOException e) {

@@ -307,7 +307,9 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                                     Item catchedItem = new Item();
                                     catchedItem = ((Item) receiveObj.getObj()).clone();
 
-                                    if (!items.contains(catchedItem)) {
+                                    if (catchedItem.getProduct() == null) { // remove
+                                        items.remove(catchedItem);
+                                    } else if (!items.contains(catchedItem)) {
                                         items.add(catchedItem);
                                     } else {
                                         items.set(items.indexOf(item), catchedItem);

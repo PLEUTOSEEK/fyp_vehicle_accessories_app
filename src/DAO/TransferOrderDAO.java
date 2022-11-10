@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import Entity.ReturnDeliveryNote;
 import Entity.SalesOrder;
 import Entity.TransferOrder;
 import java.sql.Connection;
@@ -140,13 +141,13 @@ public class TransferOrderDAO {
         }
     }
 
-    public static List<TransferOrder<SalesOrder>> getAllTO() {
+    public static List<TransferOrder> getAllTO() {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        TransferOrder<SalesOrder> transferOrder = new TransferOrder<>();
-        List<TransferOrder<SalesOrder>> transferOrders = new ArrayList<>();
+        TransferOrder transferOrder = new TransferOrder<>();
+        List<TransferOrder> transferOrders = new ArrayList<>();
 
         try {
             conn = SQLDatabaseConnection.openConn();
@@ -162,7 +163,15 @@ public class TransferOrderDAO {
 
                 transferOrder.setCode(rs.getString("TO_TO_ID"));
                 transferOrder.setReqType(rs.getString("TO_Req_Type"));
-                transferOrder.setReqTypeRef(SalesOrderDAO.getSalesOrderByID(rs.getString("TO_Req_Type_Ref")));
+
+                if (transferOrder.getReqType().equals("SO")) {
+                    transferOrder.setReqTypeRef(new SalesOrder());
+                    ((SalesOrder) transferOrder.getReqTypeRef()).setCode(rs.getString("TO_Req_Type_Ref"));
+                } else if (transferOrder.getReqType().equals("RDN")) {
+                    transferOrder.setReqTypeRef(new ReturnDeliveryNote());
+                    ((ReturnDeliveryNote) transferOrder.getReqTypeRef()).setCode(rs.getString("TO_Req_Type_Ref"));
+                }
+
                 transferOrder.setPIC(StaffDAO.getStaffByID(rs.getString("TO_Person_In_Charge")));
                 transferOrder.setDestination(PlaceDAO.getPlaceByID(rs.getString("TO_Destination")));
                 transferOrder.setIssuedBy(StaffDAO.getStaffByID(rs.getString("TO_Issued_By")));

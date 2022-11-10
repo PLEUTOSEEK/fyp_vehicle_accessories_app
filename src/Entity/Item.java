@@ -26,6 +26,7 @@ public class Item<E> implements Cloneable {
     private Date dlvrDate;
     private BigDecimal exclTaxAmt;
     private BigDecimal discAmt;
+    private double discPercent;
     private BigDecimal inclTaxAmt;
 
     public Item() {
@@ -101,7 +102,11 @@ public class Item<E> implements Cloneable {
     }
 
     public BigDecimal getDiscAmt() {
-        return discAmt;
+        BigDecimal result = this.unitPrice;
+        result.multiply(BigDecimal.valueOf(this.oriQty));
+        result = result.multiply(BigDecimal.valueOf(this.discPercent / 100));
+
+        return result;
     }
 
     public void setDiscAmt(BigDecimal discAmt) {
@@ -120,6 +125,14 @@ public class Item<E> implements Cloneable {
 
     public void setInclTaxAmt(BigDecimal inclTaxAmt) {
         this.inclTaxAmt = inclTaxAmt;
+    }
+
+    public double getDiscPercent() {
+        return discPercent;
+    }
+
+    public void setDiscPercent(double discPercent) {
+        this.discPercent = discPercent;
     }
 
 //    @Override

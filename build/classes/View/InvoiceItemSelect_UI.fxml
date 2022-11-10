@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefHeight="182.0" prefWidth="638.0" stylesheets="@../Material/css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SalesOrderPSSelectCONTR">
+<AnchorPane id="AnchorPane" prefHeight="182.0" prefWidth="638.0" stylesheets="@../Material/css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.InvoiceItemSelectCONTR">
    <children>
       <GridPane layoutX="10.0" prefHeight="162.0" prefWidth="623.0">
         <columnConstraints>
@@ -25,10 +25,10 @@
          <children>
             <MFXTextField fx:id="txtProdID" alignment="CENTER_RIGHT" floatingText="Product ID" prefHeight="50.0" prefWidth="135.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <MFXButton fx:id="btnConfirm" minHeight="27.0" minWidth="70.0" onMousePressed="#confirmItem" styleClass="outline-button" text="Confirm" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <MFXButton id="custom" fx:id="btnCancel" minHeight="27.0" minWidth="70.0" onMousePressed="#goBackPrevious" styleClass="outline-button" text="Cancel" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <MFXButton id="custom" fx:id="btnCancel1" minHeight="27.0" minWidth="70.0" onMousePressed="#goBackPrevious" text="Remove" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <MFXTextField fx:id="txtQuantity" alignment="CENTER_RIGHT" floatingText="Remark" prefHeight="50.0" prefWidth="258.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <MFXTextField fx:id="txtProdID1" alignment="CENTER_RIGHT" floatingText="Quantity" prefHeight="50.0" prefWidth="135.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <MFXButton id="custom" fx:id="btnCancel" minHeight="27.0" minWidth="70.0" onMousePressed="#cancelAction" styleClass="outline-button" text="Cancel" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <MFXButton id="custom" fx:id="btnRemove" minHeight="27.0" minWidth="70.0" onMousePressed="#removeCurrentItem" text="Remove" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <MFXTextField fx:id="txtRemark" alignment="CENTER_RIGHT" floatingText="Remark" prefHeight="50.0" prefWidth="258.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <MFXTextField fx:id="txtQuantity" alignment="CENTER_RIGHT" floatingText="Quantity" prefHeight="50.0" prefWidth="135.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>

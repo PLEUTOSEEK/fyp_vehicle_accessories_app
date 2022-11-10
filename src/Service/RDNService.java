@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -69,6 +70,10 @@ public class RDNService {
 
     public static String updateRDN(ReturnDeliveryNote returnDeliveryNote) {
         return ReturnDeliveryNoteDAO.updateRDN(returnDeliveryNote);
+    }
+
+    public static List<ReturnDeliveryNote> getAllRDN() {
+        return ReturnDeliveryNoteDAO.getAllRDN();
     }
 
 }

@@ -33,7 +33,7 @@
         </rowConstraints>
          <children>
             <MFXTextField fx:id="txtProdID" alignment="CENTER_RIGHT" floatingText="Product ID" prefHeight="50.0" prefWidth="135.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <MFXCircleToggleNode fx:id="openProductSelection" graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <MFXCircleToggleNode fx:id="openProductSelection" graphicTextGap="2.0" onMousePressed="#openProductSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <padding>
                   <Insets bottom="1.0" />
                </padding>
@@ -45,13 +45,13 @@
                </GridPane.margin>
             </MFXCircleToggleNode>
             <MFXTextField fx:id="txtRemarks" alignment="CENTER_RIGHT" floatingText="Remarks" prefHeight="49.0" prefWidth="172.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <MFXTextField fx:id="txtQuantity" alignment="CENTER_RIGHT" floatingText="Quantity" prefHeight="49.0" prefWidth="71.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <MFXTextField fx:id="txtQuantity" alignment="CENTER_RIGHT" floatingText="Quantity" prefHeight="49.0" prefWidth="71.0" text="0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
             <MFXTextField fx:id="txtUnitPrice" alignment="CENTER_RIGHT" floatingText="Unit Price" text="0.00" GridPane.columnIndex="5" GridPane.rowIndex="1" />
             <MFXComboBox fx:id="cmbDiscountAmount" floatingText="Disc. %" prefHeight="40.0" prefWidth="102.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
             <MFXDatePicker fx:id="dtDeliveryDate" alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Delivery Date" minHeight="47.0" minWidth="136.0" prefHeight="47.0" prefWidth="257.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
-            <MFXButton id="custom" fx:id="btnCancel" minHeight="27.0" minWidth="70.0" onMousePressed="#goBackPrevious" text="Cancel" GridPane.columnIndex="7" GridPane.rowIndex="2" />
+            <MFXButton id="custom" fx:id="btnCancel" minHeight="27.0" minWidth="70.0" onMousePressed="#cancelAction" text="Cancel" GridPane.columnIndex="7" GridPane.rowIndex="2" />
             <MFXButton fx:id="btnConfirm" minWidth="50.0" onMousePressed="#confirmItem" styleClass="outline-button" text="Confirm" GridPane.columnIndex="7" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-            <MFXButton id="custom" fx:id="btnRemove" minHeight="27.0" minWidth="70.0" onMousePressed="#goBackPrevious" text="Remove" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <MFXButton id="custom" fx:id="btnRemove" minHeight="27.0" minWidth="70.0" onMousePressed="#removeCurrentItem" text="Remove" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>

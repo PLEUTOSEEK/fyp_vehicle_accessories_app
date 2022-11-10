@@ -4,12 +4,18 @@
  */
 package DAO;
 
+import Entity.CollectAddress;
+import Entity.Place;
 import Entity.ReturnDeliveryNote;
+import Entity.SalesOrder;
+import Entity.Staff;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -270,6 +276,88 @@ public class ReturnDeliveryNoteDAO {
 
             return latestCode;
 
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static List<ReturnDeliveryNote> getAllRDN() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        List<ReturnDeliveryNote> returnDeliveryNotes = new ArrayList<>();
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT [RDN_ID] "
+                    + "      ,[SO_ID] "
+                    + "      ,[Collect_Back_To] "
+                    + "      ,[Collect_Back_From] "
+                    + "      ,[Collect_Date] "
+                    + "      ,[Inspector_Msg] "
+                    + "      ,[Issued_By] "
+                    + "      ,[Inspected_By] "
+                    + "      ,[Collect_Back_By] "
+                    + "      ,[Item_Passed_Back_by] "
+                    + "      ,[Item_Received_By] "
+                    + "      ,[Status] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Actual_Created_Date] "
+                    + "      ,[Signed_Doc_Pic] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM ReturnDeliveryNote";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ReturnDeliveryNote r = new ReturnDeliveryNote();
+                // RDN ID
+                r.setCode(rs.getString("RDN_ID"));
+                // So Ref.
+                r.setSO(new SalesOrder());
+                r.getSO().setCode(rs.getString("SO_ID"));
+                r.setCollBackTo(new Place());
+                r.getCollBackTo().setPlaceID(rs.getString("Collect_Back_To"));
+                // Collect Back From Location Name
+                r.setCollBckFr(CollectAddressDAO.getCollectAddressByID(rs.getString("Collect_Back_From")));
+                r.setCollectDate(rs.getDate("Collect_Date"));
+                r.setInspectorMsg(rs.getString("Inspector_Msg"));
+                r.setIssuedBy(new Staff());
+                r.getIssuedBy().setStaffID(rs.getString("Issued_By"));
+                r.setInspectedBy(new Staff());
+                r.getInspectedBy().setStaffID(rs.getString("Inspected_By"));
+                r.setCollectBackBy(new Staff());
+                r.getCollectBackBy().setStaffID(rs.getString("Collect_Back_By"));
+                r.setItemPassedBackBy(new CollectAddress());
+                r.getItemPassedBackBy().setCollectAddrID(rs.getString("Item_Passed_Back_by"));
+                r.setItemReceivedBy(new Staff());
+                r.getItemReceivedBy().setStaffID(rs.getString("Item_Received_By"));
+                // Status(""));
+                r.setStatus(rs.getString("Status"));
+                r.setCreatedDate(rs.getTimestamp("Created_Date"));
+                r.setActualCreatedDateTime(rs.getTimestamp("Actual_Created_Date"));
+                r.setSignedDocPic(rs.getString("Signed_Doc_Pic"));
+                r.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+
+                returnDeliveryNotes.add(r);
+            }
+
+            //return object
+            return returnDeliveryNotes;
         } catch (Exception e) {
             return null;
         } finally {

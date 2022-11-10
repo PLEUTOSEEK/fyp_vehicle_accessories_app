@@ -19,8 +19,10 @@ import Service.CustomerInquiryService;
 import Service.CustomerService;
 import Service.PlaceService;
 import Service.QuotationService;
+import Service.RDNService;
 import Service.SalesOrderService;
 import Service.StaffService;
+import Service.TransferOrderService;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
@@ -51,14 +53,18 @@ public class InnerEntitySelectCONTR implements Initializable {
     /**
      * Initializes the controller class.
      */
-    private static List<String> rowSelected = new ArrayList<>();
-
-    private Stage parentStage;
+    //<editor-fold defaultstate="collapsed" desc="fields">
     @FXML
     private MFXButton btnCancel;
-    private BasicObjs passObj;
     @FXML
     private MFXTableView<?> tblVw;
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="util declarations">
+    private BasicObjs passObj;
+
+    private static List<String> rowSelected = new ArrayList<>();
+    //</editor-fold>
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -66,7 +72,6 @@ public class InnerEntitySelectCONTR implements Initializable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                System.out.println("before receive data");
                 receiveData();
                 setupTable();
                 tblVw.autosizeColumnsOnInitialization();
@@ -412,15 +417,16 @@ public class InnerEntitySelectCONTR implements Initializable {
 
     private void forCustomerInquiry() {
 
-        MFXTableColumn<CustomerInquiry> ciIDCol = new MFXTableColumn<>("CustomerInquiry ID", true, Comparator.comparing(customer -> customer.getCode()));
-        MFXTableColumn<CustomerInquiry> refCol = new MFXTableColumn<>("Reference", true, Comparator.comparing(customer -> customer.getReference()));
-        MFXTableColumn<CustomerInquiry> billToIDCol = new MFXTableColumn<>("Bill To Customer ID", true, Comparator.comparing(customer -> customer.getBillToCust() == null ? "" : customer.getBillToCust().getCustID()));
-        MFXTableColumn<CustomerInquiry> billToNmCol = new MFXTableColumn<>("Bill To Customer Name", true, Comparator.comparing(customer -> customer.getBillToCust() == null ? "" : customer.getBillToCust().getName()));
-        MFXTableColumn<CustomerInquiry> deliverToIDCol = new MFXTableColumn<>("Deliver To Customer ID", true, Comparator.comparing(customer -> customer.getDeliverToCust() == null ? "" : customer.getDeliverToCust().getCollectAddrID()));
-        MFXTableColumn<CustomerInquiry> deliverToNmCol = new MFXTableColumn<>("Deliver To Customer Name", true, Comparator.comparing(customer -> customer.getDeliverToCust() == null ? "" : customer.getDeliverToCust().getPerson().getName()));
-        MFXTableColumn<CustomerInquiry> salesPersonIDCol = new MFXTableColumn<>("Sales Person ID", true, Comparator.comparing(customer -> customer.getSalesPerson() == null ? "" : customer.getSalesPerson().getStaffID()));
-        MFXTableColumn<CustomerInquiry> salesPersonNmCol = new MFXTableColumn<>("Sales Person Name", true, Comparator.comparing(customer -> customer.getSalesPerson() == null ? "" : customer.getSalesPerson().getName()));
-        MFXTableColumn<CustomerInquiry> nettDtCol = new MFXTableColumn<>("Nett", true, Comparator.comparing(customer -> customer.getNett()));
+        MFXTableColumn<CustomerInquiry> ciIDCol = new MFXTableColumn<>("CustomerInquiry ID", true, Comparator.comparing(customerInquiry -> customerInquiry.getCode()));
+        MFXTableColumn<CustomerInquiry> refCol = new MFXTableColumn<>("Reference", true, Comparator.comparing(customerInquiry -> customerInquiry.getReference()));
+        MFXTableColumn<CustomerInquiry> billToIDCol = new MFXTableColumn<>("Bill To customer ID", true, Comparator.comparing(customerInquiry -> customerInquiry.getBillToCust() == null ? "" : customerInquiry.getBillToCust().getCustID()));
+        MFXTableColumn<CustomerInquiry> billToNmCol = new MFXTableColumn<>("Bill To customer Name", true, Comparator.comparing(customerInquiry -> customerInquiry.getBillToCust() == null ? "" : customerInquiry.getBillToCust().getName()));
+        MFXTableColumn<CustomerInquiry> deliverToIDCol = new MFXTableColumn<>("Deliver To ID", true, Comparator.comparing(customerInquiry -> customerInquiry.getDeliverToCust() == null ? "" : customerInquiry.getDeliverToCust().getCollectAddrID()));
+        MFXTableColumn<CustomerInquiry> deliverToNmCol = new MFXTableColumn<>("Deliver To Collector Name", true, Comparator.comparing(customerInquiry -> customerInquiry.getDeliverToCust() == null ? "" : customerInquiry.getDeliverToCust().getPerson().getName()));
+        MFXTableColumn<CustomerInquiry> salesPersonIDCol = new MFXTableColumn<>("Sales Person ID", true, Comparator.comparing(customerInquiry -> customerInquiry.getSalesPerson() == null ? "" : customerInquiry.getSalesPerson().getStaffID()));
+        MFXTableColumn<CustomerInquiry> salesPersonNmCol = new MFXTableColumn<>("Sales Person Name", true, Comparator.comparing(customerInquiry -> customerInquiry.getSalesPerson() == null ? "" : customerInquiry.getSalesPerson().getName()));
+        MFXTableColumn<CustomerInquiry> nettDtCol = new MFXTableColumn<>("Nett", true, Comparator.comparing(customerInquiry -> customerInquiry.getNett()));
+        MFXTableColumn<CustomerInquiry> statusCol = new MFXTableColumn<>("Status", true, Comparator.comparing(customerInquiry -> customerInquiry.getStatus()));
 
         ciIDCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getCode()));
         refCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getReference()));
@@ -431,6 +437,7 @@ public class InnerEntitySelectCONTR implements Initializable {
         salesPersonIDCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getSalesPerson() == null ? "" : c.getSalesPerson().getStaffID()));
         salesPersonNmCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getSalesPerson() == null ? "" : c.getSalesPerson().getName()));
         nettDtCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getNett()));
+        statusCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getStatus()));
 
         ((MFXTableView<CustomerInquiry>) tblVw).getTableColumns().addAll(
                 ciIDCol,
@@ -441,18 +448,20 @@ public class InnerEntitySelectCONTR implements Initializable {
                 deliverToNmCol,
                 salesPersonIDCol,
                 salesPersonNmCol,
-                nettDtCol);
+                nettDtCol,
+                statusCol);
 
         ((MFXTableView<CustomerInquiry>) tblVw).getFilters().addAll(
-                new StringFilter<>("Customer Inquiry ID", customer -> customer.getCode()),
-                new StringFilter<>("Reference", customer -> customer.getReference()),
-                new StringFilter<>("Bill To Customer ID", customer -> customer.getBillToCust() == null ? "" : customer.getBillToCust().getCustID()),
-                new StringFilter<>("Bill To Customer Name", customer -> customer.getBillToCust() == null ? "" : customer.getBillToCust().getName()),
-                new StringFilter<>("Deliver To Customer ID", customer -> customer.getDeliverToCust() == null ? "" : customer.getDeliverToCust().getCollectAddrID()),
-                new StringFilter<>("Deliver To Customer Name", customer -> customer.getDeliverToCust() == null ? "" : customer.getDeliverToCust().getPerson().getName()),
-                new StringFilter<>("Sales Person ID", customer -> customer.getSalesPerson() == null ? "" : customer.getSalesPerson().getStaffID()),
-                new StringFilter<>("Sales Person Name", customer -> customer.getSalesPerson() == null ? "" : customer.getSalesPerson().getName()),
-                new DoubleFilter<>("Nett", customer -> customer.getNett().doubleValue())
+                new StringFilter<>("Customer Inquiry ID", customerInquiry -> customerInquiry.getCode()),
+                new StringFilter<>("Reference", customerInquiry -> customerInquiry.getReference()),
+                new StringFilter<>("Bill To Customer ID", customerInquiry -> customerInquiry.getBillToCust() == null ? "" : customerInquiry.getBillToCust().getCustID()),
+                new StringFilter<>("Bill To Customer Name", customerInquiry -> customerInquiry.getBillToCust() == null ? "" : customerInquiry.getBillToCust().getName()),
+                new StringFilter<>("Deliver To ID", customerInquiry -> customerInquiry.getDeliverToCust() == null ? "" : customerInquiry.getDeliverToCust().getCollectAddrID()),
+                new StringFilter<>("Deliver To Collector Name", customerInquiry -> customerInquiry.getDeliverToCust() == null ? "" : customerInquiry.getDeliverToCust().getPerson().getName()),
+                new StringFilter<>("Sales Person ID", customerInquiry -> customerInquiry.getSalesPerson() == null ? "" : customerInquiry.getSalesPerson().getStaffID()),
+                new StringFilter<>("Sales Person Name", customerInquiry -> customerInquiry.getSalesPerson() == null ? "" : customerInquiry.getSalesPerson().getName()),
+                new DoubleFilter<>("Nett", customerInquiry -> customerInquiry.getNett().doubleValue()),
+                new StringFilter<>("Status", customerInquiry -> customerInquiry.getStatus())
         );
 
         //5
@@ -494,12 +503,13 @@ public class InnerEntitySelectCONTR implements Initializable {
         MFXTableColumn<Quotation> refCol = new MFXTableColumn<>("Reference", true, Comparator.comparing(quot -> quot.getReference()));
         MFXTableColumn<Quotation> billToIDCol = new MFXTableColumn<>("Bill To Customer ID", true, Comparator.comparing(quot -> quot.getBillToCust() == null ? "" : quot.getBillToCust().getCustID()));
         MFXTableColumn<Quotation> billToNmCol = new MFXTableColumn<>("Bill To Customer Name", true, Comparator.comparing(quot -> quot.getBillToCust() == null ? "" : quot.getBillToCust().getName()));
-        MFXTableColumn<Quotation> deliverToIDCol = new MFXTableColumn<>("Deliver To Customer ID", true, Comparator.comparing(quot -> quot.getDeliverToCust() == null ? "" : quot.getDeliverToCust().getCollectAddrID()));
-        MFXTableColumn<Quotation> deliverToNmCol = new MFXTableColumn<>("Deliver To Customer Name", true, Comparator.comparing(quot -> quot.getDeliverToCust() == null ? "" : quot.getDeliverToCust().getPerson().getName()));
+        MFXTableColumn<Quotation> deliverToIDCol = new MFXTableColumn<>("Deliver To ID", true, Comparator.comparing(quot -> quot.getDeliverToCust() == null ? "" : quot.getDeliverToCust().getCollectAddrID()));
+        MFXTableColumn<Quotation> deliverToNmCol = new MFXTableColumn<>("Deliver To Collector Name", true, Comparator.comparing(quot -> quot.getDeliverToCust() == null ? "" : quot.getDeliverToCust().getPerson().getName()));
         MFXTableColumn<Quotation> salesPersonIDCol = new MFXTableColumn<>("Sales Person ID", true, Comparator.comparing(quot -> quot.getSalesPerson() == null ? "" : quot.getSalesPerson().getStaffID()));
         MFXTableColumn<Quotation> salesPersonNmCol = new MFXTableColumn<>("Sales Person Name", true, Comparator.comparing(quot -> quot.getSalesPerson() == null ? "" : quot.getSalesPerson().getName()));
         MFXTableColumn<Quotation> quotValDtCol = new MFXTableColumn<>("Quotation Validity Date", true, Comparator.comparing(quot -> quot.getQuotValidityDate()));
         MFXTableColumn<Quotation> nettDtCol = new MFXTableColumn<>("Nett", true, Comparator.comparing(quot -> quot.getNett()));
+        MFXTableColumn<Quotation> statusCol = new MFXTableColumn<>("Status", true, Comparator.comparing(quot -> quot.getStatus()));
 
         //2
         quotIDCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getCode()));
@@ -512,6 +522,7 @@ public class InnerEntitySelectCONTR implements Initializable {
         salesPersonNmCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getSalesPerson() == null ? "" : quot.getSalesPerson().getName()));
         quotValDtCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getQuotValidityDate()));
         nettDtCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getNett()));
+        statusCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(quot -> quot.getStatus()));
 
         //3
         ((MFXTableView<Quotation>) tblVw).getTableColumns().addAll(quotIDCol,
@@ -523,7 +534,8 @@ public class InnerEntitySelectCONTR implements Initializable {
                 salesPersonIDCol,
                 salesPersonNmCol,
                 quotValDtCol,
-                nettDtCol);
+                nettDtCol,
+                statusCol);
 
         //4
         ((MFXTableView<Quotation>) tblVw).getFilters().addAll(
@@ -531,12 +543,13 @@ public class InnerEntitySelectCONTR implements Initializable {
                 new StringFilter<>("Reference", quot -> quot.getReference()),
                 new StringFilter<>("Bill To Customer ID", quot -> quot.getBillToCust() == null ? "" : quot.getBillToCust().getCustID()),
                 new StringFilter<>("Bill To Customer Name", quot -> quot.getBillToCust() == null ? "" : quot.getBillToCust().getName()),
-                new StringFilter<>("Deliver To Customer ID", quot -> quot.getDeliverToCust() == null ? "" : quot.getDeliverToCust().getCollectAddrID()),
+                new StringFilter<>("Deliver To ID", quot -> quot.getDeliverToCust() == null ? "" : quot.getDeliverToCust().getCollectAddrID()),
                 new StringFilter<>("Deliver To Customer Name", quot -> quot.getDeliverToCust() == null ? "" : quot.getDeliverToCust().getPerson().getName()),
                 new StringFilter<>("Sales Person ID", quot -> quot.getSalesPerson() == null ? "" : quot.getSalesPerson().getStaffID()),
                 new StringFilter<>("Sales Person Name", quot -> quot.getSalesPerson() == null ? "" : quot.getSalesPerson().getName()),
                 new StringFilter<>("Quotation Validity Date", quot -> quot.getQuotValidityDate().toString()),
-                new DoubleFilter<>("Nett", quot -> quot.getNett().doubleValue())
+                new DoubleFilter<>("Nett", quot -> quot.getNett().doubleValue()),
+                new StringFilter<>("Status", quot -> quot.getStatus())
         );
 
         //5
@@ -577,11 +590,12 @@ public class InnerEntitySelectCONTR implements Initializable {
         MFXTableColumn<SalesOrder> refCol = new MFXTableColumn<>("Reference", true, Comparator.comparing(so -> so.getReference()));
         MFXTableColumn<SalesOrder> billToIDCol = new MFXTableColumn<>("Bill To Customer ID", true, Comparator.comparing(so -> so.getBillToCust() == null ? "" : so.getBillToCust().getCustID()));
         MFXTableColumn<SalesOrder> billToNmCol = new MFXTableColumn<>("Bill To Customer Name", true, Comparator.comparing(so -> so.getBillToCust() == null ? "" : so.getBillToCust().getName()));
-        MFXTableColumn<SalesOrder> deliverToIDCol = new MFXTableColumn<>("Deliver To Customer ID", true, Comparator.comparing(so -> so.getDeliverToCust() == null ? "" : so.getDeliverToCust().getCollectAddrID()));
-        MFXTableColumn<SalesOrder> deliverToNmCol = new MFXTableColumn<>("Deliver To Customer Name", true, Comparator.comparing(so -> so.getDeliverToCust() == null ? "" : so.getDeliverToCust().getPerson().getName()));
+        MFXTableColumn<SalesOrder> deliverToIDCol = new MFXTableColumn<>("Deliver To ID", true, Comparator.comparing(so -> so.getDeliverToCust() == null ? "" : so.getDeliverToCust().getCollectAddrID()));
+        MFXTableColumn<SalesOrder> deliverToNmCol = new MFXTableColumn<>("Deliver To Collector Name", true, Comparator.comparing(so -> so.getDeliverToCust() == null ? "" : so.getDeliverToCust().getPerson().getName()));
         MFXTableColumn<SalesOrder> salesPersonIDCol = new MFXTableColumn<>("Sales Person ID", true, Comparator.comparing(so -> so.getSalesPerson() == null ? "" : so.getSalesPerson().getStaffID()));
         MFXTableColumn<SalesOrder> salesPersonNmCol = new MFXTableColumn<>("Sales Person Name", true, Comparator.comparing(so -> so.getSalesPerson() == null ? "" : so.getSalesPerson().getName()));
         MFXTableColumn<SalesOrder> nettDtCol = new MFXTableColumn<>("Nett", true, Comparator.comparing(so -> so.getNett()));
+        MFXTableColumn<SalesOrder> statusCol = new MFXTableColumn<>("Status", true, Comparator.comparing(so -> so.getStatus()));
 
         //2
         soIDCol.setRowCellFactory(salesOrder -> new MFXTableRowCell<>(so -> so.getCode()));
@@ -593,6 +607,7 @@ public class InnerEntitySelectCONTR implements Initializable {
         salesPersonIDCol.setRowCellFactory(salesOrder -> new MFXTableRowCell<>(so -> so.getSalesPerson() == null ? "" : so.getSalesPerson().getStaffID()));
         salesPersonNmCol.setRowCellFactory(salesOrder -> new MFXTableRowCell<>(so -> so.getSalesPerson() == null ? "" : so.getSalesPerson().getName()));
         nettDtCol.setRowCellFactory(salesOrder -> new MFXTableRowCell<>(so -> so.getNett()));
+        statusCol.setRowCellFactory(quotation -> new MFXTableRowCell<>(so -> so.getStatus()));
 
         //3
         ((MFXTableView<SalesOrder>) tblVw).getTableColumns().addAll(
@@ -604,7 +619,8 @@ public class InnerEntitySelectCONTR implements Initializable {
                 deliverToNmCol,
                 salesPersonIDCol,
                 salesPersonNmCol,
-                nettDtCol
+                nettDtCol,
+                statusCol
         );
 
         //4
@@ -613,11 +629,12 @@ public class InnerEntitySelectCONTR implements Initializable {
                 new StringFilter<>("Reference", so -> so.getReference()),
                 new StringFilter<>("Bill To Customer ID", so -> so.getBillToCust() == null ? "" : so.getBillToCust().getCustID()),
                 new StringFilter<>("Bill To Customer Name", so -> so.getBillToCust() == null ? "" : so.getBillToCust().getName()),
-                new StringFilter<>("Deliver To Customer ID", so -> so.getDeliverToCust() == null ? "" : so.getDeliverToCust().getCollectAddrID()),
-                new StringFilter<>("Deliver To Customer Name", so -> so.getDeliverToCust() == null ? "" : so.getDeliverToCust().getPerson().getName()),
+                new StringFilter<>("Deliver To ID", so -> so.getDeliverToCust() == null ? "" : so.getDeliverToCust().getCollectAddrID()),
+                new StringFilter<>("Deliver To Collector Name", so -> so.getDeliverToCust() == null ? "" : so.getDeliverToCust().getPerson().getName()),
                 new StringFilter<>("Sales Person ID", so -> so.getSalesPerson() == null ? "" : so.getSalesPerson().getStaffID()),
                 new StringFilter<>("Sales Person Name", so -> so.getSalesPerson() == null ? "" : so.getSalesPerson().getName()),
-                new DoubleFilter<>("Nett", so -> so.getNett().doubleValue())
+                new DoubleFilter<>("Nett", so -> so.getNett().doubleValue()),
+                new StringFilter<>("Status", so -> so.getStatus())
         );
 
         //5
@@ -631,7 +648,7 @@ public class InnerEntitySelectCONTR implements Initializable {
             @Override
             public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
 
-                if (((MFXTableView<Quotation>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                if (((MFXTableView<SalesOrder>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
                     SalesOrder salesOrder = (((MFXTableView<SalesOrder>) tblVw).getSelectionModel().getSelectedValues().get(0));
                     rowSelected.add(salesOrder.getCode());
 
@@ -640,6 +657,143 @@ public class InnerEntitySelectCONTR implements Initializable {
                             Stage stage = (Stage) btnCancel.getScene().getWindow();
                             BasicObjs passObj = new BasicObjs();
                             passObj.setObj(salesOrder);
+                            stage.setUserData(passObj);
+                            stage.close();
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+    }
+
+    private void forTransferOrder() {
+        // TO ID
+        // PIC ID
+        // PIC Name
+        // Status
+
+        // TO ID
+        MFXTableColumn<TransferOrder> toIDCol = new MFXTableColumn<>("Transfer Order ID", true, Comparator.comparing(to -> to.getCode()));
+        // PIC ID
+        MFXTableColumn<TransferOrder> picIDCol = new MFXTableColumn<>("PIC ID", true, Comparator.comparing(to -> to.getPIC() == null ? "" : to.getPIC().getStaffID()));
+        // PIC Name
+        MFXTableColumn<TransferOrder> picNmCol = new MFXTableColumn<>("PIC Name", true, Comparator.comparing(to -> to.getPIC() == null ? "" : to.getPIC().getName()));
+        // Doc. Ref. ID
+        MFXTableColumn<TransferOrder> docRefIDCol = new MFXTableColumn<>("Doc. Ref. ID", true, Comparator.comparing(to -> to.getReqTypeRef() == null ? "" : to.getReqTypeRef() instanceof SalesOrder ? ((SalesOrder) to.getReqTypeRef()).getCode() : ((ReturnDeliveryNote) to.getReqTypeRef()).getCode()));
+        // Status
+        MFXTableColumn<TransferOrder> statusCol = new MFXTableColumn<>("Status", true, Comparator.comparing(to -> to.getStatus()));
+
+        // TO ID
+        toIDCol.setRowCellFactory(transferOrder -> new MFXTableRowCell<>(to -> to.getCode()));
+        // PIC ID
+        picIDCol.setRowCellFactory(transferOrder -> new MFXTableRowCell<>(to -> to.getPIC() == null ? "" : to.getPIC().getStaffID()));
+        // PIC Name
+        picNmCol.setRowCellFactory(transferOrder -> new MFXTableRowCell<>(to -> to.getPIC() == null ? "" : to.getPIC().getName()));
+        // Doc. Ref. ID
+        docRefIDCol.setRowCellFactory(transferOrder -> new MFXTableRowCell<>(to -> to.getReqTypeRef() == null ? "" : to.getReqTypeRef() instanceof SalesOrder ? ((SalesOrder) to.getReqTypeRef()).getCode() : ((ReturnDeliveryNote) to.getReqTypeRef()).getCode()));
+        // Status
+        statusCol.setRowCellFactory(transferOrder -> new MFXTableRowCell<>(to -> to.getStatus()));
+
+        ((MFXTableView<TransferOrder>) tblVw).getTableColumns().addAll(
+                toIDCol,
+                picIDCol,
+                picNmCol,
+                statusCol
+        );
+
+        ((MFXTableView<TransferOrder>) tblVw).getFilters().addAll(
+                new StringFilter<>("Transfer Order ID", to -> to.getCode()),
+                new StringFilter<>("PIC ID", to -> to.getPIC() == null ? "" : to.getPIC().getStaffID()),
+                new StringFilter<>("PIC Name", to -> to.getPIC() == null ? "" : to.getPIC().getName()),
+                new StringFilter<>("Doc. Ref. ID", to -> to.getReqTypeRef() == null ? "" : to.getReqTypeRef() instanceof SalesOrder ? ((SalesOrder) to.getReqTypeRef()).getCode() : ((ReturnDeliveryNote) to.getReqTypeRef()).getCode()),
+                new StringFilter<>("Status", to -> to.getStatus())
+        );
+
+        List<TransferOrder> transferOrders = TransferOrderService.getAllTO();
+
+        //6
+        ((MFXTableView<TransferOrder>) tblVw).setItems(FXCollections.observableList(transferOrders));
+
+        ((MFXTableView<TransferOrder>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<TransferOrder>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    TransferOrder transferOrder = (((MFXTableView<TransferOrder>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(transferOrder.getCode());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            Stage stage = (Stage) btnCancel.getScene().getWindow();
+                            BasicObjs passObj = new BasicObjs();
+                            passObj.setObj(transferOrder);
+                            stage.setUserData(passObj);
+                            stage.close();
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+    }
+
+    private void forReturnDeliveryNote() {
+        // RDN ID
+        // So Ref.
+        // Collect Back From Location Name
+        // Status
+
+        // RDN ID
+        MFXTableColumn<ReturnDeliveryNote> rdnIDCol = new MFXTableColumn<>("RDN ID", true, Comparator.comparing(rdn -> rdn.getCode()));
+        // So Ref.
+        MFXTableColumn<ReturnDeliveryNote> soRefCol = new MFXTableColumn<>("So Ref.", true, Comparator.comparing(rdn -> rdn.getSO() == null ? "" : rdn.getSO().getCode()));
+        // Collect Back From Location Name
+        MFXTableColumn<ReturnDeliveryNote> cllctBckFrLocationCol = new MFXTableColumn<>("Collect Back From Location", true, Comparator.comparing(rdn -> rdn.getCollBckFr() == null ? "" : rdn.getCollBckFr().getAddr().getLocationName()));
+        // Status
+        MFXTableColumn<ReturnDeliveryNote> statusCol = new MFXTableColumn<>("Status", true, Comparator.comparing(rdn -> rdn.getStatus()));
+
+        // RDN ID
+        rdnIDCol.setRowCellFactory(returnDeliveryNote -> new MFXTableRowCell<>(rdn -> rdn.getCode()));
+        // So Ref.
+        soRefCol.setRowCellFactory(returnDeliveryNote -> new MFXTableRowCell<>(rdn -> rdn.getSO() == null ? "" : rdn.getSO().getCode()));
+        // Collect Back From Location Name
+        cllctBckFrLocationCol.setRowCellFactory(returnDeliveryNote -> new MFXTableRowCell<>(rdn -> rdn.getCollBckFr() == null ? "" : rdn.getCollBckFr().getAddr().getLocationName()));
+        // Status
+        statusCol.setRowCellFactory(returnDeliveryNote -> new MFXTableRowCell<>(rdn -> rdn.getStatus()));
+
+        ((MFXTableView<ReturnDeliveryNote>) tblVw).getTableColumns().addAll(
+                rdnIDCol,
+                soRefCol,
+                cllctBckFrLocationCol,
+                statusCol
+        );
+
+        ((MFXTableView<ReturnDeliveryNote>) tblVw).getFilters().addAll(
+                new StringFilter<>("RDN ID", rdn -> rdn.getCode()),
+                new StringFilter<>("So Ref.", rdn -> rdn.getSO() == null ? "" : rdn.getSO().getCode()),
+                new StringFilter<>("Collect Back From Location", rdn -> rdn.getCollBckFr() == null ? "" : rdn.getCollBckFr().getAddr().getLocationName()),
+                new StringFilter<>("Status", rdn -> rdn.getStatus())
+        );
+
+        List<ReturnDeliveryNote> returnDeliveryNotes = RDNService.getAllRDN();
+
+        //6
+        ((MFXTableView<ReturnDeliveryNote>) tblVw).setItems(FXCollections.observableList(returnDeliveryNotes));
+
+        ((MFXTableView<ReturnDeliveryNote>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<ReturnDeliveryNote>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    ReturnDeliveryNote returnDeliveryNote = (((MFXTableView<ReturnDeliveryNote>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(returnDeliveryNote.getCode());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            Stage stage = (Stage) btnCancel.getScene().getWindow();
+                            BasicObjs passObj = new BasicObjs();
+                            passObj.setObj(returnDeliveryNote);
                             stage.setUserData(passObj);
                             stage.close();
                         }
@@ -666,14 +820,6 @@ public class InnerEntitySelectCONTR implements Initializable {
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.setUserData(null);
         stage.close();
-    }
-
-    private void forTransferOrder() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    private void forReturnDeliveryNote() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

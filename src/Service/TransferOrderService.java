@@ -5,7 +5,6 @@
 package Service;
 
 import DAO.TransferOrderDAO;
-import Entity.SalesOrder;
 import Entity.TransferOrder;
 import Structures.CodeStructure;
 import java.sql.SQLException;
@@ -51,7 +50,7 @@ public class TransferOrderService {
 
     }
 
-    public static List<TransferOrder<SalesOrder>> getAllTO() {
+    public static List<TransferOrder> getAllTO() {
         return TransferOrderDAO.getAllTO();
     }
 

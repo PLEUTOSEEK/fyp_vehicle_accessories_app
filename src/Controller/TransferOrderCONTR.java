@@ -287,7 +287,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                                     Item catchedItem = new Item();
                                     catchedItem = ((Item) receiveObj.getObj()).clone();
 
-                                    adjustItemsNotYetTransfer(catchedItem);
+                                    adjustItemsNotYetTransfer(catchedItem, item);
 
                                 }
                             } catch (IOException e) {
@@ -301,14 +301,14 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
         });
     }
 
-    private void adjustItemsNotYetTransfer(Item catchedItem) { // item passed in is consider as the item going to be transfer
+    private void adjustItemsNotYetTransfer(Item catchedItem, Item item) { // item passed in is consider as the item going to be transfer
 
-        if (catchedItem.getProduct() == null) {//remove
-            Item itemInSO = itemsNotYetTransfer.get(itemsNotYetTransfer.indexOf(catchedItem));
-            Item itemInTO = (Item) items.get(items.indexOf(catchedItem));
+        if (catchedItem == null) {//remove
+            Item itemInSO = itemsNotYetTransfer.get(itemsNotYetTransfer.indexOf(item));
+            Item itemInTO = (Item) items.get(items.indexOf(item));
 
             itemInSO.setQty(itemInSO.getQty() + itemInTO.getQty());
-            items.remove(catchedItem);
+            items.remove(item);
         } else if (!items.contains(catchedItem)) { //add
             items.add(catchedItem);
 
@@ -335,6 +335,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             itemInTO.setOriQty(0);
             itemInSO.setQty(itemInSO.getQty() - itemInTO.getQty() + itemInTO.getOriQty());
         }
+
         setupItemTable();
 
     }
@@ -746,21 +747,8 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             stage.setScene(new Scene(root));
 
             BasicObjs passObj = new BasicObjs();
-
             passObj.setCrud(BasicObjs.create);
-
-            Item item = new Item();
-            if (this.cmbRefType.getText().equals("RDN")) {
-                ReturnDeliveryNote rdn = new ReturnDeliveryNote();
-                rdn.setCode(this.txtRef.getText());
-                item.setRefDoc(rdn);
-            } else if (this.cmbRefType.getText().equals("SO")) {
-                SalesOrder so = new SalesOrder();
-                so.setCode(this.txtRef.getText());
-                item.setRefDoc(so);
-            }
-
-            passObj.setObj(item);
+            passObj.setObj(new TransferOrder());
             passObj.setObjs((List<Object>) (Object) itemsNotYetTransfer);
 
             stage.setUserData(passObj);
@@ -772,7 +760,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                 Item catchedItem = ((Item) receiveObj.getObj()).clone();
 
-                adjustItemsNotYetTransfer(catchedItem);
+                adjustItemsNotYetTransfer(catchedItem, null);
 
             }
         } catch (IOException e) {

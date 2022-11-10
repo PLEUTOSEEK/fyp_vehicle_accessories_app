@@ -285,7 +285,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                                     Item catchedItem = new Item();
                                     catchedItem = ((Item) receiveObj.getObj()).clone();
 
-                                    adjustItemsNotYetTransfer(catchedItem);
+                                    adjustItemsNotYetTransfer(catchedItem, item);
 
                                 }
                             } catch (IOException e) {
@@ -300,13 +300,13 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
 
     }
 
-    private void adjustItemsNotYetTransfer(Item catchedItem) {
+    private void adjustItemsNotYetTransfer(Item catchedItem, Item item) {
         if (catchedItem.getProduct() == null) {//remove
-            Item itemInSO = itemsNotYetBill.get(itemsNotYetBill.indexOf(catchedItem));
-            Item itemInTO = (Item) items.get(items.indexOf(catchedItem));
+            Item itemInSO = itemsNotYetBill.get(itemsNotYetBill.indexOf(item));
+            Item itemInTO = (Item) items.get(items.indexOf(item));
 
             itemInSO.setQty(itemInSO.getQty() + itemInTO.getQty());
-            items.remove(catchedItem);
+            items.remove(item);
         } else if (!items.contains(catchedItem)) { //add
             items.add(catchedItem);
 
@@ -758,10 +758,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
 
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
-
-            Item<SalesOrder> item = new Item();
-            item.setRefDoc((SalesOrder) this.passObj.getObj());
-            passObj.setObj(item);
+            passObj.setObj(new Invoice());
             passObj.setObjs((List<Object>) (Object) itemsNotYetBill);
 
             stage.setUserData(passObj);
@@ -773,7 +770,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                 BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                 Item catchedItem = ((Item) receiveObj.getObj()).clone();
 
-                adjustItemsNotYetTransfer(catchedItem);
+                adjustItemsNotYetTransfer(catchedItem, null);
 
             }
         } catch (IOException e) {
