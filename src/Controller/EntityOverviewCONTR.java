@@ -5,9 +5,17 @@
 package Controller;
 
 import Entity.Customer;
+import Entity.CustomerInquiry;
+import Entity.DeliveryOrder;
+import Entity.Invoice;
 import Entity.Quotation;
+import Entity.Receipt;
+import Entity.ReturnDeliveryNote;
+import Entity.SalesOrder;
 import Entity.Staff;
+import Entity.TransferOrder;
 import PassObjs.BasicObjs;
+import Service.CustomerInquiryService;
 import Service.CustomerService;
 import Service.QuotationService;
 import Service.StaffService;
@@ -73,79 +81,30 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private void setupTable() {
-        if (this.passObj.getObj() instanceof Quotation) {
-            forQuotation();
-        } else if (this.passObj.getObj() instanceof Customer) {
-            forCustomer();
-        } else if (this.passObj.getObj() instanceof Staff) {
+
+        Object entity = this.passObj.getObj();
+
+        if (entity instanceof Staff) {
             forStaff();
+        } else if (entity instanceof Customer) {
+            forCustomer();
+        } else if (entity instanceof CustomerInquiry) {
+            forCustomerInquiry();
+        } else if (entity instanceof Quotation) {
+            forQuotation();
+        } else if (entity instanceof SalesOrder) {
+            forSalesOrder();
+        } else if (entity instanceof TransferOrder) {
+            forTransferOrder();
+        } else if (entity instanceof DeliveryOrder) {
+            forDeliveryOrder();
+        } else if (entity instanceof ReturnDeliveryNote) {
+            forReturnDeliveryNote();
+        } else if (entity instanceof Invoice) {
+            forInvoice();
+        } else if (entity instanceof Receipt) {
+            forPayment();
         }
-    }
-
-    private void forCustomer() {
-        // Customer ID
-        MFXTableColumn<Customer> custIDCol = new MFXTableColumn<>("Customer ID", true, Comparator.comparing(cust -> cust.getCustID()));
-        // Name
-        MFXTableColumn<Customer> custNmCol = new MFXTableColumn<>("Name", true, Comparator.comparing(cust -> cust.getName()));
-        // Email
-        MFXTableColumn<Customer> emailCol = new MFXTableColumn<>("Email", true, Comparator.comparing(cust -> cust.getContact().getEmail()));
-        // Mobile Number
-        MFXTableColumn<Customer> mobNoCol = new MFXTableColumn<>("Mobile No.", true, Comparator.comparing(cust -> cust.getContact().getMobileNo()));
-        // Bill To Address
-        MFXTableColumn<Customer> billTo = new MFXTableColumn<>("Bill To Address", true, Comparator.comparing(cust -> cust.getBillToAddr().getLocationName()));
-
-        // Customer ID
-        custIDCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getCustID()));
-        // Name
-        custNmCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getName()));
-        // Email
-        emailCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getContact().getEmail()));
-        // Mobile Number
-        mobNoCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getContact().getMobileNo()));
-        // Bill To Address
-        billTo.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getBillToAddr().getLocationName()));
-
-        ((MFXTableView<Customer>) tblVw).getTableColumns().addAll(
-                custIDCol,
-                custNmCol,
-                emailCol,
-                mobNoCol,
-                billTo
-        );
-
-        ((MFXTableView<Customer>) tblVw).getFilters().addAll(
-                new StringFilter<>("Customer ID", cust -> cust.getCustID()),
-                new StringFilter<>("Name", cust -> cust.getName()),
-                new StringFilter<>("Email", cust -> cust.getContact().getEmail()),
-                new StringFilter<>("Mobile No.", cust -> cust.getContact().getMobileNo()),
-                new StringFilter<>("Bill To Address", cust -> cust.getBillToAddr().getLocationName())
-        );
-
-        List<Customer> customers = CustomerService.getAllCustomers();
-
-        ((MFXTableView<Customer>) tblVw).setItems(FXCollections.observableList(customers));
-
-        ((MFXTableView<Customer>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
-
-                if (((MFXTableView<Customer>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
-                    Customer customer = (((MFXTableView<Customer>) tblVw).getSelectionModel().getSelectedValues().get(0));
-                    rowSelected.add(customer.getCustID());
-
-                    if (rowSelected.size() == 2) {
-                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            System.out.println(customer.getCustID());
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(customer);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/Customer_UI.fxml", passObjs, BasicObjs.forward);
-                        }
-                        rowSelected.clear();
-                    }
-                }
-            }
-        });
     }
 
     private void forStaff() {
@@ -219,8 +178,148 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
             }
         });
 
-        System.out.println("done go through function");
+    }
 
+    private void forCustomer() {
+        // Customer ID
+        MFXTableColumn<Customer> custIDCol = new MFXTableColumn<>("Customer ID", true, Comparator.comparing(cust -> cust.getCustID()));
+        // Name
+        MFXTableColumn<Customer> custNmCol = new MFXTableColumn<>("Name", true, Comparator.comparing(cust -> cust.getName()));
+        // Email
+        MFXTableColumn<Customer> emailCol = new MFXTableColumn<>("Email", true, Comparator.comparing(cust -> cust.getContact().getEmail()));
+        // Mobile Number
+        MFXTableColumn<Customer> mobNoCol = new MFXTableColumn<>("Mobile No.", true, Comparator.comparing(cust -> cust.getContact().getMobileNo()));
+        // Bill To Address
+        MFXTableColumn<Customer> billTo = new MFXTableColumn<>("Bill To Address", true, Comparator.comparing(cust -> cust.getBillToAddr().getLocationName()));
+
+        // Customer ID
+        custIDCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getCustID()));
+        // Name
+        custNmCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getName()));
+        // Email
+        emailCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getContact().getEmail()));
+        // Mobile Number
+        mobNoCol.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getContact().getMobileNo()));
+        // Bill To Address
+        billTo.setRowCellFactory(customer -> new MFXTableRowCell<>(cust -> cust.getBillToAddr().getLocationName()));
+
+        ((MFXTableView<Customer>) tblVw).getTableColumns().addAll(
+                custIDCol,
+                custNmCol,
+                emailCol,
+                mobNoCol,
+                billTo
+        );
+
+        ((MFXTableView<Customer>) tblVw).getFilters().addAll(
+                new StringFilter<>("Customer ID", cust -> cust.getCustID()),
+                new StringFilter<>("Name", cust -> cust.getName()),
+                new StringFilter<>("Email", cust -> cust.getContact().getEmail()),
+                new StringFilter<>("Mobile No.", cust -> cust.getContact().getMobileNo()),
+                new StringFilter<>("Bill To Address", cust -> cust.getBillToAddr().getLocationName())
+        );
+
+        List<Customer> customers = CustomerService.getAllCustomers();
+
+        ((MFXTableView<Customer>) tblVw).setItems(FXCollections.observableList(customers));
+
+        ((MFXTableView<Customer>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<Customer>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    Customer customer = (((MFXTableView<Customer>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(customer.getCustID());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            System.out.println(customer.getCustID());
+                            BasicObjs passObjs = new BasicObjs();
+                            passObjs.setObj(customer);
+                            passObjs.setCrud(BasicObjs.read);
+                            switchScene("View/Customer_UI.fxml", passObjs, BasicObjs.forward);
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+    }
+
+    private void forCustomerInquiry() {
+        MFXTableColumn<CustomerInquiry> ciIDCol = new MFXTableColumn<>("CustomerInquiry ID", true, Comparator.comparing(customerInquiry -> customerInquiry.getCode()));
+        MFXTableColumn<CustomerInquiry> refCol = new MFXTableColumn<>("Reference", true, Comparator.comparing(customerInquiry -> customerInquiry.getReference()));
+        MFXTableColumn<CustomerInquiry> billToIDCol = new MFXTableColumn<>("Bill To customer ID", true, Comparator.comparing(customerInquiry -> customerInquiry.getBillToCust() == null ? "" : customerInquiry.getBillToCust().getCustID()));
+        MFXTableColumn<CustomerInquiry> billToNmCol = new MFXTableColumn<>("Bill To customer Name", true, Comparator.comparing(customerInquiry -> customerInquiry.getBillToCust() == null ? "" : customerInquiry.getBillToCust().getName()));
+        MFXTableColumn<CustomerInquiry> deliverToIDCol = new MFXTableColumn<>("Deliver To ID", true, Comparator.comparing(customerInquiry -> customerInquiry.getDeliverToCust() == null ? "" : customerInquiry.getDeliverToCust().getCollectAddrID()));
+        MFXTableColumn<CustomerInquiry> deliverToNmCol = new MFXTableColumn<>("Deliver To Collector Name", true, Comparator.comparing(customerInquiry -> customerInquiry.getDeliverToCust() == null ? "" : customerInquiry.getDeliverToCust().getPerson().getName()));
+        MFXTableColumn<CustomerInquiry> salesPersonIDCol = new MFXTableColumn<>("Sales Person ID", true, Comparator.comparing(customerInquiry -> customerInquiry.getSalesPerson() == null ? "" : customerInquiry.getSalesPerson().getStaffID()));
+        MFXTableColumn<CustomerInquiry> salesPersonNmCol = new MFXTableColumn<>("Sales Person Name", true, Comparator.comparing(customerInquiry -> customerInquiry.getSalesPerson() == null ? "" : customerInquiry.getSalesPerson().getName()));
+        MFXTableColumn<CustomerInquiry> nettDtCol = new MFXTableColumn<>("Nett", true, Comparator.comparing(customerInquiry -> customerInquiry.getNett()));
+        MFXTableColumn<CustomerInquiry> statusCol = new MFXTableColumn<>("Status", true, Comparator.comparing(customerInquiry -> customerInquiry.getStatus()));
+
+        ciIDCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getCode()));
+        refCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getReference()));
+        billToIDCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getBillToCust() == null ? "" : c.getBillToCust().getCustID()));
+        billToNmCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getBillToCust() == null ? "" : c.getBillToCust().getName()));
+        deliverToIDCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getDeliverToCust() == null ? "" : c.getDeliverToCust().getCollectAddrID()));
+        deliverToNmCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getDeliverToCust() == null ? "" : c.getDeliverToCust().getPerson().getName()));
+        salesPersonIDCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getSalesPerson() == null ? "" : c.getSalesPerson().getStaffID()));
+        salesPersonNmCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getSalesPerson() == null ? "" : c.getSalesPerson().getName()));
+        nettDtCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getNett()));
+        statusCol.setRowCellFactory(customerInquiry -> new MFXTableRowCell<>(c -> c.getStatus()));
+
+        ((MFXTableView<CustomerInquiry>) tblVw).getTableColumns().addAll(
+                ciIDCol,
+                refCol,
+                billToIDCol,
+                billToNmCol,
+                deliverToIDCol,
+                deliverToNmCol,
+                salesPersonIDCol,
+                salesPersonNmCol,
+                nettDtCol,
+                statusCol);
+
+        ((MFXTableView<CustomerInquiry>) tblVw).getFilters().addAll(
+                new StringFilter<>("Customer Inquiry ID", customerInquiry -> customerInquiry.getCode()),
+                new StringFilter<>("Reference", customerInquiry -> customerInquiry.getReference()),
+                new StringFilter<>("Bill To Customer ID", customerInquiry -> customerInquiry.getBillToCust() == null ? "" : customerInquiry.getBillToCust().getCustID()),
+                new StringFilter<>("Bill To Customer Name", customerInquiry -> customerInquiry.getBillToCust() == null ? "" : customerInquiry.getBillToCust().getName()),
+                new StringFilter<>("Deliver To ID", customerInquiry -> customerInquiry.getDeliverToCust() == null ? "" : customerInquiry.getDeliverToCust().getCollectAddrID()),
+                new StringFilter<>("Deliver To Collector Name", customerInquiry -> customerInquiry.getDeliverToCust() == null ? "" : customerInquiry.getDeliverToCust().getPerson().getName()),
+                new StringFilter<>("Sales Person ID", customerInquiry -> customerInquiry.getSalesPerson() == null ? "" : customerInquiry.getSalesPerson().getStaffID()),
+                new StringFilter<>("Sales Person Name", customerInquiry -> customerInquiry.getSalesPerson() == null ? "" : customerInquiry.getSalesPerson().getName()),
+                new DoubleFilter<>("Nett", customerInquiry -> customerInquiry.getNett().doubleValue()),
+                new StringFilter<>("Status", customerInquiry -> customerInquiry.getStatus())
+        );
+
+        //5
+        List<CustomerInquiry> customerInquiries = CustomerInquiryService.getAllCustomerInquiry();
+
+        //6
+        ((MFXTableView<CustomerInquiry>) tblVw).setItems(FXCollections.observableList(customerInquiries));
+        //7
+        ((MFXTableView<CustomerInquiry>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<CustomerInquiry>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    CustomerInquiry customerInquiry = (((MFXTableView<CustomerInquiry>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(customerInquiry.getCode());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            BasicObjs passObjs = new BasicObjs();
+                            passObjs.setObj(customerInquiry);
+                            passObjs.setCrud(BasicObjs.read);
+                            switchScene("View/CustomerInquiry_UI.fxml", passObjs, BasicObjs.forward);
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
     }
 
     private void forQuotation() {
@@ -316,7 +415,10 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            System.out.println(quotation.getCode());
+                            BasicObjs passObjs = new BasicObjs();
+                            passObjs.setObj(quotation);
+                            passObjs.setCrud(BasicObjs.read);
+                            switchScene("View/Staff_UI.fxml", passObjs, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -325,6 +427,30 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
         });
 
         System.out.println("done go through function");
+    }
+
+    private void forSalesOrder() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void forTransferOrder() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void forDeliveryOrder() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void forReturnDeliveryNote() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void forInvoice() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void forPayment() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @FXML
@@ -402,4 +528,5 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
     public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
 }

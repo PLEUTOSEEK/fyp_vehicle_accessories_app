@@ -59,8 +59,7 @@ import net.synedra.validatorfx.Validator;
  */
 public class CustomerCONTR implements Initializable, BasicCONTRFunc {
 
-    private BasicObjs passObj;
-    private Validator validator = new Validator();
+    //<editor-fold defaultstate="collapsed" desc="fields">
     @FXML
     private MFXCircleToggleNode btnBack;
     @FXML
@@ -143,18 +142,23 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
     private MFXComboBox<?> cmbStatus;
     @FXML
     private ImageView imgAvatarImg;
-
-    private Customer custInDraft;
     @FXML
     private MFXButton btnDiscard;
     @FXML
     private MFXButton btnUploadImage;
     @FXML
     private MFXButton btnAdd;
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="util declarations">
+    private BasicObjs passObj;
+    private Validator validator = new Validator();
     private List<CollectAddress> newCollectAddresses = new ArrayList<>(); // use to know which address been update, and perform update action for those modified address
     private List<CollectAddress> tempCollectAddresses = new ArrayList<>(); // use to know which address been update, and perform update action for those modified address
     private List<CollectAddress> collectAddresses = new ArrayList<>(); // use to know which address been update, and perform update action for those modified address
+    private Customer custInDraft;
+    //</editor-fold>
+
     @FXML
     private MFXTableView<?> tblVw;
 

@@ -60,11 +60,7 @@ import net.synedra.validatorfx.Validator;
  */
 public class StaffCONTR implements Initializable, BasicCONTRFunc {
 
-    private BasicObjs passObj;
-    private Validator validator = new Validator();
-    private Staff staffInDraft;
-    private final String newWindow = "New Window";
-
+    //<editor-fold defaultstate="collapsed" desc="fields">
     @FXML
     private MFXCircleToggleNode btnBack;
     @FXML
@@ -143,12 +139,18 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
     private ImageView imgAvatarImg;
     @FXML
     private MFXButton btnUploadImage;
-
-    StaffRules staffRules = new StaffRules();
     @FXML
     private MFXCircleToggleNode ctnWorkPlaceSelection;
     @FXML
     private MFXCircleToggleNode ctnReportToSelection;
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="util declarations">
+    StaffRules staffRules = new StaffRules();
+    private BasicObjs passObj;
+    private Validator validator = new Validator();
+    private Staff staffInDraft;
+//</editor-fold>
 
     /**
      * Initializes the controller class.
@@ -234,6 +236,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private void fieldFillIn() throws IOException {
+        clearAllFieldsValue();
+
         if (passObj.getObj() != null) {
             //fill all data column with object information
             Staff staff = (Staff) passObj.getObj();
@@ -304,9 +308,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
     @Override
     public void switchScene(String fxmlPath, BasicObjs passObj, String direction) {
         Stage stage = (Stage) btnBack.getScene().getWindow();
-        //stage.close();
+        stage.close();
         try {
-
             // Step 4
             Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(fxmlPath)); // Example: "View/HomePage_UI.fxml"
             // Step 5
@@ -557,7 +560,7 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public boolean clearAllFieldsValue() {
-        this.txtStaffID.clear();
+        //this.txtStaffID.clear();
         this.txtName.clear();
         this.cmbGender.clear();
         this.cmbMaritalStatus.clear();
@@ -691,7 +694,7 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
             } else if (this.passObj.getCrud().equals(BasicObjs.update) || this.passObj.getCrud().equals(BasicObjs.read)) {
 
                 AddressService.updateAddress(staffInDraft.getResidentialAddr());
-                AddressService.updateAddress(staffInDraft.getResidentialAddr());
+                AddressService.updateAddress(staffInDraft.getCorAddr());
 
                 StaffService.updateStaff(staffInDraft);
             }
