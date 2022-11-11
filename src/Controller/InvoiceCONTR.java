@@ -246,9 +246,25 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                 new DoubleFilter<>("Discount Amount", item -> item.getDiscAmt().doubleValue()),
                 new DoubleFilter<>("Incl. Amount", item -> item.getInclTaxAmt().doubleValue())
         );
+
         tempItems.addAll(items);
+
+        List<Item> tempTempItems = new ArrayList<>();
+        for (Item item : tempItems) {
+            Item clonedItem = item.clone();
+            clonedItem.setQty(0);
+            for (Item i : tempItems) {
+                if (i.getDlvrDate().equals(clonedItem.getDlvrDate())
+                        && i.getProduct().getProdID().equals(clonedItem.getProduct().getProdID())) {
+                    clonedItem.setQty(clonedItem.getQty() + i.getQty());
+                }
+            }
+            clonedItem.setOriQty(clonedItem.getQty());
+            tempTempItems.add(clonedItem);
+        }
+
         ((MFXTableView<Item>) tblVw).getItems().clear();
-        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
+        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempTempItems));
         tempItems.clear();
 
         ((MFXTableView<Item>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
@@ -285,7 +301,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                                     Item catchedItem = new Item();
                                     catchedItem = ((Item) receiveObj.getObj()).clone();
 
-                                    adjustItemsNotYetTransfer(catchedItem, item);
+                                    adjustItemsNotYetBill(catchedItem, item);
 
                                 }
                             } catch (IOException e) {
@@ -300,7 +316,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
 
     }
 
-    private void adjustItemsNotYetTransfer(Item catchedItem, Item item) {
+    private void adjustItemsNotYetBill(Item catchedItem, Item item) {
         if (catchedItem.getProduct() == null) {//remove
             Item itemInSO = itemsNotYetBill.get(itemsNotYetBill.indexOf(item));
             Item itemInTO = (Item) items.get(items.indexOf(item));
@@ -770,7 +786,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                 BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                 Item catchedItem = ((Item) receiveObj.getObj()).clone();
 
-                adjustItemsNotYetTransfer(catchedItem, null);
+                adjustItemsNotYetBill(catchedItem, null);
 
             }
         } catch (IOException e) {
@@ -802,6 +818,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
 
             ItemService.updateItemsByDoc(invoiceInDraft.getItems(), invoiceInDraft.getCode());
 
+            updateSOStatus();
         }
     }
 

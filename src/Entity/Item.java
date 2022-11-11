@@ -115,7 +115,7 @@ public class Item<E> implements Cloneable {
 
     public BigDecimal getInclTaxAmt() {
         AccountingRules accRules = new AccountingRules();
-        inclTaxAmt = BigDecimal.valueOf((exclTaxAmt.doubleValue() - discAmt.doubleValue()) * (1 + (accRules.getTaxRate() / 100.0)));
+        inclTaxAmt = BigDecimal.valueOf((getExclTaxAmt().doubleValue() - getDiscAmt().doubleValue()) * (1 + (accRules.getTaxRate() / 100.0)));
         return inclTaxAmt;
     }
 

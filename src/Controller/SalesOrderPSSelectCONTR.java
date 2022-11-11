@@ -7,6 +7,7 @@ package Controller;
 import Entity.Item;
 import Entity.Product;
 import PassObjs.BasicObjs;
+import Service.InventoryService;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
@@ -62,9 +63,7 @@ public class SalesOrderPSSelectCONTR implements Initializable {
     @FXML
     private MFXButton btnRemove;
     @FXML
-    private MFXCircleToggleNode openProductSelection;
-    //</editor-fold>
-
+    private MFXCircleToggleNode ctnProductSelection;
     //<editor-fold defaultstate="collapsed" desc="util declarations">
     private BasicObjs passObj;
 
@@ -86,10 +85,17 @@ public class SalesOrderPSSelectCONTR implements Initializable {
                 inputValidation();
                 receiveData();
                 fieldFillIn();
+
+                if (passObj.getCrud().equals(BasicObjs.create)) {
+                    btnRemove.setVisible(false);
+                }
+//                if (passObj.getCrud().equals(BasicObjs.read)) {
+//                    ctnProductSelection.setVisible(false);
+//                }
+
             }
         }
         );
-
     }
 
     private void intializeComboSelections() {
@@ -205,12 +211,51 @@ public class SalesOrderPSSelectCONTR implements Initializable {
                 return;
             }
 
+            Item item = prepareItemToObj();
+
+            if (isDemandOverReadyStock(item) == true) {
+                return;
+            }
+
             Stage stage = (Stage) btnCancel.getScene().getWindow();
             BasicObjs passObj = new BasicObjs();
-            passObj.setObj(prepareItemToObj());
+            passObj.setObj(item);
             stage.setUserData(passObj);
             stage.close();
         }
+
+    }
+
+    private boolean isDemandOverReadyStock(Item item) {
+        if (this.passObj.getObjs() != null) {
+            List<Item> items = (List<Item>) (Item) this.passObj.getObjs();
+
+            Integer ttlDemandQty = 0;
+
+            ttlDemandQty += item.getQty();
+
+            for (Item i : items) {
+                if (i.getProduct().getProdID().equals(item.getProduct().getProdID())
+                        && !i.equals(item)) {
+                    ttlDemandQty += i.getQty();
+                }
+            }
+
+            Integer ttlReadyQty = InventoryService.getInventoryReadyQtyByProdID(item.getProduct().getProdID());
+
+            ttlDemandQty -= InventoryService.getOriginalReservedQty(item.getProduct().getProdID());
+
+            if (ttlDemandQty > ttlReadyQty) {
+                alertDialog(Alert.AlertType.WARNING,
+                        "Warning",
+                        "Insufficient Stock Alert", "Ready Qty = " + ttlReadyQty + "\nDemand Qty = " + ttlDemandQty + "\nKindly make Demand Qty below or equal Ready Qty.");
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return false;
 
     }
 

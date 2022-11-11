@@ -11,11 +11,13 @@ import BizRulesConfiguration.WarehouseRules;
 import Entity.CollectAddress;
 import Entity.Customer;
 import Entity.CustomerInquiry;
+import Entity.Inventory;
 import Entity.Item;
 import Entity.Quotation;
 import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.CustomerInquiryService;
+import Service.InventoryService;
 import Service.ItemService;
 import Service.QuotationService;
 import Utils.DateFilter;
@@ -154,6 +156,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
     SalesRules salesRules = new SalesRules();
 
+    private List<Item> oriItems = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
+
     private List<Item> items = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
 
     private List<Item> tempItems = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
@@ -193,11 +197,16 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                     } else if (passObj.getObj() instanceof CustomerInquiry) {
                         items.addAll(ItemService.getItemsByCIID(((CustomerInquiry) passObj.getObj()).getCode()));
                     }
+
+                    for (Item item : items) {
+                        oriItems.add(item.clone());
+                    }
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read)) {
                     isViewMode(true);
                 }
+
             }
         });
     }
@@ -269,8 +278,23 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         );
 
         tempItems.addAll(items);
+
+        List<Item> tempTempItems = new ArrayList<>();
+        for (Item item : tempItems) {
+            Item clonedItem = item.clone();
+            clonedItem.setQty(0);
+            for (Item i : tempItems) {
+                if (i.getDlvrDate().equals(clonedItem.getDlvrDate())
+                        && i.getProduct().getProdID().equals(clonedItem.getProduct().getProdID())) {
+                    clonedItem.setQty(clonedItem.getQty() + i.getQty());
+                }
+            }
+            clonedItem.setOriQty(clonedItem.getQty());
+            tempTempItems.add(clonedItem);
+        }
+
         ((MFXTableView<Item>) tblVw).getItems().clear();
-        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
+        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempTempItems));
         tempItems.clear();
 
         ((MFXTableView<Item>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
@@ -295,6 +319,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
                                 BasicObjs passObj = new BasicObjs();
                                 passObj.setObj(item);
+                                passObj.setObjs((List<Object>) (Object) items);
                                 passObj.setCrud(BasicObjs.read);
 
                                 stage.setUserData(passObj);
@@ -310,6 +335,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                                     if (catchedItem.getProduct() == null) { // remove
                                         items.remove(catchedItem);
                                     } else if (!items.contains(catchedItem)) {
+                                        items.remove(item);
                                         items.add(catchedItem);
                                     } else {
                                         items.set(items.indexOf(item), catchedItem);
@@ -922,6 +948,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
             passObj.setObj(new Item());
+            passObj.setObjs((List<Object>) (Object) items);
             stage.setUserData(passObj);
             stage.showAndWait();
 
@@ -969,15 +996,56 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                 QuotationService.updateQuotation(quotInDraft);
             }
 
+            quotInDraft.setItems(reserveStock());
+
             for (Item i : quotInDraft.getItems()) {
                 i.setOriQty(i.getQty());
             }
 
             ItemService.updateItemsByDoc(quotInDraft.getItems(), quotInDraft.getCode());
 
+            for (Item item : quotInDraft.getItems()) {
+                InventoryService.reserveQtyForSalesDoc(item);
+            }
+
             updateRefDoc();
 
         }
+    }
+
+    private List<Item> reserveStock() {
+        if (oriItems.size() != 0) {
+            for (Item item : oriItems) {
+                InventoryService.freeUpReservedQtyByInventoryID(item.getInventory(), item.getQty());
+            }
+        }
+
+        List<Item> finalItems = new ArrayList<>();
+
+        for (Item item : items) {
+            List<Inventory> inventories = new ArrayList<>();
+            inventories = InventoryService.getReadyInventoriesByProdID(item.getProduct().getProdID(), item.getQty());
+
+            int oriQty = item.getQty();
+
+            for (Inventory inventory : inventories) {
+                Item cloneItem = item.clone();
+                oriQty = Math.abs(inventory.getReadyQty() - oriQty);
+
+                if (oriQty > inventory.getReadyQty()) {
+                    cloneItem.setQty(inventory.getReadyQty());
+                } else {
+                    cloneItem.setQty(oriQty);
+                }
+
+                cloneItem.setInventory(inventory);
+
+                finalItems.add(cloneItem);
+            }
+        }
+
+        return finalItems;
+
     }
 
     private void updateRefDoc() {

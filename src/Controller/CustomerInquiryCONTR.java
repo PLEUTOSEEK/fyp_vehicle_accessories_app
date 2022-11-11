@@ -285,6 +285,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                                     if (catchedItem.getProduct() == null) { // remove
                                         items.remove(catchedItem);
                                     } else if (!items.contains(catchedItem)) {
+                                        items.remove(item);
                                         items.add(catchedItem);
                                     } else {
                                         items.set(items.indexOf(item), catchedItem);

@@ -52,4 +52,12 @@ public class ItemService {
         return ItemDAO.updateItemsByDoc(newItems, code);
     }
 
+    public static Collection<? extends Item> getItemByRcptID(String code) {
+        return ItemDAO.getItemsByCode(code);
+    }
+
+    public static Collection<? extends Item> getItemNotYetPaidByInvoice(String code) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

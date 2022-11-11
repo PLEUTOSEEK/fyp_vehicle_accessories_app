@@ -33,7 +33,7 @@
         </rowConstraints>
          <children>
             <MFXTextField fx:id="txtProdID" alignment="CENTER_RIGHT" floatingText="Product ID" prefHeight="50.0" prefWidth="135.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <MFXCircleToggleNode fx:id="openProductSelection" graphicTextGap="2.0" onMousePressed="#openProductSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <MFXCircleToggleNode fx:id="ctnProductSelection" graphicTextGap="2.0" onMousePressed="#openProductSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <padding>
                   <Insets bottom="1.0" />
                </padding>

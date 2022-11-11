@@ -275,9 +275,25 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                 new DoubleFilter<>("Incl. Amount", item -> item.getInclTaxAmt().doubleValue()),
                 new DateFilter<>("Delivery Date", item -> item.getDlvrDate())
         );
+
         tempItems.addAll(items);
+
+        List<Item> tempTempItems = new ArrayList<>();
+        for (Item item : tempItems) {
+            Item clonedItem = item.clone();
+            clonedItem.setQty(0);
+            for (Item i : tempItems) {
+                if (i.getDlvrDate().equals(clonedItem.getDlvrDate())
+                        && i.getProduct().getProdID().equals(clonedItem.getProduct().getProdID())) {
+                    clonedItem.setQty(clonedItem.getQty() + i.getQty());
+                }
+            }
+            clonedItem.setOriQty(clonedItem.getQty());
+            tempTempItems.add(clonedItem);
+        }
+
         ((MFXTableView<Item>) tblVw).getItems().clear();
-        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
+        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempTempItems));
         tempItems.clear();
 
         ((MFXTableView<Item>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
@@ -313,16 +329,16 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                                     Item catchedItem = new Item();
                                     catchedItem = ((Item) receiveObj.getObj()).clone();
 
-                                    if (catchedItem == null) { // remove
-                                        items.remove(item);
+                                    if (catchedItem.getProduct() == null) { // remove
+                                        items.remove(catchedItem);
                                     } else if (!items.contains(catchedItem)) {
+                                        items.remove(item);
                                         items.add(catchedItem);
                                     } else {
                                         items.set(items.indexOf(item), catchedItem);
                                     }
 
                                     setupItemTable();
-
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
