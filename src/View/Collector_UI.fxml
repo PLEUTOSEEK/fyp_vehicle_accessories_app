@@ -477,7 +477,8 @@
       </MFXScrollPane>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c1c1ec" height="53.0" layoutX="3.0" layoutY="728.0" stroke="#cdc7d9" strokeType="INSIDE" width="1515.0" />
       <MFXButton fx:id="btnSave" buttonType="RAISED" layoutX="1430.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" onMousePressed="#saveCollector" styleClass="outline-button" text="Save" />
-      <MFXButton id="custom" fx:id="btnDiscard" layoutX="1331.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" onMousePressed="#discardCurrentData" text="Discard" />
+      <MFXButton id="custom" fx:id="btnDiscard" layoutX="1236.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" onMousePressed="#discardCurrentData" text="Discard" />
+      <MFXButton id="custom" fx:id="btnRemove" layoutX="1334.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" onMousePressed="#removeCurrentCollector" text="Remove" />
    </children>
    <stylesheets>
       <URL value="@../Material/css/Buttons.css" />

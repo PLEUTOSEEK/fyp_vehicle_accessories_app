@@ -333,7 +333,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                                     catchedItem = ((Item) receiveObj.getObj()).clone();
 
                                     if (catchedItem.getProduct() == null) { // remove
-                                        items.remove(catchedItem);
+                                        items.remove(item);
                                     } else if (!items.contains(catchedItem)) {
                                         items.remove(item);
                                         items.add(catchedItem);

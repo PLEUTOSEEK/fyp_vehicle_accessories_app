@@ -55,7 +55,6 @@ public class LoginCONTR implements Initializable {
     private void login(MouseEvent event) {
 
         if (event.isPrimaryButtonDown() == true) {
-            System.out.println("Left Clicked");
 
             if (validator.containsErrors()) {
                 alertDialog(AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
@@ -136,5 +135,10 @@ public class LoginCONTR implements Initializable {
         }
     }
 //</editor-fold>
+
+    @FXML
+    private void goToForgotPassword(MouseEvent event) {
+        alertDialog(AlertType.INFORMATION, "Information", "Contact System Administrator", "Kindly inform administrator for new password login");
+    }
 
 }

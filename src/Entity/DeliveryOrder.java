@@ -18,6 +18,7 @@ public class DeliveryOrder extends Document {
     private Place deliverFr; // company = Thir Shen
     private Date deliveryDate;
     private SalesOrder so; // RDN / TO
+    private String reference;
     private List<PackingSlip> packingSlips;
     private Staff issuedBy;
     private Staff releasedAVerifiedBy;
@@ -101,6 +102,14 @@ public class DeliveryOrder extends Document {
 
     public void setItemReceivedBy(CollectAddress itemReceivedBy) {
         this.itemReceivedBy = itemReceivedBy;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
 }

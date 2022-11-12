@@ -7,6 +7,7 @@ package Controller;
 import Entity.CollectAddress;
 import Entity.Customer;
 import Entity.CustomerInquiry;
+import Entity.Invoice;
 import Entity.Place;
 import Entity.Quotation;
 import Entity.ReturnDeliveryNote;
@@ -17,12 +18,14 @@ import PassObjs.BasicObjs;
 import Service.CollectAddressService;
 import Service.CustomerInquiryService;
 import Service.CustomerService;
+import Service.InvoiceService;
 import Service.PlaceService;
 import Service.QuotationService;
 import Service.RDNService;
 import Service.SalesOrderService;
 import Service.StaffService;
 import Service.TransferOrderService;
+import Utils.DateFilter;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
@@ -103,6 +106,8 @@ public class InnerEntitySelectCONTR implements Initializable {
             forTransferOrder();
         } else if (entity instanceof ReturnDeliveryNote) {
             forReturnDeliveryNote();
+        } else if (entity instanceof Invoice) {
+            forInvoice();
         }
     }
 
@@ -802,6 +807,80 @@ public class InnerEntitySelectCONTR implements Initializable {
                 }
             }
         });
+    }
+
+    private void forInvoice() {
+        // INV_ID
+        // SO ID
+        // Total Payable
+        // Status
+        //Created Date
+
+        // INV_ID
+        MFXTableColumn<Invoice> invIDCol = new MFXTableColumn<>("Invoice ID", true, Comparator.comparing(invoice -> invoice.getCode()));
+        // SO ID
+        MFXTableColumn<Invoice> soIDCol = new MFXTableColumn<>("Sales Order ID", true, Comparator.comparing(invoice -> invoice.getSO() == null ? "" : invoice.getSO().getCode()));
+        // Total Payable
+        MFXTableColumn<Invoice> ttlPybleCol = new MFXTableColumn<>("Total Payable", true, Comparator.comparing(invoice -> invoice.getTtlPayable()));
+        // Status
+        MFXTableColumn<Invoice> statusCol = new MFXTableColumn<>("Status", true, Comparator.comparing(invoice -> invoice.getStatus()));
+        //Created Date
+        MFXTableColumn<Invoice> createdDtCol = new MFXTableColumn<>("Created Date", true, Comparator.comparing(invoice -> invoice.getCreatedDate()));
+
+        // INV_ID
+        invIDCol.setRowCellFactory(invoice -> new MFXTableRowCell<>(inv -> inv.getCode()));
+        // SO ID
+        soIDCol.setRowCellFactory(invoice -> new MFXTableRowCell<>(inv -> inv.getSO() == null ? "" : inv.getSO().getCode()));
+        // Total Payable
+        ttlPybleCol.setRowCellFactory(invoice -> new MFXTableRowCell<>(inv -> inv.getTtlPayable()));
+        // Status
+        statusCol.setRowCellFactory(invoice -> new MFXTableRowCell<>(inv -> inv.getStatus()));
+        //Created Date
+        createdDtCol.setRowCellFactory(invoice -> new MFXTableRowCell<>(inv -> inv.getCreatedDate()));
+
+        ((MFXTableView<Invoice>) tblVw).getTableColumns().addAll(
+                invIDCol,
+                soIDCol,
+                ttlPybleCol,
+                statusCol,
+                createdDtCol
+        );
+
+        ((MFXTableView<Invoice>) tblVw).getFilters().addAll(
+                new StringFilter<>("Invoice ID", invoice -> invoice.getCode()),
+                new StringFilter<>("Sales Order ID", invoice -> invoice.getSO() == null ? "" : invoice.getSO().getCode()),
+                new DoubleFilter<>("Total Payable", invoice -> invoice.getTtlPayable().doubleValue()),
+                new StringFilter<>("Status", invoice -> invoice.getStatus()),
+                new DateFilter<>("Created Date", invoice -> invoice.getCreatedDate())
+        );
+
+        List<Invoice> invoices = InvoiceService.getAllInvoice();
+
+        //6
+        ((MFXTableView<Invoice>) tblVw).setItems(FXCollections.observableList(invoices));
+
+        ((MFXTableView<Invoice>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<Invoice>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    Invoice invoice = (((MFXTableView<Invoice>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(invoice.getCode());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            Stage stage = (Stage) btnCancel.getScene().getWindow();
+                            BasicObjs passObj = new BasicObjs();
+                            passObj.setObj(invoice);
+                            stage.setUserData(passObj);
+                            stage.close();
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public void receiveData() {

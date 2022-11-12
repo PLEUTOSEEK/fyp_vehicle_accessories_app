@@ -134,6 +134,7 @@
                                           <FontAwesomeIconView glyphName="LIST" />
                                        </graphic>
                                     </MFXCircleToggleNode>
+                                    <MFXTextField fx:id="txtRef" alignment="CENTER_RIGHT" floatingText="Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                             </children>
                                         </GridPane>
                                     </children>

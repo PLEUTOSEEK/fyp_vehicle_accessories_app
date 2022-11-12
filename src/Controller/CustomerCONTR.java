@@ -286,7 +286,10 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                                     CollectAddress catchedCollectAddress = new CollectAddress();
                                     catchedCollectAddress = (CollectAddress) receiveObj.getObj();
 
-                                    if (!collectAddresses.contains(catchedCollectAddress)) {
+                                    if (catchedCollectAddress == null) { // remove
+                                        collectAddresses.remove(collectAddress);
+                                    } else if (!collectAddresses.contains(catchedCollectAddress)) {
+                                        collectAddresses.remove(collectAddress);
                                         collectAddresses.add(catchedCollectAddress);
                                     } else {
                                         collectAddresses.set(collectAddresses.indexOf(collectAddress), catchedCollectAddress);

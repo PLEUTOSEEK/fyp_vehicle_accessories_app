@@ -5,6 +5,7 @@
 package Service;
 
 import Entity.Receipt;
+import java.util.List;
 
 /**
  *
@@ -17,6 +18,10 @@ public class ReceiptService {
     }
 
     public static String saveNewReceipt(Receipt receiptInDraft) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public static List<Receipt> getAllReceipt() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

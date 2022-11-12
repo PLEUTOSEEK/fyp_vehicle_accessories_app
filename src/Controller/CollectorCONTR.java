@@ -121,6 +121,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
     private MFXComboBox<?> cmbCollectAddrCountry;
     private Validator validator = new Validator();
     //</editor-fold>
+    @FXML
+    private MFXButton btnRemove;
 
     /**
      * Initializes the controller class.
@@ -429,7 +431,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public boolean clearAllFieldsValue() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -554,6 +556,15 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
         collAddr.getPerson().setReligion(this.cmbReligion.getText());
 
         return collAddr;
+    }
+
+    @FXML
+    private void removeCurrentCollector(MouseEvent event) {
+        Stage stage = (Stage) btnDiscard.getScene().getWindow();
+        BasicObjs passObj = new BasicObjs();
+        passObj.setObj(null);
+        stage.setUserData(passObj);
+        stage.close();
     }
 
 }

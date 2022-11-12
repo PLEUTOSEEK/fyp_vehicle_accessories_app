@@ -108,7 +108,7 @@ public class DeliveryOrderDAO {
         }
     }
 
-    public static boolean saveNewDeliveryOrder(DeliveryOrder deliveryOrder) {
+    public static String saveNewDeliveryOrder(DeliveryOrder deliveryOrder) {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -123,9 +123,9 @@ public class DeliveryOrderDAO {
             ps = conn.prepareStatement(query);
             // bind parameter
             ps.execute();
-            return true;
+            return deliveryOrder.getCode();
         } catch (Exception e) {
-            return false;
+            return null;
         } finally {
             try {
                 ps.close();

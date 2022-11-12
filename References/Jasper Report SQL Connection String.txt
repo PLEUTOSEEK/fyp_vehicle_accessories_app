@@ -1,0 +1,9 @@
+LOCALHOST
+jdbc:sqlserver://localhost:1400;databaseName=vehicle-accessories-2022-8-9-8-57;encrypt=true;trustServerCertificate=true
+teezhuoxuan
+mapletree010203
+
+Cloud
+jdbc:sqlserver://vehicle-accessories--server.database.windows.net:1433;database=vehicle-accessories;user=TeeZhuoXuan@vehicle-accessories--server;password=oS6*3y57SnP2lv7tkBehY5Y6YbmR7n;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+TeeZhuoXuan
+oS6*3y57SnP2lv7tkBehY5Y6YbmR7n

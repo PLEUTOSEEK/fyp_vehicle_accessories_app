@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6a77c2c4-58ad-4db3-a2a7-333d6290437d">
+    <property name="ireport.zoom" value="1.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <queryString language="SQL">
+		<![CDATA[SELECT * FROM
+Customerinquiry]]>
+    </queryString>
+    <field name="CI_ID" class="java.lang.String"/>
+    <field name="Reference_Type" class="java.lang.String"/>
+    <field name="Reference" class="java.lang.String"/>
+    <field name="Bill_To_Cust" class="java.lang.String"/>
+    <field name="Deliver_To" class="java.lang.String"/>
+    <field name="Sales_Person" class="java.lang.String"/>
+    <field name="Currency_Code" class="java.lang.String"/>
+    <field name="Required_Delivery_Date" class="java.sql.Date"/>
+    <field name="Payment_Term" class="java.lang.String"/>
+    <field name="Shipment_Term" class="java.lang.String"/>
+    <field name="Gross" class="java.math.BigDecimal"/>
+    <field name="Discount" class="java.math.BigDecimal"/>
+    <field name="Sub_Total" class="java.math.BigDecimal"/>
+    <field name="Nett" class="java.math.BigDecimal"/>
+    <field name="Issued_By" class="java.lang.String"/>
+    <field name="Status" class="java.lang.String"/>
+    <field name="Created_Date" class="java.sql.Timestamp"/>
+    <field name="Actual_Created_Date" class="java.sql.Timestamp"/>
+    <field name="Signed_Doc_Pic" class="java.lang.String"/>
+    <field name="Modified_Date_Time" class="java.sql.Timestamp"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="79" splitType="Stretch"/>
+    </title>
+    <pageHeader>
+        <band height="35" splitType="Stretch"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="61" splitType="Stretch">
+            <staticText>
+                <reportElement x="51" y="2" width="100" height="20" uuid="656520f0-f584-4a42-ba2e-652041f2dc82"/>
+                <text><![CDATA[CI_ID]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="125" splitType="Stretch">
+            <textField>
+                <reportElement x="51" y="35" width="100" height="20" uuid="a065ec67-fef1-4b63-9a38-bfdd1a23dfbe"/>
+                <textFieldExpression><![CDATA[$F{CI_ID}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <columnFooter>
+        <band height="50"/>
+    </columnFooter>
+    <pageFooter>
+        <band height="54" splitType="Stretch"/>
+    </pageFooter>
+    <summary>
+        <band height="42" splitType="Stretch"/>
+    </summary>
+</jasperReport>

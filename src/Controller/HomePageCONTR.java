@@ -101,6 +101,8 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private MenuItem mniAccRpt;
 
+    public static Staff logInStaff;
+
     /**
      * Initializes the controller class.
      *
@@ -114,6 +116,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
             @Override
             public void run() {
                 receiveData();
+                logInStaff = (Staff) passObj.getObj();
             }
         });
     }
@@ -331,7 +334,13 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerTxt);
+        alert.setContentText(contentTxt);
+
+        alert.showAndWait();
+        return alert.getResult();
     }
 
 }

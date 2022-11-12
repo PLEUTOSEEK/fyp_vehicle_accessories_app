@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.List;
 
 /**
  *
@@ -63,6 +64,10 @@ public class InvoiceService {
 
     public static String updateInvoiceStatus(Invoice invoice) {
         return InvoiceDAO.updateInvoiceStatus(invoice);
+    }
+
+    public static List<Invoice> getAllInvoice() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

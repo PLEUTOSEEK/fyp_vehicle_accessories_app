@@ -135,6 +135,8 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
     private DeliveryOrder doInDraft;
     //</editor-fold>
+    @FXML
+    private MFXTextField txtRef;
 
     /**
      * Initializes the controller class.
@@ -337,6 +339,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
         this.dtDlvrDt.setDisable(disable);
         this.dtRefDate.setDisable(disable);
         this.txtSORef.setDisable(disable);
+        this.txtRef.setDisable(disable);
         this.cmbStatus.setDisable(disable);
 
         this.ctnDeliverFromSelection.setDisable(disable);
@@ -450,6 +453,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
         this.dtDlvrDt.clear();
         this.dtRefDate.clear();
         this.txtSORef.clear();
+        this.txtRef.clear();
         this.cmbStatus.clear();
         this.txtIssuedBy.clear();
         this.txtReleasedAVerifiedBy.clear();
@@ -489,6 +493,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
         soRef.setCode(this.txtSORef.getText());
         d.setSo(soRef);
 
+        d.setReference(this.txtRef.getText());
         d.setStatus(this.cmbStatus.getText());
 
         Staff issuedBy = new Staff();
