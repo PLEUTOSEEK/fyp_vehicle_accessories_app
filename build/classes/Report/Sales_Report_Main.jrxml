@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4445ac83-e064-4287-bb2c-f86296ad75d5">
+    <property name="ireport.zoom" value="1.9487171000000048"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="59"/>
+    <parameter name="param_Main_Staff_ID" class="java.lang.String"/>
+    <parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA["C:\\Users\\Tee Zhuo Xuan\\OneDrive - Tunku Abdul Rahman University College\\Desktop\\fyp_vehicle_accessories_app\\src\\Report\\"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="Start_Date_Range" class="java.sql.Timestamp"/>
+    <parameter name="End_Date_Range" class="java.sql.Timestamp"/>
+    <queryString>
+		<![CDATA[]]>
+    </queryString>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="61" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="4" width="555" height="52" uuid="98e3d05f-b7f4-484c-b72c-5bc1faa7bad2"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="40" isBold="true"/>
+                </textElement>
+                <text><![CDATA[SALES REPORT]]></text>
+            </staticText>
+            <image>
+                <reportElement x="460" y="3" width="91" height="55" uuid="cb5e9e92-7cb7-429d-874d-c34229e7beff"/>
+                <imageExpression><![CDATA["C:\\Users\\Tee Zhuo Xuan\\OneDrive - Tunku Abdul Rahman University College\\Desktop\\fyp_vehicle_accessories_app\\Images\\311588031_574271901246093_1596750214979266858_n.jpg"]]></imageExpression>
+            </image>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="545" splitType="Stretch">
+            <subreport>
+                <reportElement x="0" y="145" width="275" height="100" uuid="d1b745a2-b84f-4d50-8d4f-b398b464ee9d"/>
+                <subreportParameter name="param_Sub_Staff_ID">
+                    <subreportParameterExpression><![CDATA[$P{param_Main_Staff_ID}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="Start_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{Start_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="End_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{End_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Sales_Report_Sub_Ttl_Cases.jasper"]]></subreportExpression>
+            </subreport>
+            <subreport>
+                <reportElement x="0" y="245" width="275" height="100" uuid="00d099fd-e705-4bdb-951a-dee1d21378b1"/>
+                <subreportParameter name="param_Sub_Staff_ID">
+                    <subreportParameterExpression><![CDATA[$P{param_Main_Staff_ID}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="Start_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{Start_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="End_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{End_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Sales_Report_Sub_Ttl_New_Cases.jasper"]]></subreportExpression>
+            </subreport>
+            <subreport>
+                <reportElement x="275" y="245" width="276" height="100" uuid="7ff93f88-2784-4c42-8374-92f0ab737e11"/>
+                <subreportParameter name="param_Sub_Staff_ID">
+                    <subreportParameterExpression><![CDATA[$P{param_Main_Staff_ID}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="Start_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{Start_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="End_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{End_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Sales_Report_Sub_Ttl_On_Hold_Cases.jasper"]]></subreportExpression>
+            </subreport>
+            <subreport>
+                <reportElement x="0" y="345" width="275" height="100" uuid="c5a966f5-fda6-424c-acb0-a812e4686e4b"/>
+                <subreportParameter name="param_Sub_Staff_ID">
+                    <subreportParameterExpression><![CDATA[$P{param_Main_Staff_ID}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="Start_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{Start_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="End_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{End_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Sales_Report_Sub_Ttl_In_Progress_Cases.jasper"]]></subreportExpression>
+            </subreport>
+            <subreport>
+                <reportElement x="275" y="345" width="276" height="100" uuid="758bb948-7c11-4703-b9d3-120c1cd7f86c"/>
+                <subreportParameter name="param_Sub_Staff_ID">
+                    <subreportParameterExpression><![CDATA[$P{param_Main_Staff_ID}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="Start_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{Start_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="End_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{End_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Sales_Report_Sub_Ttl_Partially_Completed_Cases.jasper"]]></subreportExpression>
+            </subreport>
+            <subreport>
+                <reportElement x="0" y="445" width="275" height="100" uuid="5167774a-65f3-4dfa-a587-0c346dc9b121"/>
+                <subreportParameter name="param_Sub_Staff_ID">
+                    <subreportParameterExpression><![CDATA[$P{param_Main_Staff_ID}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="Start_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{Start_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="End_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{End_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Sales_Report_Sub_Ttl_Completed_Cases.jasper"]]></subreportExpression>
+            </subreport>
+            <timeSeriesChart>
+                <chart>
+                    <reportElement x="0" y="0" width="555" height="145" uuid="f6d31683-de3c-4121-a3a7-304209095c46"/>
+                    <chartTitle/>
+                    <chartSubtitle/>
+                    <chartLegend/>
+                </chart>
+                <timeSeriesDataset/>
+                <timeSeriesPlot>
+                    <plot/>
+                    <timeAxisFormat>
+                        <axisFormat/>
+                    </timeAxisFormat>
+                    <valueAxisFormat>
+                        <axisFormat/>
+                    </valueAxisFormat>
+                </timeSeriesPlot>
+            </timeSeriesChart>
+        </band>
+    </pageHeader>
+    <detail>
+        <band height="125" splitType="Stretch">
+            <subreport>
+                <reportElement x="0" y="0" width="555" height="125" uuid="6ff66803-5d55-49cc-8e87-461c56727a6a"/>
+                <subreportParameter name="param_Sub_Staff_ID">
+                    <subreportParameterExpression><![CDATA[$P{param_Main_Staff_ID}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="Start_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{Start_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="End_Date_Range">
+                    <subreportParameterExpression><![CDATA[$P{End_Date_Range}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Sales_Report_Sub_Body.jasper"]]></subreportExpression>
+            </subreport>
+            <break>
+                <reportElement x="0" y="0" width="100" height="1" uuid="e48cdce9-4b64-4af7-be5a-6212a209e688"/>
+            </break>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="132" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="88" width="275" height="11" uuid="34625bf3-92c4-4178-94f9-7ddb112df5dc"/>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Thir Shen Sdn. Bhd.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="121" width="275" height="11" uuid="a462a628-1444-4938-b750-dccdea272fdf"/>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Tel: 016-3717733    Fax: (603) 7965 9999    Email: ThirShen_Gan@gmail.com]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="99" width="275" height="11" uuid="91ad437e-2bc4-44f6-a1dd-7742945c057d"/>
+                <textElement>
+                    <font fontName="Calibri" size="7" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Co. Reg. No.: 001515510-U]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="110" width="275" height="11" uuid="a721157c-ea87-4d87-9a5e-d65efa4cae5c"/>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Lot.8538, Jalan Klang Banting, 42700 Banting, Selangor]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="415" y="10" width="140" height="20" uuid="c9755bfd-2225-43a9-a8b4-9be0e86c42e1"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="8" isBold="false"/>
+                    <paragraph rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Released & Verified By]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="415" y="64" width="140" height="11" uuid="5cfe59f6-c9bd-4207-bc37-5bad2406d29f"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="8" isBold="false"/>
+                    <paragraph rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Name]]></text>
+            </staticText>
+            <line>
+                <reportElement x="415" y="63" width="140" height="1" uuid="14253568-9172-445b-aa52-cd27b6bc4dfa"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="415" y="77" width="140" height="11" uuid="d5d85606-7604-4e39-ad32-e097a205b740"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="8" isBold="false"/>
+                    <paragraph rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+        </band>
+    </pageFooter>
+</jasperReport>

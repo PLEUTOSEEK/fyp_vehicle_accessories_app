@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4796f987-c7f4-4b21-a16d-fb80c432980c">
+    <property name="ireport.zoom" value="1.771561000000001"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="param_Sub_Staff_ID" class="java.lang.String">
+        <defaultValueExpression><![CDATA[]]></defaultValueExpression>
+    </parameter>
+    <parameter name="Start_Date_Range" class="java.sql.Timestamp">
+        <defaultValueExpression><![CDATA[]]></defaultValueExpression>
+    </parameter>
+    <parameter name="End_Date_Range" class="java.sql.Timestamp">
+        <defaultValueExpression><![CDATA[]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+		<![CDATA[SELECT
+    Staff.Staff_ID,
+    COUNT(SalesOrder.SO_ID) AS SO_TTL_CASES,
+    SUM(SalesOrder.Gross) AS SO_GROSS,
+    SUM(SalesOrder.Discount) AS SO_DISC,
+    SUM(SalesOrder.Sub_Total) AS SO_SUB_TTL,
+    SUM(SalesOrder.Nett ) AS SO_NETT
+FROM
+    Staff
+    INNER JOIN SalesOrder
+    ON Staff.Staff_ID = SalesOrder.Sales_Person
+WHERE
+    Staff.Staff_ID = $P{param_Sub_Staff_ID} AND
+    SalesOrder.[Status] = 'PARTIALLY_COMPLETED' AND
+    SalesOrder.Actual_Created_Date BETWEEN $P{Start_Date_Range} AND $P{End_Date_Range}
+GROUP BY
+    Staff.Staff_ID]]>
+    </queryString>
+    <field name="Staff_ID" class="java.lang.String"/>
+    <field name="SO_TTL_CASES" class="java.lang.Integer"/>
+    <field name="SO_GROSS" class="java.math.BigDecimal"/>
+    <field name="SO_DISC" class="java.math.BigDecimal"/>
+    <field name="SO_SUB_TTL" class="java.math.BigDecimal"/>
+    <field name="SO_NETT" class="java.math.BigDecimal"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="91" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="122" height="32" uuid="909b9fcd-3e99-4d95-a2b1-f6f085f85479"/>
+                <textElement verticalAlignment="Top">
+                    <font fontName="Century Gothic" size="11" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[PARTIALLY COMPLETED
+CASES]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="122" y="1" width="111" height="23" uuid="5674e823-c1a1-45da-8419-82c557395750"/>
+                <textElement textAlignment="Right" verticalAlignment="Top">
+                    <font fontName="Century Gothic" size="11"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{SO_TTL_CASES}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="45" width="122" height="13" uuid="e29e4ff7-dc88-4bf2-864c-019c6c6e8687"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Discount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="32" width="122" height="13" uuid="81de1aba-09f4-4975-82dd-416ce6c18c94"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Gross (Excl. Tax)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="58" width="122" height="13" uuid="775459b3-d60b-4ba3-899c-26abcef731ca"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Sub Total]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="78" width="122" height="13" uuid="50a22549-df1f-4bb0-84dd-d3c2808605ce"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Nett (Incl. Tax)]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="122" y="32" width="111" height="13" uuid="f69e4652-3592-4d7d-90db-44081f4f3a61"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.text.DecimalFormat("RM     #,##0.00").format($F{SO_GROSS})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="122" y="45" width="111" height="13" uuid="b5427ab5-9734-42b1-9f17-8b10627e4078"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.text.DecimalFormat("RM     #,##0.00").format($F{SO_DISC})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="122" y="58" width="111" height="13" uuid="24189cbc-fe48-4d77-ae20-3c65a53b8034"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.text.DecimalFormat("RM     #,##0.00").format($F{SO_SUB_TTL})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="122" y="78" width="111" height="13" uuid="1be8cefc-ce8d-4074-84a4-c3f4ece30c9f"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.text.DecimalFormat("RM     #,##0.00").format($F{SO_NETT})]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="73" width="233" height="1" uuid="159b2442-3128-458b-80fe-3bf7f351fb4b"/>
+            </line>
+        </band>
+    </title>
+</jasperReport>

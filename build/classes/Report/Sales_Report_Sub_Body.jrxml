@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b7c41d34-d713-4c76-8245-b16e9fa5287d">
+    <property name="ireport.zoom" value="2.1435888100000016"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="param_Sub_Staff_ID" class="java.lang.String"/>
+    <parameter name="Start_Date_Range" class="java.sql.Timestamp">
+        <defaultValueExpression><![CDATA[]]></defaultValueExpression>
+    </parameter>
+    <parameter name="End_Date_Range" class="java.sql.Timestamp">
+        <defaultValueExpression><![CDATA[]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+		<![CDATA[SELECT
+    SalesOrder.Bill_To_Cust,
+    SalesOrder.SO_ID,
+    SalesOrder.Gross,
+    SalesOrder.Discount,
+    SalesOrder.Sub_Total,
+    SalesOrder.Nett,
+    SalesOrder.[Status]
+FROM
+    Staff
+    INNER JOIN SalesOrder
+    ON Staff.Staff_ID = SalesOrder.Sales_Person
+WHERE
+    Staff.Staff_ID = $P{param_Sub_Staff_ID} AND
+    SalesOrder.Actual_Created_Date BETWEEN $P{Start_Date_Range} AND $P{End_Date_Range}]]>
+    </queryString>
+    <field name="Bill_To_Cust" class="java.lang.String"/>
+    <field name="SO_ID" class="java.lang.String"/>
+    <field name="Gross" class="java.math.BigDecimal"/>
+    <field name="Discount" class="java.math.BigDecimal"/>
+    <field name="Sub_Total" class="java.math.BigDecimal"/>
+    <field name="Nett" class="java.math.BigDecimal"/>
+    <field name="Status" class="java.lang.String"/>
+    <variable name="Grp_Gross_Sum" class="java.math.BigDecimal" resetType="Group" resetGroup="Bill_To_Cust" calculation="Sum">
+        <variableExpression><![CDATA[$F{Gross}]]></variableExpression>
+        <initialValueExpression><![CDATA[]]></initialValueExpression>
+    </variable>
+    <variable name="Grp_Discount_Sum" class="java.math.BigDecimal" resetType="Group" resetGroup="Bill_To_Cust" calculation="Sum">
+        <variableExpression><![CDATA[$F{Gross}]]></variableExpression>
+        <initialValueExpression><![CDATA[]]></initialValueExpression>
+    </variable>
+    <variable name="Grp_SubTtl_Sum" class="java.math.BigDecimal" resetType="Group" resetGroup="Bill_To_Cust" calculation="Sum">
+        <variableExpression><![CDATA[$F{Gross}]]></variableExpression>
+        <initialValueExpression><![CDATA[]]></initialValueExpression>
+    </variable>
+    <variable name="Grp_Nett_Sum" class="java.math.BigDecimal" resetType="Group" resetGroup="Bill_To_Cust" calculation="Sum">
+        <variableExpression><![CDATA[$F{Gross}]]></variableExpression>
+        <initialValueExpression><![CDATA[]]></initialValueExpression>
+    </variable>
+    <group name="Bill_To_Cust">
+        <groupExpression><![CDATA[$F{Bill_To_Cust}]]></groupExpression>
+        <groupHeader>
+            <band height="29">
+                <textField>
+                    <reportElement x="92" y="4" width="196" height="20" uuid="c8386931-aada-4903-ab99-3c0e579d97be"/>
+                    <textElement verticalAlignment="Middle">
+                        <font fontName="Century Gothic" size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{Bill_To_Cust}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="0" y="4" width="83" height="20" uuid="58a2a8bc-64d7-4b88-bf7a-58b55a68b088"/>
+                    <textElement verticalAlignment="Middle">
+                        <font fontName="Century Gothic" size="9" isBold="true"/>
+                        <paragraph leftIndent="2"/>
+                    </textElement>
+                    <text><![CDATA[BILL TO]]></text>
+                </staticText>
+            </band>
+        </groupHeader>
+        <groupFooter>
+            <band height="30">
+                <textField>
+                    <reportElement x="92" y="5" width="100" height="20" uuid="8f60d7a3-ba59-4e91-9da5-fff2ceb4e847"/>
+                    <box>
+                        <topPen lineWidth="0.5"/>
+                        <bottomPen lineWidth="0.5"/>
+                    </box>
+                    <textElement verticalAlignment="Middle">
+                        <font fontName="Century Gothic" size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{Grp_Gross_Sum}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="206" y="5" width="100" height="20" uuid="3db24236-8623-49ed-8461-1cd9211e8925"/>
+                    <box>
+                        <topPen lineWidth="0.5"/>
+                        <bottomPen lineWidth="0.5"/>
+                    </box>
+                    <textElement verticalAlignment="Middle">
+                        <font fontName="Century Gothic" size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{Grp_Discount_Sum}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="321" y="5" width="92" height="20" uuid="24569821-65d8-426a-ab64-7829a8a66d5b"/>
+                    <box>
+                        <topPen lineWidth="0.5"/>
+                        <bottomPen lineWidth="0.5"/>
+                    </box>
+                    <textElement verticalAlignment="Middle">
+                        <font fontName="Century Gothic" size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{Grp_SubTtl_Sum}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="427" y="5" width="118" height="20" uuid="20572441-cc9c-41b7-a4dd-7ede3ca284e9"/>
+                    <box>
+                        <topPen lineWidth="0.5"/>
+                        <bottomPen lineWidth="0.5"/>
+                    </box>
+                    <textElement verticalAlignment="Middle">
+                        <font fontName="Century Gothic" size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{Grp_Nett_Sum}]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupFooter>
+    </group>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <columnHeader>
+        <band height="18">
+            <staticText>
+                <reportElement x="25" y="3" width="58" height="13" uuid="b2aed240-0110-41b9-9769-6f0f58339266"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[SO ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="92" y="3" width="100" height="13" uuid="4d650ac6-4bb7-4c69-aeee-88c01631b3fd"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Gross (Excl. Tax)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="206" y="3" width="100" height="13" uuid="f7879c0b-1e2c-41be-9453-a234f5d5dcdd"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Discount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="321" y="3" width="92" height="13" uuid="ece69c20-5fe5-49d7-a80c-f2e4f55fb47b"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Sub Total]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="427" y="3" width="118" height="13" uuid="267fdbc6-a235-4350-a296-317649e4f550"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Nett (Incl. Tax)]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="18" splitType="Stretch">
+            <textField>
+                <reportElement x="25" y="0" width="58" height="14" uuid="ef6c33eb-fb68-4b8b-8319-260223c0b352"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{SO_ID}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00;(#,##0.00)">
+                <reportElement x="92" y="0" width="100" height="14" uuid="c5f279c9-831c-4aba-a791-b92f0fde5568"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Gross}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00;(#,##0.00)">
+                <reportElement x="206" y="0" width="100" height="14" uuid="f130c2e1-948a-4122-8442-5563b2f6f3cc"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Discount}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00;(#,##0.00)">
+                <reportElement x="321" y="0" width="92" height="14" uuid="236ec725-0712-4b3c-a045-b07ece0f366b"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Sub_Total}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00;(#,##0.00)">
+                <reportElement x="427" y="0" width="118" height="14" uuid="d852e5cd-c169-4318-8761-780ff9baa4e7"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Nett}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <summary>
+        <band height="31">
+            <staticText>
+                <reportElement x="0" y="5" width="106" height="20" uuid="d1b366cc-6bd7-4c7e-b2a5-08350df4e457"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Total Rows of Records]]></text>
+            </staticText>
+            <textField evaluationTime="Report">
+                <reportElement x="106" y="5" width="100" height="20" uuid="ac55332a-de2a-4a02-9bb4-a8dea29c91e7"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>
