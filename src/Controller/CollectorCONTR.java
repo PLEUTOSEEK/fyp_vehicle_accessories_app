@@ -9,7 +9,6 @@ import Entity.CollectAddress;
 import Entity.Contact;
 import PassObjs.BasicObjs;
 import Utils.ImageUtils;
-import Utils.ValidationUtils;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
@@ -18,10 +17,11 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +33,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
 /**
@@ -250,182 +251,658 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public void inputValidation() {
-        List<MFXTextField> listOfControls = new ArrayList<MFXTextField>();
-        ValidationUtils<MFXTextField> validationUtils = new ValidationUtils<>();
-        int characterLimit = 0;
-        //================================
-        listOfControls.add(this.txtName);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, 0, false, "Name - Required Field", ValidationUtils.isNotEmpty);
-        validationUtils.validationCreator(validator, listOfControls, 0, false, "Name - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        validationUtils.validationCreator(validator, listOfControls, 0, false, "Name - Only Aphabet and Space are allow", ValidationUtils.isAlphaSpace);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbGender);
-        characterLimit = 30;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Gender - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.dtDOB);
-        characterLimit = 100;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Date of birth - cannot be after current date", ValidationUtils.isBeforeCurrentDate);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtIC);
-        characterLimit = 100;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "IC - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbMaritalStatus);
-        characterLimit = 50;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Marital Status - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbNationality);
-        characterLimit = 100;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Nationality - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbHonorifics);
-        characterLimit = 100;
-        validationUtils.validationCreator(validator, listOfControls, 0, false, "Honorifics - Required Field", ValidationUtils.isNotEmpty);
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Honorifics - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtEmail);
-        characterLimit = 50;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Email - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtMobileNo);
-        characterLimit = 50;
-        validationUtils.validationCreator(validator, listOfControls, 0, false, "Mobile No - Required Field", ValidationUtils.isNotEmpty);
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Mobile No - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtExt);
-        characterLimit = 50;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Extension No - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtOffPhNo);
-        characterLimit = 50;
-        validationUtils.validationCreator(validator, listOfControls, 0, false, "Office Phone No - Required Field", ValidationUtils.isNotEmpty);
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Office Phone No - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtHomePhNo);
-        characterLimit = 100;
-        validationUtils.validationCreator(validator, listOfControls, 0, false, "Home Phone No - Required Field", ValidationUtils.isNotEmpty);
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, false, "Home Phone No - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtOccupation);
-        characterLimit = 100;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Occupation - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbRace);
-        characterLimit = 50;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Race - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbReligion);
-        characterLimit = 50;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Religion - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtResidentialAddrLocationName);
-        characterLimit = 500;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address Location Name - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtResidentialAddrAddress);
-        characterLimit = 1000;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtResidentialAddrCity);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address City - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtResidentialAddrPostalCode);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address Postal Code - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbResidentialAddrState);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address State - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbResidentialAddrCountry);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Residential Address Country - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtCorAddrLocationName);
-        characterLimit = 500;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address Location Name - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtCorAddrAddress);
-        characterLimit = 1000;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtCorAddrCity);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address City - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtCorAddrPostalCode);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address Postal Code - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbCorAddrState);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address State - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbCorAddrCountry);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address Country - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtCollectAddrLocationName);
-        characterLimit = 500;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address Location Name - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtCollectAddrAddress);
-        characterLimit = 1000;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtCollectAddrCity);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address City - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.txtCollectAddrPostalCode);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address Postal Code - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbCollectAddrState);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address State - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
-        listOfControls.add(this.cmbCollectAddrCountry);
-        characterLimit = 200;
-        validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Corresponding Address Country - cannot exceed " + characterLimit + " characters", ValidationUtils.isExceed);
-        listOfControls.clear();
-        //================================
+        Check validatorCheck = (new Validator()).createCheck();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US);
 
+        /*
+        No need include:
+        1. Honorifics
+        2. Gender
+         */
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Name", this.txtName.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Name");
+
+                    /*
+                    1. Cannot be null
+                    2. Must be alphabet and space allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Name - Required Field");
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Name - ONLY letter and spaces");
+                        return;
+                    }
+                })
+                .decorates(this.txtName);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Occupation", this.txtOccupation.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Occupation");
+                    /*
+                     1. Alphabet and spaces allowed ONLY
+                     */
+
+                    // allow null
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+
+                        c.error("Occupation - ONLY letter and spaces");
+
+                        return;
+                    }
+                })
+                .decorates(this.txtOccupation);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("DOB", this.dtDOB.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("DOB");
+
+                    /*
+                    1. Cannot be future date
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    LocalDate date = LocalDate.parse(textVal, formatter);
+
+                    if (date.isAfter(LocalDate.now())) {
+
+                        c.error("Date of Birth - Cannot be future date");
+                        return;
+                    }
+                })
+                .decorates(this.dtDOB);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("IC", this.txtIC.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("IC");
+                    /*
+                     1. must follow regex
+                     */
+
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^\\d{6}-\\d{2}-\\d{4}$")) {
+
+                        c.error("IC - Format not matched");
+                        return;
+
+                    }
+
+                })
+                .decorates(this.txtIC);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Nationality", this.cmbNationality.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Nationality");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Nationality - ONLY letter and spaces");
+                        return;
+                    }
+                })
+                .decorates(this.cmbNationality);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Race", this.cmbRace.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Race");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Race - ONLY letter and spaces");
+                        return;
+                    }
+                })
+                .decorates(this.cmbRace);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Religion", this.cmbReligion.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Religion");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Religion - ONLY letter and spaces");
+                        return;
+                    }
+                })
+                .decorates(this.cmbReligion);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Mobile_No", this.txtMobileNo.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Mobile_No");
+                    /*
+                     1. cannot be null
+                     2. must follow regex
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Mobile No. - Required Field");
+                        return;
+                    }
+
+                    if (!textVal.matches("^(01)[0|1|2|3|4|6|7|8|9]\\-*[0-9]{7,8}$")) {
+
+                        c.error("Mobile No. - Format not matched");
+                        return;
+
+                    }
+                })
+                .decorates(this.txtMobileNo);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Email", this.txtEmail.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Email");
+                    /*
+                     1. must follow regex
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Email - Required Field");
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")) {
+                        c.error("Email - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.txtEmail);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Extension_No.", this.txtExt.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Extension_No.");
+                    /*
+                     1.
+                     */
+                    // allow null
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[0-9]{4}$")) {
+                        c.error("Extension No. - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.txtExt);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Office_Phone_No", this.txtOffPhNo.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Office_Phone_No");
+                    /*
+                     1. cannot be null
+                     2. must follow regex
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^(01)[0|1|2|3|4|6|7|8|9]\\-*[0-9]{7,8}$")) {
+                        c.error("Office Phone No. - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.txtOffPhNo);
+
+        validator.add(validatorCheck);
+        //=====================================
+        //=====================================
+
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Home_Phone_No", this.txtHomePhNo.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Home_Phone_No");
+                    /*
+                     1. cannot be null
+                     2. must follow regex
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^(01)[0|1|2|3|4|6|7|8|9]\\-*[0-9]{7,8}$")) {
+                        c.error("Home Phone No. - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.txtHomePhNo);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Collect_Location_Name", this.txtCollectAddrLocationName.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Collect_Location_Name");
+                    /*
+                     1. Cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Collect Location Name - Required Field");
+                        return;
+                    }
+                })
+                .decorates(this.txtCollectAddrLocationName);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Collect_Address", this.txtCollectAddrAddress.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Collect_Address");
+                    /*
+                     1. Cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Collect Address - Required Field");
+                        return;
+                    }
+                })
+                .decorates(this.txtCollectAddrAddress);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Collect_City", this.txtCollectAddrCity.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Collect_City");
+                    /*
+                     1. Cannot be null
+                     2. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Collect City - Required Field");
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Collect City - ONLY letter and spaces");
+                        return;
+                    }
+                })
+                .decorates(this.txtCollectAddrCity);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Collect_Postal_Code", this.txtCollectAddrPostalCode.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Collect_Postal_Code");
+                    /*
+                     1. Cannot be null
+                     2. must follow regex
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Collect Postal Code - Required Field");
+                        return;
+                    }
+
+                    if (!textVal.matches("^\\d{5}$")) {
+                        c.error("Collect Postal Code - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.txtCollectAddrPostalCode);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Collect_State", this.cmbCollectAddrState.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Collect_State");
+                    /*
+                     1. Cannot be null
+                     2. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Collect State - ONLY letter and spaces");
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Collect State - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.cmbCollectAddrState);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Collect_Country", this.cmbCollectAddrCountry.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Collect_Country");
+                    /*
+                     1. Cannot be null
+                     2. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Collect Country - ONLY letter and spaces");
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Collect Country - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.cmbCollectAddrCountry);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Residential_City", this.txtResidentialAddrCity.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Residential_City");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Residential City - ONLY letter and spaces");
+                        return;
+                    }
+                })
+                .decorates(this.txtResidentialAddrCity);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Residential_Postal_Code", this.txtResidentialAddrPostalCode.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Residential_Postal_Code");
+                    /*
+                     1. must follow regex
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^\\d{5}$")) {
+                        c.error("Residential Postal Code - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.txtResidentialAddrPostalCode);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Residential_State", this.cmbResidentialAddrState.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Residential_State");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Residential State - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.cmbResidentialAddrState);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Residential_Country", this.cmbResidentialAddrCountry.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Residential_Country");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Residential Country - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.cmbResidentialAddrCountry);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Corresponding_City", this.txtCorAddrCity.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Corresponding_City");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Corresponding City - ONLY letter and spaces");
+                        return;
+                    }
+                })
+                .decorates(this.txtCorAddrCity);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Corresponding_Postal_Code", this.txtCorAddrPostalCode.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Corresponding_Postal_Code");
+                    /*
+                     1. must follow regex
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^\\d{5}$")) {
+                        c.error("Corresponding Postal Code - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.txtCorAddrPostalCode);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Corresponding_State", this.cmbCorAddrState.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Corresponding_State");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Corresponding State - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.cmbCorAddrState);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Corresponding_Country", this.cmbCorAddrCountry.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Corresponding_Country");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Corresponding Country - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.cmbCorAddrCountry);
+
+        validator.add(validatorCheck);
+
+        //=====================================
     }
 //</editor-fold>
 

@@ -69,7 +69,7 @@ public class FXMLDocumentController implements Initializable {
                 .withMethod(c -> {
                     String textVal = c.get("test TxtField");
                     if (!textVal.matches("^\\d{5}$")) {
-                        c.error("Bill To Postal Code - Format not matched");
+                        c.error("Bill To Postal Code - Format not zzz");
                         return;
                     }
                 })

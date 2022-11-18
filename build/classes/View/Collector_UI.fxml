@@ -161,25 +161,25 @@
                                              </rowConstraints>
                                              <children>
                                                 <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="grid-background" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647" />
-                                                <MFXTextField fx:id="txtName" alignment="CENTER_RIGHT" floatingText="Name" prefHeight="49.0" prefWidth="200.0" GridPane.rowIndex="2">
+                                                <MFXTextField fx:id="txtName" alignment="CENTER_RIGHT" floatingText="Name" prefHeight="49.0" prefWidth="200.0" textLimit="200" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXComboBox fx:id="cmbGender" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Gender" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.rowIndex="3">
+                                                <MFXComboBox fx:id="cmbGender" alignment="CENTER_RIGHT" allowEdit="true" editable="false" floatingText="Gender" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="30" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXComboBox>
-                                                <MFXComboBox fx:id="cmbMaritalStatus" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Marital Status" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                                <MFXComboBox fx:id="cmbHonorifics" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Honorifics" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                                <MFXComboBox fx:id="cmbMaritalStatus" alignment="CENTER_RIGHT" allowEdit="true" editable="false" floatingText="Marital Status" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="50" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                <MFXComboBox fx:id="cmbHonorifics" alignment="CENTER_RIGHT" allowEdit="true" editable="false" floatingText="Honorifics" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="50" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXComboBox>
-                                                <MFXTextField fx:id="txtIC" alignment="CENTER_RIGHT" floatingText="IC" prefHeight="49.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                <MFXDatePicker fx:id="dtDOB" accessibleRole="DATE_PICKER" alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Date of Birth" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <MFXComboBox fx:id="cmbNationality" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Nationality" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                <MFXTextField fx:id="txtIC" alignment="CENTER_RIGHT" floatingText="IC" prefHeight="49.0" prefWidth="200.0" textLimit="100" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <MFXDatePicker fx:id="dtDOB" accessibleRole="DATE_PICKER" alignment="CENTER_RIGHT" editable="false" floatMode="INLINE" floatingText="Date of Birth" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <MFXComboBox fx:id="cmbNationality" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Nationality" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="100" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                 <Label styleClass="small-label" stylesheets="@../../css/labels.css" text="Basic Information" textFill="WHITE" GridPane.valignment="CENTER">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
@@ -191,9 +191,9 @@
                                                       <Insets left="15.0" right="15.0" />
                                                    </padding>
                                                 </Label>
-                                                <MFXComboBox fx:id="cmbRace" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Race" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                <MFXComboBox fx:id="cmbReligion" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Religion" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                                <MFXTextField fx:id="txtOccupation" alignment="CENTER_RIGHT" floatingText="Occupation" prefHeight="49.0" prefWidth="200.0" GridPane.rowIndex="4">
+                                                <MFXComboBox fx:id="cmbRace" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Race" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="50" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                <MFXComboBox fx:id="cmbReligion" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Religion" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="50" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                <MFXTextField fx:id="txtOccupation" alignment="CENTER_RIGHT" floatingText="Occupation" prefHeight="49.0" prefWidth="200.0" textLimit="100" GridPane.rowIndex="4">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
@@ -229,27 +229,27 @@
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <MFXTextField fx:id="txtMobileNo" alignment="CENTER_RIGHT" floatingText="Mobile No." prefHeight="49.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                                <MFXTextField fx:id="txtMobileNo" alignment="CENTER_RIGHT" floatingText="Mobile No." prefHeight="49.0" prefWidth="200.0" textLimit="50" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXTextField fx:id="txtEmail" alignment="CENTER_RIGHT" floatingText="Email" prefHeight="49.0" prefWidth="200.0" GridPane.rowIndex="2">
+                                                <MFXTextField fx:id="txtEmail" alignment="CENTER_RIGHT" floatingText="Email" prefHeight="49.0" prefWidth="200.0" textLimit="50" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXTextField fx:id="txtOffPhNo" alignment="CENTER_RIGHT" floatingText="Office Phone No." prefHeight="49.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                <MFXTextField fx:id="txtOffPhNo" alignment="CENTER_RIGHT" floatingText="Office Phone No." prefHeight="49.0" prefWidth="200.0" textLimit="50" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXTextField fx:id="txtHomePhNo" alignment="CENTER_RIGHT" floatingText="Home Phone No." prefHeight="49.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                <MFXTextField fx:id="txtHomePhNo" alignment="CENTER_RIGHT" floatingText="Home Phone No." prefHeight="49.0" prefWidth="200.0" textLimit="50" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXTextField fx:id="txtExt" alignment="CENTER_RIGHT" floatingText="Extension No." prefHeight="49.0" prefWidth="200.0" GridPane.rowIndex="3">
+                                                <MFXTextField fx:id="txtExt" alignment="CENTER_RIGHT" floatingText="Extension No." prefHeight="49.0" prefWidth="200.0" textLimit="50" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
@@ -276,17 +276,17 @@
                                              </rowConstraints>
                                              <children>
                                                 <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="grid-background" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647" />
-                                                <MFXTextField fx:id="txtResidentialAddrCity" alignment="CENTER_RIGHT" floatingText="City" prefHeight="49.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                <MFXTextField fx:id="txtResidentialAddrCity" alignment="CENTER_RIGHT" floatingText="City" prefHeight="49.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXTextField fx:id="txtResidentialAddrLocationName" alignment="CENTER_RIGHT" floatingText="Location Name" prefHeight="49.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                                <MFXTextField fx:id="txtResidentialAddrLocationName" alignment="CENTER_RIGHT" floatingText="Location Name" prefHeight="49.0" prefWidth="200.0" textLimit="500" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXComboBox fx:id="cmbResidentialAddrState" alignment="CENTER_RIGHT" allowEdit="true" floatingText="State" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                <MFXComboBox fx:id="cmbResidentialAddrState" alignment="CENTER_RIGHT" allowEdit="true" floatingText="State" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
@@ -302,7 +302,7 @@
                                                       <Insets left="15.0" right="15.0" />
                                                    </padding>
                                                 </Label>
-                                                <MFXTextField fx:id="txtResidentialAddrAddress" alignment="CENTER_RIGHT" floatingText="Address" prefHeight="50.0" prefWidth="521.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                                <MFXTextField fx:id="txtResidentialAddrAddress" alignment="CENTER_RIGHT" floatingText="Address" prefHeight="50.0" prefWidth="521.0" textLimit="1000" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding>
@@ -310,7 +310,7 @@
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXTextField fx:id="txtResidentialAddrPostalCode" alignment="CENTER_RIGHT" floatingText="Postal Code" prefHeight="49.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                <MFXTextField fx:id="txtResidentialAddrPostalCode" alignment="CENTER_RIGHT" floatingText="Postal Code" prefHeight="49.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding>
@@ -318,7 +318,7 @@
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXComboBox fx:id="cmbResidentialAddrCountry" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Country" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
+                                                <MFXComboBox fx:id="cmbResidentialAddrCountry" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Country" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
@@ -345,17 +345,17 @@
                                              </rowConstraints>
                                              <children>
                                                 <StackPane prefHeight="478.0" prefWidth="523.0" styleClass="grid-background" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647" />
-                                                <MFXTextField fx:id="txtCorAddrCity" alignment="CENTER_RIGHT" floatingText="City" prefHeight="49.0" prefWidth="200.0" text="City" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                <MFXTextField fx:id="txtCorAddrCity" alignment="CENTER_RIGHT" floatingText="City" prefHeight="49.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXTextField fx:id="txtCorAddrLocationName" alignment="CENTER_RIGHT" floatingText="Location Name" prefHeight="49.0" prefWidth="200.0" text="Location Name" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                                <MFXTextField fx:id="txtCorAddrLocationName" alignment="CENTER_RIGHT" floatingText="Location Name" prefHeight="49.0" prefWidth="200.0" textLimit="500" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXComboBox fx:id="cmbCorAddrState" alignment="CENTER_RIGHT" allowEdit="true" floatingText="State" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" text="State" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                <MFXComboBox fx:id="cmbCorAddrState" alignment="CENTER_RIGHT" allowEdit="true" floatingText="State" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
@@ -371,7 +371,7 @@
                                                       <Insets left="15.0" right="15.0" />
                                                    </padding>
                                                 </Label>
-                                                <MFXTextField fx:id="txtCorAddrAddress" alignment="CENTER_RIGHT" floatingText="Address" prefHeight="50.0" prefWidth="521.0" text="Address" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                                <MFXTextField fx:id="txtCorAddrAddress" alignment="CENTER_RIGHT" floatingText="Address" prefHeight="50.0" prefWidth="521.0" textLimit="1000" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding>
@@ -379,7 +379,7 @@
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXTextField fx:id="txtCorAddrPostalCode" alignment="CENTER_RIGHT" floatingText="Postal Code" prefHeight="49.0" prefWidth="200.0" text="Postal Code" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                <MFXTextField fx:id="txtCorAddrPostalCode" alignment="CENTER_RIGHT" floatingText="Postal Code" prefHeight="49.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding>
@@ -387,7 +387,7 @@
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXComboBox fx:id="cmbCorAddrCountry" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Country" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" text="Country" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
+                                                <MFXComboBox fx:id="cmbCorAddrCountry" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Country" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
@@ -414,17 +414,17 @@
                                              </rowConstraints>
                                              <children>
                                                 <StackPane prefHeight="478.0" prefWidth="523.0" styleClass="grid-background" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647" />
-                                                <MFXTextField fx:id="txtCollectAddrCity" alignment="CENTER_RIGHT" floatingText="City" prefHeight="49.0" prefWidth="200.0" text="City" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                <MFXTextField fx:id="txtCollectAddrCity" alignment="CENTER_RIGHT" floatingText="City" prefHeight="49.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXTextField fx:id="txtCollectAddrLocationName" alignment="CENTER_RIGHT" floatingText="Location Name" prefHeight="49.0" prefWidth="200.0" text="Location Name" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                                <MFXTextField fx:id="txtCollectAddrLocationName" alignment="CENTER_RIGHT" floatingText="Location Name" prefHeight="49.0" prefWidth="200.0" textLimit="500" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXComboBox fx:id="cmbCollectAddrState" alignment="CENTER_RIGHT" allowEdit="true" floatingText="State" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" text="State" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                <MFXComboBox fx:id="cmbCollectAddrState" alignment="CENTER_RIGHT" allowEdit="true" floatingText="State" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
@@ -440,7 +440,7 @@
                                                       <Insets left="15.0" right="15.0" />
                                                    </padding>
                                                 </Label>
-                                                <MFXTextField fx:id="txtCollectAddrAddress" alignment="CENTER_RIGHT" floatingText="Address" prefHeight="50.0" prefWidth="521.0" text="Address" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                                <MFXTextField fx:id="txtCollectAddrAddress" alignment="CENTER_RIGHT" floatingText="Address" prefHeight="50.0" prefWidth="521.0" textLimit="1000" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding>
@@ -448,7 +448,7 @@
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXTextField fx:id="txtCollectAddrPostalCode" alignment="CENTER_RIGHT" floatingText="Postal Code" prefHeight="49.0" prefWidth="200.0" text="Postal Code" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                <MFXTextField fx:id="txtCollectAddrPostalCode" alignment="CENTER_RIGHT" floatingText="Postal Code" prefHeight="49.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding>
@@ -456,7 +456,7 @@
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </MFXTextField>
-                                                <MFXComboBox fx:id="cmbCollectAddrCountry" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Country" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" text="Country" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
+                                                <MFXComboBox fx:id="cmbCollectAddrCountry" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Country" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="200.0" textLimit="200" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>

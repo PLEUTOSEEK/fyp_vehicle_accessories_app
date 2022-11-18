@@ -324,7 +324,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         1. Gender
         2. Marital Status
         3. Residential Address (Postal Code have)
-        4. Corresponding Address (Postal Code have) 
+        4. Corresponding Address (Postal Code have)
          */
         validatorCheck
                 .dependsOn("Honorifics", this.cmbHonorifics.textProperty())
@@ -403,7 +403,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         validatorCheck = (new Validator()).createCheck();
 
         validatorCheck
-                .dependsOn("DOB", this.cmbGender.textProperty())
+                .dependsOn("DOB", this.dtDOB.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("DOB");
 
@@ -422,7 +422,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                         return;
                     }
                 })
-                .decorates(this.cmbGender);
+                .decorates(this.dtDOB);
 
         validator.add(validatorCheck);
 
@@ -437,6 +437,11 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                     /*
                      1. must follow regex
                      */
+
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
                     if (!textVal.matches("^\\d{6}-\\d{2}-\\d{4}$")) {
 
                         c.error("IC - Format not matched");
@@ -562,7 +567,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                     }
 
                     if (!textVal.matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")) {
-                        c.error("Email - Message");
+                        c.error("Email - Format not matched");
                         return;
                     }
                 })
@@ -755,15 +760,9 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                     String textVal = c.get("Bill_To_Location_Name");
                     /*
                      1. Cannot be null
-                     2. alphabet and spaces allowed ONLY
                      */
                     if (textVal.isEmpty()) {
                         c.error("Bill To Location Name - Required Field");
-                        return;
-                    }
-
-                    if (!textVal.matches("^[a-zA-Z ]*$")) {
-                        c.error("Bill To Location Name - ONLY letter and spaces");
                         return;
                     }
                 })
@@ -781,15 +780,9 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                     String textVal = c.get("Bill_To_Address");
                     /*
                      1. Cannot be null
-                     2. alphabet and spaces allowed ONLY
                      */
                     if (textVal.isEmpty()) {
                         c.error("Bill To Address - Required Field");
-                        return;
-                    }
-
-                    if (!textVal.matches("^[a-zA-Z ]*$")) {
-                        c.error("Bill To Address - ONLY letter and spaces");
                         return;
                     }
                 })
@@ -906,6 +899,30 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         validatorCheck = (new Validator()).createCheck();
 
         validatorCheck
+                .dependsOn("Residential_City", this.txtResidentialAddrCity.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Residential_City");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Residential City - ONLY letter and spaces");
+                        return;
+                    }
+                })
+                .decorates(this.txtResidentialAddrCity);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
                 .dependsOn("Residential_Postal_Code", this.txtResidentialAddrPostalCode.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_Postal_Code");
@@ -930,6 +947,78 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         validatorCheck = (new Validator()).createCheck();
 
         validatorCheck
+                .dependsOn("Residential_State", this.cmbResidentialAddrState.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Residential_State");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Residential State - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.cmbResidentialAddrState);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Residential_Country", this.cmbResidentialAddrCountry.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Residential_Country");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Residential Country - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.cmbResidentialAddrCountry);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Corresponding_City", this.txtCorAddrCity.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Corresponding_City");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Corresponding City - ONLY letter and spaces");
+                        return;
+                    }
+                })
+                .decorates(this.txtCorAddrCity);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
                 .dependsOn("Corresponding_Postal_Code", this.txtCorAddrPostalCode.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_Postal_Code");
@@ -946,6 +1035,54 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                     }
                 })
                 .decorates(this.txtCorAddrPostalCode);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Corresponding_State", this.cmbCorAddrState.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Corresponding_State");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Corresponding State - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.cmbCorAddrState);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Corresponding_Country", this.cmbCorAddrCountry.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Corresponding_Country");
+                    /*
+                     1. alphabet and spaces allowed ONLY
+                     */
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    if (!textVal.matches("^[a-zA-Z ]*$")) {
+                        c.error("Corresponding Country - Format not matched");
+                        return;
+                    }
+                })
+                .decorates(this.cmbCorAddrCountry);
 
         validator.add(validatorCheck);
 
