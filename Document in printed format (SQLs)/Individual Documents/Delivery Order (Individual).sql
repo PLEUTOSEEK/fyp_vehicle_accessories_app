@@ -1,14 +1,15 @@
 SELECT
-    Staff.Name,
+    DeliveryOrder.DO_ID,
+    Staff.Name AS STAFF_NAME,
     SalesOrder.Shipment_Term,
-    DELIVER_TO.Name,
+    DELIVER_TO.Name AS DELIVER_TO_NAME,
     DELIVER_TO_ADDR.Location_Name,
     DELIVER_TO_ADDR.Address,
     DELIVER_TO_ADDR.City,
     DELIVER_TO_ADDR.Postal_Code,
     DELIVER_TO_ADDR.[State],
     DELIVER_TO_ADDR.Country,
-    DeliveryOrder.Delivery_Date,
+    FORMAT (DeliveryOrder.Delivery_Date , 'dd-MMM-yyyy')AS DO_DLVR_DATE,
     FORMAT (DeliveryOrder.Created_Date , 'dd-MMM-yyyy') AS DO_CREATED_DATE,
     SalesOrder.SO_ID,
     FORMAT (SalesOrder.Created_Date, 'dd-MMM-yyyy') AS SO_CREATED_DATE,
@@ -38,3 +39,5 @@ FROM
 
     INNER JOIN Product
     ON Item.Prod_ID = Product.Prod_ID
+WHERE
+    DeliveryOrder.DO_ID = ''

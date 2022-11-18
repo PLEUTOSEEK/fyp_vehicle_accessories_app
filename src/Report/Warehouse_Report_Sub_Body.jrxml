@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a392d495-06ea-4587-8739-868c7fc59293">
+    <property name="ireport.zoom" value="1.6105100000000014"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <queryString language="SQL">
+		<![CDATA[SELECT
+    PRODUCT_STOCK_LEVEL_STATUS.Prod_ID,
+    PRODUCT_STOCK_LEVEL_STATUS.Part_No,
+    PRODUCT_STOCK_LEVEL_STATUS.Reorder_Level,
+    PRODUCT_STOCK_LEVEL_STATUS.LEVEL_STATUS,
+    PRODUCT_STORED_PLACES.Place_ID,
+    PRODUCT_STORED_PLACES.Place_Name,
+    PRODUCT_STORED_PLACES.Ready_Qty,
+    PRODUCT_STORED_PLACES.Reserved_Qty
+FROM
+(SELECT
+    PRODUCT_TTL_INVENTORY.Prod_ID,
+    PRODUCT_TTL_INVENTORY.TTL_INVENTORY,
+    PRODUCT_TTL_INVENTORY.Part_No,
+    PRODUCT_TTL_INVENTORY.Reorder_Level,
+    CASE
+        WHEN PRODUCT_TTL_INVENTORY.TTL_INVENTORY >= Maximum_Level THEN 'MAXIMUM_LEVEL'
+        WHEN PRODUCT_TTL_INVENTORY.TTL_INVENTORY >= Average_Level THEN 'AVERAGE_LEVEL'
+        WHEN PRODUCT_TTL_INVENTORY.TTL_INVENTORY >= Minimum_Level THEN 'MINIMUM_LEVEL'
+        WHEN PRODUCT_TTL_INVENTORY.TTL_INVENTORY >= Reorder_Level THEN 'REORDER_LEVEL'
+        ELSE 'DANGER_LEVEL'
+    END AS LEVEL_STATUS
+FROM
+    (SELECT
+        Product.Prod_ID,
+        Product.Part_No,
+        Product.Maximum_Level,
+        Product.Average_Level,
+        Product.Minimum_Level,
+        Product.Reorder_Level,
+        Product.Danger_Level,
+        SUM(Inventory.Reserved_Qty + Inventory.Ready_Qty) AS TTL_INVENTORY
+    FROM
+        Product
+        LEFT JOIN Inventory
+        ON Product.Prod_ID = Inventory.Inventory_ID
+    GROUP BY
+        Product.Prod_ID,
+        Product.Part_No,
+        Product.Maximum_Level,
+        Product.Average_Level,
+        Product.Minimum_Level,
+        Product.Reorder_Level,
+        Product.Danger_Level
+    ) AS PRODUCT_TTL_INVENTORY
+) AS PRODUCT_STOCK_LEVEL_STATUS
+INNER JOIN (SELECT
+                Inventory.Product_ID,
+                Place.Place_ID,
+                Place.Place_Name,
+                Inventory.Ready_Qty,
+                Inventory.Reserved_Qty
+            FROM
+                Inventory
+                INNER JOIN Place
+                ON Inventory.Inventory_ID = Place.Place_ID
+            ) AS PRODUCT_STORED_PLACES
+ON PRODUCT_STOCK_LEVEL_STATUS.Prod_ID = PRODUCT_STORED_PLACES.Product_ID
+ORDER BY
+    PRODUCT_STOCK_LEVEL_STATUS.Prod_ID ASC]]>
+    </queryString>
+    <field name="Prod_ID" class="java.lang.String"/>
+    <field name="Part_No" class="java.lang.String"/>
+    <field name="Reorder_Level" class="java.lang.Integer"/>
+    <field name="LEVEL_STATUS" class="java.lang.String"/>
+    <field name="Place_ID" class="java.lang.String"/>
+    <field name="Place_Name" class="java.lang.String"/>
+    <field name="Ready_Qty" class="java.lang.Integer"/>
+    <field name="Reserved_Qty" class="java.lang.Integer"/>
+    <group name="Prod_ID">
+        <groupExpression><![CDATA[$F{Prod_ID}]]></groupExpression>
+        <groupHeader>
+            <band height="17">
+                <staticText>
+                    <reportElement x="0" y="2" width="60" height="12" uuid="5cf39fe7-31e3-498b-8521-752171d1640c"/>
+                    <textElement verticalAlignment="Top">
+                        <font fontName="Century Gothic" size="9" isBold="true"/>
+                        <paragraph leftIndent="2"/>
+                    </textElement>
+                    <text><![CDATA[Product ID]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="137" y="2" width="60" height="12" uuid="bd108497-faa8-4e02-956e-e38b1241f89c"/>
+                    <textElement verticalAlignment="Top">
+                        <font fontName="Century Gothic" size="9" isBold="true"/>
+                        <paragraph leftIndent="2"/>
+                    </textElement>
+                    <text><![CDATA[Part No.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="274" y="2" width="63" height="12" uuid="d6b0975d-e114-49dc-906f-2e9094a7231b"/>
+                    <textElement verticalAlignment="Top">
+                        <font fontName="Century Gothic" size="9" isBold="true"/>
+                        <paragraph leftIndent="2"/>
+                    </textElement>
+                    <text><![CDATA[Reorder Level]]></text>
+                </staticText>
+                <textField>
+                    <reportElement x="60" y="2" width="77" height="12" uuid="fe5b575e-9599-4cb4-a838-68b9b730e8a0"/>
+                    <textElement textAlignment="Right" verticalAlignment="Top">
+                        <font fontName="Century Gothic" size="9"/>
+                        <paragraph leftIndent="2" rightIndent="5"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{Prod_ID}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="197" y="2" width="77" height="12" uuid="7d0d4373-1c4f-4137-bf6c-824f3a212894"/>
+                    <textElement textAlignment="Right" verticalAlignment="Top">
+                        <font fontName="Century Gothic" size="9"/>
+                        <paragraph leftIndent="2" rightIndent="5"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{Part_No}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="337" y="2" width="74" height="12" uuid="044fcd3f-3b27-4301-ac5f-55815efbba3c"/>
+                    <textElement textAlignment="Right" verticalAlignment="Top">
+                        <font fontName="Century Gothic" size="9"/>
+                        <paragraph leftIndent="2" rightIndent="5"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{Reorder_Level}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="411" y="2" width="60" height="12" uuid="2a2e9703-435b-47d1-bf27-174b167e9935"/>
+                    <textElement verticalAlignment="Top">
+                        <font fontName="Century Gothic" size="9" isBold="true"/>
+                        <paragraph leftIndent="2"/>
+                    </textElement>
+                    <text><![CDATA[Stock Level]]></text>
+                </staticText>
+                <textField>
+                    <reportElement x="471" y="2" width="77" height="12" uuid="7d7d831d-d83f-41a8-8f33-186703715757"/>
+                    <textElement textAlignment="Right" verticalAlignment="Top">
+                        <font fontName="Century Gothic" size="9"/>
+                        <paragraph leftIndent="2" rightIndent="5"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{LEVEL_STATUS}]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupHeader>
+        <groupFooter>
+            <band height="23">
+                <textField evaluationTime="Group" evaluationGroup="Prod_ID">
+                    <reportElement x="421" y="5" width="100" height="12" uuid="48ccc5ff-e4d4-4115-8cd0-b1b06ba837f4"/>
+                    <box>
+                        <topPen lineWidth="0.5"/>
+                        <bottomPen lineWidth="0.5"/>
+                    </box>
+                    <textElement>
+                        <font fontName="Century Gothic" size="9" isItalic="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{Ready_Qty} + $F{Reserved_Qty}]]></textFieldExpression>
+                </textField>
+                <textField evaluationTime="Group" evaluationGroup="Prod_ID">
+                    <reportElement x="311" y="5" width="100" height="12" uuid="81241d59-a23b-4851-a635-7680a5d98a95"/>
+                    <box>
+                        <topPen lineWidth="0.5"/>
+                        <bottomPen lineWidth="0.5"/>
+                    </box>
+                    <textElement>
+                        <font fontName="Century Gothic" size="9" isItalic="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{Reserved_Qty}]]></textFieldExpression>
+                </textField>
+                <textField evaluationTime="Group" evaluationGroup="Prod_ID">
+                    <reportElement x="200" y="5" width="100" height="12" uuid="adda9647-4aa6-468b-bcf9-2600193a7540"/>
+                    <box>
+                        <topPen lineWidth="0.5"/>
+                        <bottomPen lineWidth="0.5"/>
+                    </box>
+                    <textElement>
+                        <font fontName="Century Gothic" size="9" isItalic="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{Ready_Qty}]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupFooter>
+    </group>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <columnHeader>
+        <band height="12" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="12" uuid="2eba97d8-3719-4219-81db-457cfed1a5c3"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Place ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="100" y="0" width="100" height="12" uuid="d5e6b0b8-4152-4acc-9e11-3f515e16b9a9"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Place Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="200" y="0" width="100" height="12" uuid="88d660c8-6abd-4db7-b4bc-1cf842957fbf"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Ready Quantities]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="311" y="0" width="100" height="12" uuid="512897e1-8215-4e10-a6a0-72853e73ba0f"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Reserved Quantities]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="421" y="0" width="100" height="12" uuid="72b6d03b-4ef3-4de0-be68-00875d7df9fd"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Total Quantities]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="13" splitType="Stretch">
+            <textField>
+                <reportElement x="0" y="0" width="100" height="13" uuid="6f8838d1-12ea-4675-91f2-3e2641ca8713"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Place_ID}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="100" y="0" width="100" height="13" uuid="d50a3fc9-5acf-42b1-8a65-eea86910ef4e"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Place_Name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="200" y="0" width="100" height="13" uuid="bc7b9f90-2903-4d25-9556-6e47da352c1c"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Ready_Qty}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="311" y="0" width="100" height="13" uuid="ea9c1eac-eb1c-470f-98af-d77853452306"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Reserved_Qty}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="421" y="0" width="100" height="13" uuid="2daf34d0-a2b1-4a0b-97b3-85597f021b7e"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Ready_Qty} + $F{Reserved_Qty}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <summary>
+        <band height="26" splitType="Stretch">
+            <textField evaluationTime="Report">
+                <reportElement x="100" y="7" width="100" height="12" uuid="5d620fdc-de48-4661-bcc1-f5d9fb3acde0"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="7" width="100" height="12" uuid="a2991f0b-9f39-4e8e-a18a-5dad5db43130"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Total Rows of Records]]></text>
+            </staticText>
+        </band>
+    </summary>
+</jasperReport>

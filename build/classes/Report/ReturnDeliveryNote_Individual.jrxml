@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1e6fb3ad-0716-4e4a-a16d-e90a85d5d493">
+    <property name="ireport.zoom" value="1.4641000000000013"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="param_RDN_ID" class="java.lang.String">
+        <defaultValueExpression><![CDATA[]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+		<![CDATA[SELECT
+    CollectAddress.Name AS COLLECTOR_NAME,
+    CLLCT_BACK_FR.Location_Name AS CLLCT_BACK_FR_LOCATION_NAME,
+    CLLCT_BACK_FR.Address AS CLLCT_BACK_FR_ADDRESS,
+    CLLCT_BACK_FR.City AS CLLCT_BACK_FR_CITY,
+    CLLCT_BACK_FR.Postal_Code AS CLLCT_BACK_FR_POSTAL_CODE,
+    CLLCT_BACK_FR.[State] AS CLLCT_BACK_FR_STATE,
+    CLLCT_BACK_FR.Country AS CLLCT_BACK_FR_COUNTRY,
+    CLLCT_BCK_TO.Location_Name AS CLLCT_BCK_TO_LOCATION_NAME,
+    CLLCT_BCK_TO.Address AS CLLCT_BCK_TO_ADDRESS,
+    CLLCT_BCK_TO.City AS CLLCT_BCK_TO_CITY,
+    CLLCT_BCK_TO.Postal_Code AS CLLCT_BCK_TO_POSTAL_CODE,
+    CLLCT_BCK_TO.[State] AS CLLCT_BCK_TO_STATE,
+    CLLCT_BCK_TO.Country AS CLLCT_BCK_TO_COUNTRY,
+    Staff.Name AS SALES_PERSON_NAME,
+    ReturnDeliveryNote.Collect_Date,
+    ReturnDeliveryNote.Created_Date AS RDN_CREATED_DATE,
+    SalesOrder.SO_ID,
+    SalesOrder.Created_Date AS SO_CREATED_DATE,
+    CollectAddress.Mobile_No,
+    CollectAddress.Email,
+    Product.Prod_ID,
+    CONCAT(Product.Part_No,' ',Product.[Description]) AS PART_NO_DESC,
+    Item.Ori_Qty,
+    Item.Reason,
+    Item.Remark
+FROM
+    ReturnDeliveryNote
+    INNER JOIN CollectAddress
+    ON ReturnDeliveryNote.Collect_Back_From = CollectAddress.Collect_Address_ID
+
+    INNER JOIN [Address] AS CLLCT_BACK_FR
+    ON CollectAddress.Collect_Address_ID = CLLCT_BACK_FR.Address_ID
+
+    INNER JOIN Place
+    ON ReturnDeliveryNote.Collect_Back_To = Place.Place_ID
+
+    INNER JOIN Address AS CLLCT_BCK_TO
+    ON Place.Address_ID = CLLCT_BCK_TO.Address_ID
+
+    INNER JOIN SalesOrder
+    ON  ReturnDeliveryNote.SO_ID = SalesOrder.SO_ID
+
+    INNER JOIN Staff
+    ON SalesOrder.Sales_Person = Staff.Staff_ID
+
+    INNER JOIN Item
+    ON ReturnDeliveryNote.RDN_ID = Item.Ref_Doc_ID
+
+    INNER JOIN Product
+    ON Item.Prod_ID = Product.Prod_ID
+WHERE
+    ReturnDeliveryNote.RDN_ID = $P{param_RDN_ID}
+
+]]>
+    </queryString>
+    <field name="COLLECTOR_NAME" class="java.lang.String"/>
+    <field name="CLLCT_BACK_FR_LOCATION_NAME" class="java.lang.String"/>
+    <field name="CLLCT_BACK_FR_ADDRESS" class="java.lang.String"/>
+    <field name="CLLCT_BACK_FR_CITY" class="java.lang.String"/>
+    <field name="CLLCT_BACK_FR_POSTAL_CODE" class="java.lang.String"/>
+    <field name="CLLCT_BACK_FR_STATE" class="java.lang.String"/>
+    <field name="CLLCT_BACK_FR_COUNTRY" class="java.lang.String"/>
+    <field name="CLLCT_BCK_TO_LOCATION_NAME" class="java.lang.String"/>
+    <field name="CLLCT_BCK_TO_ADDRESS" class="java.lang.String"/>
+    <field name="CLLCT_BCK_TO_CITY" class="java.lang.String"/>
+    <field name="CLLCT_BCK_TO_POSTAL_CODE" class="java.lang.String"/>
+    <field name="CLLCT_BCK_TO_STATE" class="java.lang.String"/>
+    <field name="CLLCT_BCK_TO_COUNTRY" class="java.lang.String"/>
+    <field name="SALES_PERSON_NAME" class="java.lang.String"/>
+    <field name="Collect_Date" class="java.sql.Date"/>
+    <field name="RDN_CREATED_DATE" class="java.sql.Timestamp"/>
+    <field name="SO_ID" class="java.lang.String"/>
+    <field name="SO_CREATED_DATE" class="java.sql.Timestamp"/>
+    <field name="Mobile_No" class="java.lang.String"/>
+    <field name="Email" class="java.lang.String"/>
+    <field name="Prod_ID" class="java.lang.String"/>
+    <field name="PART_NO_DESC" class="java.lang.String"/>
+    <field name="Ori_Qty" class="java.lang.Integer"/>
+    <field name="Reason" class="java.lang.String"/>
+    <field name="Remark" class="java.lang.String"/>
+    <variable name="var_Page_Footer" class="java.lang.String">
+        <variableExpression><![CDATA["Notes:<br>" +
+"1. All cheque should be crossed and made payable to<br>" +
+"&emsp;<b>THIR SHEN SDN BHD</b><br>" +
+"2. Bank        : HONG LEONG BANK BERHAD<br>" +
+"   Account No  : 22000003964<br>" +
+"3. All items remain the properties of Thir Shen Sdn Bhd until full payment are made."]]></variableExpression>
+    </variable>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <pageHeader>
+        <band height="253" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="52" uuid="328c6e42-979b-4067-a962-3c4d01678dc3"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Times New Roman" size="40" isBold="true"/>
+                </textElement>
+                <text><![CDATA[RDN]]></text>
+            </staticText>
+            <image>
+                <reportElement x="464" y="-3" width="91" height="55" uuid="5af3fc4a-76f9-4ac5-91c8-50372cf4f804"/>
+                <imageExpression><![CDATA["C:\\Users\\Tee Zhuo Xuan\\OneDrive - Tunku Abdul Rahman University College\\Desktop\\fyp_vehicle_accessories_app\\Images\\311588031_574271901246093_1596750214979266858_n.jpg"]]></imageExpression>
+            </image>
+            <textField>
+                <reportElement x="318" y="174" width="125" height="10" uuid="7dedd807-fe0e-4503-8938-b5d8452662ed"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="443" y="174" width="102" height="10" uuid="6c059317-efea-4663-a37c-8bdf1951749b"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="84" width="100" height="10" uuid="b48e6b9f-b00b-478e-9172-ea865388b2ac"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Print Date & Time]]></text>
+            </staticText>
+            <textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy HH.mm" isBlankWhenNull="true">
+                <reportElement x="100" y="84" width="100" height="10" uuid="9f6fab32-d764-4765-8a7e-241115a9b54f"/>
+                <textElement>
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="94" width="71" height="10" uuid="8ddbf3c6-a293-42d0-a157-b0303c5fd528"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2" rightIndent="5"/>
+                </textElement>
+                <text><![CDATA[Collect Back From: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="0" y="104" width="131" height="10" uuid="b7f0ee60-742c-4d98-8e8e-618de029e17c"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{COLLECTOR_NAME}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="414" y="94" width="71" height="10" uuid="f6033ce3-0fd8-429b-8050-afd11e04e6b2"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2" rightIndent="5"/>
+                </textElement>
+                <text><![CDATA[Deliver To: ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="221" y="59" width="38" height="17" uuid="e94333fe-0b52-42c9-9bb1-126e0e0bdbd8"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Number]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="259" y="59" width="100" height="17" uuid="fc2e325a-7c41-434d-8279-edcad718010a"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{PS_ID}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="114" width="131" height="10" uuid="33171c91-0cd9-4103-8e5a-d7f4c7e040ec"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BACK_FR_LOCATION_NAME}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="124" width="131" height="10" uuid="effe63fd-a270-42cf-b8ec-db4437685c27"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BACK_FR_ADDRESS}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="134" width="131" height="10" uuid="dec6f8f9-9a80-438d-9e56-0a0708b7609c"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BACK_FR_CITY}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="144" width="131" height="10" uuid="02951531-ed85-4d5d-8aa2-bb9fca79e35c"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BACK_FR_POSTAL_CODE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="164" width="131" height="10" uuid="f665b69a-9b29-4797-8b6d-a7f4db28d130"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BACK_FR_COUNTRY}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="154" width="131" height="10" uuid="287f6325-d745-425e-b33d-9b944803df27"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BACK_FR_STATE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="414" y="124" width="131" height="10" uuid="68103725-14e4-431c-ad30-b1c2f88670ab"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BCK_TO_CITY}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="414" y="144" width="131" height="10" uuid="326a3954-82ac-49fe-aa79-2d53e82dc104"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BCK_TO_STATE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="414" y="134" width="131" height="10" uuid="965cb3f3-ab0a-4508-b0aa-8c43cd0a34dd"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BCK_TO_POSTAL_CODE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="414" y="154" width="131" height="10" uuid="a6e83c48-05f1-4f70-b61d-5fad90f476fd"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BCK_TO_COUNTRY}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="414" y="114" width="131" height="10" uuid="3b5c0cf8-5273-477d-b284-3b04dfd4a796"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BCK_TO_ADDRESS}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="414" y="104" width="131" height="10" uuid="527f2d14-e09f-4476-adc0-4ccbb253e2a6"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLLCT_BCK_TO_LOCATION_NAME}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="372" y="184" width="71" height="10" uuid="a1f07347-54a5-4920-9b73-ed5436ed2d26"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2" rightIndent="5"/>
+                </textElement>
+                <text><![CDATA[Collect Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="372" y="194" width="71" height="10" uuid="8c17cf97-e7ea-4f4a-b041-222f21076631"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2" rightIndent="5"/>
+                </textElement>
+                <text><![CDATA[Posting Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="372" y="204" width="71" height="10" uuid="a44ced2f-5cfd-46ae-8913-e05ad84aa99f"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2" rightIndent="5"/>
+                </textElement>
+                <text><![CDATA[Order No.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="372" y="214" width="71" height="10" uuid="0cd14aba-ae56-44e0-973f-b9d698837f9b"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2" rightIndent="5"/>
+                </textElement>
+                <text><![CDATA[Order Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="372" y="224" width="71" height="10" uuid="e5204006-f438-42ae-99a2-1b2293f3d97b"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2" rightIndent="5"/>
+                </textElement>
+                <text><![CDATA[Mobile No]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="372" y="234" width="71" height="10" uuid="fa82510f-6134-4769-b8a1-9662ff9a698d"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2" rightIndent="5"/>
+                </textElement>
+                <text><![CDATA[Email]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="443" y="184" width="102" height="10" uuid="f6cf5a5e-0b68-4a83-bad8-5bdeb4cc7019"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Collect_Date}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="443" y="194" width="102" height="10" uuid="d915c931-96c1-41ca-9f06-62d6c7eb883a"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{RDN_CREATED_DATE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="443" y="204" width="102" height="10" uuid="2afa4be3-4229-4204-a68f-383d203be2b7"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{SO_ID}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="443" y="214" width="102" height="10" uuid="81123bbb-6631-4834-b209-1aad78d210b4"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{SO_CREATED_DATE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="443" y="224" width="102" height="10" uuid="c1cd43bb-cfb6-49b0-939a-4fbb5154dfce"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Mobile_No}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="443" y="234" width="102" height="10" uuid="a71c489b-b9e0-4344-b146-1f1efdb3f6fd"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Email}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageHeader>
+    <columnHeader>
+        <band height="10" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="28" height="10" uuid="4c52aa24-08e6-469b-a171-19860f2db418"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[S/No.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="28" y="0" width="100" height="10" uuid="6456ed4c-fa61-4477-8c13-3fed7b3b6d3a"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Product Code]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="128" y="0" width="103" height="10" uuid="9ee6590d-a04c-4399-acb2-97a55396233e"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Part No./ Description]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="231" y="0" width="42" height="10" uuid="44654c81-5bdd-4d45-ae70-51c96953046b"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Quantity]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="273" y="0" width="66" height="10" uuid="04f6a3c1-c718-4aa5-8754-9a4f5611e5bd"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Reason]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="339" y="0" width="216" height="10" uuid="739e0257-2a2b-43af-a9df-cc50527723ba"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Additional Description]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="10" splitType="Stretch">
+            <textField isStretchWithOverflow="true">
+                <reportElement x="0" y="0" width="28" height="10" uuid="b127bd09-ab47-4d02-a7e0-657cbd93335f"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.5"/>
+                    <leftPen lineWidth="0.5"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="0.5"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2" rightIndent="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="28" y="0" width="100" height="10" uuid="90065a7b-9ea5-43e6-9038-4e9a90bdf531"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.5"/>
+                    <leftPen lineWidth="0.5"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="0.5"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Prod_ID}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="128" y="0" width="103" height="10" uuid="29bd9953-4b4f-4792-aa53-7b15da512a75"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.5"/>
+                    <leftPen lineWidth="0.5"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="0.5"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{PART_NO_DESC}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="231" y="0" width="42" height="10" uuid="ba311eb2-a199-4f20-bfc6-dd7ff5778f12"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.5"/>
+                    <leftPen lineWidth="0.5"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="0.5"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Ori_Qty}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="273" y="0" width="66" height="10" uuid="32d9fdf5-8a20-4439-b652-34bbf8d0dad4"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.5"/>
+                    <leftPen lineWidth="0.5"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="0.5"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Reason}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="339" y="0" width="216" height="10" uuid="4769ba99-f325-4044-97b6-cbab80e0f3ed"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.5"/>
+                    <leftPen lineWidth="0.5"/>
+                    <bottomPen lineWidth="0.5"/>
+                    <rightPen lineWidth="0.5"/>
+                </box>
+                <textElement>
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{Remark}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="300" splitType="Stretch">
+            <textField>
+                <reportElement x="0" y="13" width="555" height="58" uuid="1cb2062e-4a10-4f91-9d73-594b792b944f"/>
+                <box>
+                    <topPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                </box>
+                <textElement markup="html">
+                    <font fontName="Calibri" size="8"/>
+                    <paragraph leftIndent="2" rightIndent="2" spacingBefore="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{var_Page_Footer}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="150" y="141" width="109" height="1" uuid="e5887399-f2c7-4375-9e69-6b264c8d9157"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <line>
+                <reportElement x="0" y="141" width="109" height="1" uuid="fc9aacb7-b02f-4d8a-9118-b4704b522f3a"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="150" y="87" width="109" height="20" uuid="f8cc775b-e21f-4a1a-9529-6a6b69d4655b"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Inspected By]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="155" width="109" height="11" uuid="ec8751e1-0439-44cc-a8fb-06bbd2e2a7a7"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="142" width="109" height="11" uuid="085e0d6d-3308-41af-92e6-a4138d72dd1f"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="150" y="142" width="109" height="11" uuid="82ae7390-6379-419c-b840-eaee8f003c38"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="150" y="155" width="109" height="11" uuid="37325dc1-5d31-4c2f-83df-d00c8cfa64bb"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="87" width="109" height="20" uuid="d3f5904f-ac75-4d61-b227-edb7b07ffbee"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Issued By]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="288" y="142" width="109" height="11" uuid="870cf91c-8f78-4cff-9516-bfe5ee30e18c"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="288" y="155" width="109" height="11" uuid="b771df93-eda6-4244-8179-c31f2cceab1f"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <line>
+                <reportElement x="288" y="141" width="109" height="1" uuid="28ed4d5b-4340-4156-856d-1ce23e2874f3"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="288" y="87" width="109" height="20" uuid="75142991-ae61-485e-93db-e11e2e3fbd34"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Collect Back By]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="436" y="87" width="109" height="20" uuid="ce70042c-33d2-4a8c-9bf6-648b1bc98095"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Item(s) Passed Back By]]></text>
+            </staticText>
+            <line>
+                <reportElement x="436" y="141" width="109" height="1" uuid="f7cec082-407f-4de6-a35a-5dcea282347e"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="436" y="142" width="109" height="11" uuid="34a26297-6434-4999-a167-9852da4dfb62"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="436" y="155" width="109" height="11" uuid="556f7343-7ac3-41df-9de4-2d90e3b9318e"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="436" y="245" width="109" height="11" uuid="a69e2312-b355-4a97-91f7-aced4f52f754"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <line>
+                <reportElement x="436" y="231" width="109" height="1" uuid="5fb0edef-903b-4b39-99bd-c3d49e0e36d5"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="436" y="177" width="109" height="20" uuid="cbcf8ac6-4304-403c-acce-153d9d6405b6"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Item(s) Passed Back By]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="436" y="232" width="109" height="11" uuid="0d1c2b0b-299c-4c14-b94f-b7cd5409b1af"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2" rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="289" width="275" height="11" uuid="7fb38f3c-f287-4611-8c09-b87e216ed955"/>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="false" isStrikeThrough="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Tel: 016-3717733    Fax: (603) 7965 9999    Email: ThirShen_Gan@gmail.com]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="267" width="275" height="11" uuid="aa3e9b7c-95f7-475a-8f81-eca60d4b6568"/>
+                <textElement>
+                    <font fontName="Calibri" size="7" isBold="false" isStrikeThrough="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Co. Reg. No.: 001515510-U]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="256" width="275" height="11" uuid="508d1a60-7493-4d4e-a902-dad1479cea9a"/>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="true" isStrikeThrough="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Thir Shen Sdn. Bhd.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="278" width="275" height="11" uuid="dc94f292-5ef6-4b6e-a01c-7b4324266892"/>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="false" isStrikeThrough="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Lot.8538, Jalan Klang Banting, 42700 Banting, Selangor]]></text>
+            </staticText>
+        </band>
+    </pageFooter>
+</jasperReport>

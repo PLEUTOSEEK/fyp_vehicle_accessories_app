@@ -16,6 +16,7 @@ public class Customer extends Person {
 
     private String custID;
     private String bankAccProvider;
+    private String bankAccOwnerName;
     private String bankAccNo;
     private Address billToAddr;
     private List<CollectAddress> dlvrAddrs;
@@ -81,6 +82,14 @@ public class Customer extends Person {
 
     public void setCustType(String custType) {
         this.custType = custType;
+    }
+
+    public String getBankAccOwnerName() {
+        return bankAccOwnerName;
+    }
+
+    public void setBankAccOwnerName(String bankAccOwnerName) {
+        this.bankAccOwnerName = bankAccOwnerName;
     }
 
 }

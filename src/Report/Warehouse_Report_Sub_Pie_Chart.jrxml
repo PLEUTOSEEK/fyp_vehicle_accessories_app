@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f79ccc7e-ac90-4e5a-b27d-1b7eb953f75d">
+    <property name="ireport.zoom" value="2.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <queryString>
+		<![CDATA[SELECT
+    LEVEL_STATUS,
+    COUNT(Prod_ID) AS COUNT_PRODUCTS
+FROM(
+    SELECT
+        Prod_ID,
+        TTL_INVENTORY,
+        CASE
+            WHEN TTL_INVENTORY >= Maximum_Level THEN 'MAXIMUM_LEVEL'
+            WHEN TTL_INVENTORY >= Average_Level THEN 'AVERAGE_LEVEL'
+            WHEN TTL_INVENTORY >= Minimum_Level THEN 'MINIMUM_LEVEL'
+            WHEN TTL_INVENTORY >= Reorder_Level THEN 'REORDER_LEVEL'
+            ELSE 'DANGER_LEVEL'
+        END AS LEVEL_STATUS
+    FROM (
+        SELECT
+            Product.Prod_ID,
+            Product.Maximum_Level,
+            Product.Average_Level,
+            Product.Minimum_Level,
+            Product.Reorder_Level,
+            Product.Danger_Level,
+            SUM(Inventory.Reserved_Qty) + SUM(Inventory.Ready_Qty) AS TTL_INVENTORY
+        FROM
+            Product
+            LEFT JOIN Inventory
+            ON Product.Prod_ID = Inventory.Inventory_ID
+        GROUP BY
+            Product.Prod_ID,
+            Product.Maximum_Level,
+            Product.Average_Level,
+            Product.Minimum_Level,
+            Product.Reorder_Level,
+            Product.Danger_Level
+    ) AS PROD_TTL_INVENTORY
+) AS COUNT_PRODUCT_BASED_ON_LEVEL_STATUS
+GROUP BY
+    LEVEL_STATUS
+]]>
+    </queryString>
+    <field name="LEVEL_STATUS" class="java.lang.String"/>
+    <field name="COUNT_PRODUCTS" class="java.lang.Integer"/>
+    <title>
+        <band height="139" splitType="Stretch">
+            <pieChart>
+                <chart evaluationTime="Report">
+                    <reportElement x="0" y="0" width="555" height="139" uuid="ecf968e0-c0b9-4fa8-8cf3-86396e014e32"/>
+                    <chartTitle/>
+                    <chartSubtitle/>
+                    <chartLegend/>
+                </chart>
+                <pieDataset>
+                    <keyExpression><![CDATA[$F{LEVEL_STATUS}]]></keyExpression>
+                    <valueExpression><![CDATA[$F{COUNT_PRODUCTS}]]></valueExpression>
+                </pieDataset>
+                <piePlot>
+                    <plot/>
+                    <itemLabel/>
+                </piePlot>
+            </pieChart>
+        </band>
+    </title>
+</jasperReport>

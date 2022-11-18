@@ -135,7 +135,7 @@ public class RDNPSSelectCONTR implements Initializable {
     @FXML
     private void confirmItem(MouseEvent event) {
         if (event.isPrimaryButtonDown() == true) {
-            if (validator.containsErrors()) {
+            if (!validator.validate()) {
                 alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
             }

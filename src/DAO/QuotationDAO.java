@@ -71,8 +71,8 @@ public class QuotationDAO {
             ps.setString(8, quotation.getCurrencyCode());
             ps.setDate(9, quotation.getQuotValidityDate());
             ps.setDate(10, quotation.getRequiredDeliveryDate());
-            ps.setString(11, quotation.getPymtTerm());
-            ps.setString(12, quotation.getShipmentTerm());
+            ps.setString(11, quotation.getPymtTerm().getPymtTermID());
+            ps.setString(12, quotation.getShipmentTerm().getShipmentTermID());
             ps.setBigDecimal(13, quotation.getGross());
             ps.setBigDecimal(14, quotation.getDiscount());
             ps.setBigDecimal(15, quotation.getSubTotal());
@@ -116,39 +116,63 @@ public class QuotationDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM View_Retrieve_All_Quotation WHERE QUOT_Quot_ID = ?";
+            query = "SELECT [QUOT_ID] "
+                    + "      ,[CI_ID] "
+                    + "      ,[Reference_Type] "
+                    + "      ,[Reference] "
+                    + "      ,[Bill_To_Cust] "
+                    + "      ,[Deliver_To] "
+                    + "      ,[Sales_Person] "
+                    + "      ,[Currency_Code] "
+                    + "      ,[Quot_Validity_Date] "
+                    + "      ,[Required_Delivery_Date] "
+                    + "      ,[Payment_Term] "
+                    + "      ,[Shipment_Term] "
+                    + "      ,[Gross] "
+                    + "      ,[Discount] "
+                    + "      ,[Sub_Total] "
+                    + "      ,[Nett] "
+                    + "      ,[Issued_By] "
+                    + "      ,[Released_And_Verified_By] "
+                    + "      ,[Customer_Signed] "
+                    + "      ,[Status] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Actual_Created_Date] "
+                    + "      ,[Signed_Doc_Pic] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[Quotation]"
+                    + "  WHERE [CI_ID] = ?";
             ps = conn.prepareStatement(query);
             ps.setString(1, code);
 
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                quotation = new Quotation(
-                        rs.getTimestamp("QUOT_Created_Date"),
-                        rs.getTimestamp("QUOT_Modified_Date_Time"),
-                        rs.getString("QUOT_Quot_ID"),
-                        rs.getTimestamp("QUOT_Actual_Created_Date"),
-                        rs.getString("signedDocPic"),
-                        rs.getString("QUOT_Status"),
-                        CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("QUOT_CI_ID")),
-                        rs.getString("QUOT_Reference_Type"),
-                        rs.getString("QUOT_Reference"),
-                        CustomerDAO.getCustomerByID(rs.getString("QUOT_Bill_To_Cust")),
-                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Deliver_To")),
-                        StaffDAO.getStaffByID(rs.getString("QUOT_Sales_Person")),
-                        rs.getString("QUOT_Currency_Code"),
-                        rs.getDate("QUOT_Quot_Validity_Date"),
-                        rs.getDate("QUOT_Required_Delivery_Date"),
-                        rs.getString("QUOT_Payment_Term"),
-                        rs.getString("QUOT_Shipment_Term"),
-                        rs.getBigDecimal("QUOT_Gross"),
-                        rs.getBigDecimal("QUOT_Discount"),
-                        rs.getBigDecimal("QUOT_Sub_Total"),
-                        rs.getBigDecimal("QUOT_Nett"),
-                        StaffDAO.getStaffByID(rs.getString("QUOT_Issued_By")),
-                        StaffDAO.getStaffByID(rs.getString("QUOT_Released_And_Verified_By")),
-                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Customer_Signed"))
-                );
+                quotation = new Quotation();
+                quotation.setCode(rs.getString("QUOT_ID"));
+                quotation.setCI(CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("CI_ID")));
+                quotation.setReferenceType(rs.getString("Reference_Type"));
+                quotation.setReference(rs.getString("Reference"));
+                quotation.setBillToCust(CustomerDAO.getCustomerByID(rs.getString("Bill_To_Cust")));
+                quotation.setDeliverToCust(CollectAddressDAO.getCollectAddressByID(rs.getString("Deliver_To")));
+                quotation.setSalesPerson(StaffDAO.getStaffByID(rs.getString("Sales_Person")));
+                quotation.setCurrencyCode(rs.getString("Currency_Code"));
+                quotation.setQuotValidityDate(rs.getDate("Quot_Validity_Date"));
+                quotation.setRequiredDeliveryDate(rs.getDate("Required_Delivery_Date"));
+                quotation.setPymtTerm(PaymentTermDAO.getPymtTermByID(rs.getString("Payment_Term")));
+                quotation.setShipmentTerm(ShipmentTermDAO.getShipmentTermByID(rs.getString("Shipment_Term")));
+                quotation.setGross(rs.getBigDecimal("Gross"));
+                quotation.setDiscount(rs.getBigDecimal("Discount"));
+                quotation.setSubTotal(rs.getBigDecimal("Sub_Total"));
+                quotation.setNett(rs.getBigDecimal(rs.getString("Nett")));
+                quotation.setIssuedBy(StaffDAO.getStaffByID(rs.getString("Issued_By")));
+                quotation.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("Released_And_Verified_By")));
+                quotation.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("Customer_Signed")));
+                quotation.setStatus(rs.getString("Status"));
+                quotation.setCreatedDate(rs.getTimestamp("Created_Date"));
+                quotation.setActualCreatedDateTime(rs.getTimestamp("Actual_Created_Date"));
+                quotation.setSignedDocPic(rs.getString("Signed_Doc_Pic"));
+                quotation.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
                 return quotation;
             } else {
                 return null;
@@ -212,48 +236,72 @@ public class QuotationDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        List<Quotation> quots = new ArrayList<>();
+        Quotation quotation = new Quotation();
+        List<Quotation> quotations = new ArrayList<>();
 
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM View_Retrieve_All_Quotation";
-            ps = conn.prepareStatement(query);
+            query = "SELECT [QUOT_ID] "
+                    + "      ,[CI_ID] "
+                    + "      ,[Reference_Type] "
+                    + "      ,[Reference] "
+                    + "      ,[Bill_To_Cust] "
+                    + "      ,[Deliver_To] "
+                    + "      ,[Sales_Person] "
+                    + "      ,[Currency_Code] "
+                    + "      ,[Quot_Validity_Date] "
+                    + "      ,[Required_Delivery_Date] "
+                    + "      ,[Payment_Term] "
+                    + "      ,[Shipment_Term] "
+                    + "      ,[Gross] "
+                    + "      ,[Discount] "
+                    + "      ,[Sub_Total] "
+                    + "      ,[Nett] "
+                    + "      ,[Issued_By] "
+                    + "      ,[Released_And_Verified_By] "
+                    + "      ,[Customer_Signed] "
+                    + "      ,[Status] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Actual_Created_Date] "
+                    + "      ,[Signed_Doc_Pic] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[Quotation]";
 
-            // bind parameter
+            ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                quots.add(new Quotation(
-                        rs.getTimestamp("QUOT_Created_Date"),
-                        rs.getTimestamp("QUOT_Modified_Date_Time"),
-                        rs.getString("QUOT_Quot_ID"),
-                        rs.getTimestamp("QUOT_Actual_Created_Date"),
-                        rs.getString("QUOT_Signed_Doc_Pic"),
-                        rs.getString("QUOT_Status"),
-                        CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("QUOT_CI_ID")),
-                        rs.getString("QUOT_Reference_Type"),
-                        rs.getString("QUOT_Reference"),
-                        CustomerDAO.getCustomerByID(rs.getString("QUOT_Bill_To_Cust")),
-                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Deliver_To")),
-                        StaffDAO.getStaffByID(rs.getString("QUOT_Sales_Person")),
-                        rs.getString("QUOT_Currency_Code"),
-                        rs.getDate("QUOT_Quot_Validity_Date"),
-                        rs.getDate("QUOT_Required_Delivery_Date"),
-                        rs.getString("QUOT_Payment_Term"),
-                        rs.getString("QUOT_Shipment_Term"),
-                        rs.getBigDecimal("QUOT_Gross"),
-                        rs.getBigDecimal("QUOT_Discount"),
-                        rs.getBigDecimal("QUOT_Sub_Total"),
-                        rs.getBigDecimal("QUOT_Nett"),
-                        StaffDAO.getStaffByID(rs.getString("QUOT_Issued_By")),
-                        StaffDAO.getStaffByID(rs.getString("QUOT_Released_And_Verified_By")),
-                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Customer_Signed"))
-                ));
+                quotation = new Quotation();
+                quotation.setCode(rs.getString("QUOT_ID"));
+                quotation.setCI(CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("CI_ID")));
+                quotation.setReferenceType(rs.getString("Reference_Type"));
+                quotation.setReference(rs.getString("Reference"));
+                quotation.setBillToCust(CustomerDAO.getCustomerByID(rs.getString("Bill_To_Cust")));
+                quotation.setDeliverToCust(CollectAddressDAO.getCollectAddressByID(rs.getString("Deliver_To")));
+                quotation.setSalesPerson(StaffDAO.getStaffByID(rs.getString("Sales_Person")));
+                quotation.setCurrencyCode(rs.getString("Currency_Code"));
+                quotation.setQuotValidityDate(rs.getDate("Quot_Validity_Date"));
+                quotation.setRequiredDeliveryDate(rs.getDate("Required_Delivery_Date"));
+                quotation.setPymtTerm(PaymentTermDAO.getPymtTermByID(rs.getString("Payment_Term")));
+                quotation.setShipmentTerm(ShipmentTermDAO.getShipmentTermByID(rs.getString("Shipment_Term")));
+                quotation.setGross(rs.getBigDecimal("Gross"));
+                quotation.setDiscount(rs.getBigDecimal("Discount"));
+                quotation.setSubTotal(rs.getBigDecimal("Sub_Total"));
+                quotation.setNett(rs.getBigDecimal(rs.getString("Nett")));
+                quotation.setIssuedBy(StaffDAO.getStaffByID(rs.getString("Issued_By")));
+                quotation.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("Released_And_Verified_By")));
+                quotation.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("Customer_Signed")));
+                quotation.setStatus(rs.getString("Status"));
+                quotation.setCreatedDate(rs.getTimestamp("Created_Date"));
+                quotation.setActualCreatedDateTime(rs.getTimestamp("Actual_Created_Date"));
+                quotation.setSignedDocPic(rs.getString("Signed_Doc_Pic"));
+                quotation.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+
+                quotations.add(quotation);
             }
 
-            //return object
-            return quots;
+            return quotations;
 
         } catch (Exception e) {
             return null;
@@ -319,8 +367,8 @@ public class QuotationDAO {
             ps.setString(7, quotation.getCurrencyCode());
             ps.setDate(8, quotation.getQuotValidityDate());
             ps.setDate(9, quotation.getRequiredDeliveryDate());
-            ps.setString(10, quotation.getPymtTerm());
-            ps.setString(11, quotation.getShipmentTerm());
+            ps.setString(10, quotation.getPymtTerm().getPymtTermID());
+            ps.setString(11, quotation.getShipmentTerm().getShipmentTermID());
             ps.setBigDecimal(12, quotation.getGross());
             ps.setBigDecimal(13, quotation.getDiscount());
             ps.setBigDecimal(14, quotation.getSubTotal());
@@ -374,73 +422,6 @@ public class QuotationDAO {
 
             ps.execute();
             return quotation.getCode();
-        } catch (Exception e) {
-            return null;
-        } finally {
-            try {
-                ps.close();
-            } catch (Exception e) {
-                /* ignored */
-            }
-            try {
-                conn.close();
-            } catch (Exception e) {
-                /* ignored */
-            }
-        }
-    }
-
-    public static Quotation getQuotationByID(String code) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        String query = "";
-        ResultSet rs = null;
-        List<Quotation> quots = new ArrayList<>();
-        Quotation quotation = new Quotation();
-
-        try {
-            conn = SQLDatabaseConnection.openConn();
-
-            query = "SELECT * FROM View_Retrieve_All_Quotation WHERE QUOT_Quot_ID = ?";
-            ps = conn.prepareStatement(query);
-
-            // bind parameter
-            ps.setString(1, code);
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                quotation = new Quotation(
-                        rs.getTimestamp("QUOT_Created_Date"),
-                        rs.getTimestamp("QUOT_Modified_Date_Time"),
-                        rs.getString("QUOT_Quot_ID"),
-                        rs.getTimestamp("QUOT_Actual_Created_Date"),
-                        rs.getString("QUOT_Signed_Doc_Pic"),
-                        rs.getString("QUOT_Status"),
-                        CustomerInquiryDAO.getCustomerInquiryByCode(rs.getString("QUOT_CI_ID")),
-                        rs.getString("QUOT_Reference_Type"),
-                        rs.getString("QUOT_Reference"),
-                        CustomerDAO.getCustomerByID(rs.getString("QUOT_Bill_To_Cust")),
-                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Deliver_To")),
-                        StaffDAO.getStaffByID(rs.getString("QUOT_Sales_Person")),
-                        rs.getString("QUOT_Currency_Code"),
-                        rs.getDate("QUOT_Quot_Validity_Date"),
-                        rs.getDate("QUOT_Required_Delivery_Date"),
-                        rs.getString("QUOT_Payment_Term"),
-                        rs.getString("QUOT_Shipment_Term"),
-                        rs.getBigDecimal("QUOT_Gross"),
-                        rs.getBigDecimal("QUOT_Discount"),
-                        rs.getBigDecimal("QUOT_Sub_Total"),
-                        rs.getBigDecimal("QUOT_Nett"),
-                        StaffDAO.getStaffByID(rs.getString("QUOT_Issued_By")),
-                        StaffDAO.getStaffByID(rs.getString("QUOT_Released_And_Verified_By")),
-                        CollectAddressDAO.getCollectAddressByID(rs.getString("QUOT_Customer_Signed"))
-                );
-
-            }
-
-            //return object
-            return quotation;
-
         } catch (Exception e) {
             return null;
         } finally {

@@ -21,8 +21,8 @@ public class CustomerInquiry extends Document {
     private CollectAddress deliverToCust;
     private String currencyCode;
     private Date requiredDeliveryDate;
-    private String pymtTerm;
-    private String shipmentTerm;
+    private PaymentTerm pymtTerm;
+    private ShipmentTerm shipmentTerm;
     private Staff salesPerson;
     private List<Item> items;
     private BigDecimal gross;
@@ -32,10 +32,10 @@ public class CustomerInquiry extends Document {
     private Staff issuedBy;
 
     public CustomerInquiry() {
-        this(null, null, "", null, null, "", "", "", null, null, "", null, "", "", null, null, null, null, null, null, null);
+        this(null, null, "", null, null, "", "", "", null, null, "", null, null, null, null, null, null, null, null, null, null);
     }
 
-    public CustomerInquiry(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, String referenceType, String reference, Customer billToCust, CollectAddress deliverToCust, String currencyCode, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, Staff salesPerson, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy) {
+    public CustomerInquiry(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, String referenceType, String reference, Customer billToCust, CollectAddress deliverToCust, String currencyCode, Date requiredDeliveryDate, PaymentTerm pymtTerm, ShipmentTerm shipmentTerm, Staff salesPerson, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.referenceType = referenceType;
         this.reference = reference;
@@ -102,19 +102,19 @@ public class CustomerInquiry extends Document {
         this.requiredDeliveryDate = requiredDeliveryDate;
     }
 
-    public String getPymtTerm() {
+    public PaymentTerm getPymtTerm() {
         return pymtTerm;
     }
 
-    public void setPymtTerm(String pymtTerm) {
+    public void setPymtTerm(PaymentTerm pymtTerm) {
         this.pymtTerm = pymtTerm;
     }
 
-    public String getShipmentTerm() {
+    public ShipmentTerm getShipmentTerm() {
         return shipmentTerm;
     }
 
-    public void setShipmentTerm(String shipmentTerm) {
+    public void setShipmentTerm(ShipmentTerm shipmentTerm) {
         this.shipmentTerm = shipmentTerm;
     }
 

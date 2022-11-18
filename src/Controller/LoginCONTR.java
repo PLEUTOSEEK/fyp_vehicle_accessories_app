@@ -56,7 +56,7 @@ public class LoginCONTR implements Initializable {
 
         if (event.isPrimaryButtonDown() == true) {
 
-            if (validator.containsErrors()) {
+            if (!validator.validate()) {
                 alertDialog(AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
             }

@@ -13,7 +13,9 @@ import Entity.Customer;
 import Entity.CustomerInquiry;
 import Entity.Inventory;
 import Entity.Item;
+import Entity.PaymentTerm;
 import Entity.Quotation;
+import Entity.ShipmentTerm;
 import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.CustomerInquiryService;
@@ -96,10 +98,6 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private MFXComboBox<?> cmbCurrencyCode;
     @FXML
-    private MFXComboBox<?> cmbPymtTerm;
-    @FXML
-    private MFXComboBox<?> cmbShipmentTerm;
-    @FXML
     private MFXCircleToggleNode ctnDeliverToSelection;
     @FXML
     private MFXCircleToggleNode ctnSalesPersonSelection;
@@ -143,6 +141,14 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
     private MFXCircleToggleNode ctnCIRefSelection;
     @FXML
     private Label lblImgStr;
+    @FXML
+    private MFXTextField txtPymtTerm;
+    @FXML
+    private MFXCircleToggleNode ctnPymtTermSelection;
+    @FXML
+    private MFXTextField txtShipmentTerm;
+    @FXML
+    private MFXCircleToggleNode ctnShipmentTermSelection;
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="util declarations">
@@ -214,8 +220,6 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
     private void initializeComboSelections() {
 
         ((MFXComboBox<String>) this.cmbCurrencyCode).setItems(FXCollections.observableList(accRules.getCurrencyCodes()));
-        ((MFXComboBox<String>) this.cmbPymtTerm).setItems(FXCollections.observableList(accRules.getPymtTerms()));
-        ((MFXComboBox<String>) this.cmbShipmentTerm).setItems(FXCollections.observableList(warehouseRules.getShipmentTerms()));
         ((MFXComboBox<QuotStatus>) this.cmbStatus).setItems(FXCollections.observableList(salesRules.getQuotStatuses()));
     }
 
@@ -380,8 +384,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
                 this.cmbCurrencyCode.setText(quotation.getCurrencyCode());
-                this.cmbPymtTerm.setText(quotation.getPymtTerm());
-                this.cmbShipmentTerm.setText(quotation.getShipmentTerm());
+                this.txtPymtTerm.setText(quotation.getPymtTerm().getPymtTermID());
+                this.txtShipmentTerm.setText(quotation.getShipmentTerm().getShipmentTermID());
                 this.cmbStatus.setText(quotation.getStatus());
 
                 this.txtGross.setText(quotation.getGross() == null ? "" : quotation.getGross().toString());
@@ -408,8 +412,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
                 this.cmbCurrencyCode.setText(customerInquiry.getCurrencyCode());
-                this.cmbPymtTerm.setText(customerInquiry.getPymtTerm());
-                this.cmbShipmentTerm.setText(customerInquiry.getShipmentTerm());
+                this.txtPymtTerm.setText(customerInquiry.getPymtTerm() == null ? "" : customerInquiry.getPymtTerm().getPymtTermID());
+                this.txtShipmentTerm.setText(customerInquiry.getShipmentTerm() == null ? "" : customerInquiry.getShipmentTerm().getShipmentTermID());
 
                 this.txtGross.setText(customerInquiry.getGross() == null ? "" : customerInquiry.getGross().toString());
                 this.txtDiscount.setText(customerInquiry.getDiscount() == null ? "" : customerInquiry.getDiscount().toString());
@@ -439,8 +443,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         this.dtQuotValidDate.setDisable(disable);
         this.dtReqDlvrDate.setDisable(disable);
         this.cmbCurrencyCode.setDisable(disable);
-        this.cmbPymtTerm.setDisable(disable);
-        this.cmbShipmentTerm.setDisable(disable);
+        this.txtPymtTerm.setDisable(disable);
+        this.txtShipmentTerm.setDisable(disable);
         this.cmbStatus.setDisable(disable);
         this.txtGross.setDisable(disable);
         this.txtDiscount.setDisable(disable);
@@ -457,6 +461,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         this.ctnIssuedBySelection.setDisable(disable);
         this.ctnReleasedAVerifiedBySelection.setDisable(disable);
         this.ctnCustSignatureSelection.setDisable(disable);
+        this.ctnPymtTermSelection.setDisable(disable);
+        this.ctnShipmentTermSelection.setDisable(disable);
 
         this.tblVw.setDisable(disable);
         this.btnAdd.setDisable(disable);
@@ -563,8 +569,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         this.dtQuotValidDate.clear();
         this.dtReqDlvrDate.clear();
         this.cmbCurrencyCode.clear();
-        this.cmbPymtTerm.clear();
-        this.cmbShipmentTerm.clear();
+        this.txtPymtTerm.clear();
+        this.txtShipmentTerm.clear();
         this.cmbStatus.clear();
 
         this.txtGross.clear();
@@ -622,8 +628,10 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         quotation.setQuotValidityDate(this.dtQuotValidDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtQuotValidDate.getValue()));
         quotation.setRequiredDeliveryDate(this.dtReqDlvrDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtReqDlvrDate.getValue()));
         quotation.setCurrencyCode(this.cmbCurrencyCode.getText());
-        quotation.setPymtTerm(this.cmbPymtTerm.getText());
-        quotation.setShipmentTerm(this.cmbShipmentTerm.getText());
+        quotation.setPymtTerm(new PaymentTerm());
+        quotation.getPymtTerm().setPymtTermID(this.txtPymtTerm.getText());
+        quotation.setShipmentTerm(new ShipmentTerm());
+        quotation.getShipmentTerm().setShipmentTermID(this.txtShipmentTerm.getText());
         quotation.setStatus(this.cmbStatus.getText());
 
         quotation.setGross(new BigDecimal(this.txtGross.getText()));
@@ -982,7 +990,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                 return;
             }
 
-            if (validator.containsErrors()) {
+            if (!validator.validate()) {
                 alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
             }
@@ -1052,6 +1060,60 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         if (!this.txtCIRef.getText().isEmpty()) {
             quotInDraft.getCI().setStatus(SalesRules.CIStatus.COMPLETED.toString());
             CustomerInquiryService.updateCustomerInquiryStatus(quotInDraft.getCI());
+        }
+    }
+
+    @FXML
+    private void openShipmentTermSelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new ShipmentTerm());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtShipmentTerm.setText(((ShipmentTerm) receiveObj.getObj()).getShipmentTermID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    private void openPymtTermSelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new PaymentTerm());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtPymtTerm.setText(((PaymentTerm) receiveObj.getObj()).getPymtTermID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

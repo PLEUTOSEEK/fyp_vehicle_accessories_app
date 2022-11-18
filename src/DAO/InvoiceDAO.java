@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -90,7 +92,7 @@ public class InvoiceDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        Invoice i = new Invoice();
+        Invoice invoice = new Invoice();
 
         try {
             conn = SQLDatabaseConnection.openConn();
@@ -103,25 +105,25 @@ public class InvoiceDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                i.setSO(SalesOrderDAO.getSalesOrderByID(rs.getString("INV_ID")));
-                i.setReferenceType(rs.getString("Reference_Type"));
-                i.setReference(rs.getString("Reference"));
-                i.setGross(rs.getBigDecimal("Gross"));
-                i.setDiscount(rs.getBigDecimal("Discount"));
-                i.setSubTotal(rs.getBigDecimal("Sub_Total"));
-                i.setTtlPayable(rs.getBigDecimal("Total_Payable"));
-                i.setIssuedBy(StaffDAO.getStaffByID(rs.getString("Issued_By")));
-                i.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("Released_And_Verified_By")));
-                i.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("Customer_Signed")));
-                i.setStatus(rs.getString("Status"));
-                i.setCreatedDate(rs.getTimestamp("Created_Date"));
-                i.setActualCreatedDateTime(rs.getTimestamp("Actual_Created_Date"));
-                i.setSignedDocPic(rs.getString("Signed_Doc_Pic"));
-                i.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+                invoice.setSO(SalesOrderDAO.getSalesOrderByID(rs.getString("INV_ID")));
+                invoice.setReferenceType(rs.getString("Reference_Type"));
+                invoice.setReference(rs.getString("Reference"));
+                invoice.setGross(rs.getBigDecimal("Gross"));
+                invoice.setDiscount(rs.getBigDecimal("Discount"));
+                invoice.setSubTotal(rs.getBigDecimal("Sub_Total"));
+                invoice.setTtlPayable(rs.getBigDecimal("Total_Payable"));
+                invoice.setIssuedBy(StaffDAO.getStaffByID(rs.getString("Issued_By")));
+                invoice.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("Released_And_Verified_By")));
+                invoice.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("Customer_Signed")));
+                invoice.setStatus(rs.getString("Status"));
+                invoice.setCreatedDate(rs.getTimestamp("Created_Date"));
+                invoice.setActualCreatedDateTime(rs.getTimestamp("Actual_Created_Date"));
+                invoice.setSignedDocPic(rs.getString("Signed_Doc_Pic"));
+                invoice.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
             }
 
             //return object
-            return i;
+            return invoice;
         } catch (Exception e) {
             return null;
         } finally {
@@ -273,6 +275,63 @@ public class InvoiceDAO {
             ps.execute();
 
             return invoice.getCode();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static List<Invoice> getAllInvoices() {
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        Invoice invoice = new Invoice();
+        List<Invoice> invoices = new ArrayList<>();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT * FROM Invoice";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                invoice.setCode(rs.getString("INV_ID"));
+                invoice.setSO(SalesOrderDAO.getSalesOrderByID(rs.getString("SO_ID")));
+                invoice.setReferenceType(rs.getString("Reference_Type"));
+                invoice.setReference(rs.getString("Reference"));
+                invoice.setGross(rs.getBigDecimal("Gross"));
+                invoice.setDiscount(rs.getBigDecimal("Discount"));
+                invoice.setSubTotal(rs.getBigDecimal("Sub_Total"));
+                invoice.setTtlPayable(rs.getBigDecimal("Total_Payable"));
+                invoice.setIssuedBy(StaffDAO.getStaffByID(rs.getString("Issued_By")));
+                invoice.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("Released_And_Verified_By")));
+                invoice.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("Customer_Signed")));
+                invoice.setStatus(rs.getString("Status"));
+                invoice.setCreatedDate(rs.getTimestamp("Created_Date"));
+                invoice.setActualCreatedDateTime(rs.getTimestamp("Actual_Created_Date"));
+                invoice.setSignedDocPic(rs.getString("Signed_Doc_Pic"));
+                invoice.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+
+                invoices.add(invoice);
+            }
+
+            //return object
+            return invoices;
         } catch (Exception e) {
             return null;
         } finally {

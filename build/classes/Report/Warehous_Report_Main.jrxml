@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b7ed81ce-3bc5-4de9-bf39-8701e5f24536">
+    <property name="ireport.zoom" value="2.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="96"/>
+    <parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA["C:\\Users\\Tee Zhuo Xuan\\OneDrive - Tunku Abdul Rahman University College\\Desktop\\fyp_vehicle_accessories_app\\src\\Report\\"]]></defaultValueExpression>
+    </parameter>
+    <queryString language="SQL">
+		<![CDATA[SELECT ''
+FROM Customer]]>
+    </queryString>
+    <field name="" class="java.lang.String"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="389" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="464" height="104" uuid="817ee483-6dd4-4005-971c-e60c80729039"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="40" isBold="true"/>
+                </textElement>
+                <text><![CDATA[INVENTORY CONTROL
+REPORT]]></text>
+            </staticText>
+            <image>
+                <reportElement x="464" y="25" width="91" height="55" uuid="683f4707-c4a2-42cf-bd5b-6062b5497f67"/>
+                <imageExpression><![CDATA["C:\\Users\\Tee Zhuo Xuan\\OneDrive - Tunku Abdul Rahman University College\\Desktop\\fyp_vehicle_accessories_app\\Images\\311588031_574271901246093_1596750214979266858_n.jpg"]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement x="355" y="104" width="100" height="10" uuid="e2ca57e8-910e-43ea-87dc-fc24ec7b5445"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Print Date & Time]]></text>
+            </staticText>
+            <textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy HH.mm" isBlankWhenNull="true">
+                <reportElement x="455" y="104" width="100" height="10" uuid="7752403d-bf4c-4413-95f6-3313a454467d"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+            <subreport>
+                <reportElement x="0" y="330" width="235" height="52" uuid="68911760-a523-4676-975e-ce5609b1a81e"/>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Warehouse_Report_Sub_Quantities.jasper"]]></subreportExpression>
+            </subreport>
+            <staticText>
+                <reportElement x="0" y="129" width="100" height="10" uuid="d10f7dbd-501e-420a-a036-e85642ae4c63"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Warehouse Address]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="139" width="157" height="20" uuid="e7fa04e1-9194-4db2-9e9c-92510c9f3239"/>
+                <textElement>
+                    <font fontName="Century Gothic" size="8"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Lot.8538, Jalan Klang Banting, 42700 Banting, Selangor]]></text>
+            </staticText>
+            <line>
+                <reportElement x="0" y="164" width="555" height="1" uuid="e600fb2f-c4c4-479b-a9ca-d4414ea6d5d8"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="255" y="313" width="100" height="10" uuid="7d713f38-3838-4697-a665-f643683ecd67"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Products In: ]]></text>
+            </staticText>
+            <subreport>
+                <reportElement x="255" y="330" width="300" height="52" uuid="a63723d4-2d97-496f-8af8-b95c5b5a78e5"/>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Warehouse_Report_Sub_Level_Status.jasper"]]></subreportExpression>
+            </subreport>
+            <subreport>
+                <reportElement x="0" y="165" width="555" height="143" uuid="fea7eab2-bfdf-480a-94e6-3339e1998c76"/>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Warehouse_Report_Sub_Pie_Chart.jasper"]]></subreportExpression>
+            </subreport>
+        </band>
+    </title>
+    <detail>
+        <band height="125" splitType="Stretch">
+            <subreport>
+                <reportElement x="0" y="0" width="555" height="125" uuid="31810d2e-fa26-43b3-a4c9-2fc38f468ba4"/>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Warehouse_Report_Sub_Body.jasper"]]></subreportExpression>
+            </subreport>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="131" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="109" width="275" height="11" uuid="f801af12-a5fc-4f8f-842a-bc6e2b1b5c81"/>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Lot.8538, Jalan Klang Banting, 42700 Banting, Selangor]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="87" width="275" height="11" uuid="70422a07-a868-466e-a709-f5f0cb821b5b"/>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Thir Shen Sdn. Bhd.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="120" width="275" height="11" uuid="1cd17881-e844-4d65-824f-71dfd4f11b24"/>
+                <textElement>
+                    <font fontName="Calibri" size="8" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Tel: 016-3717733    Fax: (603) 7965 9999    Email: ThirShen_Gan@gmail.com]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="98" width="275" height="11" uuid="3a5ac7ee-e232-4e8a-acdb-276e64a3690b"/>
+                <textElement>
+                    <font fontName="Calibri" size="7" isBold="false"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Co. Reg. No.: 001515510-U]]></text>
+            </staticText>
+            <line>
+                <reportElement x="415" y="62" width="140" height="1" uuid="05ce2e27-5e6d-4060-b0c2-39abfd1f01e5"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="415" y="9" width="140" height="20" uuid="6e5c46da-fb34-4f6c-a117-6988e0ae7688"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="8" isBold="false"/>
+                    <paragraph rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Released & Verified By]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="415" y="76" width="140" height="11" uuid="0eb03120-ebdd-45e6-a5a4-d25a170d01cd"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="8" isBold="false"/>
+                    <paragraph rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="415" y="63" width="140" height="11" uuid="d5cae186-8428-48df-b845-36b4e2cb66ba"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="8" isBold="false"/>
+                    <paragraph rightIndent="10"/>
+                </textElement>
+                <text><![CDATA[Name]]></text>
+            </staticText>
+        </band>
+    </pageFooter>
+</jasperReport>

@@ -137,27 +137,37 @@ public class ImageViewer_UI implements Initializable, BasicCONTRFunc {
 
     @Override
     public void inputValidation() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // Unused
+        return;
     }
 
     @Override
     public boolean clearAllFieldsValue() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // Unused
+        return true;
     }
 
     @Override
     public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerTxt);
+        alert.setContentText(contentTxt);
+
+        alert.showAndWait();
+        return alert.getResult();
     }
 
     @Override
     public void switchScene(String fxmlPath, BasicObjs passObj, String direction) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // Unused
+        return;
     }
 
     @Override
     public BasicObjs sendData(BasicObjs passObj, String direction) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Unused
+        return new BasicObjs();
     }
 
     @Override

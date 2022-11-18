@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="46df67f3-2a81-42d2-bf41-8d2a4425fe9f">
+    <property name="ireport.zoom" value="2.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <queryString>
+		<![CDATA[-- Ready, Reserved, Total Quantities
+SELECT
+    SUM(Inventory.Ready_Qty) AS TTL_READY_QTY,
+    SUM(Inventory.Reserved_Qty) AS TTL_RESERVED_QTY,
+    SUM(Inventory.Reserved_Qty) + SUM(Inventory.Ready_Qty) AS TTL_QTY
+FROM
+    Inventory]]>
+    </queryString>
+    <field name="TTL_READY_QTY" class="java.lang.Integer"/>
+    <field name="TTL_RESERVED_QTY" class="java.lang.Integer"/>
+    <field name="TTL_QTY" class="java.lang.Integer"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="42" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="97" height="12" uuid="e39efa35-947c-4134-96d3-9d817cb4cf13"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[READY QUANTITIES]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="15" width="97" height="12" uuid="a3f48c7f-e4d8-4593-bc2e-fc27f32b35be"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[RESERVED QUANTITIES]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="30" width="97" height="12" uuid="fdf1d542-0ef1-41a1-94fd-0bf5b5d3cbf4"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[TOTAL QUANTITIES]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="97" y="0" width="136" height="12" uuid="d2508fad-c508-4d7d-8942-4cef1406a686"/>
+                <textElement textAlignment="Right">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TTL_READY_QTY}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="97" y="15" width="136" height="12" uuid="39bdd2ac-95b9-4f37-8766-8ac40624e5a3"/>
+                <textElement textAlignment="Right">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TTL_RESERVED_QTY}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="97" y="30" width="136" height="12" uuid="f83c08de-1664-4a56-9124-b14a23bc07e3"/>
+                <textElement textAlignment="Right">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TTL_QTY}]]></textFieldExpression>
+            </textField>
+            <elementGroup>
+                <frame>
+                    <reportElement x="0" y="0" width="233" height="42" uuid="e843594c-c75b-40f3-a8a4-d50565593af5"/>
+                    <box rightPadding="0">
+                        <pen lineWidth="0.5"/>
+                        <topPen lineWidth="0.5"/>
+                        <leftPen lineWidth="0.5"/>
+                        <bottomPen lineWidth="0.5"/>
+                        <rightPen lineWidth="0.5"/>
+                    </box>
+                </frame>
+            </elementGroup>
+        </band>
+    </title>
+</jasperReport>

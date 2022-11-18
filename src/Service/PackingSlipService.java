@@ -40,7 +40,7 @@ public class PackingSlipService {
     }
 
     public static List<PackingSlip> getAllPackingSlips() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return PackingSlipDAO.getAllPackingSlips();
     }
 
 }

@@ -854,7 +854,7 @@ public class InnerEntitySelectCONTR implements Initializable {
                 new DateFilter<>("Created Date", invoice -> invoice.getCreatedDate())
         );
 
-        List<Invoice> invoices = InvoiceService.getAllInvoice();
+        List<Invoice> invoices = InvoiceService.getAllInvoices();
 
         //6
         ((MFXTableView<Invoice>) tblVw).setItems(FXCollections.observableList(invoices));
@@ -880,7 +880,6 @@ public class InnerEntitySelectCONTR implements Initializable {
                 }
             }
         });
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public void receiveData() {

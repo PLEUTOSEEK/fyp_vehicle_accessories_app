@@ -57,7 +57,7 @@ public class ItemService {
     }
 
     public static Collection<? extends Item> getItemNotYetPaidByInvoice(String code) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return ItemDAO.getItemsByCode(code);
     }
 
 }

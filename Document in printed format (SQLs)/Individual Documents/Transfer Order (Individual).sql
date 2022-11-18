@@ -25,3 +25,5 @@ FROM
 
     INNER JOIN Product
     ON Item.Prod_ID = Product.Prod_ID
+WHERE
+    TransferOrder.TO_ID = ''

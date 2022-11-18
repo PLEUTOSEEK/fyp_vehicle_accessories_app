@@ -220,7 +220,7 @@ public class PackingSlipDAO {
             query = "SELECT "
                     + "    PackingSlip.PS_ID,"
                     + "    TransferOrder.TO_ID,"
-                    + "    PackingSlip.Status,"
+                    + "    PackingSlip.Status"
                     + "     "
                     + "FROM "
                     + "    PackingSlip INNER JOIN "
@@ -300,6 +300,58 @@ public class PackingSlipDAO {
             return true;
         } catch (Exception e) {
             return false;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static List<PackingSlip> getAllPackingSlips() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        PackingSlip p = new PackingSlip();
+        List<PackingSlip> packingSlips = new ArrayList<>();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT [PS_ID] "
+                    + "      ,[TO_ID] "
+                    + "      ,[DO_ID] "
+                    + "      ,[Status] "
+                    + "      ,[Actual_Created_Date] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[PackingSlip]";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                p = new PackingSlip();
+                p.setCode(rs.getString("PS_ID"));
+                p.setTO(TransferOrderDAO.getTransferOrderByCode(rs.getString("TO_ID")));
+                p.setDO(DeliveryOrderDAO.getDeliveryOrderByCode(rs.getString("DO_ID")));
+                p.setStatus(rs.getString("Status"));
+                p.setActualCreatedDateTime(rs.getTimestamp("Actual_Created_Date"));
+                p.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+
+                packingSlips.add(p);
+            }
+
+            //return object
+            return packingSlips;
+        } catch (Exception e) {
+            return null;
         } finally {
             try {
                 ps.close();

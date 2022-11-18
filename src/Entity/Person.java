@@ -48,6 +48,9 @@ public class Person extends Entity {
         this.status = status;
     }
 
+    public Person() {
+    }
+
     public String getAvatarImg() {
         return avatarImg;
     }

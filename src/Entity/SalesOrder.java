@@ -24,8 +24,8 @@ public class SalesOrder extends Document {
     private Staff salesPerson;
     private String currencyCode;
     private Date requiredDeliveryDate;
-    private String pymtTerm;
-    private String shipmentTerm;
+    private PaymentTerm pymtTerm;
+    private ShipmentTerm shipmentTerm;
     private List<Item> items;
     private BigDecimal gross;
     private BigDecimal discount;
@@ -36,10 +36,10 @@ public class SalesOrder extends Document {
     private CollectAddress customerSignature;
 
     public SalesOrder() {
-        this(null, null, "", null, null, "", null, null, "", null, "", "", null, "", null, "", "", null, null, null, null, null, null, null, null);
+        this(null, null, "", null, null, "", null, null, "", null, "", "", null, "", null, null, null, null, null, null, null, null, null, null, null);
     }
 
-    public SalesOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Customer billToCust, CollectAddress deliverToCust, String custPOReference, Quotation quotRef, String referenceType, String reference, Staff salesPerson, String currencyCode, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy, Staff releasedAVerifiedBy, CollectAddress customerSignature) {
+    public SalesOrder(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, Customer billToCust, CollectAddress deliverToCust, String custPOReference, Quotation quotRef, String referenceType, String reference, Staff salesPerson, String currencyCode, Date requiredDeliveryDate, PaymentTerm pymtTerm, ShipmentTerm shipmentTerm, List<Item> items, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy, Staff releasedAVerifiedBy, CollectAddress customerSignature) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.billToCust = billToCust;
         this.deliverToCust = deliverToCust;
@@ -134,19 +134,19 @@ public class SalesOrder extends Document {
         this.requiredDeliveryDate = requiredDeliveryDate;
     }
 
-    public String getPymtTerm() {
+    public PaymentTerm getPymtTerm() {
         return pymtTerm;
     }
 
-    public void setPymtTerm(String pymtTerm) {
+    public void setPymtTerm(PaymentTerm pymtTerm) {
         this.pymtTerm = pymtTerm;
     }
 
-    public String getShipmentTerm() {
+    public ShipmentTerm getShipmentTerm() {
         return shipmentTerm;
     }
 
-    public void setShipmentTerm(String shipmentTerm) {
+    public void setShipmentTerm(ShipmentTerm shipmentTerm) {
         this.shipmentTerm = shipmentTerm;
     }
 

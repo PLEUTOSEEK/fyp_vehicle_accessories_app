@@ -73,8 +73,8 @@ public class SalesOrderDAO {
             ps.setString(8, salesOrder.getSalesPerson().getStaffID());
             ps.setString(9, salesOrder.getCurrencyCode());
             ps.setDate(10, salesOrder.getRequiredDeliveryDate());
-            ps.setString(11, salesOrder.getPymtTerm());
-            ps.setString(12, salesOrder.getShipmentTerm());
+            ps.setString(11, salesOrder.getPymtTerm().getPymtTermID());
+            ps.setString(12, salesOrder.getShipmentTerm().getShipmentTermID());
             ps.setBigDecimal(13, salesOrder.getGross());
             ps.setBigDecimal(14, salesOrder.getDiscount());
             ps.setBigDecimal(15, salesOrder.getSubTotal());
@@ -116,7 +116,32 @@ public class SalesOrderDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM View_Retrieve_All_SalesOrder WHERE SO_SO_ID = ?";
+            query = "SELECT [SO_ID] "
+                    + "      ,[Quot_ID] "
+                    + "      ,[Bill_To_Cust] "
+                    + "      ,[Deliver_To] "
+                    + "      ,[Cust_PO_Reference] "
+                    + "      ,[Reference_Type] "
+                    + "      ,[Reference] "
+                    + "      ,[Sales_Person] "
+                    + "      ,[Currency_Code] "
+                    + "      ,[Required_Delivery_Date] "
+                    + "      ,[Payment_Term] "
+                    + "      ,[Shipment_Term] "
+                    + "      ,[Gross] "
+                    + "      ,[Discount] "
+                    + "      ,[Sub_Total] "
+                    + "      ,[Nett] "
+                    + "      ,[Issued_By] "
+                    + "      ,[Released_And_Verified_By] "
+                    + "      ,[Customer_Signed] "
+                    + "      ,[Status] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Actual_Created_Date] "
+                    + "      ,[Signed_Doc_Pic] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[SalesOrder] "
+                    + "  WHERE [SO_ID] = ?";
             ps = conn.prepareStatement(query);
 
             // bind parameter
@@ -125,30 +150,30 @@ public class SalesOrderDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                salesOrder.setCode(rs.getString("SO_SO_ID"));
-                salesOrder.setQuotRef(QuotationDAO.getQuotationByCode(rs.getString("SO_Quot_ID")));
-                salesOrder.setBillToCust(CustomerDAO.getCustomerByID(rs.getString("SO_Bill_To_Cust")));
-                salesOrder.setDeliverToCust(CollectAddressDAO.getCollectAddressByID(rs.getString("SO_Deliver_To")));
-                salesOrder.setCustPOReference(rs.getString("SO_Cust_PO_Reference"));
-                salesOrder.setReferenceType(rs.getString("SO_Reference_Type"));
-                salesOrder.setReference(rs.getString("SO_Reference"));
-                salesOrder.setSalesPerson(StaffDAO.getStaffByID(rs.getString("SO_Sales_Person")));
-                salesOrder.setCurrencyCode(rs.getString("SO_Currency_Code"));
-                salesOrder.setRequiredDeliveryDate(rs.getDate("SO_Required_Delivery_Date"));
-                salesOrder.setPymtTerm(rs.getString("SO_Payment_Term"));
-                salesOrder.setShipmentTerm(rs.getString("SO_Shipment_Term"));
-                salesOrder.setGross(rs.getBigDecimal("SO_Gross"));
-                salesOrder.setDiscount(rs.getBigDecimal("SO_Discount"));
-                salesOrder.setSubTotal(rs.getBigDecimal("SO_Sub_Total"));
-                salesOrder.setNett(rs.getBigDecimal("SO_Nett"));
-                salesOrder.setIssuedBy(StaffDAO.getStaffByID(rs.getString("SO_Issued_By")));
-                salesOrder.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("SO_Released_AnVerified_By")));
-                salesOrder.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("SO_Customer_Signed")));
-                salesOrder.setStatus(rs.getString("SO_Status"));
-                salesOrder.setCreatedDate(rs.getTimestamp("SO_Created_Date"));
-                salesOrder.setActualCreatedDateTime(rs.getTimestamp("SO_Actual_Created_Date"));
-                salesOrder.setSignedDocPic(rs.getString("SO_Signed_Doc_Pic"));
-                salesOrder.setModifiedDateTime(rs.getTimestamp("SO_Modified_Date_Time"));
+                salesOrder.setCode(rs.getString("ID"));
+                salesOrder.setQuotRef(QuotationDAO.getQuotationByCode(rs.getString("Quot_ID")));
+                salesOrder.setBillToCust(CustomerDAO.getCustomerByID(rs.getString("Bill_To_Cust")));
+                salesOrder.setDeliverToCust(CollectAddressDAO.getCollectAddressByID(rs.getString("Deliver_To")));
+                salesOrder.setCustPOReference(rs.getString("Cust_PO_Reference"));
+                salesOrder.setReferenceType(rs.getString("Reference_Type"));
+                salesOrder.setReference(rs.getString("Reference"));
+                salesOrder.setSalesPerson(StaffDAO.getStaffByID(rs.getString("Sales_Person")));
+                salesOrder.setCurrencyCode(rs.getString("Currency_Code"));
+                salesOrder.setRequiredDeliveryDate(rs.getDate("Required_Delivery_Date"));
+                salesOrder.setPymtTerm(PaymentTermDAO.getPymtTermByID(rs.getString("Payment_Term")));
+                salesOrder.setShipmentTerm(ShipmentTermDAO.getShipmentTermByID(rs.getString("Shipment_Term")));
+                salesOrder.setGross(rs.getBigDecimal("Gross"));
+                salesOrder.setDiscount(rs.getBigDecimal("Discount"));
+                salesOrder.setSubTotal(rs.getBigDecimal("Sub_Total"));
+                salesOrder.setNett(rs.getBigDecimal("Nett"));
+                salesOrder.setIssuedBy(StaffDAO.getStaffByID(rs.getString("Issued_By")));
+                salesOrder.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("Released_AnVerified_By")));
+                salesOrder.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("Customer_Signed")));
+                salesOrder.setStatus(rs.getString("Status"));
+                salesOrder.setCreatedDate(rs.getTimestamp("Created_Date"));
+                salesOrder.setActualCreatedDateTime(rs.getTimestamp("Actual_Created_Date"));
+                salesOrder.setSignedDocPic(rs.getString("Signed_Doc_Pic"));
+                salesOrder.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
 
                 return salesOrder;
             } else {
@@ -265,8 +290,8 @@ public class SalesOrderDAO {
                 so.setSalesPerson(StaffDAO.getStaffByID(rs.getString("Sales_Person")));
                 so.setCurrencyCode(rs.getString("Currency_Code"));
                 so.setRequiredDeliveryDate(rs.getDate("Required_Delivery_Date"));
-                so.setPymtTerm(rs.getString("Payment_Term"));
-                so.setShipmentTerm(rs.getString("Shipment_Term"));
+                so.setPymtTerm(PaymentTermDAO.getPymtTermByID(rs.getString("Payment_Term")));
+                so.setShipmentTerm(ShipmentTermDAO.getShipmentTermByID(rs.getString("Shipment_Term")));
 
                 so.setGross(rs.getBigDecimal("Gross"));
                 so.setDiscount(rs.getBigDecimal("Discount"));
@@ -359,8 +384,8 @@ public class SalesOrderDAO {
             ps.setString(7, so.getSalesPerson().getStaffID());
             ps.setString(8, so.getCurrencyCode());
             ps.setDate(9, so.getRequiredDeliveryDate());
-            ps.setString(10, so.getPymtTerm());
-            ps.setString(11, so.getShipmentTerm());
+            ps.setString(10, so.getPymtTerm().getPymtTermID());
+            ps.setString(11, so.getShipmentTerm().getShipmentTermID());
             ps.setBigDecimal(12, so.getGross());
             ps.setBigDecimal(13, so.getDiscount());
             ps.setBigDecimal(14, so.getSubTotal());

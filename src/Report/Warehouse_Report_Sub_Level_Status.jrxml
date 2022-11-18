@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="49f1d919-24ad-49a6-80da-1a52b4b557fe">
+    <property name="ireport.zoom" value="2.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <queryString>
+		<![CDATA[SELECT
+    Prod_ID,
+    TTL_INVENTORY,
+    CASE
+        WHEN TTL_INVENTORY >= Maximum_Level THEN 'MAXIMUM_LEVEL'
+        WHEN TTL_INVENTORY >= Average_Level THEN 'AVERAGE_LEVEL'
+        WHEN TTL_INVENTORY >= Minimum_Level THEN 'MINIMUM_LEVEL'
+        WHEN TTL_INVENTORY >= Reorder_Level THEN 'REORDER_LEVEL'
+        ELSE 'DANGER_LEVEL'
+    END AS LEVEL_STATUS
+FROM (
+    SELECT
+        Product.Prod_ID,
+        Product.Maximum_Level,
+        Product.Average_Level,
+        Product.Minimum_Level,
+        Product.Reorder_Level,
+        Product.Danger_Level,
+        SUM(Inventory.Reserved_Qty) + SUM(Inventory.Ready_Qty) AS TTL_INVENTORY
+    FROM
+        Product
+        LEFT JOIN Inventory
+        ON Product.Prod_ID = Inventory.Inventory_ID
+    GROUP BY
+        Product.Prod_ID,
+        Product.Maximum_Level,
+        Product.Average_Level,
+        Product.Minimum_Level,
+        Product.Reorder_Level,
+        Product.Danger_Level
+) AS PROD_TTL_INVENTORY]]>
+    </queryString>
+    <field name="Prod_ID" class="java.lang.String"/>
+    <field name="TTL_INVENTORY" class="java.lang.Integer"/>
+    <field name="LEVEL_STATUS" class="java.lang.String"/>
+    <variable name="param_Count_Maximum" class="java.lang.Integer" calculation="Sum">
+        <variableExpression><![CDATA["MAXIMUM_LEVEL".equals($F{LEVEL_STATUS}) ? 1 : 0]]></variableExpression>
+    </variable>
+    <variable name="param_Count_Minimum" class="java.lang.Integer" calculation="Sum">
+        <variableExpression><![CDATA["MINIMUM_LEVEL".equals($F{LEVEL_STATUS}) ? 1 : 0]]></variableExpression>
+    </variable>
+    <variable name="param_Count_Average" class="java.lang.Integer" calculation="Sum">
+        <variableExpression><![CDATA["AVERAGE_LEVEL".equals($F{LEVEL_STATUS}) ? 1 : 0]]></variableExpression>
+    </variable>
+    <variable name="param_Count_Danger" class="java.lang.Integer" calculation="Sum">
+        <variableExpression><![CDATA["DANGER_LEVEL".equals($F{LEVEL_STATUS}) ? 1 : 0]]></variableExpression>
+    </variable>
+    <variable name="param_Count_Reorder" class="java.lang.Integer" calculation="Sum">
+        <variableExpression><![CDATA["REORDER_LEVEL".equals($F{LEVEL_STATUS}) ? 1 : 0]]></variableExpression>
+    </variable>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="53" splitType="Stretch">
+            <rectangle>
+                <reportElement x="0" y="0" width="279" height="52" uuid="077c1983-d6dc-4179-ae41-8868db35cc98"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </rectangle>
+            <textField>
+                <reportElement x="78" y="0" width="56" height="12" uuid="9bf455a1-a83c-4db4-a85a-d3bbb3752622"/>
+                <textElement textAlignment="Right">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{param_Count_Maximum}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="223" y="0" width="56" height="12" uuid="bc2a92b8-2cb0-4abe-bfd2-1715c9d33f34"/>
+                <textElement textAlignment="Right">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{param_Count_Reorder}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="223" y="20" width="56" height="12" uuid="bb6f5ea8-2500-4d91-9f76-227ed423a9d8"/>
+                <textElement textAlignment="Right">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{param_Count_Danger}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="78" y="20" width="56" height="12" uuid="c1be3460-6e15-4957-be99-c4cd39506b2e"/>
+                <textElement textAlignment="Right">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{param_Count_Average}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="78" y="40" width="56" height="12" uuid="e1ec1ba9-d3da-4c12-932e-e5f8b4ea3e94"/>
+                <textElement textAlignment="Right">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="2"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{param_Count_Minimum}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="0" width="78" height="12" uuid="06f21be7-bf62-4e21-b98d-6ed146e00f17"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[MAXIMUM LEVEL]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="20" width="78" height="12" uuid="e6c7c132-ca13-46b2-931b-0dba3f4755bf"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[AVERAGE LEVEL]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="40" width="78" height="12" uuid="982cd835-b7ae-48d9-bb1b-ad44c3424efc"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[MINIMUM LEVEL]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="145" y="0" width="78" height="12" uuid="3ef20e1e-8770-491d-a94e-85306f99a04a"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[REORDER LEVEL]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="145" y="20" width="78" height="12" uuid="5bbf6374-5c7a-4cdc-9416-b8f745ae4d1f"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[DANGER LEVEL]]></text>
+            </staticText>
+        </band>
+    </title>
+</jasperReport>

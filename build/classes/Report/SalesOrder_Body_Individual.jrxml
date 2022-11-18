@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f731804b-a97e-4a4f-bfd3-6eab6d4d57c4">
-    <property name="ireport.zoom" value="2.1435888100000056"/>
-    <property name="ireport.x" value="0"/>
+    <property name="ireport.zoom" value="2.5937424601000076"/>
+    <property name="ireport.x" value="29"/>
     <property name="ireport.y" value="0"/>
     <parameter name="param_SO_ID_Body" class="java.lang.String"/>
     <parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -46,28 +46,28 @@ WHERE
     <columnHeader>
         <band height="13" splitType="Stretch">
             <staticText>
-                <reportElement x="2" y="1" width="22" height="12" uuid="3caaf20b-48c8-488b-a275-0a72de6aa186"/>
-                <box rightPadding="0">
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="0.5"/>
-                    <leftPen lineWidth="0.5"/>
-                    <bottomPen lineWidth="0.5"/>
-                    <rightPen lineWidth="0.5"/>
+                <reportElement x="2" y="0" width="22" height="12" uuid="3caaf20b-48c8-488b-a275-0a72de6aa186"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
                 </box>
                 <textElement>
                     <font fontName="Calibri" size="8" isBold="true"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
-                <text><![CDATA[Serial_No]]></text>
+                <text><![CDATA[S/No.]]></text>
             </staticText>
             <staticText>
-                <reportElement x="24" y="1" width="53" height="12" uuid="b7aa6814-c817-42d4-8bbc-4d1ec225cf20"/>
-                <box rightPadding="0">
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="0.5"/>
-                    <leftPen lineWidth="0.5"/>
-                    <bottomPen lineWidth="0.5"/>
-                    <rightPen lineWidth="0.5"/>
+                <reportElement x="24" y="0" width="53" height="12" uuid="b7aa6814-c817-42d4-8bbc-4d1ec225cf20"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
                 </box>
                 <textElement>
                     <font fontName="Calibri" size="8" isBold="true"/>
@@ -76,13 +76,13 @@ WHERE
                 <text><![CDATA[Product Code]]></text>
             </staticText>
             <staticText>
-                <reportElement x="77" y="1" width="85" height="12" uuid="2daf9064-a20a-4fef-a3e3-7ff1b3fd2549"/>
-                <box rightPadding="0">
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="0.5"/>
-                    <leftPen lineWidth="0.5"/>
-                    <bottomPen lineWidth="0.5"/>
-                    <rightPen lineWidth="0.5"/>
+                <reportElement x="77" y="0" width="85" height="12" uuid="2daf9064-a20a-4fef-a3e3-7ff1b3fd2549"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
                 </box>
                 <textElement>
                     <font fontName="Calibri" size="8" isBold="true"/>
@@ -91,13 +91,13 @@ WHERE
                 <text><![CDATA[Part No./ Description]]></text>
             </staticText>
             <staticText>
-                <reportElement x="162" y="1" width="68" height="12" uuid="d84a8a71-ced5-4056-a0e7-c973ac69aa23"/>
-                <box rightPadding="0">
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="0.5"/>
-                    <leftPen lineWidth="0.5"/>
-                    <bottomPen lineWidth="0.5"/>
-                    <rightPen lineWidth="0.5"/>
+                <reportElement x="162" y="0" width="68" height="12" uuid="d84a8a71-ced5-4056-a0e7-c973ac69aa23"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
                 </box>
                 <textElement>
                     <font fontName="Calibri" size="8" isBold="true"/>
@@ -106,13 +106,13 @@ WHERE
                 <text><![CDATA[Remark]]></text>
             </staticText>
             <staticText>
-                <reportElement x="230" y="1" width="20" height="12" uuid="2d485b1b-5efe-425b-ae1e-7d2d1061145a"/>
-                <box rightPadding="0">
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="0.5"/>
-                    <leftPen lineWidth="0.5"/>
-                    <bottomPen lineWidth="0.5"/>
-                    <rightPen lineWidth="0.5"/>
+                <reportElement x="230" y="0" width="20" height="12" uuid="2d485b1b-5efe-425b-ae1e-7d2d1061145a"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
                 </box>
                 <textElement>
                     <font fontName="Calibri" size="8" isBold="true"/>
@@ -121,13 +121,13 @@ WHERE
                 <text><![CDATA[Qty]]></text>
             </staticText>
             <staticText>
-                <reportElement x="250" y="1" width="21" height="12" uuid="fd153911-d49c-4da0-a8e5-248d249623ae"/>
-                <box rightPadding="0">
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="0.5"/>
-                    <leftPen lineWidth="0.5"/>
-                    <bottomPen lineWidth="0.5"/>
-                    <rightPen lineWidth="0.5"/>
+                <reportElement x="250" y="0" width="21" height="12" uuid="fd153911-d49c-4da0-a8e5-248d249623ae"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
                 </box>
                 <textElement>
                     <font fontName="Calibri" size="8" isBold="true"/>
@@ -136,13 +136,13 @@ WHERE
                 <text><![CDATA[UOM]]></text>
             </staticText>
             <staticText>
-                <reportElement x="271" y="1" width="35" height="12" uuid="98c2f266-64bf-4a48-ab58-8ada60809bbc"/>
-                <box rightPadding="0">
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="0.5"/>
-                    <leftPen lineWidth="0.5"/>
-                    <bottomPen lineWidth="0.5"/>
-                    <rightPen lineWidth="0.5"/>
+                <reportElement x="271" y="0" width="35" height="12" uuid="98c2f266-64bf-4a48-ab58-8ada60809bbc"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
                 </box>
                 <textElement>
                     <font fontName="Calibri" size="8" isBold="true"/>
@@ -151,13 +151,13 @@ WHERE
                 <text><![CDATA[U/P]]></text>
             </staticText>
             <staticText>
-                <reportElement x="306" y="1" width="68" height="12" uuid="23d182a1-0f31-4b3c-9c88-8b453e3ac09d"/>
-                <box rightPadding="0">
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="0.5"/>
-                    <leftPen lineWidth="0.5"/>
-                    <bottomPen lineWidth="0.5"/>
-                    <rightPen lineWidth="0.5"/>
+                <reportElement x="306" y="0" width="68" height="12" uuid="23d182a1-0f31-4b3c-9c88-8b453e3ac09d"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
                 </box>
                 <textElement>
                     <font fontName="Calibri" size="8" isBold="true"/>
@@ -166,13 +166,13 @@ WHERE
                 <text><![CDATA[Dlvr. Date]]></text>
             </staticText>
             <staticText>
-                <reportElement x="374" y="1" width="68" height="12" uuid="02ed5019-b2d2-4a43-b212-32e6c32dada6"/>
-                <box rightPadding="0">
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="0.5"/>
-                    <leftPen lineWidth="0.5"/>
-                    <bottomPen lineWidth="0.5"/>
-                    <rightPen lineWidth="0.5"/>
+                <reportElement x="374" y="0" width="68" height="12" uuid="02ed5019-b2d2-4a43-b212-32e6c32dada6"/>
+                <box>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
                 </box>
                 <textElement>
                     <font fontName="Calibri" size="8" isBold="true"/>
@@ -181,13 +181,13 @@ WHERE
                 <text><![CDATA[Excl. Tax]]></text>
             </staticText>
             <staticText>
-                <reportElement x="442" y="1" width="43" height="12" uuid="2d85f6a9-1c1b-4f2e-9d3f-4807c3384def"/>
+                <reportElement x="442" y="0" width="43" height="12" uuid="2d85f6a9-1c1b-4f2e-9d3f-4807c3384def"/>
                 <box>
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="0.5"/>
-                    <leftPen lineWidth="0.5"/>
-                    <bottomPen lineWidth="0.5"/>
-                    <rightPen lineWidth="0.5"/>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
                 </box>
                 <textElement>
                     <font fontName="Calibri" size="8" isBold="true"/>
@@ -196,24 +196,24 @@ WHERE
                 <text><![CDATA[Disc. Amt]]></text>
             </staticText>
             <staticText>
-                <reportElement x="485" y="1" width="68" height="12" uuid="f2cbf3be-122c-483a-bd6a-1b185cc9229e"/>
+                <reportElement x="485" y="0" width="68" height="12" uuid="f2cbf3be-122c-483a-bd6a-1b185cc9229e"/>
                 <box>
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="0.5"/>
-                    <leftPen lineWidth="0.5"/>
-                    <bottomPen lineWidth="0.5"/>
-                    <rightPen lineWidth="0.5"/>
+                    <pen lineWidth="1.0"/>
+                    <topPen lineWidth="1.0"/>
+                    <leftPen lineWidth="1.0"/>
+                    <bottomPen lineWidth="1.0"/>
+                    <rightPen lineWidth="1.0"/>
                 </box>
                 <textElement>
                     <font fontName="Calibri" size="8" isBold="true"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
-                <text><![CDATA[Incl_Amount]]></text>
+                <text><![CDATA[Incl. Tax]]></text>
             </staticText>
         </band>
     </columnHeader>
     <detail>
-        <band height="33" splitType="Stretch">
+        <band height="14" splitType="Stretch">
             <textField isStretchWithOverflow="true">
                 <reportElement x="2" y="0" width="22" height="14" uuid="1d9b7a6c-d1d3-4468-bea0-2883e525b985"/>
                 <box rightPadding="0">

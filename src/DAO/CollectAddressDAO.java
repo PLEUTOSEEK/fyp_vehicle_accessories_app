@@ -4,7 +4,6 @@
  */
 package DAO;
 
-import Entity.Address;
 import Entity.CollectAddress;
 import Entity.Contact;
 import Entity.Person;
@@ -22,20 +21,44 @@ import java.util.List;
 public class CollectAddressDAO {
 
     public static List<CollectAddress> getCollectAddressByCustID(String ID) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        /*
 
-    public static CollectAddress getCollectAddressByID(String ID) {
+         */
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        CollectAddress collectAddr = new CollectAddress();
+        CollectAddress collectAddress = new CollectAddress();
+        List<CollectAddress> collectAddrs = new ArrayList<>();
 
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM View_Retrieve_All_CollectAddress WHERE COLL_Collect_Address_ID = ?";
+            query = "SELECT [Collect_Address_ID] "
+                    + "      ,[Address_ID] "
+                    + "      ,[Customer_ID] "
+                    + "      ,[Avatar_Img] "
+                    + "      ,[Name] "
+                    + "      ,[Gender] "
+                    + "      ,[DOB] "
+                    + "      ,[IC] "
+                    + "      ,[Marital_Status] "
+                    + "      ,[Nationality] "
+                    + "      ,[Honorifics] "
+                    + "      ,[Residential_Address] "
+                    + "      ,[Corresponding_Address] "
+                    + "      ,[Email] "
+                    + "      ,[Mobile_No] "
+                    + "      ,[Extension_No] "
+                    + "      ,[Office_Phone_No] "
+                    + "      ,[Home_Phone_No] "
+                    + "      ,[Occupation] "
+                    + "      ,[Race] "
+                    + "      ,[Religion] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[CollectAddress] "
+                    + "  WHERE [Customer_ID] = ?";
             ps = conn.prepareStatement(query);
 
             // bind parameter
@@ -44,42 +67,132 @@ public class CollectAddressDAO {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                collectAddr = new CollectAddress(
-                        rs.getTimestamp("COLL_CreatedDate"),
-                        rs.getTimestamp("COLL_Modified_Date_Time"),
-                        rs.getString("COLL_Collect_Address_ID"),
-                        CustomerDAO.getCustomerByID(rs.getString("COLL_Customer_ID")),
-                        new Person(
-                                null,
-                                null,
-                                rs.getString("COLL_Avatar_Img"),
-                                rs.getString("COLL_Name"),
-                                rs.getString("COLL_Gender"),
-                                rs.getDate("COLL_DOB"),
-                                rs.getString("COLL_IC"),
-                                rs.getString("COLL_Marital_Status"),
-                                rs.getString("COLL_Nationality"),
-                                rs.getString("COLL_Honorifics"),
-                                AddressDAO.getAddressByID(rs.getString("COLL_Residential_Address")),
-                                AddressDAO.getAddressByID(rs.getString("COLL_Corresponding_Address")),
-                                new Contact(
-                                        rs.getString("COLL_Email"),
-                                        rs.getString("COLL_Mobile_No"),
-                                        rs.getString("COLL_Extension_No"),
-                                        rs.getString("COLL_Office_Phone_No"),
-                                        rs.getString("COLL_Home_Phone_No")
-                                ),
-                                rs.getString("COLL_Occupation"),
-                                rs.getString("COLL_Race"),
-                                rs.getString("COLL_Religion"),
-                                null
-                        ),
-                        AddressDAO.getAddressByID(rs.getString("COLL_Address_ID"))
-                );
+                collectAddress = new CollectAddress();
+
+                collectAddress.setCollectAddrID(rs.getString("Collect_Address_ID"));
+                collectAddress.setAddr(AddressDAO.getAddressByID(rs.getString("Address_ID")));
+                collectAddress.setCustomer(CustomerDAO.getCustomerByID(rs.getString("Customer_ID")));
+                collectAddress.setPerson(new Person());
+                collectAddress.getPerson().setAvatarImg(rs.getString("Avatar_Img"));
+                collectAddress.getPerson().setName(rs.getString("Name"));
+                collectAddress.getPerson().setGender(rs.getString("Gender"));
+                collectAddress.getPerson().setDOB(rs.getDate("DOB"));
+                collectAddress.getPerson().setIC(rs.getString("IC"));
+                collectAddress.getPerson().setMaritalStatus(rs.getString("Marital_Status"));
+                collectAddress.getPerson().setNationality(rs.getString("Nationality"));
+                collectAddress.getPerson().setHonorifics(rs.getString("Honorifics"));
+                collectAddress.getPerson().setResidentialAddr(AddressDAO.getAddressByID(rs.getString("Residential_Address")));
+                collectAddress.getPerson().setCorAddr(AddressDAO.getAddressByID(rs.getString("Corresponding_Address")));
+                collectAddress.getPerson().setContact(new Contact());
+                collectAddress.getPerson().getContact().setEmail(rs.getString("Email"));
+                collectAddress.getPerson().getContact().setMobileNo(rs.getString("Mobile_No"));
+                collectAddress.getPerson().getContact().setExt(rs.getString("Extension_No"));
+                collectAddress.getPerson().getContact().setOffPhNo(rs.getString("Office_Phone_No"));
+                collectAddress.getPerson().getContact().setHomePhNo(rs.getString("Home_Phone_No"));
+                collectAddress.getPerson().setOccupation(rs.getString("Occupation"));
+                collectAddress.getPerson().setRace(rs.getString("Race"));
+                collectAddress.getPerson().setReligion(rs.getString("Religion"));
+                collectAddress.setCreatedDate(rs.getTimestamp("Created_Date"));
+                collectAddress.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+
+                collectAddrs.add(collectAddress);
             }
 
             //return object
-            return collectAddr;
+            return collectAddrs;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static CollectAddress getCollectAddressByID(String ID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        CollectAddress collectAddress = new CollectAddress();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT [Collect_Address_ID] "
+                    + "      ,[Address_ID] "
+                    + "      ,[Customer_ID] "
+                    + "      ,[Avatar_Img] "
+                    + "      ,[Name] "
+                    + "      ,[Gender] "
+                    + "      ,[DOB] "
+                    + "      ,[IC] "
+                    + "      ,[Marital_Status] "
+                    + "      ,[Nationality] "
+                    + "      ,[Honorifics] "
+                    + "      ,[Residential_Address] "
+                    + "      ,[Corresponding_Address] "
+                    + "      ,[Email] "
+                    + "      ,[Mobile_No] "
+                    + "      ,[Extension_No] "
+                    + "      ,[Office_Phone_No] "
+                    + "      ,[Home_Phone_No] "
+                    + "      ,[Occupation] "
+                    + "      ,[Race] "
+                    + "      ,[Religion] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[CollectAddress] "
+                    + "  WHERE [Collect_Address_ID] = ?";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            ps.setString(1, ID);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                collectAddress = new CollectAddress();
+
+                collectAddress.setCollectAddrID(rs.getString("Collect_Address_ID"));
+                collectAddress.setAddr(AddressDAO.getAddressByID(rs.getString("Address_ID")));
+                collectAddress.setCustomer(CustomerDAO.getCustomerByID(rs.getString("Customer_ID")));
+                collectAddress.setPerson(new Person());
+                collectAddress.getPerson().setAvatarImg(rs.getString("Avatar_Img"));
+                collectAddress.getPerson().setName(rs.getString("Name"));
+                collectAddress.getPerson().setGender(rs.getString("Gender"));
+                collectAddress.getPerson().setDOB(rs.getDate("DOB"));
+                collectAddress.getPerson().setIC(rs.getString("IC"));
+                collectAddress.getPerson().setMaritalStatus(rs.getString("Marital_Status"));
+                collectAddress.getPerson().setNationality(rs.getString("Nationality"));
+                collectAddress.getPerson().setHonorifics(rs.getString("Honorifics"));
+                collectAddress.getPerson().setResidentialAddr(AddressDAO.getAddressByID(rs.getString("Residential_Address")));
+                collectAddress.getPerson().setCorAddr(AddressDAO.getAddressByID(rs.getString("Corresponding_Address")));
+                collectAddress.getPerson().setContact(new Contact());
+                collectAddress.getPerson().getContact().setEmail(rs.getString("Email"));
+                collectAddress.getPerson().getContact().setMobileNo(rs.getString("Mobile_No"));
+                collectAddress.getPerson().getContact().setExt(rs.getString("Extension_No"));
+                collectAddress.getPerson().getContact().setOffPhNo(rs.getString("Office_Phone_No"));
+                collectAddress.getPerson().getContact().setHomePhNo(rs.getString("Home_Phone_No"));
+                collectAddress.getPerson().setOccupation(rs.getString("Occupation"));
+                collectAddress.getPerson().setRace(rs.getString("Race"));
+                collectAddress.getPerson().setReligion(rs.getString("Religion"));
+                collectAddress.setCreatedDate(rs.getTimestamp("Created_Date"));
+                collectAddress.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+
+                //return object
+                return collectAddress;
+            } else {
+                return null;
+            }
+
         } catch (Exception e) {
             return null;
         } finally {
@@ -263,51 +376,69 @@ public class CollectAddressDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        CollectAddress collectAddr = new CollectAddress();
+        CollectAddress collectAddress = new CollectAddress();
         List<CollectAddress> collectAddrs = new ArrayList<>();
 
         try {
             conn = SQLDatabaseConnection.openConn();
-
-            query = "SELECT * FROM View_Retrieve_All_CollectAddress";
+            query = "SELECT [Collect_Address_ID] "
+                    + "      ,[Address_ID] "
+                    + "      ,[Customer_ID] "
+                    + "      ,[Avatar_Img] "
+                    + "      ,[Name] "
+                    + "      ,[Gender] "
+                    + "      ,[DOB] "
+                    + "      ,[IC] "
+                    + "      ,[Marital_Status] "
+                    + "      ,[Nationality] "
+                    + "      ,[Honorifics] "
+                    + "      ,[Residential_Address] "
+                    + "      ,[Corresponding_Address] "
+                    + "      ,[Email] "
+                    + "      ,[Mobile_No] "
+                    + "      ,[Extension_No] "
+                    + "      ,[Office_Phone_No] "
+                    + "      ,[Home_Phone_No] "
+                    + "      ,[Occupation] "
+                    + "      ,[Race] "
+                    + "      ,[Religion] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[CollectAddress] ";
             ps = conn.prepareStatement(query);
 
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                collectAddr = new CollectAddress(
-                        rs.getTimestamp("COLL_CreatedDate"),
-                        rs.getTimestamp("COLL_Modified_Date_Time"),
-                        rs.getString("COLL_Collect_Address_ID"),
-                        CustomerDAO.getCustomerByID(rs.getString("COLL_Customer_ID")),
-                        new Person(
-                                null,
-                                null,
-                                rs.getString("COLL_Avatar_Img"),
-                                rs.getString("COLL_Name"),
-                                rs.getString("COLL_Gender"),
-                                rs.getDate("COLL_DOB"),
-                                rs.getString("COLL_IC"),
-                                rs.getString("COLL_Marital_Status"),
-                                rs.getString("COLL_Nationality"),
-                                rs.getString("COLL_Honorifics"),
-                                new Address(rs.getString("COLL_Residential_Address")),
-                                new Address(rs.getString("COLL_Corresponding_Address")),
-                                new Contact(
-                                        rs.getString("COLL_Email"),
-                                        rs.getString("COLL_Mobile_No"),
-                                        rs.getString("COLL_Extension_No"),
-                                        rs.getString("COLL_Office_Phone_No"),
-                                        rs.getString("COLL_Home_Phone_No")
-                                ),
-                                rs.getString("COLL_Occupation"),
-                                rs.getString("COLL_Race"),
-                                rs.getString("COLL_Religion"),
-                                null
-                        ),
-                        AddressDAO.getAddressByID(rs.getString("COLL_Address_ID"))
-                );
-                collectAddrs.add(collectAddr);
+                collectAddress = new CollectAddress();
+
+                collectAddress.setCollectAddrID(rs.getString("Collect_Address_ID"));
+                collectAddress.setAddr(AddressDAO.getAddressByID(rs.getString("Address_ID")));
+                collectAddress.setCustomer(CustomerDAO.getCustomerByID(rs.getString("Customer_ID")));
+                collectAddress.setPerson(new Person());
+                collectAddress.getPerson().setAvatarImg(rs.getString("Avatar_Img"));
+                collectAddress.getPerson().setName(rs.getString("Name"));
+                collectAddress.getPerson().setGender(rs.getString("Gender"));
+                collectAddress.getPerson().setDOB(rs.getDate("DOB"));
+                collectAddress.getPerson().setIC(rs.getString("IC"));
+                collectAddress.getPerson().setMaritalStatus(rs.getString("Marital_Status"));
+                collectAddress.getPerson().setNationality(rs.getString("Nationality"));
+                collectAddress.getPerson().setHonorifics(rs.getString("Honorifics"));
+                collectAddress.getPerson().setResidentialAddr(AddressDAO.getAddressByID(rs.getString("Residential_Address")));
+                collectAddress.getPerson().setCorAddr(AddressDAO.getAddressByID(rs.getString("Corresponding_Address")));
+                collectAddress.getPerson().setContact(new Contact());
+                collectAddress.getPerson().getContact().setEmail(rs.getString("Email"));
+                collectAddress.getPerson().getContact().setMobileNo(rs.getString("Mobile_No"));
+                collectAddress.getPerson().getContact().setExt(rs.getString("Extension_No"));
+                collectAddress.getPerson().getContact().setOffPhNo(rs.getString("Office_Phone_No"));
+                collectAddress.getPerson().getContact().setHomePhNo(rs.getString("Home_Phone_No"));
+                collectAddress.getPerson().setOccupation(rs.getString("Occupation"));
+                collectAddress.getPerson().setRace(rs.getString("Race"));
+                collectAddress.getPerson().setReligion(rs.getString("Religion"));
+                collectAddress.setCreatedDate(rs.getTimestamp("Created_Date"));
+                collectAddress.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+
+                collectAddrs.add(collectAddress);
             }
 
             //return object

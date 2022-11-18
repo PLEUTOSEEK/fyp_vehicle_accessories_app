@@ -803,7 +803,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                 return;
             }
 
-            if (validator.containsErrors()) {
+            if (!validator.validate()) {
                 alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
             }

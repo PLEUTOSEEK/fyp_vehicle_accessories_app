@@ -76,8 +76,8 @@ public class QuotationService {
         return QuotationDAO.updateQuotationStatus(quotation);
     }
 
-    public static Quotation getQuotationByID(String code) {
-        return QuotationDAO.getQuotationByID(code);
+    public static Quotation getQuotationByID(String code) throws SQLException {
+        return QuotationDAO.getQuotationByCode(code);
     }
 
 }

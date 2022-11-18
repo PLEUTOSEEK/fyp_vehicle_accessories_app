@@ -38,7 +38,7 @@ public class ValidationUtils<T> extends Validation<T> {
     public static final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
 
     //</editor-fold>
-    public void validationCreator(Validator validator, List<T> control, Integer characterLimit, boolean allowNull, String validateMsg, String method) {
+    public void validationCreator(Validator validator, List<T> control, boolean allowNull, String validateMsg, String method) {
         String uuid = KeyGenerator.next();
         Check validatorCheck = (new Validator()).createCheck();
 
@@ -52,11 +52,6 @@ public class ValidationUtils<T> extends Validation<T> {
 
             if (method.equals(isEmpty)) {
                 if (isEmpty(content) == false) {
-                    isValid = false;
-                }
-
-            } else if (method.equals(isExceed)) {
-                if (isExceed(content, characterLimit) == true) {
                     isValid = false;
                 }
 
@@ -160,8 +155,7 @@ public class ValidationUtils<T> extends Validation<T> {
             if (isValid == false) {
                 c.error(validateMsg);
             }
-        })
-                .immediate();
+        });
 
         validator.add(validatorCheck);
     }

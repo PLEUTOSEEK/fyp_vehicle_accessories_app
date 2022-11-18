@@ -246,7 +246,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
 
         }
     }
-//<editor-fold defaultstate="collapsed" desc="comment">
+    //<editor-fold defaultstate="collapsed" desc="comment">
 
     @Override
     public void inputValidation() {
@@ -431,7 +431,41 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public boolean clearAllFieldsValue() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.cmbHonorifics.clear();
+        this.txtName.clear();
+        this.cmbGender.clear();
+        this.txtOccupation.clear();
+        this.dtDOB.clear();
+        this.txtIC.clear();
+        this.cmbNationality.clear();
+        this.cmbRace.clear();
+        this.cmbReligion.clear();
+        this.cmbMaritalStatus.clear();
+        this.txtMobileNo.clear();
+        this.txtEmail.clear();
+        this.txtOffPhNo.clear();
+        this.txtHomePhNo.clear();
+        this.txtExt.clear();
+        this.txtCollectAddrLocationName.clear();
+        this.txtCollectAddrAddress.clear();
+        this.txtCollectAddrCity.clear();
+        this.txtCollectAddrPostalCode.clear();
+        this.cmbCollectAddrState.clear();
+        this.cmbCollectAddrCountry.clear();
+        this.txtResidentialAddrCity.clear();
+        this.txtResidentialAddrLocationName.clear();
+        this.cmbResidentialAddrState.clear();
+        this.txtResidentialAddrAddress.clear();
+        this.txtResidentialAddrPostalCode.clear();
+        this.cmbResidentialAddrCountry.clear();
+        this.txtCorAddrCity.clear();
+        this.txtCorAddrLocationName.clear();
+        this.cmbCorAddrState.clear();
+        this.txtCorAddrAddress.clear();
+        this.txtCorAddrPostalCode.clear();
+        this.cmbCorAddrCountry.clear();
+
+        return true;
     }
 
     @Override
@@ -497,12 +531,14 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public void switchScene(String fxmlPath, BasicObjs passObj, String direction) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Unused
+        return;
     }
 
     @Override
     public BasicObjs sendData(BasicObjs passObj, String direction) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Unused
+        return new BasicObjs();
     }
 
     private CollectAddress prepareCollectAddressInforToObj() throws IOException {

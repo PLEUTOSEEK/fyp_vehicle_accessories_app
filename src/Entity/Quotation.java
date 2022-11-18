@@ -20,8 +20,8 @@ public class Quotation extends Document {
     private String currencyCode;
     private Date quotValidityDate; // Valid Until
     private Date requiredDeliveryDate;
-    private String pymtTerm;
-    private String shipmentTerm;
+    private PaymentTerm pymtTerm;
+    private ShipmentTerm shipmentTerm;
     private List<Item> items;
     private BigDecimal gross;
     private BigDecimal discount;
@@ -32,10 +32,10 @@ public class Quotation extends Document {
     private CollectAddress customerSignature;
 
     public Quotation() {
-        this(null, null, "", null, null, "", null, "", "", null, null, null, "", null, null, "", "", null, null, null, null, null, null, null);
+        this(null, null, "", null, null, "", null, "", "", null, null, null, "", null, null, null, null, null, null, null, null, null, null, null);
     }
 
-    public Quotation(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, CustomerInquiry CI, String referenceType, String reference, Customer billToCust, CollectAddress deliverToCust, Staff salesPerson, String currencyCode, Date quotValidityDate, Date requiredDeliveryDate, String pymtTerm, String shipmentTerm, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy, Staff releasedAVerifiedBy, CollectAddress customerSignature) {
+    public Quotation(Timestamp createdDateTime, Timestamp modifiedDateTime, String code, Timestamp actualCreatedDateTime, String signedDocPic, String status, CustomerInquiry CI, String referenceType, String reference, Customer billToCust, CollectAddress deliverToCust, Staff salesPerson, String currencyCode, Date quotValidityDate, Date requiredDeliveryDate, PaymentTerm pymtTerm, ShipmentTerm shipmentTerm, BigDecimal gross, BigDecimal discount, BigDecimal subTotal, BigDecimal nett, Staff issuedBy, Staff releasedAVerifiedBy, CollectAddress customerSignature) {
         super(createdDateTime, modifiedDateTime, code, actualCreatedDateTime, signedDocPic, status);
         this.CI = CI;
         this.referenceType = referenceType;
@@ -129,19 +129,19 @@ public class Quotation extends Document {
         this.requiredDeliveryDate = requiredDeliveryDate;
     }
 
-    public String getPymtTerm() {
+    public PaymentTerm getPymtTerm() {
         return pymtTerm;
     }
 
-    public void setPymtTerm(String pymtTerm) {
+    public void setPymtTerm(PaymentTerm pymtTerm) {
         this.pymtTerm = pymtTerm;
     }
 
-    public String getShipmentTerm() {
+    public ShipmentTerm getShipmentTerm() {
         return shipmentTerm;
     }
 
-    public void setShipmentTerm(String shipmentTerm) {
+    public void setShipmentTerm(ShipmentTerm shipmentTerm) {
         this.shipmentTerm = shipmentTerm;
     }
 

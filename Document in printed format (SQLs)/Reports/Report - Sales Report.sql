@@ -1,3 +1,19 @@
+-- Time Series
+SELECT
+    Staff.Staff_ID,
+    SalesOrder.Actual_Created_Date,
+    COUNT(SalesOrder.SO_ID) AS SO_TTL_CASES
+FROM
+    Staff 
+    INNER JOIN SalesOrder
+    ON Staff.Staff_ID = SalesOrder.Sales_Person
+WHERE
+    Staff.Staff_ID = '' AND
+    SalesOrder.Actual_Created_Date BETWEEN '' AND ''
+GROUP BY
+    Staff.Staff_ID,
+    SalesOrder.Actual_Created_Date
+
 -- TOTAL CASES
 SELECT
     Staff.Staff_ID,

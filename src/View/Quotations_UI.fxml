@@ -131,8 +131,6 @@
                                     <MFXTextField fx:id="txtRef" alignment="CENTER_RIGHT" floatingText="Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                                     <MFXTextField fx:id="txtRefType" alignment="CENTER_RIGHT" floatingText="Reference Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                     <MFXComboBox fx:id="cmbCurrencyCode" alignment="CENTER_RIGHT" floatingText="Currency Code" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                                    <MFXComboBox fx:id="cmbPymtTerm" alignment="CENTER_RIGHT" floatingText="Payment Term" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                                    <MFXComboBox fx:id="cmbShipmentTerm" alignment="CENTER_RIGHT" allowEdit="true" floatingText="Shipment Term" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" selectable="true" GridPane.columnIndex="4" GridPane.rowIndex="5" />
                                     <MFXCircleToggleNode fx:id="ctnDeliverToSelection" graphicTextGap="2.0" onMousePressed="#openDeliverToSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
                                        <graphic>
                                           <FontAwesomeIconView glyphName="LIST" />
@@ -160,6 +158,30 @@
                                        <graphic>
                                           <FontAwesomeIconView glyphName="LIST" />
                                        </graphic>
+                                    </MFXCircleToggleNode>
+                                    <MFXTextField fx:id="txtPymtTerm" alignment="CENTER_RIGHT" floatingText="Payment Term" minWidth="145.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                                    <MFXCircleToggleNode fx:id="ctnPymtTermSelection" graphicTextGap="2.0" onMousePressed="#openPymtTermSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="4" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <graphic>
+                                          <FontAwesomeIconView glyphName="LIST" />
+                                       </graphic>
+                                       <padding>
+                                          <Insets bottom="1.0" top="10.0" />
+                                       </padding>
+                                       <GridPane.margin>
+                                          <Insets left="150.0" />
+                                       </GridPane.margin>
+                                    </MFXCircleToggleNode>
+                                    <MFXTextField fx:id="txtShipmentTerm" alignment="CENTER_RIGHT" floatingText="Shipment Term" minWidth="145.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                                    <MFXCircleToggleNode fx:id="ctnShipmentTermSelection" graphicTextGap="2.0" onMousePressed="#openShipmentTermSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="4" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                                       <graphic>
+                                          <FontAwesomeIconView glyphName="LIST" />
+                                       </graphic>
+                                       <padding>
+                                          <Insets bottom="1.0" top="10.0" />
+                                       </padding>
+                                       <GridPane.margin>
+                                          <Insets left="150.0" />
+                                       </GridPane.margin>
                                     </MFXCircleToggleNode>
                                  </children>
                               </GridPane>

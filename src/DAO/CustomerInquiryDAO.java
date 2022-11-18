@@ -5,7 +5,6 @@
 package DAO;
 
 import Entity.CustomerInquiry;
-import Entity.Staff;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,8 +64,8 @@ public class CustomerInquiryDAO {
             ps.setString(6, customerInquiry.getSalesPerson().getStaffID());
             ps.setString(7, customerInquiry.getCurrencyCode());
             ps.setDate(8, customerInquiry.getRequiredDeliveryDate());
-            ps.setString(9, customerInquiry.getPymtTerm());
-            ps.setString(10, customerInquiry.getShipmentTerm());
+            ps.setString(9, customerInquiry.getPymtTerm().getPymtTermID());
+            ps.setString(10, customerInquiry.getShipmentTerm().getShipmentTermID());
             ps.setBigDecimal(11, customerInquiry.getGross());
             ps.setBigDecimal(12, customerInquiry.getDiscount());
             ps.setBigDecimal(13, customerInquiry.getSubTotal());
@@ -107,36 +106,55 @@ public class CustomerInquiryDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM View_Retrieve_All_CustomerInquriy WHERE CI_CI_ID = ?";
+            query = "SELECT [CI_ID] "
+                    + "      ,[Reference_Type] "
+                    + "      ,[Reference] "
+                    + "      ,[Bill_To_Cust] "
+                    + "      ,[Deliver_To] "
+                    + "      ,[Sales_Person] "
+                    + "      ,[Currency_Code] "
+                    + "      ,[Required_Delivery_Date] "
+                    + "      ,[Payment_Term] "
+                    + "      ,[Shipment_Term] "
+                    + "      ,[Gross] "
+                    + "      ,[Discount] "
+                    + "      ,[Sub_Total] "
+                    + "      ,[Nett] "
+                    + "      ,[Issued_By] "
+                    + "      ,[Status] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Actual_Created_Date] "
+                    + "      ,[Signed_Doc_Pic] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[CustomerInquiry]"
+                    + "  WHERE [CI_ID] = ?";
             ps = conn.prepareStatement(query);
             ps.setString(1, code);
 
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                customerInquiry = new CustomerInquiry(
-                        rs.getTimestamp("Created_Date"),
-                        rs.getTimestamp("Modified_Date_Time"),
-                        rs.getString("CI_ID"),
-                        rs.getTimestamp("CI_Actual_Created_Date"),
-                        rs.getString("CI_Signed_Doc_Pic"),
-                        rs.getString("CI_Status"),
-                        rs.getString("CI_Reference_Type"),
-                        rs.getString("CI_Reference"),
-                        CustomerDAO.getCustomerByID(rs.getString("CI_Bill_To_Cust")),
-                        CollectAddressDAO.getCollectAddressByID(rs.getString("CI_Deliver_To")),
-                        rs.getString("CI_Currency_Code"),
-                        rs.getDate("CI_Required_Delivery_Date"),
-                        rs.getString("CI_Payment_Term"),
-                        rs.getString("CI_Shipment_Term"),
-                        StaffDAO.getStaffByID("CI_Sales_Person"),
-                        null,
-                        rs.getBigDecimal("CI_Gross"),
-                        rs.getBigDecimal("CI_Discount"),
-                        rs.getBigDecimal("CI_Sub_Total"),
-                        rs.getBigDecimal("CI_Nett"),
-                        StaffDAO.getStaffByID(rs.getString("CI_Issued_By"))
-                );
+                customerInquiry.setCode(rs.getString("CI_ID"));
+                customerInquiry.setReferenceType(rs.getString("Reference_Type"));
+                customerInquiry.setReference(rs.getString("Reference"));
+                customerInquiry.setBillToCust(CustomerDAO.getCustomerByID(rs.getString("Bill_To_Cust")));
+                customerInquiry.setDeliverToCust(CollectAddressDAO.getCollectAddressByID("Deliver_To"));
+                customerInquiry.setSalesPerson(StaffDAO.getStaffByID(rs.getString("Sales_Person")));
+                customerInquiry.setCurrencyCode(rs.getString("Currency_Code"));
+                customerInquiry.setRequiredDeliveryDate(rs.getDate("Required_Delivery_Date"));
+                customerInquiry.setPymtTerm(PaymentTermDAO.getPymtTermByID(rs.getString("Payment_Term")));
+                customerInquiry.setShipmentTerm(ShipmentTermDAO.getShipmentTermByID(rs.getString("Shipment_Term")));
+                customerInquiry.setGross(rs.getBigDecimal("Gross"));
+                customerInquiry.setDiscount(rs.getBigDecimal("Discount"));
+                customerInquiry.setSubTotal(rs.getBigDecimal("Sub_Total"));
+                customerInquiry.setNett(rs.getBigDecimal(rs.getString("Nett")));
+                customerInquiry.setIssuedBy(StaffDAO.getStaffByID("Issued_By"));
+                customerInquiry.setStatus(rs.getString("Status"));
+                customerInquiry.setCreatedDate(rs.getTimestamp("Created_Date"));
+                customerInquiry.setActualCreatedDateTime(rs.getTimestamp("Actual_Created_Date"));
+                customerInquiry.setSignedDocPic(rs.getString("Signed_Doc_Pic"));
+                customerInquiry.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+
                 return customerInquiry;
             } else {
                 return null;
@@ -235,8 +253,8 @@ public class CustomerInquiryDAO {
             ps.setString(5, customerInquiry.getSalesPerson().getStaffID());
             ps.setString(6, customerInquiry.getCurrencyCode());
             ps.setDate(7, customerInquiry.getRequiredDeliveryDate());
-            ps.setString(8, customerInquiry.getPymtTerm());
-            ps.setString(9, customerInquiry.getShipmentTerm());
+            ps.setString(8, customerInquiry.getPymtTerm().getPymtTermID());
+            ps.setString(9, customerInquiry.getShipmentTerm().getShipmentTermID());
             ps.setBigDecimal(10, customerInquiry.getGross());
             ps.setBigDecimal(11, customerInquiry.getDiscount());
             ps.setBigDecimal(12, customerInquiry.getSubTotal());
@@ -315,41 +333,55 @@ public class CustomerInquiryDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM View_Retrieve_All_CustomerInquriy";
+            query = "SELECT [CI_ID] "
+                    + "      ,[Reference_Type] "
+                    + "      ,[Reference] "
+                    + "      ,[Bill_To_Cust] "
+                    + "      ,[Deliver_To] "
+                    + "      ,[Sales_Person] "
+                    + "      ,[Currency_Code] "
+                    + "      ,[Required_Delivery_Date] "
+                    + "      ,[Payment_Term] "
+                    + "      ,[Shipment_Term] "
+                    + "      ,[Gross] "
+                    + "      ,[Discount] "
+                    + "      ,[Sub_Total] "
+                    + "      ,[Nett] "
+                    + "      ,[Issued_By] "
+                    + "      ,[Status] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Actual_Created_Date] "
+                    + "      ,[Signed_Doc_Pic] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[CustomerInquiry]";
             ps = conn.prepareStatement(query);
-
             rs = ps.executeQuery();
 
             while (rs.next()) {
+                customerInquiry = new CustomerInquiry();
 
-                Staff issuedBy = new Staff();
+                customerInquiry.setCode(rs.getString("CI_ID"));
+                customerInquiry.setReferenceType(rs.getString("Reference_Type"));
+                customerInquiry.setReference(rs.getString("Reference"));
+                customerInquiry.setBillToCust(CustomerDAO.getCustomerByID(rs.getString("Bill_To_Cust")));
+                customerInquiry.setDeliverToCust(CollectAddressDAO.getCollectAddressByID("Deliver_To"));
+                customerInquiry.setSalesPerson(StaffDAO.getStaffByID(rs.getString("Sales_Person")));
+                customerInquiry.setCurrencyCode(rs.getString("Currency_Code"));
+                customerInquiry.setRequiredDeliveryDate(rs.getDate("Required_Delivery_Date"));
+                customerInquiry.setPymtTerm(PaymentTermDAO.getPymtTermByID(rs.getString("Payment_Term")));
+                customerInquiry.setShipmentTerm(ShipmentTermDAO.getShipmentTermByID(rs.getString("Shipment_Term")));
+                customerInquiry.setGross(rs.getBigDecimal("Gross"));
+                customerInquiry.setDiscount(rs.getBigDecimal("Discount"));
+                customerInquiry.setSubTotal(rs.getBigDecimal("Sub_Total"));
+                customerInquiry.setNett(rs.getBigDecimal(rs.getString("Nett")));
+                customerInquiry.setIssuedBy(StaffDAO.getStaffByID("Issued_By"));
+                customerInquiry.setStatus(rs.getString("Status"));
+                customerInquiry.setCreatedDate(rs.getTimestamp("Created_Date"));
+                customerInquiry.setActualCreatedDateTime(rs.getTimestamp("Actual_Created_Date"));
+                customerInquiry.setSignedDocPic(rs.getString("Signed_Doc_Pic"));
+                customerInquiry.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
 
-                issuedBy.setStaffID(rs.getString("CI_Issued_By"));
-
-                customerInquiries.add(new CustomerInquiry(
-                        rs.getTimestamp("Created_Date"),
-                        rs.getTimestamp("Modified_Date_Time"),
-                        rs.getString("CI_ID"),
-                        rs.getTimestamp("CI_Actual_Created_Date"),
-                        rs.getString("CI_Signed_Doc_Pic"),
-                        rs.getString("CI_Status"),
-                        rs.getString("CI_Reference_Type"),
-                        rs.getString("CI_Reference"),
-                        CustomerDAO.getCustomerByID(rs.getString("CI_Bill_To_Cust")),
-                        CollectAddressDAO.getCollectAddressByID(rs.getString("CI_Deliver_To")),
-                        rs.getString("CI_Currency_Code"),
-                        rs.getDate("CI_Required_Delivery_Date"),
-                        rs.getString("CI_Payment_Term"),
-                        rs.getString("CI_Shipment_Term"),
-                        StaffDAO.getStaffByID("CI_Sales_Person"),
-                        null,
-                        rs.getBigDecimal("CI_Gross"),
-                        rs.getBigDecimal("CI_Discount"),
-                        rs.getBigDecimal("CI_Sub_Total"),
-                        rs.getBigDecimal("CI_Nett"),
-                        issuedBy)
-                );
-
+                customerInquiries.add(customerInquiry);
             }
 
             return customerInquiries;

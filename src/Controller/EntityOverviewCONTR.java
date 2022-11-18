@@ -801,7 +801,7 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
                 new DateFilter<>("Created Date", invoice -> invoice.getCreatedDate())
         );
 
-        List<Invoice> invoices = InvoiceService.getAllInvoice();
+        List<Invoice> invoices = InvoiceService.getAllInvoices();
 
         //6
         ((MFXTableView<Invoice>) tblVw).setItems(FXCollections.observableList(invoices));
@@ -956,17 +956,25 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public void inputValidation() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // Unused
+        return;
     }
 
     @Override
     public boolean clearAllFieldsValue() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // Unused
+        return true;
     }
 
     @Override
     public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerTxt);
+        alert.setContentText(contentTxt);
+
+        alert.showAndWait();
+        return alert.getResult();
     }
 
 }

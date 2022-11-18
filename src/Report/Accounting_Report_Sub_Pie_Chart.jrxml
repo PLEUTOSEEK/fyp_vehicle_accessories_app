@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b78bbaa9-266c-47d9-bff4-a0a7ae9cce87">
+    <property name="ireport.zoom" value="1.8627639691774651"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <queryString language="SQL">
+		<![CDATA[SELECT
+    IS_EXCEED_PAYMENT_TERM,
+    COUNT(IS_EXCEED_PAYMENT_TERM) AS COUNT_IS_EXCEED_PAYMENT_TERM
+FROM
+    (SELECT
+        CASE
+            WHEN DATEDIFF(DAY,Baseline_Documet_Date, DOC_DATE_TIME) > Days_Limit THEN 'YES'
+            ELSE 'NO'
+        END AS IS_EXCEED_PAYMENT_TERM
+    FROM
+        (SELECT
+            PaymentTerm.Baseline_Documet_Date,
+            PaymentTerm.Days_Limit,
+            CASE SalesOrder.Payment_Term
+                WHEN 'SO' THEN (SELECT
+                                    SalesOrder.Created_Date
+                                FROM
+                                    SalesOrder
+                                WHERE
+                                    SalesOrder.SO_ID = Invoice.SO_ID)
+                WHEN 'DO' THEN (SELECT
+                                    TOP(1)
+                                    DeliveryOrder.Created_Date
+                                FROM
+                                    DeliveryOrder
+                                WHERE
+                                    DeliveryOrder.SO_ID = Invoice.SO_ID
+                                ORDER BY
+                                    DeliveryOrder.Created_Date DESC)
+                ELSE
+                    Invoice.Created_Date
+            END AS DOC_DATE_TIME
+        FROM
+            Invoice
+            INNER JOIN SalesOrder
+            ON Invoice.SO_ID = SalesOrder.SO_ID
+
+            INNER JOIN PaymentTerm
+            ON PaymentTerm.Pymt_Term_ID = SalesOrder.Payment_Term
+
+            INNER JOIN Customer
+            ON Customer.Customer_ID = SalesOrder.Bill_To_Cust
+        ) AS SO_INFORMATION
+    ) AS FINAL_RESULT_PYMT_TERM
+GROUP BY
+    IS_EXCEED_PAYMENT_TERM]]>
+    </queryString>
+    <field name="IS_EXCEED_PAYMENT_TERM" class="java.lang.String"/>
+    <field name="COUNT_IS_EXCEED_PAYMENT_TERM" class="java.lang.Integer"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="102" splitType="Stretch">
+            <pieChart>
+                <chart evaluationTime="Report">
+                    <reportElement x="0" y="0" width="555" height="102" uuid="1efd8b39-61da-42f2-93dd-a74190860eb5"/>
+                    <chartTitle/>
+                    <chartSubtitle/>
+                    <chartLegend/>
+                </chart>
+                <pieDataset>
+                    <keyExpression><![CDATA[$F{IS_EXCEED_PAYMENT_TERM}]]></keyExpression>
+                    <valueExpression><![CDATA[$F{COUNT_IS_EXCEED_PAYMENT_TERM}]]></valueExpression>
+                </pieDataset>
+                <piePlot>
+                    <plot/>
+                    <itemLabel/>
+                </piePlot>
+            </pieChart>
+        </band>
+    </title>
+</jasperReport>

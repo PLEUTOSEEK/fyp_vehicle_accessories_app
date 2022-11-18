@@ -11,6 +11,8 @@ import Entity.CollectAddress;
 import Entity.Customer;
 import Entity.CustomerInquiry;
 import Entity.Item;
+import Entity.PaymentTerm;
+import Entity.ShipmentTerm;
 import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.CustomerInquiryService;
@@ -86,10 +88,6 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private MFXComboBox<?> cmbCurrencyCode;
     @FXML
-    private MFXComboBox<?> cmbPymtTerm;
-    @FXML
-    private MFXComboBox<?> cmbShipTerm;
-    @FXML
     private MFXCircleToggleNode ctnDeliverToSelection;
     @FXML
     private MFXTextField txtSalesPerson;
@@ -125,8 +123,16 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
     private Label lblImgStrs;
     @FXML
     private ImageView imgDocs;
-    //</editor-fold>
+    @FXML
+    private MFXTextField txtShipmentTerm;
+    @FXML
+    private MFXCircleToggleNode ctnShipmentTermSelection;
+    @FXML
+    private MFXTextField txtPymtTerm;
+    @FXML
+    private MFXCircleToggleNode ctnPymtTermSelection;
 
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="util declarations">
     private BasicObjs passObj;
 
@@ -325,8 +331,8 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate());
             this.cmbCurrencyCode.setText(customerInquiry.getCurrencyCode());
-            this.cmbPymtTerm.setText(customerInquiry.getPymtTerm());
-            this.cmbShipTerm.setText(customerInquiry.getShipmentTerm());
+            this.txtPymtTerm.setText(customerInquiry.getPymtTerm() == null ? "" : customerInquiry.getPymtTerm().getPymtTermName());
+            this.txtShipmentTerm.setText(customerInquiry.getShipmentTerm() == null ? "" : customerInquiry.getShipmentTerm().getShipmentTermName());
             this.cmbStatus.setText(customerInquiry.getStatus());
 
             this.txtGross.setText(customerInquiry.getGross() == null ? "" : customerInquiry.getGross().toString());
@@ -355,8 +361,8 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         this.txtRef.setDisable(disable);
         this.dtReqDuireDeliveryDate.setDisable(disable);
         this.cmbCurrencyCode.setDisable(disable);
-        this.cmbPymtTerm.setDisable(disable);
-        this.cmbShipTerm.setDisable(disable);
+        this.txtPymtTerm.setDisable(disable);
+        this.txtShipmentTerm.setDisable(disable);
         this.cmbStatus.setDisable(disable);
         this.txtGross.setDisable(disable);
         this.txtDiscount.setDisable(disable);
@@ -368,6 +374,8 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         this.ctnDeliverToSelection.setDisable(disable);
         this.ctnIssuedBySelection.setDisable(disable);
         this.ctnSalesPersonSelection.setDisable(disable);
+        this.ctnPymtTermSelection.setDisable(disable);
+        this.ctnShipmentTermSelection.setDisable(disable);
 
         this.tblVw.setDisable(disable);
         this.btnAdd.setDisable(disable);
@@ -376,8 +384,6 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
     private void initializeComboSelections() {
         ((MFXComboBox<String>) this.cmbCurrencyCode).setItems(FXCollections.observableList(accRules.getCurrencyCodes()));
-        ((MFXComboBox<String>) this.cmbPymtTerm).setItems(FXCollections.observableList(accRules.getPymtTerms()));
-        ((MFXComboBox<String>) this.cmbShipTerm).setItems(FXCollections.observableList(warehouseRules.getShipmentTerms()));
         ((MFXComboBox<SalesRules.CIStatus>) this.cmbStatus).setItems(FXCollections.observableList(salesRules.getCiStatuses()));
     }
 
@@ -521,8 +527,8 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         this.txtRef.clear();
         this.dtReqDuireDeliveryDate.clear();
         this.cmbCurrencyCode.clear();
-        this.cmbPymtTerm.clear();
-        this.cmbShipTerm.clear();
+        this.txtPymtTerm.clear();
+        this.txtShipmentTerm.clear();
         this.cmbStatus.clear();
 
         this.txtGross.clear();
@@ -570,8 +576,11 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         customerInquiry.setReference(this.txtRef.getText());
         customerInquiry.setRequiredDeliveryDate(this.dtReqDuireDeliveryDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtReqDuireDeliveryDate.getValue()));
         customerInquiry.setCurrencyCode(this.cmbCurrencyCode.getText());
-        customerInquiry.setPymtTerm(this.cmbPymtTerm.getText());
-        customerInquiry.setShipmentTerm(this.cmbShipTerm.getText());
+
+        customerInquiry.setPymtTerm(new PaymentTerm());
+        customerInquiry.getPymtTerm().setPymtTermID(this.txtPymtTerm.getText());
+        customerInquiry.setShipmentTerm(new ShipmentTerm());
+        customerInquiry.getShipmentTerm().setShipmentTermID(this.txtShipmentTerm.getText());
         customerInquiry.setStatus(this.cmbStatus.getText());
 
         customerInquiry.setGross(new BigDecimal(this.txtGross.getText()));
@@ -796,7 +805,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 return;
             }
 
-            if (validator.containsErrors()) {
+            if (!validator.validate()) {
                 alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
             }
@@ -811,6 +820,60 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
             }
 
             ItemService.updateItemsByDoc(customerInquiryInDraft.getItems(), customerInquiryInDraft.getCode());
+        }
+    }
+
+    @FXML
+    private void openShipmentTermSelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new ShipmentTerm());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtShipmentTerm.setText(((ShipmentTerm) receiveObj.getObj()).getShipmentTermID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    private void openPymtTermSelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new PaymentTerm());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtPymtTerm.setText(((PaymentTerm) receiveObj.getObj()).getPymtTermID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

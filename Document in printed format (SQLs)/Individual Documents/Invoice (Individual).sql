@@ -1,4 +1,5 @@
 SELECT
+    Invoice.INV_ID,
     Customer.Customer_ID,
     Customer.Name,
     BILL_TO_ADDR.Location_Name,
@@ -7,14 +8,12 @@ SELECT
     BILL_TO_ADDR.Postal_Code,
     BILL_TO_ADDR.[State],
     BILL_TO_ADDR.Country,
-    Receipt.RCPT_ID,
-    FORMAT (Receipt.Created_Date, 'dd-MMM-yyyy') AS RCPT_CREATED_DATE,
     Invoice.INV_ID,
     FORMAT (Invoice.Created_Date, 'dd-MMM-yyyy') AS INV_CREATED_DATE,
     SalesOrder.SO_ID,
     FORMAT (SalesOrder.Created_Date, 'dd-MMM-yyyy') AS SO_CREATED_DATE,
     SalesOrder.Cust_PO_Reference,
-    Receipt.Reference,
+    Invoice.Reference,
     SalesOrder.Currency_Code,
     SalesOrder.Payment_Term,
     SalesOrder.Shipment_Term,
@@ -32,10 +31,10 @@ SELECT
     Item.Excl_Amount,
     Item.Discount_Amount,
     Item.Incl_Amount,
-    Receipt.Total_Payable,
-    Receipt.Paid_Amount,
-    Receipt.Prev_Paid_Amount,
-    Receipt.Bal_Unpaid
+    Invoice.Gross,
+    Invoice.Discount,
+    invoice.Sub_Total,
+    Invoice.Total_Payable
 FROM 
     Customer
     INNER JOIN [Address] AS BILL_TO_ADDR
@@ -47,11 +46,10 @@ FROM
     INNER JOIN Invoice
     ON Invoice.SO_ID = SalesOrder.SO_ID
 
-    INNER JOIN Receipt
-    ON Invoice.INV_ID = Receipt.INV_ID
-
     INNER JOIN Item
-    ON Receipt.RCPT_ID = Item.Ref_Doc_ID
+    ON Invoice.INV_ID = Item.Ref_Doc_ID
 
     INNER JOIN Product
     ON Item.Prod_ID = Product.Prod_ID
+WHERE
+    Invoice.INV_ID = ''

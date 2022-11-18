@@ -39,37 +39,37 @@ public class CustomerDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                customer = new Customer(
-                        rs.getTimestamp("CUST_Created_Date"),
-                        rs.getTimestamp("CUST_Modified_Date_Time"),
-                        rs.getString("CUST_Avatar_Img"),
-                        rs.getString("CUST_Name"),
-                        rs.getString("CUST_Gender"),
-                        rs.getDate("CUST_DOB"),
-                        rs.getString("CUST_IC"),
-                        rs.getString("CUST_Marital_Status"),
-                        rs.getString("CUST_Nationality"),
-                        rs.getString("CUST_Honorifics"),
-                        AddressDAO.getAddressByID(rs.getString("CUST_Residential_Address")),
-                        AddressDAO.getAddressByID(rs.getString("CUST_Corresponding_Address")),
-                        new Contact(
-                                rs.getString("CUST_Email"),
-                                rs.getString("CUST_Mobile_No"),
-                                rs.getString("CUST_Extension_No"),
-                                rs.getString("CUST_Office_Phone_No"),
-                                rs.getString("CUST_Home_Phone_No")
-                        ),
-                        rs.getString("CUST_Occupation"),
-                        rs.getString("CUST_Race"),
-                        rs.getString("CUST_Religion"),
-                        rs.getString("CUST_Status"),
-                        rs.getString("CUST_Customer_ID"),
-                        rs.getString("CUST_Bank_Acc_Provider"),
-                        rs.getString("CUST_Bank_Acc_No"),
-                        AddressDAO.getAddressByID(rs.getString("CUST_Bill_To_Addr")),
-                        null,
-                        rs.getString("CUST_Customer_Type")
-                );
+                customer = new Customer();
+
+                customer.setCustID(rs.getString("Customer_ID"));
+                customer.setBillToAddr(AddressDAO.getAddressByID("Bill_To_Addr"));
+                customer.setAvatarImg(rs.getString(rs.getString("Avatar_Img")));
+                customer.setName(rs.getString("Name"));
+                customer.setGender(rs.getString("Gender"));
+                customer.setDOB(rs.getDate("DOB"));
+                customer.setIC(rs.getString("IC"));
+                customer.setMaritalStatus(rs.getString("Marital_Status"));
+                customer.setNationality(rs.getString("Nationality"));
+                customer.setHonorifics(rs.getString("Honorifics"));
+                customer.setResidentialAddr(AddressDAO.getAddressByID(rs.getString("Residential_Address")));
+                customer.setCorAddr(AddressDAO.getAddressByID(rs.getString("Corresponding_Address")));
+                customer.setContact(new Contact());
+                customer.getContact().setEmail(rs.getString("Email"));
+                customer.getContact().setMobileNo(rs.getString("Mobile_No"));
+                customer.getContact().setExt(rs.getString("Extension_No"));
+                customer.getContact().setOffPhNo(rs.getString("Office_Phone_No"));
+                customer.getContact().setHomePhNo(rs.getString("Home_Phone_No"));
+                customer.setOccupation(rs.getString("Occupation"));
+                customer.setRace(rs.getString("Race"));
+                customer.setReligion(rs.getString("Religion"));
+                customer.setBankAccProvider(rs.getString("Bank_Acc_Provider"));
+                customer.setBankAccOwnerName(rs.getString("Bank_Acc_Owner_Name"));
+                customer.setBankAccNo(rs.getString("Bank_Acc_No"));
+                customer.setCustType(rs.getString("Customer_Type"));
+                customer.setStatus(rs.getString("Status"));
+                customer.setCreatedDate(rs.getTimestamp("Created_Date"));
+                customer.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+
                 return customer;
             } else {
                 return null;
@@ -127,13 +127,14 @@ public class CustomerDAO {
                     + "Race, "
                     + "Religion, "
                     + "Bank_Acc_Provider, "
+                    + "Bank_Acc_Owner_Name, "
                     + "Bank_Acc_No, "
                     + "Customer_Type, "
                     + "Status, "
                     + "Created_Date, "
                     + "Modified_Date_Time, "
                     + ") "
-                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(query);
 
             // bind parameter
@@ -160,11 +161,12 @@ public class CustomerDAO {
             ps.setString(19, customer.getRace());
             ps.setString(20, customer.getReligion());
             ps.setString(21, customer.getBankAccProvider());
-            ps.setString(22, customer.getBankAccNo());
-            ps.setString(23, customer.getCustType());
-            ps.setString(24, customer.getStatus());
-            ps.setTimestamp(25, customer.getCreatedDate());
-            ps.setTimestamp(26, customer.getModifiedDateTime());
+            ps.setString(22, customer.getBankAccOwnerName());
+            ps.setString(23, customer.getBankAccNo());
+            ps.setString(24, customer.getCustType());
+            ps.setString(25, customer.getStatus());
+            ps.setTimestamp(26, customer.getCreatedDate());
+            ps.setTimestamp(27, customer.getModifiedDateTime());
 
             return customer.getCustID();
 
@@ -249,12 +251,13 @@ public class CustomerDAO {
             ps.setString(18, customer.getRace());
             ps.setString(19, customer.getReligion());
             ps.setString(20, customer.getBankAccProvider());
-            ps.setString(21, customer.getBankAccNo());
-            ps.setString(22, customer.getCustType());
-            ps.setString(23, customer.getStatus());
-            ps.setTimestamp(24, customer.getCreatedDate());
-            ps.setTimestamp(25, customer.getModifiedDateTime());
-            ps.setString(26, customer.getCustID());
+            ps.setString(21, customer.getBankAccOwnerName());
+            ps.setString(22, customer.getBankAccNo());
+            ps.setString(23, customer.getCustType());
+            ps.setString(24, customer.getStatus());
+            ps.setTimestamp(25, customer.getCreatedDate());
+            ps.setTimestamp(26, customer.getModifiedDateTime());
+            ps.setString(27, customer.getCustID());
 
             return customer.getCustID();
 
@@ -320,51 +323,79 @@ public class CustomerDAO {
         String query = "";
         ResultSet rs = null;
         List<Customer> customers = new ArrayList<>();
-        Customer customer = new Customer();
+        Customer c = new Customer();
 
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM View_Retrieve_All_Customer";
+            query = "SELECT [Customer_ID] "
+                    + "      ,[Bill_To_Addr] "
+                    + "      ,[Avatar_Img] "
+                    + "      ,[Name] "
+                    + "      ,[Gender] "
+                    + "      ,[DOB] "
+                    + "      ,[IC] "
+                    + "      ,[Marital_Status] "
+                    + "      ,[Nationality] "
+                    + "      ,[Honorifics] "
+                    + "      ,[Residential_Address] "
+                    + "      ,[Corresponding_Address] "
+                    + "      ,[Email] "
+                    + "      ,[Mobile_No] "
+                    + "      ,[Extension_No] "
+                    + "      ,[Office_Phone_No] "
+                    + "      ,[Home_Phone_No] "
+                    + "      ,[Occupation] "
+                    + "      ,[Race] "
+                    + "      ,[Religion] "
+                    + "      ,[Bank_Acc_Provider] "
+                    + "      ,[Bank_Acc_Owner_Name] "
+                    + "      ,[Bank_Acc_No] "
+                    + "      ,[Customer_Type] "
+                    + "      ,[Status] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[Customer]";
             ps = conn.prepareStatement(query);
 
             // bind parameter
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                customer = new Customer(
-                        rs.getTimestamp("CUST_Created_Date"),
-                        rs.getTimestamp("CUST_Modified_Date_Time"),
-                        rs.getString("CUST_Avatar_Img"),
-                        rs.getString("CUST_Name"),
-                        rs.getString("CUST_Gender"),
-                        rs.getDate("CUST_DOB"),
-                        rs.getString("CUST_IC"),
-                        rs.getString("CUST_Marital_Status"),
-                        rs.getString("CUST_Nationality"),
-                        rs.getString("CUST_Honorifics"),
-                        new Address(rs.getString("CUST_Residential_Address")),
-                        new Address(rs.getString("CUST_Corresponding_Address")),
-                        new Contact(
-                                rs.getString("CUST_Email"),
-                                rs.getString("CUST_Mobile_No"),
-                                rs.getString("CUST_Extension_No"),
-                                rs.getString("CUST_Office_Phone_No"),
-                                rs.getString("CUST_Home_Phone_No")
-                        ),
-                        rs.getString("CUST_Occupation"),
-                        rs.getString("CUST_Race"),
-                        rs.getString("CUST_Religion"),
-                        rs.getString("CUST_Status"),
-                        rs.getString("CUST_Customer_ID"),
-                        rs.getString("CUST_Bank_Acc_Provider"),
-                        rs.getString("CUST_Bank_Acc_No"),
-                        AddressDAO.getAddressByID(rs.getString("CUST_Bill_To_Addr")),
-                        null,
-                        rs.getString("CUST_Customer_Type")
-                );
+                c = new Customer();
 
-                customers.add(customer);
+                c.setCustID(rs.getString("Customer_ID"));
+                c.setBillToAddr(AddressDAO.getAddressByID("Bill_To_Addr"));
+                c.setAvatarImg(rs.getString(rs.getString("Avatar_Img")));
+                c.setName(rs.getString("Name"));
+                c.setGender(rs.getString("Gender"));
+                c.setDOB(rs.getDate("DOB"));
+                c.setIC(rs.getString("IC"));
+                c.setMaritalStatus(rs.getString("Marital_Status"));
+                c.setNationality(rs.getString("Nationality"));
+                c.setHonorifics(rs.getString("Honorifics"));
+                c.setResidentialAddr(new Address());
+                c.getResidentialAddr().setAddressID(rs.getString("Residential_Address"));
+                c.setCorAddr(new Address());
+                c.getCorAddr().setAddressID(rs.getString("Corresponding_Address"));
+                c.setContact(new Contact());
+                c.getContact().setEmail(rs.getString("Email"));
+                c.getContact().setMobileNo(rs.getString("Mobile_No"));
+                c.getContact().setExt(rs.getString("Extension_No"));
+                c.getContact().setOffPhNo(rs.getString("Office_Phone_No"));
+                c.getContact().setHomePhNo(rs.getString("Home_Phone_No"));
+                c.setOccupation(rs.getString("Occupation"));
+                c.setRace(rs.getString("Race"));
+                c.setReligion(rs.getString("Religion"));
+                c.setBankAccProvider(rs.getString("Bank_Acc_Provider"));
+                c.setBankAccOwnerName(rs.getString("Bank_Acc_Owner_Name"));
+                c.setBankAccNo(rs.getString("Bank_Acc_No"));
+                c.setCustType(rs.getString("Customer_Type"));
+                c.setStatus(rs.getString("Status"));
+                c.setCreatedDate(rs.getTimestamp("Created_Date"));
+                c.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+
+                customers.add(c);
             }
 
             //return object

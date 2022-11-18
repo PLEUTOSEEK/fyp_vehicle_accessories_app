@@ -10,8 +10,10 @@ import BizRulesConfiguration.WarehouseRules;
 import Entity.CollectAddress;
 import Entity.Customer;
 import Entity.Item;
+import Entity.PaymentTerm;
 import Entity.Quotation;
 import Entity.SalesOrder;
+import Entity.ShipmentTerm;
 import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.ItemService;
@@ -96,10 +98,6 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private MFXComboBox<?> cmbCurrencyCode;
     @FXML
-    private MFXComboBox<?> cmbPymtTerm;
-    @FXML
-    private MFXComboBox<?> cmbShipmentTerm;
-    @FXML
     private MFXCircleToggleNode ctnDeliverToSelection;
     @FXML
     private MFXTextField txtSalesPerson;
@@ -143,7 +141,14 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
     private MFXCircleToggleNode ctnQuotRefSelection;
     @FXML
     private Label lblImgStrs;
-    //</editor-fold>
+    @FXML
+    private MFXTextField txtPymtTerm;
+    @FXML
+    private MFXCircleToggleNode ctnPymtTermSelection;
+    @FXML
+    private MFXTextField txtShipmentTerm;
+    @FXML
+    private MFXCircleToggleNode ctnShipmentTermSelection;
 
     //<editor-fold defaultstate="collapsed" desc="util declarations">
     private BasicObjs passObj;
@@ -205,8 +210,6 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
     private void initializeComboSelections() {
         ((MFXComboBox<String>) this.cmbCurrencyCode).setItems(FXCollections.observableList(accRules.getCurrencyCodes()));
-        ((MFXComboBox<String>) this.cmbPymtTerm).setItems(FXCollections.observableList(accRules.getPymtTerms()));
-        ((MFXComboBox<String>) this.cmbShipmentTerm).setItems(FXCollections.observableList(warehouseRules.getShipmentTerms()));
         ((MFXComboBox<SalesRules.SOStatus>) this.cmbStatus).setItems(FXCollections.observableList(salesRules.getSOStatuses()));
     }
 
@@ -374,8 +377,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
                 this.cmbCurrencyCode.setText(so.getCurrencyCode());
-                this.cmbPymtTerm.setText(so.getPymtTerm());
-                this.cmbShipmentTerm.setText(so.getShipmentTerm());
+                this.txtPymtTerm.setText(so.getPymtTerm().getPymtTermID());
+                this.txtShipmentTerm.setText(so.getShipmentTerm().getShipmentTermID());
                 this.cmbStatus.setText(so.getStatus());
 
                 this.txtGross.setText(so.getGross().toString());
@@ -403,8 +406,10 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
                 this.cmbCurrencyCode.setText(quotation.getCurrencyCode());
-                this.cmbPymtTerm.setText(quotation.getPymtTerm());
-                this.cmbShipmentTerm.setText(quotation.getShipmentTerm());
+
+                this.txtPymtTerm.setText(quotation.getPymtTerm().getPymtTermID());
+
+                this.txtShipmentTerm.setText(quotation.getShipmentTerm().getShipmentTermID());
 
                 this.txtGross.setText(quotation.getGross().toString());
                 this.txtDiscount.setText(quotation.getDiscount().toString());
@@ -432,8 +437,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         this.txtRef.setDisable(disable);
         this.dtReqDlvrDate.setDisable(disable);
         this.cmbCurrencyCode.setDisable(disable);
-        this.cmbPymtTerm.setDisable(disable);
-        this.cmbShipmentTerm.setDisable(disable);
+        this.txtPymtTerm.setDisable(disable);
+        this.txtShipmentTerm.setDisable(disable);
         this.cmbStatus.setDisable(disable);
         this.txtGross.setDisable(disable);
         this.txtDiscount.setDisable(disable);
@@ -450,6 +455,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         this.ctnIssuedBySelection.setDisable(disable);
         this.ctnReleasedAVerifiedBySelection.setDisable(disable);
         this.ctnCustSignatureSelection.setDisable(disable);
+        this.ctnPymtTermSelection.setDisable(disable);
+        this.ctnShipmentTermSelection.setDisable(disable);
 
         this.tblVw.setDisable(disable);
         this.btnAdd.setDisable(disable);
@@ -555,8 +562,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         this.txtRef.clear();
         this.dtReqDlvrDate.clear();
         this.cmbCurrencyCode.clear();
-        this.cmbPymtTerm.clear();
-        this.cmbShipmentTerm.clear();
+        this.txtPymtTerm.clear();
+        this.txtShipmentTerm.clear();
         this.cmbStatus.clear();
 
         this.txtGross.clear();
@@ -614,8 +621,10 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         so.setReference(this.txtRef.getText());
         so.setRequiredDeliveryDate(this.dtReqDlvrDate.getValue() == null ? null : java.sql.Date.valueOf(this.dtReqDlvrDate.getValue()));
         so.setCurrencyCode(this.cmbCurrencyCode.getText());
-        so.setPymtTerm(this.cmbPymtTerm.getText());
-        so.setShipmentTerm(this.cmbShipmentTerm.getText());
+        so.setPymtTerm(new PaymentTerm());
+        so.getPymtTerm().setPymtTermID(this.txtPymtTerm.getText());
+        so.setShipmentTerm(new ShipmentTerm());
+        so.getShipmentTerm().setShipmentTermID(this.txtShipmentTerm.getText());
         so.setStatus(this.cmbStatus.getText());
 
         so.setGross(new BigDecimal(this.txtGross.getText()));
@@ -973,7 +982,7 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                 return;
             }
 
-            if (validator.containsErrors()) {
+            if (!validator.validate()) {
                 alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
             }
@@ -1005,5 +1014,13 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
             QuotationService.updateQuotationStatus(soInDraft.getQuotRef());
 
         }
+    }
+
+    @FXML
+    private void openPymtTermSelection(MouseEvent event) {
+    }
+
+    @FXML
+    private void openShipmentTermSelection(MouseEvent event) {
     }
 }
