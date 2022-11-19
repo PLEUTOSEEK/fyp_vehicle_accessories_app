@@ -68,8 +68,26 @@ public class FXMLDocumentController implements Initializable {
                 .dependsOn("test TxtField", txttTestTextField.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("test TxtField");
-                    if (!textVal.matches("^\\d{5}$")) {
-                        c.error("Bill To Postal Code - Format not zzz");
+                    textVal = textVal.trim();
+                    /*
+                     1.
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Unit Price - Required Field");
+                        return;
+                    }
+
+                    try {
+
+                        Double unitPrice = Double.parseDouble(textVal);
+
+                        if (unitPrice < 0) {
+                            c.error("Unit Price - Must be positive");
+                            return;
+                        }
+
+                    } catch (Exception ex) {
+                        c.error("Unit Price - Must be double");
                         return;
                     }
                 })
@@ -85,6 +103,7 @@ public class FXMLDocumentController implements Initializable {
                 "dtPicker", this.dtDatePicker.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("dtPicker");
+                    textVal = textVal.trim();
 
                     if (textVal.isEmpty()) {
                         c.error("Required Field");
@@ -104,6 +123,7 @@ public class FXMLDocumentController implements Initializable {
                 "cmbComboBox", this.cmbComboBox.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("cmbComboBox");
+                    textVal = textVal.trim();
 
                     if (textVal.isEmpty()) {
                         c.error("Required Field");

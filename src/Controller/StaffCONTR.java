@@ -371,6 +371,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Honorifics", this.cmbHonorifics.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Honorifics");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -394,6 +396,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Name", this.txtName.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Name");
+                    textVal = textVal.trim();
+
 
                     /*
                     1. Cannot be null
@@ -421,6 +425,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Gender", this.cmbGender.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Gender");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -444,6 +450,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Marital Status", this.cmbMaritalStatus.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Marital Status");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -466,6 +474,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Date of Birth", this.dtDOB.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Date of Birth");
+                    textVal = textVal.trim();
+
                     /*
                      1.
                      */
@@ -495,6 +505,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("IC", this.txtIC.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("IC");
+                    textVal = textVal.trim();
+
                     /*
                      1.
                      */
@@ -518,6 +530,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Nationality", this.cmbNationality.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Nationality");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -544,6 +558,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Race", this.cmbRace.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Race");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -570,11 +586,12 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Religion", this.cmbReligion.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Religion");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. alphabet and spaces allowed ONLY
                      */
-
                     if (textVal.isEmpty()) {
                         c.error("Religion - Required Field");
                         return;
@@ -597,6 +614,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Mobile_No", this.txtMobileNo.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Mobile_No");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. must follow regex
@@ -625,6 +644,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Email", this.txtEmail.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Email");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. must follow regex
@@ -651,6 +672,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Extension_No.", this.txtExt.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Extension_No.");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. must follow regex
@@ -678,6 +701,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Office_Phone_No", this.txtOffPhNo.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Office_Phone_No");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. must follow regex
@@ -704,6 +729,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Home_Phone_No", this.txtHomePhNo.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Home_Phone_No");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. must follow regex
@@ -730,10 +757,11 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Status", this.cmbStatus.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Status");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
-
                     if (textVal.isEmpty()) {
                         c.error("Status - Required Field");
                         return;
@@ -751,6 +779,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_Location_Name", this.txtResidentialAddrLocationName.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_Location_Name");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -772,6 +802,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_Address", this.txtResidentialAddrAddress.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_Address");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -792,6 +824,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_City", this.txtResidentialAddrCity.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_City");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -818,6 +852,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_Postal_Code", this.txtResidentialAddrPostalCode.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_Postal_Code");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. must follow regex
@@ -844,6 +880,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_State", this.cmbResidentialAddrState.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_State");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -870,6 +908,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_Country", this.cmbResidentialAddrCountry.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_Country");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -896,6 +936,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_Location_Name", this.txtCorAddrLocationName.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_Location_Name");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -917,6 +959,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_Address", this.txtCorAddrAddress.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_Address");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -937,6 +981,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_City", this.txtCorAddrCity.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_City");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -962,6 +1008,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_Postal_Code", this.txtCorAddrPostalCode.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_Postal_Code");
+                    textVal = textVal.trim();
+
                     /*
                      1. must follow regex
                      */
@@ -987,6 +1035,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_State", this.cmbCorAddrState.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_State");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -1013,6 +1063,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_Country", this.cmbCorAddrCountry.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_Country");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -1038,6 +1090,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Employee Type", this.cmbEmpType.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Employee Type");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -1059,6 +1113,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Work Place ID", this.txtWorkPlaceID.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Work Place ID");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -1081,6 +1137,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Entry Date", this.dtEntryDate.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Entry Date");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. cannot be future date
@@ -1111,6 +1169,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Occupation", this.txtOccupation.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Occupation");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -1139,6 +1199,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Role", this.cmbRole.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Role");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. alphabet and spaces allowed ONLY

@@ -17,10 +17,13 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -34,6 +37,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
 /**
@@ -84,10 +88,14 @@ public class SalesOrderPSSelectCONTR implements Initializable {
                 intializeComboSelections();
                 inputValidation();
                 receiveData();
-                fieldFillIn();
 
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     btnRemove.setVisible(false);
+                    defaultValFillIn();
+                }
+
+                if (passObj.getCrud().equals(BasicObjs.read)) {
+                    fieldFillIn();
                 }
 //                if (passObj.getCrud().equals(BasicObjs.read)) {
 //                    ctnProductSelection.setVisible(false);
@@ -112,9 +120,16 @@ public class SalesOrderPSSelectCONTR implements Initializable {
 
     }
 
+    private void defaultValFillIn() {
+        this.txtQuantity.setText("0");
+        this.txtUnitPrice.setText("0.00");
+        this.cmbDiscountAmount.setText("0");
+        this.dtDeliveryDate.setValue(LocalDate.now());
+    }
+
     private void fieldFillIn() {
         clearAllFieldsValue();
-
+        defaultValFillIn();
         if (passObj.getObj() != null) {
             Item item = (Item) passObj.getObj();
 
@@ -143,7 +158,178 @@ public class SalesOrderPSSelectCONTR implements Initializable {
     }
 
     private void inputValidation() {
+        Check validatorCheck = (new Validator()).createCheck();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US);
 
+        /*
+        No need include:
+        1. Remarks
+        2.
+         */
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Product ID", this.txtProdID.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Product ID");
+                    textVal = textVal.trim();
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Product ID - Required Field");
+                        return;
+                    }
+
+                })
+                .decorates(this.txtProdID);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Quantity", this.txtQuantity.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Quantity");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     2. must be integer
+                     2. must be more than zero
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Quantity - Required Field");
+                        return;
+                    }
+
+                    if (!textVal.matches("^\\d+$")) {
+                        c.error("Quantity - ONLY integer value");
+                        return;
+                    }
+
+                    Integer qty = Integer.parseInt(textVal);
+
+                    if (qty <= 0) {
+                        c.error("Quantity - Cannot less than 1");
+                        return;
+                    }
+                })
+                .decorates(this.txtQuantity);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Unit Price", this.txtUnitPrice.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Unit Price");
+                    textVal = textVal.trim();
+                    /*
+                     1. Cannot be null
+                     2. Must be numeric
+                     3. Cannot negative value
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Unit Price - Required Field");
+                        return;
+                    }
+
+                    try {
+
+                        Double unitPrice = Double.parseDouble(textVal);
+
+                        if (unitPrice < 0) {
+                            c.error("Unit Price - Negative value are not allowed");
+                            return;
+                        }
+
+                    } catch (Exception ex) {
+                        c.error("Unit Price - ONLY numeric value");
+                        return;
+                    }
+
+                })
+                .decorates(this.txtUnitPrice);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Disc. %", this.cmbDiscountAmount.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Disc. %");
+                    textVal = textVal.trim();
+                    /*
+                     1. Cannot be null
+                     2. Must be numeric value
+                     3. Must within 0 <= Disc <= 30
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Disc. % - Required Field");
+                        return;
+                    }
+
+                    try {
+
+                        Double discPercent = Double.parseDouble(textVal);
+
+                        if (0 > discPercent || discPercent > 30) {
+                            c.error("Disc. % - Must within 0 <= Disc <= 30");
+                            return;
+                        }
+
+                    } catch (Exception ex) {
+                        c.error("Disc. % - ONLY numeric value");
+                        return;
+                    }
+
+                })
+                .decorates(this.cmbDiscountAmount);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Delivery Date", this.dtDeliveryDate.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Delivery Date");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     2. cannot early than reference date
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Delivery Date - Required Field");
+                        return;
+                    }
+
+                    LocalDate date = LocalDate.parse(textVal, formatter);
+
+                    if (date.isBefore(LocalDate.now())) {
+                        c.error("Delivery Date - Cannot be before the current date");
+                        return;
+                    }
+                })
+                .decorates(this.dtDeliveryDate);
+
+        validator.add(validatorCheck);
+
+        //=====================================
     }
 
     public void receiveData() {

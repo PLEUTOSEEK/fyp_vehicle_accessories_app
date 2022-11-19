@@ -330,6 +330,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Honorifics", this.cmbHonorifics.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Honorifics");
+                    textVal = textVal.trim();
+
 
                     /*
                     1. Cannot be null
@@ -351,6 +353,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Name", this.txtName.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Name");
+                    textVal = textVal.trim();
+
 
                     /*
                     1. Cannot be null
@@ -378,10 +382,11 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Occupation", this.txtOccupation.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Occupation");
+                    textVal = textVal.trim();
+
                     /*
                      1. Alphabet and spaces allowed ONLY
                      */
-
                     // allow null
                     if (textVal.isEmpty()) {
                         return;
@@ -406,6 +411,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("DOB", this.dtDOB.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("DOB");
+                    textVal = textVal.trim();
+
 
                     /*
                     1. Cannot be future date
@@ -434,10 +441,11 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("IC", this.txtIC.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("IC");
+                    textVal = textVal.trim();
+
                     /*
                      1. must follow regex
                      */
-
                     if (textVal.isEmpty()) {
                         return;
                     }
@@ -462,6 +470,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Nationality", this.cmbNationality.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Nationality");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -482,6 +492,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Race", this.cmbRace.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Race");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -506,10 +518,11 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Religion", this.cmbReligion.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Religion");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
-
                     if (textVal.isEmpty()) {
                         return;
                     }
@@ -531,6 +544,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Mobile_No", this.txtMobileNo.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Mobile_No");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. must follow regex
@@ -559,6 +574,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Email", this.txtEmail.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Email");
+                    textVal = textVal.trim();
+
                     /*
                      1. must follow regex
                      */
@@ -583,6 +600,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Extension_No.", this.txtExt.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Extension_No.");
+                    textVal = textVal.trim();
+
                     /*
                      1.
                      */
@@ -608,6 +627,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Office_Phone_No", this.txtOffPhNo.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Office_Phone_No");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. must follow regex
@@ -634,6 +655,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Home_Phone_No", this.txtHomePhNo.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Home_Phone_No");
+                    textVal = textVal.trim();
+
                     /*
                      1. cannot be null
                      2. must follow regex
@@ -660,10 +683,11 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Status", this.cmbStatus.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Status");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
-
                     if (textVal.isEmpty()) {
                         c.error("Status - Required Field");
                         return;
@@ -681,6 +705,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Bank_Acc._Provider", this.cmbBankAccProvider.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Bank_Acc._Provider");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -707,6 +733,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Bank_Acc._Owner_Name", this.txtBankAccOwnerName.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Bank_Acc._Owner_Name");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -732,6 +760,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Bank_Acc._No", this.txtBankAccNo.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Bank_Acc._No");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -758,6 +788,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Bill_To_Location_Name", this.txtBillToAddrLocationName.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Bill_To_Location_Name");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -778,6 +810,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Bill_To_Address", this.txtBillToAddrAddress.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Bill_To_Address");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -798,6 +832,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Bill_To_City", this.txtBillToAddrCity.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Bill_To_City");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -824,6 +860,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Bill_To_Postal_Code", this.txtBillToAddrPostalCode.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Bill_To_Postal_Code");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. must follow regex
@@ -850,6 +888,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Bill_To_State", this.cmbBillToAddrState.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Bill_To_State");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -876,6 +916,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Bill_To_Country", this.cmbBillToAddrCountry.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Bill_To_Country");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -902,6 +944,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_City", this.txtResidentialAddrCity.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_City");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -926,6 +970,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_Postal_Code", this.txtResidentialAddrPostalCode.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_Postal_Code");
+                    textVal = textVal.trim();
+
                     /*
                      1. must follow regex
                      */
@@ -950,6 +996,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_State", this.cmbResidentialAddrState.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_State");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -974,6 +1022,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_Country", this.cmbResidentialAddrCountry.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_Country");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -998,6 +1048,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_City", this.txtCorAddrCity.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_City");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -1022,6 +1074,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_Postal_Code", this.txtCorAddrPostalCode.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_Postal_Code");
+                    textVal = textVal.trim();
+
                     /*
                      1. must follow regex
                      */
@@ -1046,6 +1100,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_State", this.cmbCorAddrState.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_State");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -1070,6 +1126,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_Country", this.cmbCorAddrCountry.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_Country");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */

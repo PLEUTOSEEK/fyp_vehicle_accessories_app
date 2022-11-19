@@ -38,10 +38,13 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,6 +66,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
 /**
@@ -185,6 +189,10 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
+
+                if (passObj.getCrud().equals(BasicObjs.create)) {
+                    defaultValFillIn();
+                }
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
@@ -355,8 +363,19 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
     }
 
+    private void defaultValFillIn() {
+        this.dtRefDate.setValue(LocalDate.now());
+        this.txtGross.setText("0.00");
+        this.txtSubTtl.setText("0.00");
+        this.txtDiscount.setText("0.00");
+        this.txtNett.setText("0.00");
+        this.txtSalesPerson.setText(HomePageCONTR.logInStaff.getStaffID());
+        this.cmbStatus.setText(SalesRules.SOStatus.NEW.toString());
+    }
+
     private void fieldFillIn() throws IOException {
         clearAllFieldsValue();
+        defaultValFillIn();
 
         if (passObj.getObj() != null) {
             if (passObj.getObj() instanceof SalesOrder) {
@@ -546,7 +565,227 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public void inputValidation() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Check validatorCheck = (new Validator()).createCheck();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US);
+
+        /*
+        No need include:
+        1.
+         */
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("SalesPerson", this.txtSalesPerson.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("SalesPerson");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("SalesPerson - Requried Field");
+                        return;
+                    }
+
+                })
+                .decorates(this.txtSalesPerson);
+
+        validator.add(validatorCheck);
+        //=====================================
+        //=====================================
+
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Bill To", this.txtBillTo.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Bill To");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Bill To - Required Field");
+                        return;
+                    }
+
+                })
+                .decorates(this.txtBillTo);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Deliver To", this.txtDeliverTo.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Deliver To");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Deliver To - Required Field");
+                        return;
+                    }
+
+                })
+                .decorates(this.txtDeliverTo);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Reference Date", this.dtRefDate.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Reference Date");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Reference Date - Required Field");
+                        return;
+                    }
+
+                    return;
+                })
+                .decorates(this.dtRefDate);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Required Delivery Date", this.dtReqDlvrDate.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Required Delivery Date");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     2. cannot early than reference date
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Required Delivery Date - Required Field");
+                        return;
+                    }
+
+                    LocalDate date = LocalDate.parse(textVal, formatter);
+
+                    if (date.isBefore(LocalDate.now())) {
+                        c.error("Required Delivery Date - Cannot be before the current date");
+                        return;
+                    }
+                })
+                .decorates(this.dtReqDlvrDate);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Currency Code", this.cmbCurrencyCode.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Currency Code");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Currency Code - Required Field");
+                        return;
+                    }
+
+                    return;
+                })
+                .decorates(this.cmbCurrencyCode);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Payment Term", this.txtPymtTerm.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Payment Term");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Payment Term - Required Field");
+                        return;
+                    }
+
+                })
+                .decorates(this.txtPymtTerm);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Shipment Term", this.txtShipmentTerm.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Shipment Term");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Shipment Term - Required Field");
+                        return;
+                    }
+
+                })
+                .decorates(this.txtShipmentTerm);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Status", this.cmbStatus.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Status");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Status - Required Field");
+                        return;
+                    }
+                })
+                .decorates(this.cmbStatus);
+
+        validator.add(validatorCheck);
+        //=====================================
     }
 
     @Override

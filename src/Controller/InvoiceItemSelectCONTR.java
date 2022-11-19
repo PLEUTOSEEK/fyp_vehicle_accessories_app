@@ -9,6 +9,8 @@ import PassObjs.BasicObjs;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -17,6 +19,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
 /**
@@ -60,9 +63,13 @@ public class InvoiceItemSelectCONTR implements Initializable {
         });
     }
 
+    private void defaultValFillIn() {
+        this.txtQuantity.setText("0");
+    }
+
     private void fieldFillIn() {
         clearAllFieldsValue();
-
+        defaultValFillIn();
         if (this.passObj.getObj() != null) {
             Item item = (Item) this.passObj.getObj();
             this.txtProdID.setText(item.getProduct().getProdID());
@@ -79,7 +86,72 @@ public class InvoiceItemSelectCONTR implements Initializable {
     }
 
     private void inputValidation() {
+        Check validatorCheck = (new Validator()).createCheck();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US);
 
+        /*
+        No need include:
+        1. Remark
+         */
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Product ID", this.txtProdID.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Product ID");
+                    textVal = textVal.trim();
+                    /*
+                     1. cannot be null
+                     */
+                    // allow null
+                    if (textVal.isEmpty()) {
+                        c.error("Product ID - Required Field ");
+                        return;
+                    }
+
+                })
+                .decorates(this.txtProdID);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Quantity", this.txtQuantity.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Quantity");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     2. must be integer
+                     2. must be more than zero
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Quantity - Required Field");
+                        return;
+                    }
+
+                    if (!textVal.matches("^\\d+$")) {
+                        c.error("Quantity - ONLY integer value");
+                        return;
+                    }
+
+                    Integer qty = Integer.parseInt(textVal);
+
+                    if (qty <= 0) {
+                        c.error("Quantity - Cannot less than 1");
+                        return;
+                    }
+                })
+                .decorates(this.txtQuantity);
+
+        validator.add(validatorCheck);
+
+        //=====================================
     }
 
     public void receiveData() {

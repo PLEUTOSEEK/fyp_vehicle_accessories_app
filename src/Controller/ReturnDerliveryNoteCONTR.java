@@ -31,10 +31,13 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -54,6 +57,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
 /**
@@ -152,6 +156,10 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
+
+                if (passObj.getCrud().equals(BasicObjs.create)) {
+                    defaultValFillIn();
+                }
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
@@ -329,8 +337,15 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
         setupItemTable();
     }
 
+    private void defaultValFillIn() {
+        this.dtRefDate.setValue(LocalDate.now());
+        this.cmbStatus.setText(WarehouseRules.RDNStatus.NEW.toString());
+    }
+
     private void fieldFillIn() throws IOException {
         clearAllFieldsValue();
+        defaultValFillIn();
+
         if (passObj.getObj() != null) {
             if (passObj.getObj() instanceof ReturnDeliveryNote) {
                 ReturnDeliveryNote rdn = new ReturnDeliveryNote();
@@ -481,7 +496,138 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public void inputValidation() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Check validatorCheck = (new Validator()).createCheck();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US);
+
+        /*
+        No need include:
+        1.
+         */
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Collect Back From", this.txtCllctBckFr.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Collect Back From");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Collect Back From - Required Field");
+                        return;
+                    }
+
+                    return;
+                })
+                .decorates(this.txtCllctBckFr);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Collect Back To", this.txtCllctBckTo.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Collect Back To");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Collect Back To - Required Field");
+                        return;
+                    }
+
+                    return;
+                })
+                .decorates(this.txtCllctBckTo);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Reference Date", this.dtRefDate.textProperty()
+                )
+                .withMethod(c -> {
+                    String textVal = c.get("Reference Date");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Reference Date - Required Field");
+                        return;
+                    }
+
+                    return;
+                })
+                .decorates(this.dtRefDate);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Collect Date", this.dtCllctDate.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Collect Date");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     2. cannot early than reference date
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Collect Date - Required Field");
+                        return;
+                    }
+
+                    LocalDate date = LocalDate.parse(textVal, formatter);
+
+                    if (date.isBefore(LocalDate.now())) {
+                        c.error("Required Delivery Date - Cannot be before the current date");
+                        return;
+                    }
+                })
+                .decorates(this.dtCllctDate);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Status", this.cmbStatus.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Status");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Status - Required Field");
+                        return;
+                    }
+                })
+                .decorates(this.cmbStatus);
+
+        validator.add(validatorCheck);
+        //=====================================
+
     }
 
     @Override
@@ -504,7 +650,9 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @Override
-    public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
+    public ButtonType alertDialog(Alert.AlertType alertType, String title,
+            String headerTxt, String contentTxt
+    ) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(headerTxt);

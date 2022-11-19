@@ -52,7 +52,7 @@ public class FXMLCONTR implements Initializable {
                 //================================
                 listOfControls.add(txtNumericFields);
                 characterLimit = 21;
-                validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Sales Person - Number Require", ValidationUtils.isCurrency);
+                //validationUtils.validationCreator(validator, listOfControls, characterLimit, true, "Sales Person - Number Require", ValidationUtils.isCurrency);
                 listOfControls.clear();
             }
         }

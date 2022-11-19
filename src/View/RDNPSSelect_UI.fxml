@@ -24,13 +24,13 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <MFXTextField fx:id="txtProdID" alignment="CENTER_RIGHT" editable="false" floatingText="Product ID" prefHeight="50.0" prefWidth="135.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <MFXTextField fx:id="txtProdID" alignment="CENTER_RIGHT" editable="false" floatingText="Product ID" prefHeight="50.0" prefWidth="135.0" textLimit="20" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <MFXButton fx:id="btnConfirm" minHeight="27.0" minWidth="70.0" onMousePressed="#confirmItem" styleClass="outline-button" text="Confirm" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                 <MFXButton id="custom" fx:id="btnCancel" minHeight="27.0" minWidth="70.0" onMousePressed="#cancelAction" styleClass="outline-button" text="Cancel" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                 <MFXButton id="custom" fx:id="btnRemove" minHeight="27.0" minWidth="70.0" onMousePressed="#removeCurrentItem" text="Remove" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                 <MFXTextField fx:id="txtQuantity" alignment="CENTER_RIGHT" floatingText="Quantity" prefHeight="50.0" prefWidth="122.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <MFXTextField fx:id="txtReason" alignment="CENTER_RIGHT" floatingText="Reason" prefHeight="50.0" prefWidth="122.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <MFXTextField fx:id="txtRemark" alignment="CENTER_RIGHT" floatingText="Additional Desc." prefHeight="50.0" prefWidth="229.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <MFXTextField fx:id="txtReason" alignment="CENTER_RIGHT" floatingText="Reason" prefHeight="50.0" prefWidth="122.0" textLimit="100" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <MFXTextField fx:id="txtRemark" alignment="CENTER_RIGHT" floatingText="Additional Desc." prefHeight="50.0" prefWidth="229.0" textLimit="100" GridPane.columnIndex="4" GridPane.rowIndex="1" />
             </children>
         </GridPane>
     </children>

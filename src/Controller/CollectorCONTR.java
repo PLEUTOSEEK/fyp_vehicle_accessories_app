@@ -266,7 +266,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Name", this.txtName.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Name");
-
+                    textVal = textVal.trim();
                     /*
                     1. Cannot be null
                     2. Must be alphabet and space allowed ONLY
@@ -293,6 +293,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Occupation", this.txtOccupation.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Occupation");
+                    textVal = textVal.trim();
                     /*
                      1. Alphabet and spaces allowed ONLY
                      */
@@ -321,6 +322,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("DOB", this.dtDOB.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("DOB");
+                    textVal = textVal.trim();
 
                     /*
                     1. Cannot be future date
@@ -349,6 +351,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("IC", this.txtIC.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("IC");
+                    textVal = textVal.trim();
                     /*
                      1. must follow regex
                      */
@@ -377,6 +380,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Nationality", this.cmbNationality.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Nationality");
+                    textVal = textVal.trim();
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -397,6 +401,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Race", this.cmbRace.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Race");
+                    textVal = textVal.trim();
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -421,6 +426,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Religion", this.cmbReligion.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Religion");
+                    textVal = textVal.trim();
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -446,6 +452,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Mobile_No", this.txtMobileNo.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Mobile_No");
+                    textVal = textVal.trim();
                     /*
                      1. cannot be null
                      2. must follow regex
@@ -474,6 +481,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Email", this.txtEmail.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Email");
+                    textVal = textVal.trim();
                     /*
                      1. must follow regex
                      */
@@ -499,6 +507,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Extension_No.", this.txtExt.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Extension_No.");
+                    textVal = textVal.trim();
                     /*
                      1.
                      */
@@ -524,6 +533,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Office_Phone_No", this.txtOffPhNo.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Office_Phone_No");
+                    textVal = textVal.trim();
                     /*
                      1. cannot be null
                      2. must follow regex
@@ -549,6 +559,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Home_Phone_No", this.txtHomePhNo.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Home_Phone_No");
+                    textVal = textVal.trim();
                     /*
                      1. cannot be null
                      2. must follow regex
@@ -574,6 +585,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Collect_Location_Name", this.txtCollectAddrLocationName.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Collect_Location_Name");
+                    textVal = textVal.trim();
                     /*
                      1. Cannot be null
                      */
@@ -594,6 +606,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Collect_Address", this.txtCollectAddrAddress.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Collect_Address");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      */
@@ -614,6 +628,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Collect_City", this.txtCollectAddrCity.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Collect_City");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -640,6 +656,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Collect_Postal_Code", this.txtCollectAddrPostalCode.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Collect_Postal_Code");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. must follow regex
@@ -666,6 +684,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Collect_State", this.cmbCollectAddrState.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Collect_State");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -692,6 +712,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Collect_Country", this.cmbCollectAddrCountry.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Collect_Country");
+                    textVal = textVal.trim();
+
                     /*
                      1. Cannot be null
                      2. alphabet and spaces allowed ONLY
@@ -718,6 +740,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_City", this.txtResidentialAddrCity.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_City");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -742,6 +766,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_Postal_Code", this.txtResidentialAddrPostalCode.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_Postal_Code");
+                    textVal = textVal.trim();
+
                     /*
                      1. must follow regex
                      */
@@ -766,6 +792,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_State", this.cmbResidentialAddrState.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_State");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -790,6 +818,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Residential_Country", this.cmbResidentialAddrCountry.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Residential_Country");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -814,6 +844,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_City", this.txtCorAddrCity.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_City");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -838,6 +870,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_Postal_Code", this.txtCorAddrPostalCode.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_Postal_Code");
+                    textVal = textVal.trim();
+
                     /*
                      1. must follow regex
                      */
@@ -862,6 +896,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_State", this.cmbCorAddrState.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_State");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */
@@ -886,6 +922,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 .dependsOn("Corresponding_Country", this.cmbCorAddrCountry.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Corresponding_Country");
+                    textVal = textVal.trim();
+
                     /*
                      1. alphabet and spaces allowed ONLY
                      */

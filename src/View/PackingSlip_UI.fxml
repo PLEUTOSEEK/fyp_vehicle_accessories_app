@@ -104,8 +104,8 @@
                                                 <RowConstraints maxHeight="293.6000213623047" minHeight="0.0" prefHeight="56.40000915527344" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <MFXTextField fx:id="txtPSID" alignment="CENTER_RIGHT" editable="false" floatingText="Packing Slip ID" minHeight="47.0" minWidth="158.0" prefHeight="47.0" prefWidth="158.0" GridPane.rowIndex="1" />
-                                                <MFXTextField fx:id="txtTORef" alignment="CENTER_RIGHT" editable="false" floatingText="Transfer Order Reference" minWidth="158.0" prefHeight="50.0" prefWidth="158.0" GridPane.rowIndex="2" />
+                                                <MFXTextField fx:id="txtPSID" alignment="CENTER_RIGHT" editable="false" floatingText="Packing Slip ID" minHeight="47.0" minWidth="158.0" prefHeight="47.0" prefWidth="158.0" textLimit="20" GridPane.rowIndex="1" />
+                                                <MFXTextField fx:id="txtTORef" alignment="CENTER_RIGHT" editable="false" floatingText="Transfer Order Reference" minWidth="158.0" prefHeight="50.0" prefWidth="158.0" textLimit="20" GridPane.rowIndex="2" />
                                     <MFXCircleToggleNode fx:id="ctnTOSelection" graphicTextGap="2.0" onMousePressed="#openTOSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                                        <graphic>
                                           <FontAwesomeIconView glyphName="LIST" />

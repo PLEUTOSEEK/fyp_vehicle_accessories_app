@@ -40,6 +40,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
 /**
@@ -96,6 +97,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
             @Override
             public void run() {
                 receiveData();
+
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
@@ -358,7 +360,32 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public void inputValidation() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Check validatorCheck = (new Validator()).createCheck();
+
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Transfer Order Reference", this.txtTORef.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Transfer Order Reference");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Transfer Order Reference - Required Field");
+
+                        return;
+                    }
+
+                })
+                .decorates(this.txtTORef);
+
+        validator.add(validatorCheck);
+
+        //=====================================
     }
 
     @Override

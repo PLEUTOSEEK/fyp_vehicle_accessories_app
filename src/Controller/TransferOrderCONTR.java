@@ -33,10 +33,13 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -55,6 +58,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
 /**
@@ -145,6 +149,10 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
+
+                if (passObj.getCrud().equals(BasicObjs.create)) {
+                    defaultValFillIn();
+                }
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
@@ -340,9 +348,16 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
     }
 
+    private void defaultValFillIn() {
+        this.dtRefDate.setValue(LocalDate.now());
+        this.txtPIC.setText(HomePageCONTR.logInStaff.getStaffID());
+        this.cmbStatus.setText(WarehouseRules.TOStatus.NEW.toString());
+    }
+
     private void fieldFillIn() throws IOException {
         // before field in, make sure the UI control is fresh
         clearAllFieldsValue();
+        defaultValFillIn();
 
         if (passObj.getObj() != null) {
             if (passObj.getObj() instanceof SalesOrder) {
@@ -492,7 +507,150 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public void inputValidation() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Check validatorCheck = (new Validator()).createCheck();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US);
+
+        /*
+        No need include:
+        1.
+         */
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Person Incharge", this.txtPIC.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Person Incharge");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Person Incharge - Required Field");
+
+                        return;
+                    }
+
+                })
+                .decorates(this.txtPIC);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Destination", this.txtDestination.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Destination");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Destination - Required Field");
+                        return;
+                    }
+
+                })
+                .decorates(this.txtDestination);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Reference Date", this.dtRefDate.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Reference Date");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Reference Date - Required Field");
+                        return;
+                    }
+
+                })
+                .decorates(this.dtRefDate);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Reference Type", this.cmbRefType.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Reference Type");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Reference Type - Required Field");
+
+                        return;
+                    }
+
+                })
+                .decorates(this.cmbRefType);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Reference", this.txtRef.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Reference");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Reference - Required Field");
+                        return;
+                    }
+                })
+                .decorates(this.txtRef);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Status", this.cmbStatus.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Status");
+                    textVal = textVal.trim();
+
+                    /*
+                     1. cannot be null
+                     */
+                    if (textVal.isEmpty()) {
+                        c.error("Status - Required Field");
+                        return;
+                    }
+                })
+                .decorates(this.cmbStatus);
+
+        validator.add(validatorCheck);
+        //=====================================
     }
 
     @Override

@@ -126,11 +126,11 @@
                                                         <Insets bottom="1.0" top="10.0" />
                                                     </padding>
                                                 </MFXCircleToggleNode>
-                                                <MFXTextField fx:id="txtCllctBckTo" alignment="CENTER_RIGHT" editable="false" floatingText="Collect Back To" minWidth="145.0" prefWidth="145.0" GridPane.rowIndex="3" />
-                                                <MFXTextField fx:id="txtRDNID" alignment="CENTER_RIGHT" editable="false" floatingText="RDN ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.rowIndex="1" />
-                                                <MFXDatePicker fx:id="dtRefDate" alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Reference Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <MFXTextField fx:id="txtSORef" alignment="CENTER_RIGHT" editable="false" floatingText="Sales Order Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                <MFXTextField fx:id="txtCllctBckFr" alignment="CENTER_RIGHT" editable="false" floatingText="Collect Back From" minWidth="145.0" prefWidth="145.0" GridPane.rowIndex="2" />
+                                                <MFXTextField fx:id="txtCllctBckTo" alignment="CENTER_RIGHT" editable="false" floatingText="Collect Back To" minWidth="145.0" prefWidth="145.0" textLimit="20" GridPane.rowIndex="3" />
+                                                <MFXTextField fx:id="txtRDNID" alignment="CENTER_RIGHT" editable="false" floatingText="RDN ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" textLimit="20" GridPane.rowIndex="1" />
+                                                <MFXDatePicker fx:id="dtRefDate" alignment="CENTER_RIGHT" allowEdit="false" editable="false" floatMode="INLINE" floatingText="Reference Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <MFXTextField fx:id="txtSORef" alignment="CENTER_RIGHT" editable="false" floatingText="Sales Order Reference" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" textLimit="20" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                <MFXTextField fx:id="txtCllctBckFr" alignment="CENTER_RIGHT" editable="false" floatingText="Collect Back From" minWidth="145.0" prefWidth="145.0" textLimit="20" GridPane.rowIndex="2" />
                                                 <MFXCircleToggleNode fx:id="ctnCllctBckFrSelection" graphicTextGap="2.0" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                                                     <padding>
                                                         <Insets bottom="1.0" top="10.0" />
@@ -139,8 +139,8 @@
                                                         <FontAwesomeIconView glyphName="LIST" />
                                                     </graphic>
                                                 </MFXCircleToggleNode>
-                                                <MFXComboBox fx:id="cmbStatus" alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                                                <MFXDatePicker fx:id="dtCllctDate" alignment="CENTER_RIGHT" floatMode="INLINE" floatingText="Collect Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <MFXComboBox fx:id="cmbStatus" alignment="CENTER_RIGHT" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" textLimit="30" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                                <MFXDatePicker fx:id="dtCllctDate" alignment="CENTER_RIGHT" allowEdit="false" editable="false" floatMode="INLINE" floatingText="Collect Date" minHeight="47.0" minWidth="186.0" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                     <TextArea fx:id="txtInspectorMsg" prefHeight="113.0" prefWidth="318.0" GridPane.columnSpan="5" GridPane.rowIndex="5" GridPane.rowSpan="2" />
                                     <Label styleClass="normal-label" text="Inspector Message" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                                        <GridPane.margin>
@@ -243,7 +243,7 @@
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </Rectangle>
-                                    <MFXTextField fx:id="txtIssuedBy" alignment="CENTER_RIGHT" editable="false" floatingText="Issued By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.rowIndex="1" />
+                                    <MFXTextField fx:id="txtIssuedBy" alignment="CENTER_RIGHT" editable="false" floatingText="Issued By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" textLimit="20" GridPane.rowIndex="1" />
                                     <MFXCircleToggleNode fx:id="ctnIssuedBySelection" graphicTextGap="2.0" onMousePressed="#openIssuedBySelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                                        <padding>
                                           <Insets bottom="1.0" top="10.0" />
@@ -255,7 +255,7 @@
                                           <Insets right="17.0" />
                                        </GridPane.margin>
                                     </MFXCircleToggleNode>
-                                    <MFXTextField fx:id="txtInspectedBy" alignment="CENTER_RIGHT" editable="false" floatingText="Inspected By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <MFXTextField fx:id="txtInspectedBy" alignment="CENTER_RIGHT" editable="false" floatingText="Inspected By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" textLimit="20" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <MFXCircleToggleNode fx:id="ctnInspectedBySelection" graphicTextGap="2.0" onMousePressed="#openInspectedBySelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                                        <padding>
                                           <Insets bottom="1.0" top="10.0" />
@@ -275,7 +275,7 @@
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </ImageView>
-                                    <MFXTextField fx:id="txtCollectBackBy" alignment="CENTER_RIGHT" editable="false" floatingText="Collect Back By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <MFXTextField fx:id="txtCollectBackBy" alignment="CENTER_RIGHT" editable="false" floatingText="Collect Back By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" textLimit="20" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                     <MFXCircleToggleNode fx:id="ctnCllctBckBySelection" graphicTextGap="2.0" onMousePressed="#openCllctBckBySelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                                        <padding>
                                           <Insets bottom="1.0" top="10.0" />
@@ -287,7 +287,7 @@
                                           <Insets right="17.0" />
                                        </GridPane.margin>
                                     </MFXCircleToggleNode>
-                                    <MFXTextField fx:id="txtItemPassedBckBy" alignment="CENTER_RIGHT" editable="false" floatingText="Item Passed Back By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                    <MFXTextField fx:id="txtItemPassedBckBy" alignment="CENTER_RIGHT" editable="false" floatingText="Item Passed Back By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" textLimit="20" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                     <MFXCircleToggleNode fx:id="ctnItemPassedBckBySelection" graphicTextGap="2.0" onMousePressed="#openItemPassedBckBySelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                                        <padding>
                                           <Insets bottom="1.0" right="17.0" top="10.0" />
@@ -296,7 +296,7 @@
                                           <FontAwesomeIconView glyphName="LIST" />
                                        </graphic>
                                     </MFXCircleToggleNode>
-                                    <MFXTextField fx:id="txtItemReceivedBy" alignment="CENTER_RIGHT" editable="false" floatingText="Item Received By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                    <MFXTextField fx:id="txtItemReceivedBy" alignment="CENTER_RIGHT" editable="false" floatingText="Item Received By" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="173.0" textLimit="20" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                     <MFXCircleToggleNode fx:id="ctnItemReceivedBySelection" graphicTextGap="2.0" onMousePressed="#openItemReceivedBySelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                                        <padding>
                                           <Insets bottom="1.0" right="17.0" top="10.0" />
