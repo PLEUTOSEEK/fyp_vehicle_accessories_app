@@ -4,6 +4,7 @@
  */
 package Controller;
 
+import BizRulesConfiguration.SalesRules;
 import Entity.Item;
 import Entity.Product;
 import PassObjs.BasicObjs;
@@ -72,6 +73,8 @@ public class SalesOrderPSSelectCONTR implements Initializable {
     private BasicObjs passObj;
 
     private Validator validator = new Validator();
+
+    SalesRules salesRules = new SalesRules();
     //</editor-fold>
 
     /**
@@ -284,8 +287,8 @@ public class SalesOrderPSSelectCONTR implements Initializable {
 
                         Double discPercent = Double.parseDouble(textVal);
 
-                        if (0 > discPercent || discPercent > 30) {
-                            c.error("Disc. % - Must within 0 <= Disc <= 30");
+                        if (0 > discPercent || discPercent > salesRules.getUpperLimitPercentageDiscount()) {
+                            c.error("Disc. % - Must within 0 <= Disc <= " + salesRules.getUpperLimitPercentageDiscount().toString());
                             return;
                         }
 
@@ -393,7 +396,6 @@ public class SalesOrderPSSelectCONTR implements Initializable {
     private void confirmItem(MouseEvent event) {
         if (event.isPrimaryButtonDown() == true) {
             if (!validator.validate()) {
-                alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
             }
 

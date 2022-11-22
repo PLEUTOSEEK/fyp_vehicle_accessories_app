@@ -16,9 +16,12 @@ import Entity.Staff;
 import Entity.TransferOrder;
 import PassObjs.BasicObjs;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
+import io.github.palexdev.materialfx.controls.MFXContextMenuItem;
+import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,7 +32,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.InputEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -102,6 +108,22 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     private MenuItem mniAccRpt;
 
     public static Staff logInStaff;
+    @FXML
+    private MenuItem mniCreateRDN1;
+    @FXML
+    private MenuItem mniUpdateRDN1;
+    @FXML
+    private MenuItem mniViewRDN1;
+    @FXML
+    private MenuItem mniCreateTO1;
+    @FXML
+    private MenuItem mniUpdateTO1;
+    @FXML
+    private MenuItem mniViewTO1;
+    @FXML
+    private MFXScrollPane settingScrollPanel;
+    @FXML
+    private MFXContextMenuItem cxmniSignOut;
 
     /**
      * Initializes the controller class.
@@ -117,6 +139,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
             public void run() {
                 receiveData();
                 logInStaff = (Staff) passObj.getObj();
+                autoClose();
             }
         });
     }
@@ -272,7 +295,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     public void switchScene(String fxmlPath, BasicObjs passObj, String direction) {
         // Step 3
         Stage stage = (Stage) btnSetting.getScene().getWindow();
-        stage.close();
+        //stage.close();
         try {
             // Step 4
             Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(fxmlPath)); // Example: "View/HomePage_UI.fxml"
@@ -280,6 +303,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
             stage.setUserData(sendData(passObj, direction));
             // Step 6
             Scene scene = new Scene(root);
+
             stage.setScene(scene);
             // Step 7
             stage.show();
@@ -345,4 +369,21 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
         return alert.getResult();
     }
 
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(10);
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        btnSetting.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
+    }
+
+    @FXML
+    private void openSettingDrawer(MouseEvent event) {
+        if (this.settingScrollPanel.isVisible()) {
+            this.settingScrollPanel.setVisible(false);
+        } else {
+            this.settingScrollPanel.setVisible(true);
+        }
+    }
 }

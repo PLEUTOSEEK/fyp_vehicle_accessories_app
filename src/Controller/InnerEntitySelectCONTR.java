@@ -8,10 +8,12 @@ import Entity.CollectAddress;
 import Entity.Customer;
 import Entity.CustomerInquiry;
 import Entity.Invoice;
+import Entity.PaymentTerm;
 import Entity.Place;
 import Entity.Quotation;
 import Entity.ReturnDeliveryNote;
 import Entity.SalesOrder;
+import Entity.ShipmentTerm;
 import Entity.Staff;
 import Entity.TransferOrder;
 import PassObjs.BasicObjs;
@@ -19,10 +21,12 @@ import Service.CollectAddressService;
 import Service.CustomerInquiryService;
 import Service.CustomerService;
 import Service.InvoiceService;
+import Service.PaymentTermService;
 import Service.PlaceService;
 import Service.QuotationService;
 import Service.RDNService;
 import Service.SalesOrderService;
+import Service.ShipmentTermService;
 import Service.StaffService;
 import Service.TransferOrderService;
 import Utils.DateFilter;
@@ -31,6 +35,7 @@ import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.DoubleFilter;
+import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import java.net.URL;
 import java.util.ArrayList;
@@ -108,6 +113,10 @@ public class InnerEntitySelectCONTR implements Initializable {
             forReturnDeliveryNote();
         } else if (entity instanceof Invoice) {
             forInvoice();
+        } else if (entity instanceof PaymentTerm) {
+            forPaymentTerm();
+        } else if (entity instanceof ShipmentTerm) {
+            forShipmentTerm();
         }
     }
 
@@ -872,6 +881,139 @@ public class InnerEntitySelectCONTR implements Initializable {
                             Stage stage = (Stage) btnCancel.getScene().getWindow();
                             BasicObjs passObj = new BasicObjs();
                             passObj.setObj(invoice);
+                            stage.setUserData(passObj);
+                            stage.close();
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+    }
+
+    private void forPaymentTerm() {
+        // payment term ID
+        // patment term name
+        // baseline documen date
+        // day limits
+        // description
+
+        // payment term ID
+        MFXTableColumn<PaymentTerm> pymtTermIDCol = new MFXTableColumn<>("Payment Term ID", true, Comparator.comparing(paymentTerm -> paymentTerm.getPymtTermID()));
+        // patment term name
+        MFXTableColumn<PaymentTerm> pymtTermNmCol = new MFXTableColumn<>("Name", true, Comparator.comparing(paymentTerm -> paymentTerm.getPymtTermName()));
+        // baseline documen date
+        MFXTableColumn<PaymentTerm> baselineDocDateCol = new MFXTableColumn<>("Baseline Document Date", true, Comparator.comparing(paymentTerm -> paymentTerm.getBaseLineDocumentDate()));
+        // day limits
+        MFXTableColumn<PaymentTerm> dayLimitCol = new MFXTableColumn<>("Day Limits", true, Comparator.comparing(paymentTerm -> paymentTerm.getDaysLimit()));
+        // description
+        MFXTableColumn<PaymentTerm> descCol = new MFXTableColumn<>("Description", true, Comparator.comparing(paymentTerm -> paymentTerm.getDescription()));
+
+        // payment term ID
+        pymtTermIDCol.setRowCellFactory(pymtTerm -> new MFXTableRowCell<>(paymentTerm -> paymentTerm.getPymtTermID()));
+        // patment term name
+        pymtTermNmCol.setRowCellFactory(pymtTerm -> new MFXTableRowCell<>(paymentTerm -> paymentTerm.getPymtTermName()));
+        // baseline documen date
+        baselineDocDateCol.setRowCellFactory(pymtTerm -> new MFXTableRowCell<>(paymentTerm -> paymentTerm.getBaseLineDocumentDate()));
+        // day limits
+        dayLimitCol.setRowCellFactory(pymtTerm -> new MFXTableRowCell<>(paymentTerm -> paymentTerm.getDaysLimit()));
+        // description
+        descCol.setRowCellFactory(pymtTerm -> new MFXTableRowCell<>(paymentTerm -> paymentTerm.getDescription()));
+
+        ((MFXTableView<PaymentTerm>) tblVw).getTableColumns().addAll(
+                pymtTermIDCol,
+                pymtTermNmCol,
+                baselineDocDateCol,
+                dayLimitCol,
+                dayLimitCol
+        );
+
+        ((MFXTableView<PaymentTerm>) tblVw).getFilters().addAll(
+                new StringFilter<>("Payment Term ID", paymentTerm -> paymentTerm.getPymtTermID()),
+                new StringFilter<>("Name", paymentTerm -> paymentTerm.getPymtTermName()),
+                new StringFilter<>("Baseline Document Date", paymentTerm -> paymentTerm.getBaseLineDocumentDate()),
+                new IntegerFilter<>("Day Limits", paymentTerm -> paymentTerm.getDaysLimit()),
+                new StringFilter<>("Description", paymentTerm -> paymentTerm.getDescription())
+        );
+
+        List<PaymentTerm> pymtTerms = PaymentTermService.getAllPaymentTerms();
+
+        //6
+        ((MFXTableView<PaymentTerm>) tblVw).setItems(FXCollections.observableList(pymtTerms));
+
+        ((MFXTableView<PaymentTerm>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<Invoice>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    PaymentTerm pymtTerm = (((MFXTableView<PaymentTerm>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(pymtTerm.getPymtTermID());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            Stage stage = (Stage) btnCancel.getScene().getWindow();
+                            BasicObjs passObj = new BasicObjs();
+                            passObj.setObj(pymtTerm);
+                            stage.setUserData(passObj);
+                            stage.close();
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+    }
+
+    private void forShipmentTerm() {
+
+        // Shipment ID
+        // Shipment Name
+        // Description
+        //
+        // Shipment ID
+        MFXTableColumn<ShipmentTerm> shipmentTermIDCol = new MFXTableColumn<>("Shipment Term ID", true, Comparator.comparing(shipmentTerm -> shipmentTerm.getShipmentTermID()));
+        // Shipment Name
+        MFXTableColumn<ShipmentTerm> shipmentTermNmCol = new MFXTableColumn<>("Name", true, Comparator.comparing(shipmentTerm -> shipmentTerm.getShipmentTermName()));
+        // Description
+        MFXTableColumn<ShipmentTerm> descCol = new MFXTableColumn<>("Description", true, Comparator.comparing(shipmentTerm -> shipmentTerm.getDescription()));
+
+        // Shipment ID
+        shipmentTermIDCol.setRowCellFactory(shipTerm -> new MFXTableRowCell<>(shipmentTerm -> shipmentTerm.getShipmentTermID()));
+        // Shipment Name
+        shipmentTermNmCol.setRowCellFactory(shipTerm -> new MFXTableRowCell<>(shipmentTerm -> shipmentTerm.getShipmentTermName()));
+        // Description
+        descCol.setRowCellFactory(shipTerm -> new MFXTableRowCell<>(shipmentTerm -> shipmentTerm.getDescription()));
+
+        ((MFXTableView<ShipmentTerm>) tblVw).getTableColumns().addAll(
+                shipmentTermIDCol,
+                shipmentTermNmCol,
+                descCol
+        );
+
+        ((MFXTableView<ShipmentTerm>) tblVw).getFilters().addAll(
+                new StringFilter<>("Shipment Term ID", shipmentTerm -> shipmentTerm.getShipmentTermID()),
+                new StringFilter<>("Name", shipmentTerm -> shipmentTerm.getShipmentTermName()),
+                new StringFilter<>("Description", shipmentTerm -> shipmentTerm.getDescription())
+        );
+
+        List<ShipmentTerm> shipmentTerms = ShipmentTermService.getAllShipmentTerms();
+
+        //6
+        ((MFXTableView<ShipmentTerm>) tblVw).setItems(FXCollections.observableList(shipmentTerms));
+
+        ((MFXTableView<ShipmentTerm>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<Invoice>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    ShipmentTerm shipmentTerm = (((MFXTableView<ShipmentTerm>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(shipmentTerm.getShipmentTermID());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            Stage stage = (Stage) btnCancel.getScene().getWindow();
+                            BasicObjs passObj = new BasicObjs();
+                            passObj.setObj(shipmentTerm);
                             stage.setUserData(passObj);
                             stage.close();
                         }

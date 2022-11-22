@@ -8,6 +8,8 @@ import Entity.PaymentTerm;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -55,6 +57,62 @@ public class PaymentTermDAO {
             }
 
             //return object
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static List<PaymentTerm> getAllPaymentTerms() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        List<PaymentTerm> paymentTerms = new ArrayList<>();
+        PaymentTerm pymtTerm = new PaymentTerm();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT   [Pymt_Term_ID] "
+                    + "      ,[Pymt_Term_Name] "
+                    + "      ,[Description] "
+                    + "      ,[Baseline_Documet_Date] "
+                    + "      ,[Days_Limit] "
+                    + "      ,[Modified_Date_Time] "
+                    + "      ,[Created_Date] "
+                    + "  FROM [PaymentTerm]";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                pymtTerm = new PaymentTerm();
+
+                pymtTerm.setPymtTermID(rs.getString("Pymt_Term_ID"));
+                pymtTerm.setPymtTermName(rs.getString("Pymt_Term_Name"));
+                pymtTerm.setDescription(rs.getString("Description"));
+                pymtTerm.setBaseLineDocumentDate(rs.getString("Baseline_Documet_Date"));
+                pymtTerm.setDaysLimit(rs.getInt("Days_Limit"));
+                pymtTerm.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+                pymtTerm.setCreatedDate(rs.getTimestamp("Created_Date"));
+
+                paymentTerms.add(pymtTerm);
+            }
+
+            //return object
+            return paymentTerms;
         } catch (Exception e) {
             return null;
         } finally {

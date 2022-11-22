@@ -13,6 +13,7 @@ public class SQLDatabaseConnection {
     // Replace server name, username, and password with your credentials
     private static Connection getConnection(String sqlServer, String db, String user, String password) {
 
+        /*
         String connectionUrl
                 = "jdbc:sqlserver://" + sqlServer + ":1433;"
                 + "database=" + db + ";"
@@ -21,16 +22,15 @@ public class SQLDatabaseConnection {
                 + "encrypt=true;"
                 + "trustServerCertificate=false;"
                 + "loginTimeout=30;";
-
-
-        /*String connectionUrl
+         */
+        String connectionUrl
                 = "jdbc:sqlserver://" + sqlServer + ":1400;"
                 + "DatabaseName=" + db + ";"
                 + "user=" + user + ";"
                 + "password=" + password + ";"
                 + "encrypt=false;"
                 + "trustServerCertificate=false;"
-                + "loginTimeout=30;";*/
+                + "loginTimeout=30;";
         try {
             // Code here.
             Connection connection = DriverManager.getConnection(connectionUrl);

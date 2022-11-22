@@ -97,7 +97,7 @@ public class TOPSSelectCONTR implements Initializable {
 
         /*
         No need include:
-        1. 
+        1.
         2.
          */
         //=====================================
@@ -188,7 +188,6 @@ public class TOPSSelectCONTR implements Initializable {
     private void confirmItem(MouseEvent event) {
         if (event.isPrimaryButtonDown() == true) {
             if (!validator.validate()) {
-                alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
             }
 

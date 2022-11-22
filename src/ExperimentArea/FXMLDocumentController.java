@@ -7,11 +7,13 @@ package ExperimentArea;
 
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
+import io.github.palexdev.materialfx.controls.cell.MFXDateCell;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -53,6 +55,25 @@ public class FXMLDocumentController implements Initializable {
     }
 
     private void inputValidation() {
+        this.dtDatePicker.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtDatePicker, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isBefore(LocalDate.now())) {
+                            setDisable(true);
+                        } else {
+                            setDisable(false);
+                        }
+                    }
+                };
+
+            }
+        });
+
         //        validator.createCheck()
         //                .dependsOn("testTxtField", txttTestTextField.textProperty())
         //                .withMethod(c -> {
@@ -64,8 +85,8 @@ public class FXMLDocumentController implements Initializable {
         //                .decorates(txttTestTextField);
         Check validatorCheck = (new Validator()).createCheck();
 
-        validatorCheck
-                .dependsOn("test TxtField", txttTestTextField.textProperty())
+        validatorCheck.dependsOn(
+                "test TxtField", txttTestTextField.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("test TxtField");
                     textVal = textVal.trim();
@@ -90,7 +111,8 @@ public class FXMLDocumentController implements Initializable {
                         c.error("Unit Price - Must be double");
                         return;
                     }
-                })
+                }
+                )
                 .decorates(txttTestTextField);
 
         validator.add(validatorCheck);
@@ -113,12 +135,14 @@ public class FXMLDocumentController implements Initializable {
                     LocalDate date = LocalDate.parse(textVal, formatter);
 
                     System.out.println(date.getMonth());
-                })
+                }
+                )
                 .decorates(dtDatePicker);
 
         validator.add(validatorCheck);
 
         validatorCheck = (new Validator()).createCheck();
+
         validatorCheck.dependsOn(
                 "cmbComboBox", this.cmbComboBox.textProperty())
                 .withMethod(c -> {
@@ -129,13 +153,15 @@ public class FXMLDocumentController implements Initializable {
                         c.error("Required Field");
                         return;
                     }
-                })
+                }
+                )
                 .decorates(cmbComboBox);
 
         validator.add(validatorCheck);
     }
 
     @Override
+
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         Platform.runLater(new Runnable() {

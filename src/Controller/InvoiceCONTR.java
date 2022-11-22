@@ -895,7 +895,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
             }
 
             if (!validator.validate()) {
-                alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
+
                 return;
             }
 

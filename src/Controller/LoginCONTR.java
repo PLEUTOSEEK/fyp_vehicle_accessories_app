@@ -5,6 +5,7 @@
 package Controller;
 
 import Entity.Staff;
+import PassObjs.BasicObjs;
 import Service.LoginService;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
@@ -19,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import net.synedra.validatorfx.Validator;
@@ -28,8 +30,9 @@ import net.synedra.validatorfx.Validator;
  *
  * @author Tee Zhuo Xuan
  */
-public class LoginCONTR implements Initializable {
+public class LoginCONTR implements Initializable, BasicCONTRFunc {
 
+    private BasicObjs passObj = new BasicObjs();
     @FXML
     private MFXTextField txtStaffID;
     @FXML
@@ -48,6 +51,7 @@ public class LoginCONTR implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         inputValidation();
+        receiveData();
 
     }
 
@@ -65,7 +69,8 @@ public class LoginCONTR implements Initializable {
 
             if (loginStaff != null) {
                 //get inside the home page
-                sendData(loginStaff);
+                passObj.setLoginStaff(loginStaff);
+                switchScene("View/HomePage_UI.fxml", passObj, BasicObjs.forward);
             } else {
                 //pop out dialog mention user id or password is wrong
                 alertDialog(AlertType.ERROR, "Error", "Invalid User", validator.createStringBinding().getValue());
@@ -78,67 +83,114 @@ public class LoginCONTR implements Initializable {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Validation for all the neccessary fields in UI">
-    private void inputValidation() {
+    public void inputValidation() {
         validator.createCheck()
                 .dependsOn("userID", txtStaffID.textProperty())
                 .withMethod(c -> {
                     String userName = c.get("userID");
-                    if (userName == "") {
+                    userName = userName.trim();
+
+                    if (userName.isEmpty()) {
                         c.error("Required ID Field");
+                        return;
                     }
                 })
-                .decorates(txtStaffID)
-                .immediate();
+                .decorates(txtStaffID);
 
         validator.createCheck()
                 .dependsOn("password", txtPassword.textProperty())
                 .withMethod(c -> {
                     String password = c.get("password");
-                    if (password == "") {
+                    password = password.trim();
+                    if (password.isEmpty()) {
                         c.error("Required Password Field");
+                        return;
                     }
                 })
-                .decorates(txtPassword)
-                .immediate();
+                .decorates(txtPassword);
 
     }
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Alert Dialog Creator">
-    private void alertDialog(AlertType alertType, String title, String headerTxt, String contentTxt) {
+    @Override
+    public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(headerTxt);
         alert.setContentText(contentTxt);
 
         alert.showAndWait();
-    }
-//</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="Send Data to Home Page">
-    private void sendData(Object staff) {
-        // Step 3
-        Stage stage = (Stage) btnLogin.getScene().getWindow();
-        stage.close();
-        try {
-            // Step 4
-            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("View/HomePage_UI.fxml"));
-            // Step 5
-            stage.setUserData(staff);
-            // Step 6
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            // Step 7
-            stage.show();
-        } catch (IOException e) {
-            System.err.println(String.format("Error: %s", e.getMessage()));
-        }
+        return alert.getResult();
     }
 //</editor-fold>
 
     @FXML
     private void goToForgotPassword(MouseEvent event) {
         alertDialog(AlertType.INFORMATION, "Information", "Contact System Administrator", "Kindly inform administrator for new password login");
+    }
+
+    @Override
+    public boolean clearAllFieldsValue() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void switchScene(String fxmlPath, BasicObjs passObj, String direction) {
+        // Step 3
+        Stage stage = (Stage) btnLogin.getScene().getWindow();
+        stage.close();
+        try {
+            // Step 4
+            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(fxmlPath)); // Example: "View/HomePage_UI.fxml"
+            // Step 5
+            stage.setUserData(sendData(passObj, direction));
+            // Step 6
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            // Step 7
+            stage.show();
+
+        } catch (IOException e) {
+            System.err.println(String.format("Error: %s", e.getMessage()));
+        }
+    }
+
+    @Override
+    public BasicObjs sendData(BasicObjs passObj, String direction) {
+        switch (direction) {
+            case BasicObjs.forward:
+                passObj.getFxmlPaths().clear();
+                passObj.getFxmlPaths().addLast("View/Login_UI.fxml");
+                break;
+        }
+        passObj.setPassDirection(direction);
+        passObj.setLoginStaff(this.passObj.getLoginStaff());
+        return passObj;
+    }
+
+    @Override
+    public void receiveData() {
+        // Step 1
+        Stage stage = (Stage) btnLogin.getScene().getWindow();
+        // Step 2
+        if (stage.getUserData() != null) {
+            // session timeout banner show up
+
+            passObj = (BasicObjs) stage.getUserData();
+
+            switch (passObj.getPassDirection()) {
+                //receive data from after scene;
+                case BasicObjs.back:
+                    if (passObj.getFxmlPaths().getLength() != 0) {
+                        passObj.getFxmlPaths().delLast();
+                    }
+                    break;
+            }
+        } else {
+            passObj = new BasicObjs();
+        }
     }
 
 }

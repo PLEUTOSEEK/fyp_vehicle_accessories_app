@@ -31,6 +31,7 @@ import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.cell.MFXDateCell;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.DoubleFilter;
 import io.github.palexdev.materialfx.filter.IntegerFilter;
@@ -49,6 +50,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -225,6 +227,27 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         });
     }
 
+    private void initializeUIControls() {
+        this.dtQuotValidDate.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtQuotValidDate, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isBefore(LocalDate.now()) || item.isAfter(LocalDate.now().plusDays(salesRules.getMaxQuotationValidityPeriod()))) {
+                            setDisable(true);
+                        } else {
+                            setDisable(false);
+                        }
+                    }
+                };
+
+            }
+        });
+    }
+
     private void initializeComboSelections() {
 
         ((MFXComboBox<String>) this.cmbCurrencyCode).setItems(FXCollections.observableList(accRules.getCurrencyCodes()));
@@ -355,6 +378,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
                                     setupItemTable();
 
+                                    calculateTotalInformation(items);
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -828,6 +852,62 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
         validator.add(validatorCheck);
         //=====================================
+        //=====================================
+
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Sub Total", this.txtSubTtl.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Sub Total");
+                    textVal = textVal.trim();
+                    /*
+                     1.
+                     */
+                    // allow null
+                    if (textVal.isEmpty()) {
+                        c.error("Sub Total - Required Field");
+                        return;
+                    }
+
+                    BigDecimal subTtl = new BigDecimal(textVal);
+
+                    if (subTtl.compareTo(salesRules.getMaxOrderAmtperSO()) == 1 && items.size() != 1) {
+                        c.error("Every Quotation’s total amount must not exceed RM 10,000 after discount and before including tax.\n"
+                                + "This rule is ignored if the Quotation has only one single item and exceeds the defined limit.");
+                        return;
+                    }
+
+                    if (subTtl.compareTo(salesRules.getMaxOrderAmtperSO()) == 1 && items.size() == 1) {
+                        if (items.get(0).getOriQty() != 1) {
+                            c.error("Every Quotation’s total amount must not exceed RM 10,000 after discount and before including tax.\n"
+                                    + "This rule is ignored if the Quotation has only one single item and exceeds the defined limit.");
+                            return;
+                        }
+                    }
+
+                })
+                .decorates(this.txtSubTtl);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .withMethod(c -> {
+
+                    if (items.size() <= 0) {
+                        c.error("Item - At least one item are required to build a quotation");
+                        return;
+                    }
+
+                })
+                .decorates(this.tblVw);
+
+        validator.add(validatorCheck);
+        //=====================================
     }
 
     @Override
@@ -1249,10 +1329,31 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
                 setupItemTable();
 
+                calculateTotalInformation(items);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void calculateTotalInformation(List<Item> items) {
+
+        Quotation quotation = new Quotation();
+
+        quotation.setGross(BigDecimal.ZERO);
+        quotation.setDiscount(BigDecimal.ZERO);
+
+        for (Item item : items) {
+            quotation.setGross(quotation.getGross().add(item.getExclTaxAmt()));
+            quotation.setDiscount(quotation.getDiscount().add(item.getDiscAmt()));
+        }
+
+        quotation.setNett(quotation.getSubTotal().multiply(new BigDecimal(1 + (accRules.getTaxRate() / 100))));
+
+        this.txtGross.setText(quotation.getGross().toString());
+        this.txtDiscount.setText(quotation.getDiscount().toString());
+        this.txtSubTtl.setText(quotation.getSubTotal().toString());
+        this.txtNett.setText(quotation.getNett().toString());
     }
 
     @FXML
@@ -1265,7 +1366,6 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
             }
 
             if (!validator.validate()) {
-                alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
             }
 

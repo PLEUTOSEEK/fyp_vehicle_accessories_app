@@ -170,6 +170,7 @@ public class Quotation extends Document {
     }
 
     public BigDecimal getSubTotal() {
+        subTotal = this.gross.subtract(this.discount);
         return subTotal;
     }
 

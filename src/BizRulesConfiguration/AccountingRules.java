@@ -4,6 +4,7 @@
  */
 package BizRulesConfiguration;
 
+import Service.AccountingRulesService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +23,7 @@ public class AccountingRules {
     private List<String> pymtTerms;
     private List<String> currencyCodes;
     private List<InvoiceStatus> invoiceStatuses;
-    private double taxRate;
+    private Double taxRate;
 
     public AccountingRules() {
         pymtTerms = new ArrayList<>();
@@ -36,15 +37,18 @@ public class AccountingRules {
         pymtTerms.add("COD");
 
         currencyCodes.add("MYR");
-        taxRate = 6;
+        taxRate = -1.00;
         invoiceStatuses = Arrays.asList(InvoiceStatus.values());
     }
 
-    public double getTaxRate() {
+    public Double getTaxRate() {
+        if (taxRate < 0) {
+            taxRate = AccountingRulesService.getTaxRate();
+        }
         return taxRate;
     }
 
-    public void setTaxRate(double taxRate) {
+    public void setTaxRate(Double taxRate) {
         this.taxRate = taxRate;
     }
 
@@ -71,4 +75,5 @@ public class AccountingRules {
     public void setInvoiceStatuses(List<InvoiceStatus> invoiceStatuses) {
         this.invoiceStatuses = invoiceStatuses;
     }
+
 }

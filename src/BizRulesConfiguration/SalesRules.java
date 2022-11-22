@@ -4,6 +4,8 @@
  */
 package BizRulesConfiguration;
 
+import Service.SalesRulesService;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +18,9 @@ public class SalesRules {
     private List<CIStatus> ciStatuses;
     private List<QuotStatus> quotStatuses;
     private List<SOStatus> soStatuses;
+    private Integer maxQuotationValidityPeriod;
+    private BigDecimal maxOrderAmtperSO;
+    private Double upperLimitPercentageDiscount;
 
     public enum CIStatus {
         NEW,
@@ -42,6 +47,11 @@ public class SalesRules {
         ciStatuses = Arrays.asList(CIStatus.values());
         quotStatuses = Arrays.asList(QuotStatus.values());
         soStatuses = Arrays.asList(SOStatus.values());
+
+        maxQuotationValidityPeriod = -1;
+        maxOrderAmtperSO = new BigDecimal("-1");
+        upperLimitPercentageDiscount = -1.00;
+
     }
 
     public List<CIStatus> getCiStatuses() {
@@ -54,6 +64,33 @@ public class SalesRules {
 
     public List<SOStatus> getSOStatuses() {
         return soStatuses;
+    }
+
+    public List<SOStatus> getSoStatuses() {
+        return soStatuses;
+    }
+
+    public Integer getMaxQuotationValidityPeriod() {
+        if (maxQuotationValidityPeriod < 0) {
+            maxQuotationValidityPeriod = SalesRulesService.getMaxQuotationValidityPeriod();
+        }
+        return maxQuotationValidityPeriod;
+    }
+
+    public BigDecimal getMaxOrderAmtperSO() {
+        if (maxOrderAmtperSO.doubleValue() < 0) {
+            maxOrderAmtperSO = SalesRulesService.getMaxOrderAmtperSO();
+
+        }
+        return maxOrderAmtperSO;
+    }
+
+    public Double getUpperLimitPercentageDiscount() {
+        if (upperLimitPercentageDiscount < 0) {
+            upperLimitPercentageDiscount = SalesRulesService.getUpperLimitPercentageDiscount();
+
+        }
+        return upperLimitPercentageDiscount;
     }
 
 }

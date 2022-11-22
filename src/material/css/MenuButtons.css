@@ -15,9 +15,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     Author     : Tee Zhuo Xuan
 */
 
-VBox{
-    -fx-background-color: rgba(232,232,232,1);
-}
+
 
 .menu{
     -fx-background-color: transparent;

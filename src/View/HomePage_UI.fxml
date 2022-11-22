@@ -2,6 +2,7 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
+<?import io.github.palexdev.materialfx.controls.MFXContextMenuItem?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
@@ -29,7 +30,7 @@
                   <Image url="@../../../../TARUC%20Degree%20Materials/21WMR04840.jpg" />
                </image>
             </ImageView>
-            <MFXCircleToggleNode fx:id="btnSetting" prefHeight="58.0" prefWidth="67.0" size="20.0">
+            <MFXCircleToggleNode fx:id="btnSetting" onMousePressed="#openSettingDrawer" prefHeight="58.0" prefWidth="67.0" size="20.0">
                <graphic>
                   <FontAwesomeIconView glyphName="GEAR" size="15" />
                </graphic>
@@ -43,6 +44,14 @@
          <content>
               <VBox prefHeight="730.0" prefWidth="186.0">
                   <children>
+                  <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Configuration">
+                     <items>
+                        <MenuItem fx:id="mniGeneral" mnemonicParsing="false" onAction="#goToGeneralConfigurationUI" text="General" />
+                        <MenuItem fx:id="mniSales" mnemonicParsing="false" onAction="#goToSalesConfigurationUI" text="Sales" />
+                        <MenuItem fx:id="mniWarehouse" mnemonicParsing="false" onAction="#goToWarehouseConfigurationUI" text="Warehouse" />
+                        <MenuItem fx:id="mniAccounting" mnemonicParsing="false" onAction="#goToAccountingConfigurationUI" text="Accounting" />
+                     </items>
+                  </SplitMenuButton>
                       <SplitMenuButton mnemonicParsing="false" popupSide="RIGHT" prefHeight="26.0" prefWidth="185.0" text="Staff Management">
                      <items>
                         <MenuItem fx:id="mniCreateStaff" mnemonicParsing="false" onAction="#goToCreateStaffUI" text="Create Staff" />
@@ -155,11 +164,25 @@
                   <URL value="@../Material/css/SplitMenuButton.css" />
                   <URL value="@../Material/css/MenuButtons.css" />
                   <URL value="@../Material/css/MenuItem.css" />
+                  <URL value="@../Material/css/VBox.css" />
                </stylesheets>
                <opaqueInsets>
                   <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                </opaqueInsets>
               </VBox>
+         </content>
+      </MFXScrollPane>
+      <MFXScrollPane fx:id="settingScrollPanel" prefHeight="732.0" prefWidth="210.0" visible="false" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="50.0">
+         <content>
+            <VBox prefHeight="729.0" prefWidth="206.0">
+               <children>
+                  <MFXContextMenuItem fx:id="cxmniSignOut" text="Sign out" />
+               </children>
+               <stylesheets>
+                  <URL value="@../Material/css/VBox.css" />
+                  <URL value="@../Material/css/MFXMenuItem.css" />
+               </stylesheets>
+            </VBox>
          </content>
       </MFXScrollPane>
     </children>

@@ -350,6 +350,9 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                                     }
 
                                     setupItemTable();
+
+                                    calculateTotalInformation(items);
+
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -786,6 +789,62 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
         validator.add(validatorCheck);
         //=====================================
+        //=====================================
+
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Sub Total", this.txtSubTtl.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Sub Total");
+                    textVal = textVal.trim();
+                    /*
+                     1.
+                     */
+                    // allow null
+                    if (textVal.isEmpty()) {
+                        c.error("Sub Total - Required Field");
+                        return;
+                    }
+
+                    BigDecimal subTtl = new BigDecimal(textVal);
+
+                    if (subTtl.compareTo(salesRules.getMaxOrderAmtperSO()) == 1 && items.size() != 1) {
+                        c.error("Every Sales Order’s total amount must not exceed RM 10,000 after discount and before including tax.\n"
+                                + "This rule is ignored if the Sales Order has only one single item and exceeds the defined limit.");
+                        return;
+                    }
+
+                    if (subTtl.compareTo(salesRules.getMaxOrderAmtperSO()) == 1 && items.size() == 1) {
+                        if (items.get(0).getOriQty() != 1) {
+                            c.error("Every Sales Order’s total amount must not exceed RM 10,000 after discount and before including tax.\n"
+                                    + "This rule is ignored if the Sales Order has only one single item and exceeds the defined limit.");
+                            return;
+                        }
+                    }
+
+                })
+                .decorates(this.txtSubTtl);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .withMethod(c -> {
+
+                    if (items.size() <= 0) {
+                        c.error("Item - At least one item are required to build a quotation");
+                        return;
+                    }
+
+                })
+                .decorates(this.tblVw);
+
+        validator.add(validatorCheck);
+        //=====================================
     }
 
     @Override
@@ -1205,11 +1264,31 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                 }
 
                 setupItemTable();
-
+                calculateTotalInformation(items);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void calculateTotalInformation(List<Item> items) {
+
+        SalesOrder salesOrder = new SalesOrder();
+
+        salesOrder.setGross(BigDecimal.ZERO);
+        salesOrder.setDiscount(BigDecimal.ZERO);
+
+        for (Item item : items) {
+            salesOrder.setGross(salesOrder.getGross().add(item.getExclTaxAmt()));
+            salesOrder.setDiscount(salesOrder.getDiscount().add(item.getDiscAmt()));
+        }
+
+        salesOrder.setNett(salesOrder.getSubTotal().multiply(new BigDecimal(1 + (accRules.getTaxRate() / 100))));
+
+        this.txtGross.setText(salesOrder.getGross().toString());
+        this.txtDiscount.setText(salesOrder.getDiscount().toString());
+        this.txtSubTtl.setText(salesOrder.getSubTotal().toString());
+        this.txtNett.setText(salesOrder.getNett().toString());
     }
 
     @FXML
@@ -1222,7 +1301,6 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
             }
 
             if (!validator.validate()) {
-                alertDialog(Alert.AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
             }
 
