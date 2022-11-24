@@ -4,11 +4,13 @@
  */
 package Entity;
 
+import java.util.Objects;
+
 /**
  *
  * @author Tee Zhuo Xuan
  */
-public class PaymentTerm extends Entity {
+public class PaymentTerm extends Entity implements Cloneable {
 
     private String pymtTermID;
     private String pymtTermName;
@@ -56,4 +58,37 @@ public class PaymentTerm extends Entity {
         this.daysLimit = daysLimit;
     }
 
+    @Override
+    public PaymentTerm clone() {
+        PaymentTerm clonedPymtTerm = null;
+        try {
+            clonedPymtTerm = (PaymentTerm) super.clone();
+
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return clonedPymtTerm;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PaymentTerm other = (PaymentTerm) obj;
+        return Objects.equals(this.pymtTermID, other.pymtTermID);
+    }
 }

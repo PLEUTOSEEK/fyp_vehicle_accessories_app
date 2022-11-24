@@ -14,6 +14,7 @@ import Entity.Item;
 import Entity.SalesOrder;
 import Entity.Staff;
 import PassObjs.BasicObjs;
+import Service.GeneralRulesService;
 import Service.InvoiceService;
 import Service.ItemService;
 import Service.SalesOrderService;
@@ -45,6 +46,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -59,9 +61,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -154,6 +158,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
+                autoClose();
 
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
@@ -189,6 +194,16 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                 }
             }
         });
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        this.btnSave.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
     private void initializeComboSelections() {
@@ -358,6 +373,8 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
             itemInSO.setQty(itemInSO.getQty() - itemInTO.getQty() + itemInTO.getOriQty());
         }
         setupItemTable();
+
+        calculateTotalInformation(items);
     }
 
     private void defaultValFillIn() {
@@ -448,7 +465,8 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
-    private void quitWindow(String title, String headerTxt, String contentTxt) {
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
         ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
                 title,
                 headerTxt,
@@ -590,6 +608,22 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                     }
                 })
                 .decorates(this.cmbStatus);
+
+        validator.add(validatorCheck);
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .withMethod(c -> {
+
+                    if (items.size() <= 0) {
+                        c.error("Item - At least one item are required to build a Return Delivery Note");
+                        return;
+                    }
+
+                })
+                .decorates(this.tblVw);
 
         validator.add(validatorCheck);
         //=====================================
@@ -920,6 +954,25 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
             SalesOrderService.updateSalesOrderStatus(invoiceInDraft.getSO());
         }
 
+    }
+
+    private void calculateTotalInformation(List<Item> items) {
+        Invoice invoice = new Invoice();
+
+        invoice.setGross(BigDecimal.ZERO);
+        invoice.setDiscount(BigDecimal.ZERO);
+
+        for (Item item : items) {
+            invoice.setGross(invoice.getGross().add(item.getExclTaxAmt()));
+            invoice.setDiscount(invoice.getDiscount().add(item.getDiscAmt()));
+        }
+
+        invoice.setTtlPayable(invoice.getSubTotal().multiply(new BigDecimal(1 + (accRules.getTaxRate() / 100))));
+
+        this.txtGross.setText(invoice.getGross().toString());
+        this.txtDiscount.setText(invoice.getDiscount().toString());
+        this.txtSubTtl.setText(invoice.getSubTotal().toString());
+        this.txtTtlPayable.setText(invoice.getTtlPayable().toString());
     }
 
 }

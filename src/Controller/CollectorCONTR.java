@@ -7,7 +7,9 @@ package Controller;
 import Entity.Address;
 import Entity.CollectAddress;
 import Entity.Contact;
+import Entity.Staff;
 import PassObjs.BasicObjs;
+import Service.GeneralRulesService;
 import Utils.ImageUtils;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
@@ -25,14 +27,17 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -136,6 +141,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
             public void run() {
                 inputValidation();
                 receiveData();
+                autoClose();
 
                 if (passObj.getCrud().equals(BasicObjs.read)) {
                     try {
@@ -147,6 +153,16 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 }
             }
         });
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        btnDiscard.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
     private void isViewMode(boolean disable) {
@@ -1029,7 +1045,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
         stage.close();
     }
 
-    private void quitWindow(String title, String headerTxt, String contentTxt) {
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
         ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
                 title,
                 headerTxt,
@@ -1052,8 +1069,14 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public BasicObjs sendData(BasicObjs passObj, String direction) {
-        // Unused
-        return new BasicObjs();
+        switch (direction) {
+            case BasicObjs.forward:
+                passObj.getFxmlPaths().addLast("View/Collector_UI.fxml");
+                break;
+        }
+        passObj.setPassDirection(direction);
+        passObj.setLoginStaff(this.passObj.getLoginStaff());
+        return passObj;
     }
 
     private CollectAddress prepareCollectAddressInforToObj() throws IOException {

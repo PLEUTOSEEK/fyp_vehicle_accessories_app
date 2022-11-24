@@ -16,6 +16,7 @@ import Entity.SalesOrder;
 import Entity.ShipmentTerm;
 import Entity.Staff;
 import PassObjs.BasicObjs;
+import Service.GeneralRulesService;
 import Service.ItemService;
 import Service.QuotationService;
 import Service.SalesOrderService;
@@ -48,6 +49,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -62,10 +64,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -189,7 +193,7 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
-
+                autoClose();
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
                 }
@@ -214,6 +218,16 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                 }
             }
         });
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        this.btnBack.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
     private void initializeComboSelections() {
@@ -499,7 +513,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
-    private void quitWindow(String title, String headerTxt, String contentTxt) {
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
         ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
                 title,
                 headerTxt,
@@ -1335,9 +1350,55 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void openPymtTermSelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new PaymentTerm());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtPymtTerm.setText(((PaymentTerm) receiveObj.getObj()).getPymtTermID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
     private void openShipmentTermSelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new ShipmentTerm());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtShipmentTerm.setText(((ShipmentTerm) receiveObj.getObj()).getShipmentTermID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

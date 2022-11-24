@@ -2,22 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/DAO/AccountingRulesDAO.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/CustomerInquiryCONTR.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/LoginCONTR.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/CustomerCONTR.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/SalesOrderCONTR.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Service/PaymentTermService.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/DAO/PaymentTermDAO.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Service/AccountingRulesService.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/DAO/AddressDAO.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/InnerEntitySelectCONTR.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Entity/SalesOrder.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/BizRulesConfiguration/AccountingRules.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/DAO/SalesRulesDAO.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/QuotationCONTR.java</file>
-            <file>file:/C:/Users/Tee%20Zhuo%20Xuan/OneDrive%20-%20Tunku%20Abdul%20Rahman%20University%20College/Desktop/fyp_vehicle_accessories_app/src/Controller/HomePageCONTR.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

@@ -4,10 +4,29 @@
  */
 package BizRulesConfiguration;
 
+import DAO.GeneralRulesDAO;
+
 /**
  *
  * @author Tee Zhuo Xuan
  */
 public class GeneralRules {
 
+    private Integer inactivityLogoutTimeSecs;
+
+    public GeneralRules() {
+        inactivityLogoutTimeSecs = -1;
+    }
+
+    public Integer getInactivityLogoutTimeSecs() {
+
+        if (inactivityLogoutTimeSecs < 0) {
+            inactivityLogoutTimeSecs = GeneralRulesDAO.getInactivityLogoutTimeSecs();
+        }
+        return inactivityLogoutTimeSecs;
+    }
+
+    public void setInactivityLogoutTimeSecs(Integer inactivityLogoutTimeSecs) {
+        this.inactivityLogoutTimeSecs = inactivityLogoutTimeSecs;
+    }
 }

@@ -16,4 +16,8 @@ public class AccountingRulesService {
         return AccountingRulesDAO.getTaxRate();
     }
 
+    public static boolean updateTaxRate(String value) {
+        return AccountingRulesDAO.updateTaxRate(value);
+    }
+
 }

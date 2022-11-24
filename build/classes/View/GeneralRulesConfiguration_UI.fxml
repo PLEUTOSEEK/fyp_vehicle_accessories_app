@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="715.0" prefWidth="796.0" stylesheets="@../Material/css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GeneralRulesConfigurationCONTR">
+   <children>
+      <GridPane prefHeight="715.0" prefWidth="773.0" stylesheets="@../Material/css/labels.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="193.0" minWidth="0.0" prefWidth="84.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="398.0" minWidth="10.0" prefWidth="200.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="370.0" minWidth="10.0" prefWidth="207.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="334.0" minWidth="10.0" prefWidth="225.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="97.0" minWidth="10.0" prefWidth="78.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <MFXTextField fx:id="txtSessionTimeOut" alignment="CENTER_RIGHT" allowEdit="false" editable="false" floatingText="Session Time Out (sec)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="170.0" textLimit="20" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="633.0" styleClass="entity-header-label" stylesheets="@../../css/labels.css" text="General Rules" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Arial monospaced for SAP Bold" size="52.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+      <MFXCircleToggleNode fx:id="btnBack" layoutX="10.0" layoutY="10.0" onMousePressed="#goBackPrevious" prefHeight="87.0" prefWidth="67.0" size="25.0">
+         <graphic>
+            <FontAwesomeIconView glyphName="ANGLE_LEFT" size="35" />
+         </graphic>
+      </MFXCircleToggleNode>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c1c1ec" height="53.0" layoutY="640.0" stroke="#cdc7d9" strokeType="INSIDE" width="797.0" />
+      <MFXButton id="custom" fx:id="btnDiscard" layoutX="620.0" layoutY="650.0" minHeight="27.0" minWidth="70.0" onMousePressed="#discardCurrentData" text="Discard" />
+      <MFXButton fx:id="btnSave" buttonType="RAISED" layoutX="720.0" layoutY="650.0" minHeight="27.0" minWidth="70.0" onMousePressed="#saveGeneralRules" styleClass="outline-button" text="Save" />
+   </children>
+</AnchorPane>

@@ -7,8 +7,10 @@ package Controller;
 import BizRulesConfiguration.WarehouseRules;
 import Entity.Item;
 import Entity.PackingSlip;
+import Entity.Staff;
 import Entity.TransferOrder;
 import PassObjs.BasicObjs;
+import Service.GeneralRulesService;
 import Service.ItemService;
 import Service.PackingSlipService;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -37,9 +40,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -97,6 +102,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
             @Override
             public void run() {
                 receiveData();
+                autoClose();
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
@@ -115,6 +121,16 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                 }
             }
         });
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        this.btnSave.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
     private void setupItemTable() {
@@ -291,7 +307,8 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
-    private void quitWindow(String title, String headerTxt, String contentTxt) {
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
         ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
                 title,
                 headerTxt,
@@ -385,6 +402,22 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
         validator.add(validatorCheck);
 
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .withMethod(c -> {
+
+                    if (items.size() <= 0) {
+                        c.error("Item - At least one item are required to build a Packing Slip");
+                        return;
+                    }
+
+                })
+                .decorates(this.tblVw);
+
+        validator.add(validatorCheck);
         //=====================================
     }
 

@@ -20,6 +20,7 @@ import PassObjs.BasicObjs;
 import Service.CollectAddressService;
 import Service.CustomerInquiryService;
 import Service.CustomerService;
+import Service.GeneralRulesService;
 import Service.InvoiceService;
 import Service.PaymentTermService;
 import Service.PlaceService;
@@ -37,19 +38,26 @@ import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.DoubleFilter;
 import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -82,11 +90,54 @@ public class InnerEntitySelectCONTR implements Initializable {
             public void run() {
                 receiveData();
                 setupTable();
+                autoClose();
                 tblVw.autosizeColumnsOnInitialization();
             }
-        }
-        );
+        });
 
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        this.btnCancel.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
+
+    }
+
+    public void switchScene(String fxmlPath, BasicObjs passObj, String direction) {
+        // Step 3
+        Stage stage = (Stage) this.btnCancel.getScene().getWindow();
+        //stage.close();
+        try {
+            // Step 4
+            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(fxmlPath)); // Example: "View/HomePage_UI.fxml"
+            // Step 5
+            stage.setUserData(sendData(passObj, direction));
+            // Step 6
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            // Step 7
+            stage.show();
+
+        } catch (IOException e) {
+            System.err.println(String.format("Error: %s", e.getMessage()));
+        }
+    }
+
+    public BasicObjs sendData(BasicObjs passObj, String direction) {
+        switch (direction) {
+            case BasicObjs.forward:
+                passObj.getFxmlPaths().addLast("View/InnerEntitySelectCONTR_UI.fxml");
+                break;
+        }
+        passObj.setPassDirection(direction);
+        passObj.setLoginStaff(this.passObj.getLoginStaff());
+        return passObj;
     }
 
     private void setupTable() {
@@ -925,7 +976,7 @@ public class InnerEntitySelectCONTR implements Initializable {
                 pymtTermNmCol,
                 baselineDocDateCol,
                 dayLimitCol,
-                dayLimitCol
+                descCol
         );
 
         ((MFXTableView<PaymentTerm>) tblVw).getFilters().addAll(

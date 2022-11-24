@@ -8,10 +8,12 @@ import Entity.Address;
 import Entity.CollectAddress;
 import Entity.Contact;
 import Entity.Customer;
+import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.AddressService;
 import Service.CollectAddressService;
 import Service.CustomerService;
+import Service.GeneralRulesService;
 import Utils.ImageUtils;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
@@ -37,6 +39,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -49,9 +52,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -180,7 +185,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
             public void run() {
                 inputValidation();
                 receiveData();
-
+                autoClose();
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
@@ -196,6 +201,16 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 }
             }
         });
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        btnDiscard.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
     private void setupCollectAddressTable() {
@@ -1278,7 +1293,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
-    private void quitWindow(String title, String headerTxt, String contentTxt) {
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
         ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
                 title,
                 headerTxt,

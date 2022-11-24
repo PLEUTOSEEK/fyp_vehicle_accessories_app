@@ -16,6 +16,7 @@ import Entity.ShipmentTerm;
 import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.CustomerInquiryService;
+import Service.GeneralRulesService;
 import Service.ItemService;
 import Utils.DateFilter;
 import Utils.ImageUtils;
@@ -46,6 +47,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -60,9 +62,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -171,7 +175,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
-
+                autoClose();
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
                 }
@@ -197,6 +201,16 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
         setupItemTable();
 
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        btnDiscard.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
     public void setupItemTable() {
@@ -262,11 +276,11 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
         tempItems.clear();
 
-        ((MFXTableView<CollectAddress>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+        ((MFXTableView<Item>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
 
-                if (((MFXTableView<CollectAddress>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                if (((MFXTableView<Item>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
 
                     Item item = (((MFXTableView<Item>) tblVw).getSelectionModel().getSelectedValues().get(0));
                     rowSelected.add(item.getProduct().getProdID());
@@ -422,7 +436,8 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
-    private void quitWindow(String title, String headerTxt, String contentTxt) {
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
         ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
                 title,
                 headerTxt,

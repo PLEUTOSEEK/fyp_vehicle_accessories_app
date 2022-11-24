@@ -13,6 +13,7 @@ import Entity.Place;
 import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.AddressService;
+import Service.GeneralRulesService;
 import Service.StaffService;
 import Utils.ImageUtils;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -34,6 +35,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -45,11 +47,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
@@ -170,6 +174,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
 
                 receiveData();
 
+                autoClose();
+
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
@@ -183,6 +189,15 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
             }
         }
         );
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+        btnDiscard.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
     private void isViewMode(boolean disable) { // if true
@@ -1319,7 +1334,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
-    private void quitWindow(String title, String headerTxt, String contentTxt) {
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
         ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
                 title,
                 headerTxt,

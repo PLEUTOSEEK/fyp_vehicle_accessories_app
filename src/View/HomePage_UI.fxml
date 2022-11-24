@@ -176,7 +176,7 @@
          <content>
             <VBox prefHeight="729.0" prefWidth="206.0">
                <children>
-                  <MFXContextMenuItem fx:id="cxmniSignOut" text="Sign out" />
+                  <MFXContextMenuItem fx:id="cxmniSignOut" onMousePressed="#signOut" text="Sign out" />
                </children>
                <stylesheets>
                   <URL value="@../Material/css/VBox.css" />

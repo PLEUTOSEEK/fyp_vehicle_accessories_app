@@ -19,6 +19,7 @@ import PassObjs.BasicObjs;
 import Service.CustomerInquiryService;
 import Service.CustomerService;
 import Service.DeliveryOrderService;
+import Service.GeneralRulesService;
 import Service.InvoiceService;
 import Service.PackingSlipService;
 import Service.QuotationService;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -51,8 +53,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -83,9 +87,21 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
             public void run() {
                 receiveData();
                 setupTable();
+                autoClose();
                 tblVw.autosizeColumnsOnInitialization();
             }
         });
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        btnBack.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
+
     }
 
     private void setupTable() {
@@ -975,6 +991,11 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
         alert.showAndWait();
         return alert.getResult();
+    }
+
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
+        //Unused
     }
 
 }

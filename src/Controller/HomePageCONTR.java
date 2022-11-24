@@ -15,6 +15,7 @@ import Entity.SalesOrder;
 import Entity.Staff;
 import Entity.TransferOrder;
 import PassObjs.BasicObjs;
+import Service.GeneralRulesService;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXContextMenuItem;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
@@ -124,6 +125,14 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     private MFXScrollPane settingScrollPanel;
     @FXML
     private MFXContextMenuItem cxmniSignOut;
+    @FXML
+    private MenuItem mniGeneral;
+    @FXML
+    private MenuItem mniSales;
+    @FXML
+    private MenuItem mniWarehouse;
+    @FXML
+    private MenuItem mniAccounting;
 
     /**
      * Initializes the controller class.
@@ -370,8 +379,9 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     }
 
     public void autoClose() {
-        Duration delay1 = Duration.seconds(10);
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
         PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
         transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
         transitionAlert.setCycleCount(1);
 
@@ -384,6 +394,44 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
             this.settingScrollPanel.setVisible(false);
         } else {
             this.settingScrollPanel.setVisible(true);
+        }
+    }
+
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
+        ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
+                title,
+                headerTxt,
+                contentTxt);
+
+        if (alertBtnClicked == ButtonType.OK) {
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
+        } else if (alertBtnClicked == ButtonType.CANCEL) {
+            //nothing need to do, remain same page
+        }
+    }
+
+    @FXML
+    private void goToGeneralConfigurationUI(ActionEvent event) {
+    }
+
+    @FXML
+    private void goToSalesConfigurationUI(ActionEvent event) {
+    }
+
+    @FXML
+    private void goToWarehouseConfigurationUI(ActionEvent event) {
+    }
+
+    @FXML
+    private void goToAccountingConfigurationUI(ActionEvent event) {
+    }
+
+    @FXML
+    private void signOut(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            this.passObj.setLoginStaff(null);
+            quitWindow("Warning", "Record Unsaved Message", "Once sign out all the unsaved record will be discarded\nAre you sure you want to continue?");
         }
     }
 }

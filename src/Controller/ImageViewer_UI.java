@@ -4,7 +4,9 @@
  */
 package Controller;
 
+import Entity.Staff;
 import PassObjs.BasicObjs;
+import Service.GeneralRulesService;
 import Service.ImageViewerService;
 import Utils.ImageUtils;
 import adt.DoublyLinkedList;
@@ -18,16 +20,22 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javax.imageio.ImageIO;
 
 /**
@@ -63,7 +71,7 @@ public class ImageViewer_UI implements Initializable, BasicCONTRFunc {
             public void run() {
 
                 receiveData();
-
+                autoClose();
                 String imgStrs = (String) passObj.getObj();
                 images = ImageUtils.splitImgStr(imgStrs);
                 imageViewerService.setImages(images);
@@ -75,6 +83,17 @@ public class ImageViewer_UI implements Initializable, BasicCONTRFunc {
                 }
             }
         });
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        this.btnDone.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
+
     }
 
     @FXML
@@ -160,14 +179,36 @@ public class ImageViewer_UI implements Initializable, BasicCONTRFunc {
 
     @Override
     public void switchScene(String fxmlPath, BasicObjs passObj, String direction) {
-        // Unused
-        return;
+        // Step 3
+        Stage stage = (Stage) this.btnDone.getScene().getWindow();
+        //stage.close();
+        try {
+            // Step 4
+            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(fxmlPath)); // Example: "View/HomePage_UI.fxml"
+            // Step 5
+            stage.setUserData(sendData(passObj, direction));
+            // Step 6
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            // Step 7
+            stage.show();
+
+        } catch (IOException e) {
+            System.err.println(String.format("Error: %s", e.getMessage()));
+        }
     }
 
     @Override
     public BasicObjs sendData(BasicObjs passObj, String direction) {
-        // Unused
-        return new BasicObjs();
+        switch (direction) {
+            case BasicObjs.forward:
+                passObj.getFxmlPaths().addLast("View/ImageViewer_UI.fxml");
+                break;
+        }
+        passObj.setPassDirection(direction);
+        passObj.setLoginStaff(this.passObj.getLoginStaff());
+        return passObj;
     }
 
     @Override
@@ -180,6 +221,11 @@ public class ImageViewer_UI implements Initializable, BasicCONTRFunc {
         } else {
             passObj = new BasicObjs();
         }
+    }
+
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
+//Unused
     }
 
 }

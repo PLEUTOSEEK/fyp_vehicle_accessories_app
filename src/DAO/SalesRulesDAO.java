@@ -141,4 +141,109 @@ public class SalesRulesDAO {
         }
     }
 
+    public static boolean updateMaxQuotationValidityPeriod(String value) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE [ConfigurationParameters] "
+                    + "   SET  [Value] = ? "
+                    + " WHERE [Key] = ?";
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, value);
+            ps.setString(2, "Maximum_Quotation_Validity_Period");
+
+            ps.execute();
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static boolean updateUpperLimitPercentageDiscount(String value) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE [ConfigurationParameters] "
+                    + "   SET  [Value] = ? "
+                    + " WHERE [Key] = ?";
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, value);
+            ps.setString(2, "Upper_Limit_Percent_Discount");
+
+            ps.execute();
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static boolean updateMaxOrderAmtperSO(String value) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE [ConfigurationParameters] "
+                    + "   SET  [Value] = ? "
+                    + " WHERE [Key] = ?";
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, value);
+            ps.setString(2, "Maximum_Order_Amt_per_SO");
+
+            ps.execute();
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
 }

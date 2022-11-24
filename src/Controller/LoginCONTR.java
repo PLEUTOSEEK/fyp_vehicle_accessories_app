@@ -176,10 +176,13 @@ public class LoginCONTR implements Initializable, BasicCONTRFunc {
         Stage stage = (Stage) btnLogin.getScene().getWindow();
         // Step 2
         if (stage.getUserData() != null) {
-            // session timeout banner show up
 
             passObj = (BasicObjs) stage.getUserData();
-
+            if (passObj.getLoginStaff() == null) {
+                // do nothing
+            } else {
+                // session timeout banner show up
+            }
             switch (passObj.getPassDirection()) {
                 //receive data from after scene;
                 case BasicObjs.back:
@@ -191,6 +194,11 @@ public class LoginCONTR implements Initializable, BasicCONTRFunc {
         } else {
             passObj = new BasicObjs();
         }
+    }
+
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
+//Unused
     }
 
 }

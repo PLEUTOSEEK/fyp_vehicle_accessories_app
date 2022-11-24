@@ -56,4 +56,40 @@ public class AccountingRulesDAO {
         }
     }
 
+    public static boolean updateTaxRate(String value) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE [ConfigurationParameters] "
+                    + "   SET  [Value] = ? "
+                    + " WHERE [Key] = ?";
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, value);
+            ps.setString(2, "Tax_Rate");
+
+            ps.execute();
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+
+    }
+
 }

@@ -8,7 +8,9 @@ import BizRulesConfiguration.AccountingRules;
 import Entity.Invoice;
 import Entity.Item;
 import Entity.Receipt;
+import Entity.Staff;
 import PassObjs.BasicObjs;
+import Service.GeneralRulesService;
 import Service.InvoiceService;
 import Service.ItemService;
 import Service.ReceiptService;
@@ -39,6 +41,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -53,9 +56,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -133,7 +138,7 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
             public void run() {
                 inputValidation();
                 receiveData();
-
+                autoClose();
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
                 }
@@ -167,6 +172,16 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
             }
         });
         setupItemTable();
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        btnDiscard.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
     private void setupItemTable() {
@@ -396,7 +411,8 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
-    private void quitWindow(String title, String headerTxt, String contentTxt) {
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
         ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
                 title,
                 headerTxt,
@@ -520,6 +536,22 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
         validator.add(validatorCheck);
 
         //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .withMethod(c -> {
+
+                    if (items.size() <= 0) {
+                        c.error("Item - At least one item are required to build a Return Delivery Note");
+                        return;
+                    }
+
+                })
+                .decorates(this.tblVw);
+
+        validator.add(validatorCheck);
+        //=====================================
     }
 
     @Override
@@ -544,7 +576,9 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @Override
-    public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
+    public ButtonType alertDialog(Alert.AlertType alertType, String title,
+            String headerTxt, String contentTxt
+    ) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(headerTxt);

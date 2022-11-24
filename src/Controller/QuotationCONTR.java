@@ -19,6 +19,7 @@ import Entity.ShipmentTerm;
 import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.CustomerInquiryService;
+import Service.GeneralRulesService;
 import Service.InventoryService;
 import Service.ItemService;
 import Service.QuotationService;
@@ -53,6 +54,7 @@ import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -67,9 +69,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -195,7 +199,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
-
+                autoClose();
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
                 }
@@ -225,6 +229,16 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
             }
         });
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        this.btnBack.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
     private void initializeUIControls() {
@@ -527,7 +541,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
-    private void quitWindow(String title, String headerTxt, String contentTxt) {
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
         ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
                 title,
                 headerTxt,
@@ -721,7 +736,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                     LocalDate date = LocalDate.parse(textVal, formatter);
                     LocalDate date2 = LocalDate.parse(this.dtRefDate.getText(), formatter);
 
-                    if (!date.isAfter(date2)) {
+                    if (!date.isAfter(LocalDate.now())) {
                         c.error("Quotation Validity Date - Cannot be before the reference date");
                         return;
                     }

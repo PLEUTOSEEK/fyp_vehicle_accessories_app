@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane id="AnchorPane" prefHeight="182.0" prefWidth="1110.0" stylesheets="@../Material/css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PymtTermSelectCONTR">
+   <children>
+      <GridPane layoutX="16.0" layoutY="38.0" prefHeight="182.0" prefWidth="1114.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="113.60000610351562" minWidth="10.0" prefWidth="18.400001525878906" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="221.5999984741211" minWidth="10.0" prefWidth="173.60000000000002" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="260.0" minWidth="10.0" prefWidth="181.800048828125" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="292.8000244140625" minWidth="10.0" prefWidth="292.8000244140625" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.99996337890627" minWidth="10.0" prefWidth="153.5999755859375" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="338.400048828125" minWidth="10.0" prefWidth="184.8000366210938" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <MFXTextField fx:id="txtPymtTermID" alignment="CENTER_RIGHT" allowEdit="false" editable="false" floatingText="Payment Term ID" prefHeight="50.0" prefWidth="135.0" textLimit="20" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <MFXButton id="custom" fx:id="btnCancel" minHeight="27.0" minWidth="70.0" onMousePressed="#cancelAction" text="Cancel" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+            <MFXButton fx:id="btnConfirm" minWidth="50.0" onMousePressed="#confirmPymtTerm" styleClass="outline-button" text="Confirm" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <MFXTextField fx:id="txtPymtTermName" alignment="CENTER_RIGHT" floatingText="Payment Term Name" prefHeight="50.0" prefWidth="135.0" textLimit="100" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <MFXTextField fx:id="txtDescription" alignment="CENTER_RIGHT" floatingText="Description" prefHeight="50.0" prefWidth="225.0" textLimit="3000" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <MFXComboBox fx:id="cmbBaselineDoc" allowEdit="true" editable="false" floatingText="Baseline Document" prefHeight="49.0" prefWidth="156.0" textLimit="100" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <MFXTextField fx:id="txtDaysLimit" alignment="CENTER_RIGHT" floatingText="Days Limit" prefHeight="50.0" prefWidth="135.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</AnchorPane>

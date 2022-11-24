@@ -7,7 +7,9 @@ package Controller;
 import BizRulesConfiguration.SalesRules;
 import Entity.Item;
 import Entity.Product;
+import Entity.Staff;
 import PassObjs.BasicObjs;
+import Service.GeneralRulesService;
 import Service.InventoryService;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
@@ -26,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -35,9 +38,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -67,8 +72,6 @@ public class SalesOrderPSSelectCONTR implements Initializable {
     private MFXButton btnCancel;
     @FXML
     private MFXButton btnRemove;
-    @FXML
-    private MFXCircleToggleNode ctnProductSelection;
     //<editor-fold defaultstate="collapsed" desc="util declarations">
     private BasicObjs passObj;
 
@@ -76,6 +79,8 @@ public class SalesOrderPSSelectCONTR implements Initializable {
 
     SalesRules salesRules = new SalesRules();
     //</editor-fold>
+    @FXML
+    private MFXCircleToggleNode ctnProductSelection;
 
     /**
      * Initializes the controller class.
@@ -107,6 +112,47 @@ public class SalesOrderPSSelectCONTR implements Initializable {
             }
         }
         );
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+
+        btnCancel.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
+    }
+
+    public void switchScene(String fxmlPath, BasicObjs passObj, String direction) {
+        Stage stage = (Stage) btnCancel.getScene().getWindow();
+        stage.close();
+        try {
+            // Step 4
+            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(fxmlPath)); // Example: "View/HomePage_UI.fxml"
+            // Step 5
+            stage.setUserData(sendData(passObj, direction));
+            // Step 6
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            // Step 7
+            stage.show();
+
+        } catch (Exception e) {
+            System.err.println(String.format("Error: %s", e.getMessage()));
+
+        }
+    }
+
+    public BasicObjs sendData(BasicObjs passObj, String direction) {
+        switch (direction) {
+            case BasicObjs.forward:
+                passObj.getFxmlPaths().addLast("View/SalesOrderPSSelect_UI.fxml");
+                break;
+        }
+        passObj.setPassDirection(direction);
+        passObj.setLoginStaff(this.passObj.getLoginStaff());
+        return passObj;
     }
 
     private void intializeComboSelections() {
@@ -477,4 +523,5 @@ public class SalesOrderPSSelectCONTR implements Initializable {
             }
         }
     }
+
 }

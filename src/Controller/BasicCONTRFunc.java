@@ -20,6 +20,8 @@ public interface BasicCONTRFunc {
 
     public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt);
 
+    public void quitWindow(String title, String headerTxt, String contentTxt);
+
     public void switchScene(String fxmlPath, BasicObjs passObj, String direction);
 
     public BasicObjs sendData(BasicObjs passObj, String direction);

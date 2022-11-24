@@ -14,6 +14,7 @@ import Entity.SalesOrder;
 import Entity.Staff;
 import Entity.TransferOrder;
 import PassObjs.BasicObjs;
+import Service.GeneralRulesService;
 import Service.ItemService;
 import Service.SalesOrderService;
 import Service.TransferOrderService;
@@ -41,6 +42,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -55,9 +57,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -149,6 +153,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
+                autoClose();
 
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
@@ -194,6 +199,15 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 }
             }
         });
+    }
+
+    public void autoClose() {
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        PauseTransition transitionAlert = new PauseTransition(delay1);
+        this.passObj.setLoginStaff(new Staff());
+        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setCycleCount(1);
+        btnDiscard.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
     private void initializeComboSelections() {
@@ -438,7 +452,8 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
-    private void quitWindow(String title, String headerTxt, String contentTxt) {
+    @Override
+    public void quitWindow(String title, String headerTxt, String contentTxt) {
         ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
                 title,
                 headerTxt,
@@ -648,6 +663,22 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                     }
                 })
                 .decorates(this.cmbStatus);
+
+        validator.add(validatorCheck);
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .withMethod(c -> {
+
+                    if (items.size() <= 0) {
+                        c.error("Item - At least one item are required to build a Transfer Order");
+                        return;
+                    }
+
+                })
+                .decorates(this.tblVw);
 
         validator.add(validatorCheck);
         //=====================================

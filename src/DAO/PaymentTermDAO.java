@@ -8,6 +8,7 @@ import Entity.PaymentTerm;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,4 +130,143 @@ public class PaymentTermDAO {
         }
     }
 
+    public static String updatePymtTerm(PaymentTerm pymtTerm) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        pymtTerm.setModifiedDateTime(timestamp);
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE [dbo].[PaymentTerm] "
+                    + "   SET [Pymt_Term_Name] = ? "
+                    + "      ,[Description] = ? "
+                    + "      ,[Baseline_Documet_Date] = ? "
+                    + "      ,[Days_Limit] = ? "
+                    + "      ,[Modified_Date_Time] = ? "
+                    + "      ,[Created_Date] = ? "
+                    + " WHERE  "
+                    + " [Pymt_Term_ID] = ?";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            ps.setString(1, pymtTerm.getPymtTermName());
+            ps.setString(2, pymtTerm.getDescription());
+            ps.setString(3, pymtTerm.getBaseLineDocumentDate());
+            ps.setInt(4, pymtTerm.getDaysLimit());
+            ps.setTimestamp(5, pymtTerm.getModifiedDateTime());
+            ps.setTimestamp(6, pymtTerm.getCreatedDate());
+            ps.setString(7, pymtTerm.getPymtTermID());
+            ps.execute();
+
+            return pymtTerm.getPymtTermID();
+        } catch (Exception e) {
+            return "";
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static String insertPymtTerm(PaymentTerm pymtTerm) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        pymtTerm.setCreatedDate(timestamp);
+        pymtTerm.setModifiedDateTime(timestamp);
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "INSERT INTO [dbo].[PaymentTerm] "
+                    + "           ([Pymt_Term_ID] "
+                    + "           ,[Pymt_Term_Name] "
+                    + "           ,[Description] "
+                    + "           ,[Baseline_Documet_Date] "
+                    + "           ,[Days_Limit] "
+                    + "           ,[Modified_Date_Time] "
+                    + "           ,[Created_Date]) "
+                    + "     VALUES "
+                    + "           (?, ?, ?, ?, ?, ?, ?)";
+
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            ps.setString(1, pymtTerm.getPymtTermID());
+            ps.setString(2, pymtTerm.getPymtTermName());
+            ps.setString(3, pymtTerm.getDescription());
+            ps.setString(4, pymtTerm.getBaseLineDocumentDate());
+            ps.setInt(5, pymtTerm.getDaysLimit());
+            ps.setTimestamp(6, pymtTerm.getModifiedDateTime());
+            ps.setTimestamp(7, pymtTerm.getCreatedDate());
+            ps.execute();
+
+            return pymtTerm.getPymtTermID();
+        } catch (Exception e) {
+            return "";
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static String getLatestCode() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        String latestID = null;
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT * FROM View_PymtTerm_LatestID";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                latestID = rs.getString("Pymt_Term_ID");
+            }
+
+            return latestID;
+
+            //return object
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
 }
