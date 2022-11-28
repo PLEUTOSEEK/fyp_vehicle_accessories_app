@@ -31,7 +31,7 @@ public class AddressService {
 
         newIDStruct.setName("ADDR");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         String latestID = AddressDAO.getLatestID();
         if (latestID != "") {

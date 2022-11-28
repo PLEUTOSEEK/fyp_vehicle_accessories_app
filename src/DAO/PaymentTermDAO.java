@@ -147,7 +147,6 @@ public class PaymentTermDAO {
                     + "      ,[Baseline_Documet_Date] = ? "
                     + "      ,[Days_Limit] = ? "
                     + "      ,[Modified_Date_Time] = ? "
-                    + "      ,[Created_Date] = ? "
                     + " WHERE  "
                     + " [Pymt_Term_ID] = ?";
             ps = conn.prepareStatement(query);
@@ -158,8 +157,7 @@ public class PaymentTermDAO {
             ps.setString(3, pymtTerm.getBaseLineDocumentDate());
             ps.setInt(4, pymtTerm.getDaysLimit());
             ps.setTimestamp(5, pymtTerm.getModifiedDateTime());
-            ps.setTimestamp(6, pymtTerm.getCreatedDate());
-            ps.setString(7, pymtTerm.getPymtTermID());
+            ps.setString(6, pymtTerm.getPymtTermID());
             ps.execute();
 
             return pymtTerm.getPymtTermID();
@@ -216,6 +214,7 @@ public class PaymentTermDAO {
 
             return pymtTerm.getPymtTermID();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "";
         } finally {
             try {
@@ -236,7 +235,7 @@ public class PaymentTermDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        String latestID = null;
+        String latestID = "";
 
         try {
             conn = SQLDatabaseConnection.openConn();
@@ -255,7 +254,7 @@ public class PaymentTermDAO {
 
             //return object
         } catch (Exception e) {
-            return null;
+            return "";
         } finally {
             try {
                 ps.close();

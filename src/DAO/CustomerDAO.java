@@ -30,7 +30,36 @@ public class CustomerDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM View_Retrieve_All_Customer WHERE CUST_Customer_ID = ? ";
+            query = "SELECT  "
+                    + "      [Customer_ID] "
+                    + "      ,[Bill_To_Addr] "
+                    + "      ,[Avatar_Img] "
+                    + "      ,[Name] "
+                    + "      ,[Gender] "
+                    + "      ,[DOB] "
+                    + "      ,[IC] "
+                    + "      ,[Marital_Status] "
+                    + "      ,[Nationality] "
+                    + "      ,[Honorifics] "
+                    + "      ,[Residential_Address] "
+                    + "      ,[Corresponding_Address] "
+                    + "      ,[Email] "
+                    + "      ,[Mobile_No] "
+                    + "      ,[Extension_No] "
+                    + "      ,[Office_Phone_No] "
+                    + "      ,[Home_Phone_No] "
+                    + "      ,[Occupation] "
+                    + "      ,[Race] "
+                    + "      ,[Religion] "
+                    + "      ,[Bank_Acc_Provider] "
+                    + "      ,[Bank_Acc_Owner_Name] "
+                    + "      ,[Bank_Acc_No] "
+                    + "      ,[Customer_Type] "
+                    + "      ,[Status] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[Customer] "
+                    + "  WHERE [Customer_ID] = ?";
             ps = conn.prepareStatement(query);
 
             // bind parameter
@@ -43,7 +72,7 @@ public class CustomerDAO {
 
                 customer.setCustID(rs.getString("Customer_ID"));
                 customer.setBillToAddr(AddressDAO.getAddressByID("Bill_To_Addr"));
-                customer.setAvatarImg(rs.getString(rs.getString("Avatar_Img")));
+                customer.setAvatarImg(rs.getString("Avatar_Img"));
                 customer.setName(rs.getString("Name"));
                 customer.setGender(rs.getString("Gender"));
                 customer.setDOB(rs.getDate("DOB"));
@@ -77,6 +106,7 @@ public class CustomerDAO {
 
             //return object
         } catch (Exception e) {
+            System.out.println("Customer Select " + e.getMessage());
             return null;
         } finally {
             try {
@@ -132,14 +162,12 @@ public class CustomerDAO {
                     + "Customer_Type, "
                     + "Status, "
                     + "Created_Date, "
-                    + "Modified_Date_Time, "
+                    + "Modified_Date_Time "
                     + ") "
                     + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(query);
 
             // bind parameter
-            rs = ps.executeQuery();
-
             ps.setString(1, customer.getCustID());
             ps.setString(2, customer.getBillToAddr().getAddressID());
             ps.setString(3, customer.getAvatarImg());
@@ -168,10 +196,13 @@ public class CustomerDAO {
             ps.setTimestamp(26, customer.getCreatedDate());
             ps.setTimestamp(27, customer.getModifiedDateTime());
 
+            ps.execute();
+
             return customer.getCustID();
 
             //return object
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -199,38 +230,36 @@ public class CustomerDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "UPDATE Customer SET"
-                    + "Bill_To_Addr = ?, "
-                    + "Avatar_Img = ?, "
-                    + "Name = ?, "
-                    + "Gender = ?, "
-                    + "DOB = ?, "
-                    + "IC = ?, "
-                    + "Marital_Status = ?, "
-                    + "Nationality = ?, "
-                    + "Honorifics = ?, "
-                    + "Residential_Address = ?, "
-                    + "Corresponding_Address = ?, "
-                    + "Email = ?, "
-                    + "Mobile_No = ?, "
-                    + "Extension_No = ?, "
-                    + "Office_Phone_No = ?, "
-                    + "Home_Phone_No = ?, "
-                    + "Occupation = ?, "
-                    + "Race = ?, "
-                    + "Religion = ?, "
-                    + "Bank_Acc_Provider = ?, "
-                    + "Bank_Acc_No = ?, "
-                    + "Customer_Type = ?, "
-                    + "Status = ?, "
-                    + "Created_Date = ?, "
-                    + "Modified_Date_Time = ? "
-                    + "WHERE Customer_ID = ?";
+            query = "UPDATE [dbo].[Customer] "
+                    + "   SET [Bill_To_Addr] = ? "
+                    + "      ,[Avatar_Img] = ? "
+                    + "      ,[Name] = ? "
+                    + "      ,[Gender] = ? "
+                    + "      ,[DOB] = ? "
+                    + "      ,[IC] = ? "
+                    + "      ,[Marital_Status] = ? "
+                    + "      ,[Nationality] = ? "
+                    + "      ,[Honorifics] = ? "
+                    + "      ,[Residential_Address] = ? "
+                    + "      ,[Corresponding_Address] = ? "
+                    + "      ,[Email] = ? "
+                    + "      ,[Mobile_No] = ? "
+                    + "      ,[Extension_No] = ? "
+                    + "      ,[Office_Phone_No] = ? "
+                    + "      ,[Home_Phone_No] = ? "
+                    + "      ,[Occupation] = ? "
+                    + "      ,[Race] = ? "
+                    + "      ,[Religion] = ? "
+                    + "      ,[Bank_Acc_Provider] = ? "
+                    + "      ,[Bank_Acc_Owner_Name] = ? "
+                    + "      ,[Bank_Acc_No] = ? "
+                    + "      ,[Customer_Type] = ? "
+                    + "      ,[Status] = ? "
+                    + "      ,[Modified_Date_Time] = ? "
+                    + "WHERE [Customer_ID] = ?";
             ps = conn.prepareStatement(query);
 
             // bind parameter
-            rs = ps.executeQuery();
-
             ps.setString(1, customer.getBillToAddr().getAddressID());
             ps.setString(2, customer.getAvatarImg());
             ps.setString(3, customer.getName());
@@ -255,16 +284,20 @@ public class CustomerDAO {
             ps.setString(22, customer.getBankAccNo());
             ps.setString(23, customer.getCustType());
             ps.setString(24, customer.getStatus());
-            ps.setTimestamp(25, customer.getCreatedDate());
-            ps.setTimestamp(26, customer.getModifiedDateTime());
-            ps.setString(27, customer.getCustID());
+            ps.setTimestamp(25, customer.getModifiedDateTime());
+            ps.setString(26, customer.getCustID());
+
+            ps.execute();
 
             return customer.getCustID();
 
             //return object
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+
             return null;
         } finally {
+
             try {
                 ps.close();
             } catch (Exception e) {
@@ -365,8 +398,8 @@ public class CustomerDAO {
                 c = new Customer();
 
                 c.setCustID(rs.getString("Customer_ID"));
-                c.setBillToAddr(AddressDAO.getAddressByID("Bill_To_Addr"));
-                c.setAvatarImg(rs.getString(rs.getString("Avatar_Img")));
+                c.setBillToAddr(AddressDAO.getAddressByID(rs.getString("Bill_To_Addr")));
+                c.setAvatarImg(rs.getString("Avatar_Img"));
                 c.setName(rs.getString("Name"));
                 c.setGender(rs.getString("Gender"));
                 c.setDOB(rs.getDate("DOB"));
@@ -401,6 +434,7 @@ public class CustomerDAO {
             //return object
             return customers;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {

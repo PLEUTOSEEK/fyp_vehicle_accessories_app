@@ -4,6 +4,8 @@
  */
 package Controller;
 
+import BizRulesConfiguration.AccountingRules;
+import BizRulesConfiguration.AccountingRules.BaselineDocuments;
 import Entity.PaymentTerm;
 import Entity.Staff;
 import PassObjs.BasicObjs;
@@ -14,8 +16,10 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -53,6 +57,8 @@ public class PymtTermSelectCONTR implements Initializable {
     private BasicObjs passObj;
 
     private Validator validator = new Validator();
+
+    AccountingRules accRules = new AccountingRules();
 
     //</editor-fold>
     @Override
@@ -119,7 +125,7 @@ public class PymtTermSelectCONTR implements Initializable {
     }
 
     private void intializeComboSelections() {
-
+        ((MFXComboBox<BaselineDocuments>) this.cmbBaselineDoc).setItems(FXCollections.observableList(accRules.getBaselineDocs()));
     }
 
     private void defaultValFillIn() {
@@ -176,14 +182,18 @@ public class PymtTermSelectCONTR implements Initializable {
                     }
 
                     if (passObj.getObjs().size() > 0) {
-                        List<PaymentTerm> paymentTerms = (List<PaymentTerm>) (PaymentTerm) passObj.getObjs();
+                        List<PaymentTerm> paymentTerms = passObj.getObjs()
+                                .stream()
+                                .map(e -> (PaymentTerm) e)
+                                .collect(Collectors.toList());
+
                         PaymentTerm passInPymtTerm = (PaymentTerm) passObj.getObj();
 
                         if (passObj.getCrud().equals(BasicObjs.read)) {
 
                             for (PaymentTerm pymtTerm : paymentTerms) {
                                 if (pymtTerm.getPymtTermName().toLowerCase().equals(textVal.toLowerCase())
-                                        && !pymtTerm.getPymtTermID().equals(passInPymtTerm.getPymtTermID())) {
+                                        && !pymtTerm.equals(passInPymtTerm)) {
                                     c.error("Payment Term Name - Must be unique");
                                     return;
                                 }

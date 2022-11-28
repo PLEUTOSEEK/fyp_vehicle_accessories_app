@@ -26,6 +26,7 @@ import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.cell.MFXDateCell;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
@@ -42,6 +43,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -64,6 +66,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * FXML Controller class
@@ -145,11 +148,10 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        setupItemTable();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-
+                initializeUIControls();
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
@@ -162,6 +164,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
+
                     } catch (IOException ex) {
                         java.util.logging.Logger.getLogger(TransferOrderCONTR.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     }
@@ -197,6 +200,29 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 if (passObj.getCrud().equals(BasicObjs.read)) {
                     isViewMode(true);
                 }
+
+                setupItemTable();
+            }
+        });
+    }
+
+    private void initializeUIControls() {
+        this.dtRefDate.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtRefDate, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isAfter(LocalDate.now())) {
+                            setDisable(true);
+                        } else {
+                            setDisable(false);
+                        }
+                    }
+                };
+
             }
         });
     }
@@ -255,7 +281,6 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 prodIDCol,
                 partNoCol,
                 qtyCol,
-                qtyCol,
                 uomCol,
                 sourceCol
         );
@@ -307,7 +332,11 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     Item catchedItem = new Item();
-                                    catchedItem = ((Item) receiveObj.getObj()).clone();
+                                    if (receiveObj.getObj() != null) {
+                                        catchedItem = ((Item) receiveObj.getObj()).clone();
+                                    } else {
+                                        catchedItem = null;
+                                    }
 
                                     adjustItemsNotYetTransfer(catchedItem, item);
 
@@ -345,7 +374,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             Item itemInSO = itemsNotYetTransfer.get(itemsNotYetTransfer.indexOf(catchedItem));
             Item itemInTO = (Item) items.get(items.indexOf(catchedItem));
 
-            itemInSO.setQty(itemInSO.getQty() + itemInTO.getQty());
+            itemInSO.setQty(itemInSO.getQty() + itemInTO.getOriQty());
             items.remove(catchedItem);
 
             //add
@@ -370,18 +399,19 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
     private void fieldFillIn() throws IOException {
         // before field in, make sure the UI control is fresh
-        clearAllFieldsValue();
         defaultValFillIn();
 
         if (passObj.getObj() != null) {
             if (passObj.getObj() instanceof SalesOrder) {
 
                 SalesOrder so = (SalesOrder) passObj.getObj();
+                this.cmbRefType.setText("Sales Order (SO)");
                 this.txtRef.setText(so.getCode());
 
             } else if (passObj.getObj() instanceof ReturnDeliveryNote) {
 
                 ReturnDeliveryNote rdn = (ReturnDeliveryNote) passObj.getObj();
+                this.cmbRefType.setText("Return Delivery Note (RDN)");
                 this.txtRef.setText(rdn.getCode());
 
             } else if (passObj.getObj() instanceof TransferOrder) {
@@ -394,9 +424,9 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                         .toLocalDate());
                 this.cmbRefType.setText(to.getReqType());
 
-                if (passObj.getObj() instanceof SalesOrder) {
+                if (((TransferOrder) passObj.getObj()).getReqTypeRef() instanceof SalesOrder) {
                     this.txtRef.setText(((SalesOrder) to.getReqTypeRef()).getCode());
-                } else if (passObj.getObj() instanceof ReturnDeliveryNote) {
+                } else if (((TransferOrder) passObj.getObj()).getReqTypeRef() instanceof ReturnDeliveryNote) {
                     this.txtRef.setText(((ReturnDeliveryNote) to.getReqTypeRef()).getCode());
                 }
 
@@ -416,11 +446,12 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             this.btnSave.setText("Save");
         }
 
+        this.dtRefDate.setDisable(disable);
         this.txtTOID.setDisable(disable);
         this.txtPIC.setDisable(disable);
         this.txtDestination.setDisable(disable);
-        this.cmbRefType.setDisable(disable);
-        this.txtRef.setDisable(disable);
+        this.cmbRefType.setDisable(true);
+        this.txtRef.setDisable(true);
         this.cmbStatus.setDisable(disable);
         this.txtIssuedBy.setDisable(disable);
         this.txtTransferBy.setDisable(disable);
@@ -460,7 +491,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 contentTxt);
 
         if (alertBtnClicked == ButtonType.OK) {
-            switchScene(passObj.getFxmlPaths().getLast().toString(), new BasicObjs(), BasicObjs.back);
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
         } else if (alertBtnClicked == ButtonType.CANCEL) {
             //nothing need to do, remain same page
         }
@@ -720,37 +751,50 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
         Staff PIC = new Staff();
         PIC.setStaffID(this.txtPIC.getText());
+        transferOrder.setPIC(PIC);
 
         Place destination = new Place();
         destination.setPlaceID(this.txtDestination.getText());
+        transferOrder.setDestination(destination);
 
-        if (this.passObj.getObj() instanceof SalesOrder) {
+        transferOrder.setReqType(this.cmbRefType.getText());
+
+        if (transferOrder.getReqType().equals("Sales Order (SO)")) {
             SalesOrder salesOrder = new SalesOrder();
             salesOrder.setCode(this.txtRef.getText());
             transferOrder.setReqTypeRef(salesOrder);
-        } else if (this.passObj.getObj() instanceof ReturnDeliveryNote) {
+        } else if (transferOrder.getReqType().equals("Return Delivery Note (RDN)")) {
             ReturnDeliveryNote rdn = new ReturnDeliveryNote();
             rdn.setCode(this.txtRef.getText());
             transferOrder.setReqTypeRef(rdn);
         }
 
         transferOrder.setCreatedDate(this.dtRefDate.getValue() == null ? null : Timestamp.valueOf(this.dtRefDate.getValue().atStartOfDay()));
-        transferOrder.setReqType(this.cmbRefType.getText());
-        transferOrder.setReqTypeRef(this.txtRef.getText());
-
         transferOrder.setStatus(this.cmbStatus.getText());
 
         Staff issuedBy = new Staff();
-        issuedBy.setStaffID(this.txtIssuedBy.getText());
+        if (isBlank(this.txtIssuedBy.getText())) {
+            issuedBy.setStaffID(null);
+        } else {
+            issuedBy.setStaffID(this.txtIssuedBy.getText());
+        }
         transferOrder.setIssuedBy(issuedBy);
 
         Staff transferBy = new Staff();
-        transferBy.setStaffID(this.txtTransferBy.getText());
-        transferOrder.setIssuedBy(transferBy);
+        if (isBlank(this.txtTransferBy.getText())) {
+            transferBy.setStaffID(null);
+        } else {
+            transferBy.setStaffID(this.txtTransferBy.getText());
+        }
+        transferOrder.setTransferBy(transferBy);
 
         Staff itemReceivedBy = new Staff();
-        itemReceivedBy.setStaffID(this.txtItemReceivedBy.getText());
-        transferOrder.setIssuedBy(itemReceivedBy);
+        if (isBlank(this.txtItemReceivedBy.getText())) {
+            itemReceivedBy.setStaffID(null);
+        } else {
+            itemReceivedBy.setStaffID(this.txtItemReceivedBy.getText());
+        }
+        transferOrder.setItemReceivedBy(itemReceivedBy);
 
         transferOrder.setSignedDocPic(this.lblImgStrs.getText());
 
@@ -847,9 +891,9 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
                 BasicObjs passObj = new BasicObjs();
 
-                if (this.cmbRefType.getText().equals("RDN")) {
+                if (this.cmbRefType.getText().equals("Return Delivery Note (RDN)")) {
                     passObj.setObj(new ReturnDeliveryNote());
-                } else if (this.cmbRefType.getText().equals("SO")) {
+                } else if (this.cmbRefType.getText().equals("Sales Order (SO)")) {
                     passObj.setObj(new SalesOrder());
                 }
 
@@ -864,19 +908,27 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                         // later done RDN just come back
                         ReturnDeliveryNote rdn = (ReturnDeliveryNote) receiveObj.getObj();
 
-                        if (rdn.getStatus().equals(WarehouseRules.RDNStatus.NEW)) {
-                            this.passObj.setObj(rdn);
+                        if (rdn.getStatus().equals(WarehouseRules.RDNStatus.RETURNED.toString())) {
                             //this.passObj.setObj(SalesOrderService.getSOByID(so.getCode()));
-                            fieldFillIn();
-
+                            this.clearAllFieldsValue();
                             itemsNotYetTransfer.addAll(ItemService.getItemByRDNID(rdn.getCode()));
 
-                            for (Item i : itemsNotYetTransfer) {
-                                items.add(i.clone());
+                            if (isValidDocumentByItems()) {
+                                this.passObj.setObj(rdn);
+                                fieldFillIn();
+                                items.clear();
+                                for (Item i : itemsNotYetTransfer) {
+                                    items.add(i.clone());
+                                    i.setQty(0);
+                                }
+
+                                setupItemTable();
+                            } else {
+                                alertDialog(Alert.AlertType.INFORMATION,
+                                        "Information",
+                                        "Document Blocked Message",
+                                        "There are no more item needed to be transfer for the selected document.");
                             }
-
-                            setupItemTable();
-
                         } else {
                             alertDialog(Alert.AlertType.INFORMATION,
                                     "Information",
@@ -886,18 +938,27 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                     } else if (receiveObj.getObj() instanceof SalesOrder) {
                         SalesOrder so = (SalesOrder) receiveObj.getObj();
 
-                        if (so.getStatus().equals(SalesRules.SOStatus.NEW)) {
-                            this.passObj.setObj(so);
-                            //this.passObj.setObj(SalesOrderService.getSOByID(so.getCode()));
-                            fieldFillIn();
-
+                        if (so.getStatus().equals(SalesRules.SOStatus.NEW.toString()) || so.getStatus().equals(SalesRules.SOStatus.IN_PROGRESS.toString())) {
+                            this.clearAllFieldsValue();
                             itemsNotYetTransfer.addAll(ItemService.getItemBySOID(so.getCode()));
 
-                            for (Item i : itemsNotYetTransfer) {
-                                items.add(i.clone());
-                            }
+                            if (isValidDocumentByItems()) {
+                                this.passObj.setObj(so);
 
-                            setupItemTable();
+                                fieldFillIn();
+                                for (Item i : itemsNotYetTransfer) {
+                                    items.add(i.clone());
+                                    i.setQty(0);
+                                }
+
+                                setupItemTable();
+
+                            } else {
+                                alertDialog(Alert.AlertType.INFORMATION,
+                                        "Information",
+                                        "Document Blocked Message",
+                                        "There are no more item needed to be transfer for the selected document.");
+                            }
 
                         } else {
                             alertDialog(Alert.AlertType.INFORMATION,
@@ -912,6 +973,21 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    private boolean isValidDocumentByItems() {
+        Integer count = 0;
+        for (Item item : itemsNotYetTransfer) {
+            if (item.getQty() == 0) {
+                count++;
+            }
+        }
+
+        if (count == itemsNotYetTransfer.size()) {
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -1092,10 +1168,10 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
             toInDraft = this.prepareTransferOrderToObj();
 
-            if (this.txtRef.getText().isEmpty()) {
-                TransferOrderService.saveNewTO(toInDraft);
+            if (isBlank(toInDraft.getCode())) {
+                toInDraft.setCode(TransferOrderService.saveNewTO(toInDraft));
 
-            } else if (this.passObj.getCrud().equals(BasicObjs.update)) {
+            } else if (this.passObj.getCrud().equals(BasicObjs.update) || this.passObj.getCrud().equals(BasicObjs.read)) {
                 TransferOrderService.updateTO(toInDraft);
             }
 

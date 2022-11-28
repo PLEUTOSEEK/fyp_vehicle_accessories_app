@@ -159,40 +159,41 @@ public class LoginCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public BasicObjs sendData(BasicObjs passObj, String direction) {
-        switch (direction) {
-            case BasicObjs.forward:
-                passObj.getFxmlPaths().clear();
-                passObj.getFxmlPaths().addLast("View/Login_UI.fxml");
-                break;
-        }
+        String currentPath = "View/Login_UI.fxml";
+        passObj.getFxmlPaths().clear();
+        passObj.getFxmlPaths().addLast(currentPath);
+        System.out.println("Here is lgin" + passObj.getLoginStaff().getStaffID());
+
         passObj.setPassDirection(direction);
-        passObj.setLoginStaff(this.passObj.getLoginStaff());
         return passObj;
     }
 
     @Override
     public void receiveData() {
-        // Step 1
-        Stage stage = (Stage) btnLogin.getScene().getWindow();
-        // Step 2
-        if (stage.getUserData() != null) {
+        if (btnLogin.getScene() != null) {
 
-            passObj = (BasicObjs) stage.getUserData();
-            if (passObj.getLoginStaff() == null) {
-                // do nothing
+            // Step 1
+            Stage stage = (Stage) btnLogin.getScene().getWindow();
+            // Step 2
+            if (stage.getUserData() != null) {
+
+                passObj = (BasicObjs) stage.getUserData();
+                if (passObj.getLoginStaff() == null) {
+                    // do nothing
+                } else {
+                    // session timeout banner show up
+                }
+                switch (passObj.getPassDirection()) {
+                    //receive data from after scene;
+                    case BasicObjs.back:
+                        if (passObj.getFxmlPaths().getLength() != 0) {
+                            passObj.getFxmlPaths().delLast();
+                        }
+                        break;
+                }
             } else {
-                // session timeout banner show up
+                passObj = new BasicObjs();
             }
-            switch (passObj.getPassDirection()) {
-                //receive data from after scene;
-                case BasicObjs.back:
-                    if (passObj.getFxmlPaths().getLength() != 0) {
-                        passObj.getFxmlPaths().delLast();
-                    }
-                    break;
-            }
-        } else {
-            passObj = new BasicObjs();
         }
     }
 

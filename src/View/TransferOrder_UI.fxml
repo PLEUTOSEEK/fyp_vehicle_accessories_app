@@ -122,7 +122,7 @@
                                           <FontAwesomeIconView glyphName="LIST" />
                                        </graphic>
                                     </MFXCircleToggleNode>
-                                    <MFXComboBox fx:id="cmbStatus" alignment="CENTER_RIGHT" editable="false" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" textLimit="30" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                    <MFXComboBox fx:id="cmbStatus" alignment="CENTER_RIGHT" allowEdit="true" editable="false" floatingText="Status" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" selectable="true" textLimit="30" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                     <MFXTextField fx:id="txtDestination" alignment="CENTER_RIGHT" allowEdit="false" editable="false" floatingText="Destination" minWidth="145.0" prefWidth="145.0" textLimit="20" GridPane.rowIndex="3" />
                                     <MFXCircleToggleNode fx:id="ctnDestinationSelection" graphicTextGap="2.0" onMousePressed="#openDestinationSelection" prefHeight="74.0" prefWidth="39.0" size="17.0" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
                                        <padding>
@@ -140,7 +140,7 @@
                                           <FontAwesomeIconView glyphName="LIST" />
                                        </graphic>
                                     </MFXCircleToggleNode>
-                                    <MFXComboBox fx:id="cmbRefType" alignment="CENTER_RIGHT" editable="false" floatingText="Ref. Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" textLimit="10" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                    <MFXComboBox fx:id="cmbRefType" alignment="CENTER_RIGHT" allowEdit="true" editable="false" floatingText="Ref. Type" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" selectable="true" textLimit="30" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                  </children>
                               </GridPane>
                            </children>

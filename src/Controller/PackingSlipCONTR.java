@@ -47,6 +47,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * FXML Controller class
@@ -96,11 +97,11 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        setupItemTable();
 
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                inputValidation();
                 receiveData();
                 autoClose();
 
@@ -112,13 +113,15 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                     }
 
                     //transfer order compulsory must based on SO to generate for Order-To-Cash Process
-                    itemsNotYetPack.addAll(ItemService.getItemByTOID(((TransferOrder) passObj.getObj()).getCode()));
-
+                    itemsNotYetPack.addAll(ItemService.getItemByTOID(((PackingSlip) passObj.getObj()).getTO().getCode()));
+                    items.addAll(ItemService.getItemByPSID(((PackingSlip) passObj.getObj()).getCode()));
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read)) {
                     isViewMode(true);
                 }
+                setupItemTable();
+
             }
         });
     }
@@ -192,7 +195,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
                                 BasicObjs passObj = new BasicObjs();
                                 passObj.setObj(item);
-                                passObj.setObjs((List<Object>) (Object) itemNotYetPack);
+                                passObj.setObjs((List<Object>) (Object) itemsNotYetPack);
                                 passObj.setCrud(BasicObjs.read);
 
                                 stage.setUserData(passObj);
@@ -203,8 +206,12 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     Item catchedItem = new Item();
-                                    catchedItem = ((Item) receiveObj.getObj()).clone();
 
+                                    if (receiveObj.getObj() != null) {
+                                        catchedItem = ((Item) receiveObj.getObj()).clone();
+                                    } else {
+                                        catchedItem = null;
+                                    }
                                     // remember to perform slow change for qty move to original quantity on UI [View/TOPSSelect_UI.fxml]
                                     adjustItemsNotYetPack(catchedItem, item);
                                 }
@@ -223,10 +230,10 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
         //=============
         if (catchedItem == null) {
-            Item itemInSO = itemsNotYetPack.get(itemsNotYetPack.indexOf(item));
-            Item itemInTO = (Item) items.get(items.indexOf(item));
+            Item itemInTO = itemsNotYetPack.get(itemsNotYetPack.indexOf(item));
+            Item itemInPS = (Item) items.get(items.indexOf(item));
 
-            itemInSO.setQty(itemInSO.getQty() + itemInTO.getQty());
+            itemInTO.setQty(itemInTO.getQty() + itemInPS.getQty());
             items.remove(item);
         } else if (!items.contains(catchedItem)) { //add
             items.add(catchedItem);
@@ -242,7 +249,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
             Item itemInTO = itemsNotYetPack.get(itemsNotYetPack.indexOf(catchedItem));
             Item itemInPS = (Item) items.get(items.indexOf(catchedItem));
 
-            itemInTO.setQty(itemInTO.getQty() + itemInPS.getQty());
+            itemInTO.setQty(itemInTO.getQty() + itemInPS.getOriQty());
             items.remove(catchedItem);
 
             //add
@@ -251,13 +258,13 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
             itemInTO = itemsNotYetPack.get(itemsNotYetPack.indexOf(catchedItem));
             itemInPS = (Item) items.get(items.indexOf(catchedItem));
 
+            itemInPS.setOriQty(0);
             itemInTO.setQty(itemInTO.getQty() - itemInPS.getQty() + itemInPS.getOriQty());
         }
         setupItemTable();
     }
 
     private void fieldFillIn() throws IOException {
-        clearAllFieldsValue();
 
         if (passObj.getObj() != null) {
             if (passObj.getObj() instanceof TransferOrder) {
@@ -284,7 +291,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
         }
 
         this.txtPSID.setDisable(disable);
-        this.txtTORef.setDisable(disable);
+        this.txtTORef.setDisable(true);
 
         this.ctnTOSelection.setDisable(disable);
 
@@ -315,7 +322,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                 contentTxt);
 
         if (alertBtnClicked == ButtonType.OK) {
-            switchScene(passObj.getFxmlPaths().getLast().toString(), new BasicObjs(), BasicObjs.back);
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
         } else if (alertBtnClicked == ButtonType.CANCEL) {
             //nothing need to do, remain same page
         }
@@ -450,6 +457,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
         TransferOrder to = new TransferOrder();
         to.setCode(this.txtTORef.getText());
         packingSlip.setTO(to);
+        packingSlip.setStatus(WarehouseRules.PSStatus.NOT_YET_REFERED.toString());
 
         packingSlip.setItems(items);
 
@@ -489,11 +497,26 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                     TransferOrder to = (TransferOrder) receiveObj.getObj();
 
-                    if (to.getStatus().equals(WarehouseRules.TOStatus.NEW)) { // check Document Reference already or not
-                        this.passObj.setObj(to);
-                        fieldFillIn();
-
+                    if (to.getStatus().equals(WarehouseRules.TOStatus.NEW.toString())) { // check Document Reference already or not
+                        this.clearAllFieldsValue();
                         itemsNotYetPack.addAll(ItemService.getItemByTOID(to.getCode()));
+
+                        if (isValidDocumentByItems()) {
+                            this.passObj.setObj(to);
+                            fieldFillIn();
+
+                            for (Item i : itemsNotYetPack) {
+                                items.add(i.clone());
+                                i.setQty(0);
+                            }
+
+                            setupItemTable();
+                        } else {
+                            alertDialog(Alert.AlertType.INFORMATION,
+                                    "Information",
+                                    "Document Blocked Message",
+                                    "There are no more item needed to be pack for the selected document.");
+                        }
 
                     } else {
                         alertDialog(Alert.AlertType.INFORMATION,
@@ -507,6 +530,21 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    private boolean isValidDocumentByItems() {
+        Integer count = 0;
+        for (Item item : itemsNotYetPack) {
+            if (item.getQty() == 0) {
+                count++;
+            }
+        }
+
+        if (count == itemsNotYetPack.size()) {
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -541,7 +579,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
             if (stage.getUserData() != null) {
 
                 BasicObjs receiveObj = (BasicObjs) stage.getUserData();
-                Item catchedItem = (Item) receiveObj.getObj();
+                Item catchedItem = ((Item) receiveObj.getObj()).clone();
 
                 adjustItemsNotYetPack(catchedItem, null);
 
@@ -566,7 +604,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
             packingSlipInDraft = this.preparePackingSlipToObj();
 
-            if (this.txtPSID.getText().isEmpty()) {
+            if (isBlank(this.txtPSID.getText())) {
                 packingSlipInDraft.setCode(PackingSlipService.saveNewPackingSlip(packingSlipInDraft));
 
             } else {

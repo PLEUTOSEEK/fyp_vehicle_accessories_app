@@ -52,7 +52,7 @@ public class SalesOrderDAO {
                     + "Sub_Total, "
                     + "Nett, "
                     + "Issued_By, "
-                    + "Released_AnVerified_By, "
+                    + "Released_And_Verified_By, "
                     + "Customer_Signed, "
                     + "Status, "
                     + "Created_Date, "
@@ -91,6 +91,8 @@ public class SalesOrderDAO {
 
             return salesOrder.getCode();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+
             return null;
         } finally {
             try {
@@ -167,7 +169,7 @@ public class SalesOrderDAO {
                 salesOrder.setSubTotal(rs.getBigDecimal("Sub_Total"));
                 salesOrder.setNett(rs.getBigDecimal("Nett"));
                 salesOrder.setIssuedBy(StaffDAO.getStaffByID(rs.getString("Issued_By")));
-                salesOrder.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("Released_AnVerified_By")));
+                salesOrder.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("Released_And_Verified_By")));
                 salesOrder.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("Customer_Signed")));
                 salesOrder.setStatus(rs.getString("Status"));
                 salesOrder.setCreatedDate(rs.getTimestamp("Created_Date"));
@@ -203,7 +205,7 @@ public class SalesOrderDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        String latestCode = null;
+        String latestCode = "";
 
         try {
             conn = SQLDatabaseConnection.openConn();
@@ -221,7 +223,8 @@ public class SalesOrderDAO {
             //return object
             return latestCode;
         } catch (Exception e) {
-            return null;
+            System.out.println(e.getMessage());
+            return "";
         } finally {
             try {
                 ps.close();
@@ -299,10 +302,10 @@ public class SalesOrderDAO {
                 so.setNett(rs.getBigDecimal("Nett"));
 
                 so.setIssuedBy(new Staff());
-                so.getIssuedBy().setStaffID("Issued_By");
+                so.getIssuedBy().setStaffID(rs.getString("Issued_By"));
 
                 so.setReleasedAVerifiedBy(new Staff());
-                so.getReleasedAVerifiedBy().setStaffID("Released_And_Verified_By");
+                so.getReleasedAVerifiedBy().setStaffID(rs.getString("Released_And_Verified_By"));
 
                 so.setCustomerSignature(new CollectAddress());
                 so.getCustomerSignature().setCollectAddrID(rs.getString("Customer_Signed"));
@@ -363,11 +366,10 @@ public class SalesOrderDAO {
                     + "Sub_Total = ?, "
                     + "Nett = ?, "
                     + "Issued_By = ?, "
-                    + "Released_AnVerified_By = ?, "
+                    + "Released_And_Verified_By = ?, "
                     + "Customer_Signed = ?, "
                     + "Status = ?, "
                     + "Created_Date = ?, "
-                    + "Actual_Created_Date = ?, "
                     + "Signed_Doc_Pic = ?, "
                     + "Modified_Date_Time = ? "
                     + "WHERE "
@@ -395,14 +397,15 @@ public class SalesOrderDAO {
             ps.setString(18, so.getCustomerSignature().getCollectAddrID());
             ps.setString(19, so.getStatus());
             ps.setTimestamp(20, so.getCreatedDate());
-            ps.setTimestamp(21, so.getActualCreatedDateTime());
-            ps.setString(22, so.getSignedDocPic());
-            ps.setTimestamp(23, so.getModifiedDateTime());
-            ps.setString(24, so.getCode());
+            ps.setString(21, so.getSignedDocPic());
+            ps.setTimestamp(22, so.getModifiedDateTime());
+            ps.setString(23, so.getCode());
 
             ps.execute();
             return so.getCode();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+
             return null;
         } finally {
             try {

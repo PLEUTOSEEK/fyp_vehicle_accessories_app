@@ -4,7 +4,6 @@
  */
 package Controller;
 
-import Entity.PaymentTerm;
 import Entity.ShipmentTerm;
 import Entity.Staff;
 import PassObjs.BasicObjs;
@@ -86,8 +85,13 @@ public class WarehouseRulesConfigurationCONTR implements Initializable, BasicCON
                 } catch (IOException ex) {
                     Logger.getLogger(AccRulesConfigurationCONTR.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
+                shipmentTerms.addAll(ShipmentTermService.getAllShipmentTerms());
+
+                setUpShipmentTermTable();
             }
         });
+
     }
 
     public void autoClose() {
@@ -164,6 +168,7 @@ public class WarehouseRulesConfigurationCONTR implements Initializable, BasicCON
 
                                 BasicObjs passObj = new BasicObjs();
                                 passObj.setObj(shipmentTerm);
+                                passObj.setObjs((List<Object>) (Object) shipmentTerms);
                                 passObj.setCrud(BasicObjs.read);
 
                                 stage.setUserData(passObj);
@@ -325,7 +330,7 @@ public class WarehouseRulesConfigurationCONTR implements Initializable, BasicCON
 
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
-            passObj.setObj(new PaymentTerm());
+            passObj.setObj(new ShipmentTerm());
             passObj.setObjs((List<Object>) (Object) shipmentTerms);
             stage.setUserData(passObj);
             stage.showAndWait();

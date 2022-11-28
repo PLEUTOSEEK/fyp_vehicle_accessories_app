@@ -193,10 +193,9 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
                             System.out.println(staff.getStaffID());
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(staff);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/Staff_UI.fxml", passObjs, BasicObjs.forward);
+                            passObj.setObj(staff);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/Staff_UI.fxml", passObj, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -260,10 +259,9 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
                             System.out.println(customer.getCustID());
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(customer);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/Customer_UI.fxml", passObjs, BasicObjs.forward);
+                            passObj.setObj(customer);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/Customer_UI.fxml", passObj, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -336,10 +334,9 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(customerInquiry);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/CustomerInquiry_UI.fxml", passObjs, BasicObjs.forward);
+                            passObj.setObj(customerInquiry);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/CustomerInquiry_UI.fxml", passObj, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -421,10 +418,9 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(quotation);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/Quotations_UI.fxml", passObjs, BasicObjs.forward);
+                            passObj.setObj(quotation);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/Quotations_UI.fxml", passObj, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -504,10 +500,9 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(salesOrder);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/SalesOrder_UI.fxml", passObjs, BasicObjs.forward);
+                            passObj.setObj(salesOrder);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/SalesOrder_UI.fxml", passObj, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -569,10 +564,9 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(transferOrder);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/TransferOrder_UI.fxml", passObjs, BasicObjs.forward);
+                            passObj.setObj(transferOrder);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/TransferOrder_UI.fxml", passObj, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -594,7 +588,7 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
         // Status
         MFXTableColumn<PackingSlip> statusCol = new MFXTableColumn<>("Status", true, Comparator.comparing(ps -> ps.getStatus()));
         // Created Date
-        MFXTableColumn<PackingSlip> createdDtCol = new MFXTableColumn<>("Created Date", true, Comparator.comparing(ps -> ps.getCreatedDate()));
+        MFXTableColumn<PackingSlip> createdDtCol = new MFXTableColumn<>("Created Date", true, Comparator.comparing(ps -> ps.getActualCreatedDateTime()));
 
         // PS ID
         psCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(ps -> ps.getCode()));
@@ -603,7 +597,7 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
         // Status
         statusCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(ps -> ps.getStatus()));
         // Created Date
-        createdDtCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(ps -> ps.getCreatedDate()));
+        createdDtCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(ps -> ps.getActualCreatedDateTime()));
 
         ((MFXTableView<PackingSlip>) tblVw).getTableColumns().addAll(
                 psCol,
@@ -616,27 +610,26 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
                 new StringFilter<>("Packing Slip ID", ps -> ps.getCode()),
                 new StringFilter<>("Transfer Order ID", ps -> ps.getTO() == null ? "" : ps.getTO().getCode()),
                 new StringFilter<>("Status", ps -> ps.getStatus()),
-                new DateFilter<>("Created Date", ps -> ps.getCreatedDate())
+                new DateFilter<>("Created Date", ps -> ps.getActualCreatedDateTime())
         );
 
         List<PackingSlip> packingSlips = PackingSlipService.getAllPackingSlips();
 
         ((MFXTableView<PackingSlip>) tblVw).setItems(FXCollections.observableList(packingSlips));
 
-        ((MFXTableView<DeliveryOrder>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+        ((MFXTableView<PackingSlip>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
 
-                if (((MFXTableView<DeliveryOrder>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
-                    DeliveryOrder deliveryOrder = (((MFXTableView<DeliveryOrder>) tblVw).getSelectionModel().getSelectedValues().get(0));
-                    rowSelected.add(deliveryOrder.getCode());
+                if (((MFXTableView<PackingSlip>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    PackingSlip packingSlip = (((MFXTableView<PackingSlip>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(packingSlip.getCode());
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(deliveryOrder);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/PackingSlip_UI.fxml", passObjs, BasicObjs.forward);
+                            passObj.setObj(packingSlip);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/PackingSlip_UI.fxml", passObj, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -704,10 +697,9 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(deliveryOrder);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/DeliveryOrder_UI.fxml", passObjs, BasicObjs.forward);
+                            passObj.setObj(deliveryOrder);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/DeliveryOrder_UI.fxml", passObj, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -764,10 +756,9 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(returnDeliveryNote);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/ReturnDeliveryNote_UI.fxml", passObjs, BasicObjs.forward);
+                            passObj.setObj(returnDeliveryNote);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/ReturnDeliveryNote_UI.fxml", passObj, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -822,20 +813,19 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
         //6
         ((MFXTableView<Invoice>) tblVw).setItems(FXCollections.observableList(invoices));
         //7
-        ((MFXTableView<ReturnDeliveryNote>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+        ((MFXTableView<Invoice>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
 
                 if (((MFXTableView<ReturnDeliveryNote>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
-                    ReturnDeliveryNote returnDeliveryNote = (((MFXTableView<ReturnDeliveryNote>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    Invoice returnDeliveryNote = (((MFXTableView<Invoice>) tblVw).getSelectionModel().getSelectedValues().get(0));
                     rowSelected.add(returnDeliveryNote.getCode());
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(returnDeliveryNote);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/Invoice_UI.fxml", passObjs, BasicObjs.forward);
+                            passObj.setObj(returnDeliveryNote);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/Invoice_UI.fxml", passObj, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -887,20 +877,19 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
         ((MFXTableView<Receipt>) tblVw).setItems(FXCollections.observableList(receipts));
 
-        ((MFXTableView<ReturnDeliveryNote>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+        ((MFXTableView<Receipt>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
 
-                if (((MFXTableView<ReturnDeliveryNote>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
-                    ReturnDeliveryNote returnDeliveryNote = (((MFXTableView<ReturnDeliveryNote>) tblVw).getSelectionModel().getSelectedValues().get(0));
-                    rowSelected.add(returnDeliveryNote.getCode());
+                if (((MFXTableView<Receipt>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    Receipt receipt = (((MFXTableView<Receipt>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(receipt.getCode());
 
                     if (rowSelected.size() == 2) {
                         if (rowSelected.get(0).equals(rowSelected.get(1))) {
-                            BasicObjs passObjs = new BasicObjs();
-                            passObjs.setObj(returnDeliveryNote);
-                            passObjs.setCrud(BasicObjs.read);
-                            switchScene("View/Payment_UI.fxml", passObjs, BasicObjs.forward);
+                            passObj.setObj(receipt);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/Payment_UI.fxml", passObj, BasicObjs.forward);
                         }
                         rowSelected.clear();
                     }
@@ -911,7 +900,7 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goBackPrevious(MouseEvent event) {
-        switchScene(passObj.getFxmlPaths().getLast().toString(), new BasicObjs(), BasicObjs.back);
+        switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
     }
 
     @Override
@@ -937,12 +926,13 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public BasicObjs sendData(BasicObjs passObj, String direction) {
+
         switch (direction) {
-            //send data to after scene
             case BasicObjs.forward:
                 passObj.getFxmlPaths().addLast("View/EntityOverview_UI.fxml");
                 break;
         }
+
         passObj.setPassDirection(direction);
         passObj.setLoginStaff(this.passObj.getLoginStaff());
 
@@ -956,7 +946,7 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
         // Step 2
         if (stage.getUserData() != null) {
             passObj = (BasicObjs) stage.getUserData();
-
+            System.out.println("Here is entity overview" + passObj.getLoginStaff().getStaffID());
             switch (passObj.getPassDirection()) {
                 //receive data from after scene;
                 case BasicObjs.back:

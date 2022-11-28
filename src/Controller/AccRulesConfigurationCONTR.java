@@ -83,6 +83,8 @@ public class AccRulesConfigurationCONTR implements Initializable, BasicCONTRFunc
                 autoClose();
                 try {
                     fieldFillIn();
+                    paymentTerms = PaymentTermService.getAllPaymentTerms();
+                    setUpPytmtTermTable();
                 } catch (IOException ex) {
                     Logger.getLogger(AccRulesConfigurationCONTR.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -164,6 +166,7 @@ public class AccRulesConfigurationCONTR implements Initializable, BasicCONTRFunc
                                 stage.setScene(new Scene(root));
 
                                 BasicObjs passObj = new BasicObjs();
+                                passObj.setObjs((List<Object>) (Object) paymentTerms);
                                 passObj.setObj(paymentTerm);
                                 passObj.setCrud(BasicObjs.read);
 
@@ -223,7 +226,7 @@ public class AccRulesConfigurationCONTR implements Initializable, BasicCONTRFunc
                         Double maxOrderAmt = Double.parseDouble(textVal);
 
                         if (maxOrderAmt < 0 || maxOrderAmt > 100) {
-                            c.error("Tax Rate - Must be within [0 <= Upper Limit Discount <= 100]");
+                            c.error("Tax Rate - Must be within [0 <= Tax Rate <= 100]");
                             return;
                         }
 

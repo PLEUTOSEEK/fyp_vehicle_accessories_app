@@ -84,9 +84,9 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Sales Order Management">
                            <items>
-                              <MenuItem fx:id="mniCreateSO" mnemonicParsing="false" onAction="#goToCreateSOUI" text="Create Transfer Order" />
-                              <MenuItem fx:id="mniUpdateSO" mnemonicParsing="false" onAction="#goToUpdateSOUI" text="Update Transfer Order" />
-                              <MenuItem fx:id="mniViewSO" mnemonicParsing="false" onAction="#goToViewSOUI" text="View Transfer Order" />
+                              <MenuItem fx:id="mniCreateSO" mnemonicParsing="false" onAction="#goToCreateSOUI" text="Create Sales Order" />
+                              <MenuItem fx:id="mniUpdateSO" mnemonicParsing="false" onAction="#goToUpdateSOUI" text="Update Sales Order" />
+                              <MenuItem fx:id="mniViewSO" mnemonicParsing="false" onAction="#goToViewSOUI" text="View Sales Order" />
                            </items>
                         </Menu>
                      </items>
@@ -103,16 +103,16 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Packing Slip Management">
                            <items>
-                              <MenuItem fx:id="mniCreateRDN1" mnemonicParsing="false" onAction="#goToCreateRDN" text="Create Packing Slip" />
-                              <MenuItem fx:id="mniUpdateRDN1" mnemonicParsing="false" onAction="#goToUpdateRDN" text="Update Packing Slip" />
-                              <MenuItem fx:id="mniViewRDN1" mnemonicParsing="false" onAction="#goToViewRDN" text="View Packing Slip" />
+                              <MenuItem fx:id="mniCreateRDN1" mnemonicParsing="false" onAction="#goToCreatePSUI" text="Create Packing Slip" />
+                              <MenuItem fx:id="mniUpdateRDN1" mnemonicParsing="false" onAction="#goToUpdatePSUI" text="Update Packing Slip" />
+                              <MenuItem fx:id="mniViewRDN1" mnemonicParsing="false" onAction="#goToViewPSUI" text="View Packing Slip" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Delivery Order Management">
                            <items>
-                              <MenuItem fx:id="mniCreateTO1" mnemonicParsing="false" onAction="#goToCreateTOUI" text="Create Delivery Order" />
-                              <MenuItem fx:id="mniUpdateTO1" mnemonicParsing="false" onAction="#goToUpdateTOUI" text="Update Delivery Order" />
-                              <MenuItem fx:id="mniViewTO1" mnemonicParsing="false" onAction="#goToViewTOUI" text="View Delivery Order" />
+                              <MenuItem fx:id="mniCreateTO1" mnemonicParsing="false" onAction="#goToCreateDOUI" text="Create Delivery Order" />
+                              <MenuItem fx:id="mniUpdateTO1" mnemonicParsing="false" onAction="#goToUpdateDOUI" text="Update Delivery Order" />
+                              <MenuItem fx:id="mniViewTO1" mnemonicParsing="false" onAction="#goToViewDOUI" text="View Delivery Order" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="RDN Management">

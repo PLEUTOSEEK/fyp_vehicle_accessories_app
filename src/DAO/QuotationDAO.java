@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  *
@@ -77,9 +78,9 @@ public class QuotationDAO {
             ps.setBigDecimal(14, quotation.getDiscount());
             ps.setBigDecimal(15, quotation.getSubTotal());
             ps.setBigDecimal(16, quotation.getNett());
-            ps.setString(17, quotation.getIssuedBy().getStaffID());
-            ps.setString(18, quotation.getReleasedAVerifiedBy().getStaffID());
-            ps.setString(19, quotation.getCustomerSignature().getCollectAddrID());
+            ps.setString(17, isBlank(quotation.getIssuedBy().getStaffID()) ? null : quotation.getIssuedBy().getStaffID());
+            ps.setString(18, isBlank(quotation.getReleasedAVerifiedBy().getStaffID()) ? null : quotation.getReleasedAVerifiedBy().getStaffID());
+            ps.setString(19, isBlank(quotation.getCustomerSignature().getCollectAddrID()) ? null : quotation.getCustomerSignature().getCollectAddrID());
             ps.setString(20, quotation.getStatus());
             ps.setTimestamp(21, quotation.getCreatedDate());
             ps.setTimestamp(22, quotation.getActualCreatedDateTime());
@@ -89,6 +90,7 @@ public class QuotationDAO {
             ps.execute();
             return quotation.getCode();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -211,12 +213,13 @@ public class QuotationDAO {
 
             if (rs.next()) {
                 latestCode = rs.getString("Quot_ID");
+                return latestCode;
+            } else {
+                return "";
             }
 
-            return latestCode;
-
         } catch (Exception e) {
-            return null;
+            return "";
         } finally {
             try {
                 ps.close();
@@ -288,7 +291,7 @@ public class QuotationDAO {
                 quotation.setGross(rs.getBigDecimal("Gross"));
                 quotation.setDiscount(rs.getBigDecimal("Discount"));
                 quotation.setSubTotal(rs.getBigDecimal("Sub_Total"));
-                quotation.setNett(rs.getBigDecimal(rs.getString("Nett")));
+                quotation.setNett(rs.getBigDecimal("Nett"));
                 quotation.setIssuedBy(StaffDAO.getStaffByID(rs.getString("Issued_By")));
                 quotation.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("Released_And_Verified_By")));
                 quotation.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("Customer_Signed")));
@@ -304,6 +307,7 @@ public class QuotationDAO {
             return quotations;
 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -329,7 +333,7 @@ public class QuotationDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "UPDATE Quotation SET"
+            query = "UPDATE Quotation SET "
                     + "CI_ID = ?, "
                     + "Reference_Type = ?, "
                     + "Reference = ?, "
@@ -350,9 +354,8 @@ public class QuotationDAO {
                     + "Customer_Signed = ?, "
                     + "Status = ?, "
                     + "Created_Date = ?, "
-                    + "Actual_Created_Date = ?, "
                     + "Signed_Doc_Pic = ?, "
-                    + "Modified_Date_Time = ?"
+                    + "Modified_Date_Time = ? "
                     + "WHERE "
                     + "Quot_ID = ?";
 
@@ -378,14 +381,14 @@ public class QuotationDAO {
             ps.setString(18, quotation.getCustomerSignature().getCollectAddrID());
             ps.setString(19, quotation.getStatus());
             ps.setTimestamp(20, quotation.getCreatedDate());
-            ps.setTimestamp(21, quotation.getActualCreatedDateTime());
-            ps.setString(22, quotation.getSignedDocPic()); // need to change to encoded 64 string
-            ps.setTimestamp(23, quotation.getModifiedDateTime());
-            ps.setString(24, quotation.getCode());
+            ps.setString(21, quotation.getSignedDocPic()); // need to change to encoded 64 string
+            ps.setTimestamp(22, quotation.getModifiedDateTime());
+            ps.setString(23, quotation.getCode());
 
             ps.execute();
             return quotation.getCode();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {

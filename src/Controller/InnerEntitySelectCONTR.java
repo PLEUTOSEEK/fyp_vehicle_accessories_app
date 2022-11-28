@@ -7,9 +7,12 @@ package Controller;
 import Entity.CollectAddress;
 import Entity.Customer;
 import Entity.CustomerInquiry;
+import Entity.DeliveryOrder;
 import Entity.Invoice;
+import Entity.PackingSlip;
 import Entity.PaymentTerm;
 import Entity.Place;
+import Entity.Product;
 import Entity.Quotation;
 import Entity.ReturnDeliveryNote;
 import Entity.SalesOrder;
@@ -20,10 +23,13 @@ import PassObjs.BasicObjs;
 import Service.CollectAddressService;
 import Service.CustomerInquiryService;
 import Service.CustomerService;
+import Service.DeliveryOrderService;
 import Service.GeneralRulesService;
 import Service.InvoiceService;
+import Service.PackingSlipService;
 import Service.PaymentTermService;
 import Service.PlaceService;
+import Service.ProductService;
 import Service.QuotationService;
 import Service.RDNService;
 import Service.SalesOrderService;
@@ -146,6 +152,8 @@ public class InnerEntitySelectCONTR implements Initializable {
 
         if (entity instanceof Place) {
             forPlace();
+        } else if (entity instanceof Product) {
+            forProduct();
         } else if (entity instanceof Customer) {
             forCustomer();
         } else if (entity instanceof Staff) {
@@ -227,6 +235,77 @@ public class InnerEntitySelectCONTR implements Initializable {
                             Stage stage = (Stage) btnCancel.getScene().getWindow();
                             BasicObjs passObj = new BasicObjs();
                             passObj.setObj(place);
+                            stage.setUserData(passObj);
+                            stage.close();
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+    }
+
+    private void forProduct() {
+        // Product ID
+        // Product Name
+        // Part Number
+        // Sell price
+        // MSRP
+        // Product ID
+        MFXTableColumn<Product> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(product -> product.getProdID()));
+        // Product Name
+        MFXTableColumn<Product> prodNmCol = new MFXTableColumn<>("Product Name", true, Comparator.comparing(product -> product.getProdName()));
+        // Part Number
+        MFXTableColumn<Product> partNoCol = new MFXTableColumn<>("Part No.", true, Comparator.comparing(product -> product.getPartNo()));
+        // Sell price
+        MFXTableColumn<Product> sellPriceCol = new MFXTableColumn<>("Sell Price", true, Comparator.comparing(product -> product.getSellPrice()));
+        // MSRP
+        MFXTableColumn<Product> msrpCol = new MFXTableColumn<>("MSRP", true, Comparator.comparing(product -> product.getMSRP()));
+
+        // Product ID
+        prodIDCol.setRowCellFactory(prod -> new MFXTableRowCell<>(product -> product.getProdID()));
+        // Product Name
+        prodNmCol.setRowCellFactory(prod -> new MFXTableRowCell<>(product -> product.getProdName()));
+        // Part Number
+        partNoCol.setRowCellFactory(prod -> new MFXTableRowCell<>(product -> product.getPartNo()));
+        // Sell price
+        sellPriceCol.setRowCellFactory(prod -> new MFXTableRowCell<>(product -> product.getSellPrice()));
+        // MSRP
+        msrpCol.setRowCellFactory(prod -> new MFXTableRowCell<>(product -> product.getMSRP()));
+
+        ((MFXTableView<Product>) tblVw).getTableColumns().addAll(
+                prodIDCol,
+                prodNmCol,
+                partNoCol,
+                sellPriceCol,
+                msrpCol
+        );
+
+        ((MFXTableView<Product>) tblVw).getFilters().addAll(
+                new StringFilter<>("Product ID", product -> product.getProdID()),
+                new StringFilter<>("Product Name", product -> product.getProdName()),
+                new StringFilter<>("Part No.", product -> product.getPartNo()),
+                new DoubleFilter<>("Sell Price", product -> product.getSellPrice().doubleValue()),
+                new DoubleFilter<>("MSRP", product -> product.getMSRP().doubleValue())
+        );
+
+        List<Product> products = ProductService.getAllProducts();
+
+        ((MFXTableView<Product>) tblVw).setItems(FXCollections.observableList(products));
+
+        ((MFXTableView<Product>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<Product>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    Product product = (((MFXTableView<Product>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(product.getProdID());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            Stage stage = (Stage) btnCancel.getScene().getWindow();
+                            BasicObjs passObj = new BasicObjs();
+                            passObj.setObj(product);
                             stage.setUserData(passObj);
                             stage.close();
                         }
@@ -803,6 +882,71 @@ public class InnerEntitySelectCONTR implements Initializable {
         });
     }
 
+    private void forPackingSlip() {
+        // PS ID
+        // TO ID
+        // Status
+        // Created Date
+
+        // PS ID
+        MFXTableColumn<PackingSlip> psCol = new MFXTableColumn<>("Packing Slip ID", true, Comparator.comparing(ps -> ps.getCode()));
+        // TO ID
+        MFXTableColumn<PackingSlip> toCol = new MFXTableColumn<>("Transfer Order ID", true, Comparator.comparing(ps -> ps.getTO() == null ? "" : ps.getTO().getCode()));
+        // Status
+        MFXTableColumn<PackingSlip> statusCol = new MFXTableColumn<>("Status", true, Comparator.comparing(ps -> ps.getStatus()));
+        // Created Date
+        MFXTableColumn<PackingSlip> createdDtCol = new MFXTableColumn<>("Created Date", true, Comparator.comparing(ps -> ps.getCreatedDate()));
+
+        // PS ID
+        psCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(ps -> ps.getCode()));
+        // TO ID
+        toCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(ps -> ps.getTO() == null ? "" : ps.getTO().getCode()));
+        // Status
+        statusCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(ps -> ps.getStatus()));
+        // Created Date
+        createdDtCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(ps -> ps.getCreatedDate()));
+
+        ((MFXTableView<PackingSlip>) tblVw).getTableColumns().addAll(
+                psCol,
+                toCol,
+                statusCol,
+                createdDtCol
+        );
+
+        ((MFXTableView<PackingSlip>) tblVw).getFilters().addAll(
+                new StringFilter<>("Packing Slip ID", ps -> ps.getCode()),
+                new StringFilter<>("Transfer Order ID", ps -> ps.getTO() == null ? "" : ps.getTO().getCode()),
+                new StringFilter<>("Status", ps -> ps.getStatus()),
+                new DateFilter<>("Created Date", ps -> ps.getCreatedDate())
+        );
+
+        List<PackingSlip> packingSlips = PackingSlipService.getAllPackingSlips();
+
+        ((MFXTableView<PackingSlip>) tblVw).setItems(FXCollections.observableList(packingSlips));
+
+        ((MFXTableView<PackingSlip>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<PackingSlip>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    PackingSlip packingSlip = (((MFXTableView<PackingSlip>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(packingSlip.getCode());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            Stage stage = (Stage) btnCancel.getScene().getWindow();
+                            BasicObjs passObj = new BasicObjs();
+                            passObj.setObj(packingSlip);
+                            stage.setUserData(passObj);
+                            stage.close();
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+    }
+
     private void forReturnDeliveryNote() {
         // RDN ID
         // So Ref.
@@ -859,6 +1003,78 @@ public class InnerEntitySelectCONTR implements Initializable {
                             Stage stage = (Stage) btnCancel.getScene().getWindow();
                             BasicObjs passObj = new BasicObjs();
                             passObj.setObj(returnDeliveryNote);
+                            stage.setUserData(passObj);
+                            stage.close();
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
+    }
+
+    private void forDeliveryOrder() {
+        //DO ID
+        //SO ID
+        //Delivery By
+        //Delivery Date
+        //Status
+
+        //DO ID
+        MFXTableColumn<DeliveryOrder> doIDCol = new MFXTableColumn<>("Delivery Order ID", true, Comparator.comparing(deliveryOrder -> deliveryOrder.getCode()));
+        //SO ID
+        MFXTableColumn<DeliveryOrder> soIDCol = new MFXTableColumn<>("Sales Order ID", true, Comparator.comparing(deliveryOrder -> deliveryOrder.getSo() == null ? "" : deliveryOrder.getSo().getCode()));
+        //Delivery By
+        MFXTableColumn<DeliveryOrder> deliveryByCol = new MFXTableColumn<>("Deliver By", true, Comparator.comparing(deliveryOrder -> deliveryOrder.getDeliveryBy() == null ? "" : deliveryOrder.getDeliveryBy().getStaffID()));
+        //Delivery Date
+        MFXTableColumn<DeliveryOrder> deliveryDtCol = new MFXTableColumn<>("Delivery Date", true, Comparator.comparing(deliveryOrder -> deliveryOrder.getDeliveryDate()));
+        //Status
+        MFXTableColumn<DeliveryOrder> statusCol = new MFXTableColumn<>("Status", true, Comparator.comparing(delveryOrder -> delveryOrder.getStatus()));
+
+        //DO ID
+        doIDCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(deliveryOrder -> deliveryOrder.getCode()));
+        //SO ID
+        soIDCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(deliveryOrder -> deliveryOrder.getSo() == null ? "" : deliveryOrder.getSo().getCode()));
+        //Delivery By
+        deliveryByCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(deliveryOrder -> deliveryOrder.getDeliveryBy() == null ? "" : deliveryOrder.getDeliveryBy().getStaffID()));
+        //Delivery Date
+        deliveryDtCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(deliveryOrder -> deliveryOrder.getDeliveryDate()));
+        //Status
+        statusCol.setRowCellFactory(dOrder -> new MFXTableRowCell<>(deliveryOrder -> deliveryOrder.getStatus()));
+
+        ((MFXTableView<DeliveryOrder>) tblVw).getTableColumns().addAll(
+                doIDCol,
+                soIDCol,
+                deliveryByCol,
+                deliveryDtCol,
+                statusCol
+        );
+
+        ((MFXTableView<DeliveryOrder>) tblVw).getFilters().addAll(
+                new StringFilter<>("Delivery Order ID", deliveryOrder -> deliveryOrder.getCode()),
+                new StringFilter<>("Sales Order ID", deliveryOrder -> deliveryOrder.getSo() == null ? "" : deliveryOrder.getSo().getCode()),
+                new StringFilter<>("Deliver By", deliveryOrder -> deliveryOrder.getDeliveryBy() == null ? "" : deliveryOrder.getDeliveryBy().getStaffID()),
+                new DateFilter<>("Delivery Date", deliveryOrder -> deliveryOrder.getDeliveryDate()),
+                new StringFilter<>("Status", deliveryOrder -> deliveryOrder.getStatus())
+        );
+
+        List<DeliveryOrder> deliveryOrders = DeliveryOrderService.getAllDOs();
+
+        ((MFXTableView<DeliveryOrder>) tblVw).setItems(FXCollections.observableList(deliveryOrders));
+
+        ((MFXTableView<DeliveryOrder>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<DeliveryOrder>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    DeliveryOrder deliveryOrder = (((MFXTableView<DeliveryOrder>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(deliveryOrder.getCode());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            Stage stage = (Stage) btnCancel.getScene().getWindow();
+                            BasicObjs passObj = new BasicObjs();
+                            passObj.setObj(deliveryOrder);
                             stage.setUserData(passObj);
                             stage.close();
                         }

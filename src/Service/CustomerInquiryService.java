@@ -42,7 +42,7 @@ public class CustomerInquiryService {
 
         newIDStruct.setName("CI");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         String latestID = CustomerInquiryDAO.getLatestCode();
         if (latestID != "") {

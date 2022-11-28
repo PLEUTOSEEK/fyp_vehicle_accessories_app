@@ -4,9 +4,11 @@
  */
 package Controller;
 
+import BizRulesConfiguration.StaffRules;
 import Entity.Address;
 import Entity.CollectAddress;
 import Entity.Contact;
+import Entity.Person;
 import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.GeneralRulesService;
@@ -16,28 +18,39 @@ import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.cell.MFXDateCell;
+import io.github.palexdev.materialfx.utils.SwingFXUtils;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javax.imageio.ImageIO;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -125,10 +138,13 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
     private MFXTextField txtCollectAddrPostalCode;
     @FXML
     private MFXComboBox<?> cmbCollectAddrCountry;
-    private Validator validator = new Validator();
-    //</editor-fold>
     @FXML
     private MFXButton btnRemove;
+    @FXML
+    private MFXTextField txtCollectorID;
+    //</editor-fold>
+    private Validator validator = new Validator();
+    StaffRules staffRules = new StaffRules();
 
     /**
      * Initializes the controller class.
@@ -139,6 +155,8 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                initializeUIControls();
+                initializeComboSelections();
                 inputValidation();
                 receiveData();
                 autoClose();
@@ -153,6 +171,36 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                 }
             }
         });
+    }
+
+    private void initializeUIControls() {
+        this.dtDOB.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtDOB, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isAfter(LocalDate.now())) {
+                            setDisable(true);
+                        } else {
+                            setDisable(false);
+                        }
+                    }
+                };
+
+            }
+        });
+    }
+
+    private void initializeComboSelections() {
+        ((MFXComboBox<String>) this.cmbRace).setItems(FXCollections.observableList(staffRules.getRaces()));
+        ((MFXComboBox<String>) this.cmbReligion).setItems(FXCollections.observableList(staffRules.getReligions()));
+        ((MFXComboBox<String>) this.cmbNationality).setItems(FXCollections.observableList(staffRules.getNationalities()));
+        ((MFXComboBox<String>) this.cmbHonorifics).setItems(FXCollections.observableList(staffRules.getHonorifics()));
+        ((MFXComboBox<String>) this.cmbMaritalStatus).setItems(FXCollections.observableList(staffRules.getMaritalStatuses()));
+        ((MFXComboBox<String>) this.cmbGender).setItems(FXCollections.observableList(staffRules.getGenders()));
     }
 
     public void autoClose() {
@@ -214,7 +262,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
     private void fieldFillIn() throws IOException {
         if (passObj.getObj() != null) {
             CollectAddress collAddr = (CollectAddress) passObj.getObj();
-
+            this.txtCollectorID.setText(collAddr.getCollectAddrID());
             this.cmbHonorifics.setText(collAddr.getPerson().getHonorifics());
             this.txtName.setText(collAddr.getPerson().getName());
             this.cmbGender.setText(collAddr.getPerson().getGender());
@@ -373,16 +421,41 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
                      */
 
                     if (textVal.isEmpty()) {
+                        c.error("IC - Required Field");
                         return;
                     }
 
                     if (!textVal.matches("^\\d{6}-\\d{2}-\\d{4}$")) {
-
                         c.error("IC - Format not matched");
                         return;
-
                     }
 
+                    if (passObj.getObjs().size() > 0) {
+                        List<CollectAddress> cllctAddrTerms = passObj.getObjs()
+                                .stream()
+                                .map(e -> (CollectAddress) e)
+                                .collect(Collectors.toList());
+
+                        CollectAddress passInCollectAddress = (CollectAddress) passObj.getObj();
+
+                        if (passObj.getCrud().equals(BasicObjs.read)) {
+
+                            for (CollectAddress cllctAddr : cllctAddrTerms) {
+                                if (cllctAddr.getPerson().getIC().toLowerCase().equals(textVal.toLowerCase())
+                                        && !cllctAddr.equals(passInCollectAddress)) {
+                                    c.error("IC - Must be unique");
+                                    return;
+                                }
+                            }
+                        } else {
+                            for (CollectAddress cllctAddr : cllctAddrTerms) {
+                                if (cllctAddr.getPerson().getIC().toLowerCase().equals(textVal.toLowerCase())) {
+                                    c.error("IC - Must be unique");
+                                    return;
+                                }
+                            }
+                        }
+                    }
                 })
                 .decorates(this.txtIC);
 
@@ -1038,6 +1111,15 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void saveCollector(MouseEvent event) throws IOException {
+        if (!this.btnSave.getText().equals("Save")) {
+            isViewMode(false);
+            return;
+        }
+
+        if (!validator.validate()) {
+
+            return;
+        }
         Stage stage = (Stage) btnDiscard.getScene().getWindow();
         BasicObjs passObj = new BasicObjs();
         passObj.setObj(prepareCollectAddressInforToObj());
@@ -1082,7 +1164,15 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
     private CollectAddress prepareCollectAddressInforToObj() throws IOException {
         CollectAddress collAddr = new CollectAddress();
 
+        collAddr.setCollectAddrID(this.txtCollectorID.getText());
+
+        collAddr.setPerson(new Person());
+
         Address residentialAddr = new Address();
+
+        if (!this.passObj.getCrud().equals(BasicObjs.create)) {
+            residentialAddr.setAddressID(((CollectAddress) this.passObj.getObj()).getPerson().getResidentialAddr().getAddressID());
+        }
         residentialAddr.setLocationName(this.txtResidentialAddrLocationName.getText());
         residentialAddr.setAddress(this.txtResidentialAddrAddress.getText());
         residentialAddr.setCity(this.txtResidentialAddrCity.getText());
@@ -1092,6 +1182,9 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
         collAddr.getPerson().setResidentialAddr(residentialAddr);
 
         Address corrAddr = new Address();
+        if (!this.passObj.getCrud().equals(BasicObjs.create)) {
+            corrAddr.setAddressID(((CollectAddress) this.passObj.getObj()).getPerson().getCorAddr().getAddressID());
+        }
         corrAddr.setLocationName(this.txtCorAddrLocationName.getText());
         corrAddr.setAddress(this.txtCorAddrAddress.getText());
         corrAddr.setCity(this.txtCorAddrCity.getText());
@@ -1101,6 +1194,9 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
         collAddr.getPerson().setCorAddr(corrAddr);
 
         Address collectAddress = new Address();
+        if (!this.passObj.getCrud().equals(BasicObjs.create)) {
+            collectAddress.setAddressID(((CollectAddress) this.passObj.getObj()).getCollectAddrID());
+        }
         collectAddress.setLocationName(this.txtCollectAddrLocationName.getText());
         collectAddress.setAddress(this.txtCollectAddrAddress.getText());
         collectAddress.setCity(this.txtCollectAddrCity.getText());
@@ -1120,7 +1216,7 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
         collAddr.getPerson().setAvatarImg(this.imgAvatarImg.getImage() == null ? "" : ImageUtils.byteToEncodedStr(ImageUtils.imgToByte(this.imgAvatarImg.getImage())));
         collAddr.getPerson().setName(this.txtName.getText());
         collAddr.getPerson().setGender(this.cmbGender.getText());
-        collAddr.getPerson().setDOB(this.dtDOB.getValue() == null ? null : (java.sql.Date) Date.from(Instant.from(this.dtDOB.getValue().atStartOfDay(ZoneId.systemDefault())))); //https://stackoverflow.com/questions/20446026/get-value-from-date-picker
+        collAddr.getPerson().setDOB(this.dtDOB.getValue() == null ? null : Date.valueOf(this.dtDOB.getValue())); //https://stackoverflow.com/questions/20446026/get-value-from-date-picker
         collAddr.getPerson().setIC(this.txtIC.getText());
         collAddr.getPerson().setMaritalStatus(this.cmbMaritalStatus.getText());
         collAddr.getPerson().setNationality(this.cmbNationality.getText());
@@ -1139,6 +1235,41 @@ public class CollectorCONTR implements Initializable, BasicCONTRFunc {
         passObj.setObj(null);
         stage.setUserData(passObj);
         stage.close();
+    }
+
+    @FXML
+    private void uploadImage(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+
+            try {
+                Stage stage = (Stage) btnBack.getScene().getWindow();
+
+                FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Image Files (*.png, *.jpg)", "*.png", "*.jpg");
+
+                // create a File chooser
+                FileChooser fil_chooser = new FileChooser();
+                fil_chooser.getExtensionFilters().add(filter);
+
+                // get the file selected
+                File file = fil_chooser.showOpenDialog(stage);
+
+                if (file != null) {
+                    BufferedImage bi = ImageIO.read(file);
+                    Image img = SwingFXUtils.toFXImage(bi, null);
+                    this.imgAvatarImg.setImage(img);
+
+                    /*
+                        Save Image to database
+                        bi = SwingFXUtils.fromFXImage(img, null);
+                        byte[] customerImg = ImageUtils.toByteArray(bi, "png");
+                        String bytesBase64Img = Base64.encodeBase64String(customerImg);
+                     */
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
 }

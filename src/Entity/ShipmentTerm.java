@@ -71,6 +71,10 @@ public class ShipmentTerm extends Entity implements Cloneable {
             return false;
         }
         final ShipmentTerm other = (ShipmentTerm) obj;
-        return Objects.equals(this.shipmentTermID, other.shipmentTermID);
+        if (!Objects.equals(this.shipmentTermID, other.shipmentTermID)) {
+            return false;
+        }
+        return Objects.equals(this.shipmentTermName, other.shipmentTermName);
     }
+
 }

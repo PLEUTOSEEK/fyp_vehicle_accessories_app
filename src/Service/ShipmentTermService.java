@@ -32,7 +32,7 @@ public class ShipmentTermService {
 
         newIDStruct.setName("ST");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         String latestID = ShipmentTermDAO.getLatestCode();
         if (latestID != "") {

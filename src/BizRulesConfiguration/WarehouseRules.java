@@ -61,6 +61,7 @@ public class WarehouseRules {
         rdnStatuses = Arrays.asList(RDNStatus.values());
 
         refTypeForTO.add("Sales Order (SO)");
+        refTypeForTO.add("Return Delivery Note (RDN)");
     }
 
     public List<String> getShipmentTerms() {

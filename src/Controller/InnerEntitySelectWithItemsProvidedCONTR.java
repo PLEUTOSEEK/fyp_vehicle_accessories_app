@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -170,7 +171,6 @@ public class InnerEntitySelectWithItemsProvidedCONTR implements Initializable {
                 prodIDCol,
                 partNoCol,
                 qtyCol,
-                qtyCol,
                 uomCol,
                 sourceCol
         );
@@ -183,7 +183,11 @@ public class InnerEntitySelectWithItemsProvidedCONTR implements Initializable {
                 new StringFilter<>("Source", item -> item.getInventory() == null ? null : item.getInventory().getInventoryID())
         );
 
-        List<Item> items = (List<Item>) (Item) this.passObj.getObjs();
+        List<Item> items
+                = this.passObj.getObjs()
+                        .stream()
+                        .map(e -> (Item) e)
+                        .collect(Collectors.toList());
 
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(items));
 
@@ -238,7 +242,10 @@ public class InnerEntitySelectWithItemsProvidedCONTR implements Initializable {
                 new IntegerFilter<>("Qty", item -> item.getQty())
         );
 
-        List<Item> items = (List<Item>) (Item) this.passObj.getObjs();
+        List<Item> items = this.passObj.getObjs()
+                .stream()
+                .map(e -> (Item) e)
+                .collect(Collectors.toList());
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(items));
 
         ((MFXTableView<Item>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
@@ -280,7 +287,10 @@ public class InnerEntitySelectWithItemsProvidedCONTR implements Initializable {
                 new StringFilter<>("Packing Slip Code", item -> item.getCode())
         );
 
-        List<PackingSlip> packingSlips = (List<PackingSlip>) (PackingSlip) this.passObj.getObjs();
+        List<PackingSlip> packingSlips = this.passObj.getObjs()
+                .stream()
+                .map(e -> (PackingSlip) e)
+                .collect(Collectors.toList());
         ((MFXTableView<PackingSlip>) tblVw).setItems(FXCollections.observableArrayList(packingSlips));
 
         // pending re modification
@@ -348,7 +358,10 @@ public class InnerEntitySelectWithItemsProvidedCONTR implements Initializable {
                 new StringFilter<>("Remarks", item -> item.getRemark())
         );
 
-        List<Item> items = (List<Item>) (Item) this.passObj.getObjs();
+        List<Item> items = this.passObj.getObjs()
+                .stream()
+                .map(e -> (Item) e)
+                .collect(Collectors.toList());
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(items));
 
         ((MFXTableView<Item>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
@@ -433,7 +446,10 @@ public class InnerEntitySelectWithItemsProvidedCONTR implements Initializable {
                 new DoubleFilter<>("Incl. Amount", item -> item.getInclTaxAmt().doubleValue())
         );
 
-        List<Item> items = (List<Item>) (Item) this.passObj.getObjs();
+        List<Item> items = this.passObj.getObjs()
+                .stream()
+                .map(e -> (Item) e)
+                .collect(Collectors.toList());
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(items));
 
         ((MFXTableView<Item>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {

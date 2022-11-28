@@ -6,6 +6,7 @@ package Entity;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  *
@@ -169,6 +170,28 @@ public class Person extends Entity {
 
     public void setStatus(String Status) {
         this.status = Status;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 67 * hash + Objects.hashCode(this.IC);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Person other = (Person) obj;
+        return Objects.equals(this.IC, other.IC);
     }
 
 }

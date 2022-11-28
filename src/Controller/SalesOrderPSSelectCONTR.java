@@ -5,17 +5,18 @@
 package Controller;
 
 import BizRulesConfiguration.SalesRules;
+import Entity.Inventory;
 import Entity.Item;
 import Entity.Product;
 import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.GeneralRulesService;
-import Service.InventoryService;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.cell.MFXDateCell;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -28,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -93,6 +95,7 @@ public class SalesOrderPSSelectCONTR implements Initializable {
 
             @Override
             public void run() {
+                initializeUIControls();
                 intializeComboSelections();
                 inputValidation();
                 receiveData();
@@ -112,6 +115,27 @@ public class SalesOrderPSSelectCONTR implements Initializable {
             }
         }
         );
+    }
+
+    private void initializeUIControls() {
+        this.dtDeliveryDate.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtDeliveryDate, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isAfter(LocalDate.now())) {
+                            setDisable(false);
+                        } else {
+                            setDisable(true);
+                        }
+                    }
+                };
+
+            }
+        });
     }
 
     public void autoClose() {
@@ -403,7 +427,14 @@ public class SalesOrderPSSelectCONTR implements Initializable {
 
         item.setQty(Integer.valueOf(this.txtQuantity.getText()));
 
+        item.setOriQty(item.getQty());
+
+        item.setQtyNotYetBill(item.getQty());
+
         item.setUnitPrice(new BigDecimal(this.txtUnitPrice.getText()));
+
+        item.setInventory(new Inventory());
+        item.getInventory().setInventoryID(null);
 
         item.setDiscPercent(Double.valueOf(this.cmbDiscountAmount.getText()));
 
@@ -433,7 +464,11 @@ public class SalesOrderPSSelectCONTR implements Initializable {
     private void removeCurrentItem(MouseEvent event) {
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         BasicObjs passObj = new BasicObjs();
-        passObj.setObj(null);
+
+        Item item = new Item();
+        item.setProduct(null);
+
+        passObj.setObj(item);
         stage.setUserData(passObj);
         stage.close();
     }
@@ -447,49 +482,12 @@ public class SalesOrderPSSelectCONTR implements Initializable {
 
             Item item = prepareItemToObj();
 
-            if (isDemandOverReadyStock(item) == true) {
-                return;
-            }
-
             Stage stage = (Stage) btnCancel.getScene().getWindow();
             BasicObjs passObj = new BasicObjs();
             passObj.setObj(item);
             stage.setUserData(passObj);
             stage.close();
         }
-
-    }
-
-    private boolean isDemandOverReadyStock(Item item) {
-        if (this.passObj.getObjs() != null) {
-            List<Item> items = (List<Item>) (Item) this.passObj.getObjs();
-
-            Integer ttlDemandQty = 0;
-
-            ttlDemandQty += item.getQty();
-
-            for (Item i : items) {
-                if (i.getProduct().getProdID().equals(item.getProduct().getProdID())
-                        && !i.equals(item)) {
-                    ttlDemandQty += i.getQty();
-                }
-            }
-
-            Integer ttlReadyQty = InventoryService.getInventoryReadyQtyByProdID(item.getProduct().getProdID());
-
-            ttlDemandQty -= InventoryService.getOriginalReservedQty(item.getProduct().getProdID());
-
-            if (ttlDemandQty > ttlReadyQty) {
-                alertDialog(Alert.AlertType.WARNING,
-                        "Warning",
-                        "Insufficient Stock Alert", "Ready Qty = " + ttlReadyQty + "\nDemand Qty = " + ttlDemandQty + "\nKindly make Demand Qty below or equal Ready Qty.");
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        return false;
 
     }
 

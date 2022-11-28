@@ -32,7 +32,7 @@ public class DeliveryOrderService {
 
         newIDStruct.setName("DO");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         String latestID = DeliveryOrderDAO.getLatestCode();
 

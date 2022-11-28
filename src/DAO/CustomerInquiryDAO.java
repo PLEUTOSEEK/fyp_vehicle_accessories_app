@@ -36,7 +36,7 @@ public class CustomerInquiryDAO {
                     + "CI_ID, "
                     + "Reference_Type, "
                     + "Reference, "
-                    + "Bill_Tp_Cust, "
+                    + "Bill_To_Cust, "
                     + "Deliver_To, "
                     + "Sales_Person, "
                     + "Currency_Code, "
@@ -81,6 +81,7 @@ public class CustomerInquiryDAO {
             return customerInquiry.getCode();
 
         } catch (Exception e) {
+            System.out.println("CI Insert " + e.getMessage());
             return null;
         } finally {
             try {
@@ -126,7 +127,7 @@ public class CustomerInquiryDAO {
                     + "      ,[Actual_Created_Date] "
                     + "      ,[Signed_Doc_Pic] "
                     + "      ,[Modified_Date_Time] "
-                    + "  FROM [dbo].[CustomerInquiry]"
+                    + "  FROM [dbo].[CustomerInquiry] "
                     + "  WHERE [CI_ID] = ?";
             ps = conn.prepareStatement(query);
             ps.setString(1, code);
@@ -147,7 +148,7 @@ public class CustomerInquiryDAO {
                 customerInquiry.setGross(rs.getBigDecimal("Gross"));
                 customerInquiry.setDiscount(rs.getBigDecimal("Discount"));
                 customerInquiry.setSubTotal(rs.getBigDecimal("Sub_Total"));
-                customerInquiry.setNett(rs.getBigDecimal(rs.getString("Nett")));
+                customerInquiry.setNett(rs.getBigDecimal("Nett"));
                 customerInquiry.setIssuedBy(StaffDAO.getStaffByID("Issued_By"));
                 customerInquiry.setStatus(rs.getString("Status"));
                 customerInquiry.setCreatedDate(rs.getTimestamp("Created_Date"));
@@ -161,6 +162,7 @@ public class CustomerInquiryDAO {
             }
 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -192,12 +194,13 @@ public class CustomerInquiryDAO {
 
             if (rs.next()) {
                 latestCode = rs.getString("CI_ID");
+                return latestCode;
+            } else {
+                return "";
             }
 
-            return latestCode;
-
         } catch (Exception e) {
-            return null;
+            return "";
         } finally {
             try {
                 ps.close();
@@ -226,7 +229,7 @@ public class CustomerInquiryDAO {
             query = "UPDATE CustomerInquiry SET "
                     + "Reference_Type = ?, "
                     + "Reference = ?, "
-                    + "Bill_Tp_Cust = ?, "
+                    + "Bill_To_Cust = ?, "
                     + "Deliver_To = ?, "
                     + "Sales_Person = ?, "
                     + "Currency_Code = ?, "
@@ -240,7 +243,6 @@ public class CustomerInquiryDAO {
                     + "issued_By = ?, "
                     + "Status = ?, "
                     + "Created_Date = ?, "
-                    + "Actual_Created_date = ?, "
                     + "Signed_Doc_Pic = ?, "
                     + "Modified_Date_Time = ? "
                     + "WHERE CI_ID = ? ";
@@ -262,14 +264,14 @@ public class CustomerInquiryDAO {
             ps.setString(14, customerInquiry.getIssuedBy().getStaffID());
             ps.setString(15, customerInquiry.getStatus());
             ps.setTimestamp(16, customerInquiry.getCreatedDate());
-            ps.setTimestamp(17, customerInquiry.getActualCreatedDateTime());
-            ps.setString(18, customerInquiry.getSignedDocPic()); // need to change to encoded 64 string
-            ps.setTimestamp(19, customerInquiry.getModifiedDateTime());
-            ps.setString(20, customerInquiry.getCode());
+            ps.setString(17, customerInquiry.getSignedDocPic()); // need to change to encoded 64 string
+            ps.setTimestamp(18, customerInquiry.getModifiedDateTime());
+            ps.setString(19, customerInquiry.getCode());
 
             ps.execute();
             return customerInquiry.getCode();
         } catch (Exception e) {
+            System.out.println("CI Update " + e.getMessage());
             return null;
         } finally {
             try {
@@ -297,16 +299,19 @@ public class CustomerInquiryDAO {
             conn = SQLDatabaseConnection.openConn();
 
             query = "UPDATE CustomerInquiry SET "
-                    + "Status = ? "
+                    + "Status = ?,"
+                    + "Modified_Date_Time = ? "
                     + "WHERE CI_ID = ? ";
             ps = conn.prepareStatement(query);
             // bind parameter
             ps.setString(1, customerInquiry.getStatus());
-            ps.setString(2, customerInquiry.getCode());
+            ps.setTimestamp(2, customerInquiry.getModifiedDateTime());
+            ps.setString(3, customerInquiry.getCode());
 
             ps.execute();
             return customerInquiry.getCode();
         } catch (Exception e) {
+            System.out.println("CI Update " + e.getMessage());
             return null;
         } finally {
             try {
@@ -364,7 +369,7 @@ public class CustomerInquiryDAO {
                 customerInquiry.setReferenceType(rs.getString("Reference_Type"));
                 customerInquiry.setReference(rs.getString("Reference"));
                 customerInquiry.setBillToCust(CustomerDAO.getCustomerByID(rs.getString("Bill_To_Cust")));
-                customerInquiry.setDeliverToCust(CollectAddressDAO.getCollectAddressByID("Deliver_To"));
+                customerInquiry.setDeliverToCust(CollectAddressDAO.getCollectAddressByID(rs.getString("Deliver_To")));
                 customerInquiry.setSalesPerson(StaffDAO.getStaffByID(rs.getString("Sales_Person")));
                 customerInquiry.setCurrencyCode(rs.getString("Currency_Code"));
                 customerInquiry.setRequiredDeliveryDate(rs.getDate("Required_Delivery_Date"));
@@ -373,7 +378,7 @@ public class CustomerInquiryDAO {
                 customerInquiry.setGross(rs.getBigDecimal("Gross"));
                 customerInquiry.setDiscount(rs.getBigDecimal("Discount"));
                 customerInquiry.setSubTotal(rs.getBigDecimal("Sub_Total"));
-                customerInquiry.setNett(rs.getBigDecimal(rs.getString("Nett")));
+                customerInquiry.setNett(rs.getBigDecimal("Nett"));
                 customerInquiry.setIssuedBy(StaffDAO.getStaffByID("Issued_By"));
                 customerInquiry.setStatus(rs.getString("Status"));
                 customerInquiry.setCreatedDate(rs.getTimestamp("Created_Date"));

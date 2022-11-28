@@ -33,7 +33,7 @@ public class SalesOrderService {
 
         newIDStruct.setName("SO");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         String latestID = SalesOrderDAO.getLatestCode();
         if (latestID != "") {

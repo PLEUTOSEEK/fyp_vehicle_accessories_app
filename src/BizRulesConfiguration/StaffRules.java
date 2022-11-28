@@ -48,9 +48,6 @@ public class StaffRules extends ActorRules {
         religions.add("Other");
 
         nationalities.add("Malaysian");
-        nationalities.add("Colombian");
-        nationalities.add("Canadian");
-        nationalities.add("etc");
 
         honorifics.add("Mr.");
         honorifics.add("Mrs.");

@@ -32,7 +32,7 @@ public class PaymentTermService {
 
         newIDStruct.setName("PT");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         String latestID = PaymentTermDAO.getLatestCode();
         if (latestID != "") {

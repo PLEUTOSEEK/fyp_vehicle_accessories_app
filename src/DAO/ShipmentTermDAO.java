@@ -142,7 +142,7 @@ public class ShipmentTermDAO {
                     + "           ,[Modified_Date_Time] "
                     + "           ,[Created_Date]) "
                     + "     VALUES "
-                    + "           ()";
+                    + "           (?,?,?,?,?)";
             ps = conn.prepareStatement(query);
 
             // bind parameter
@@ -186,7 +186,6 @@ public class ShipmentTermDAO {
                     + "      [Shipment_Term_Name] = ? "
                     + "      ,[Description] = ? "
                     + "      ,[Modified_Date_Time] = ? "
-                    + "      ,[Created_Date] = ? "
                     + " WHERE "
                     + "       [Shipment_Term_ID] = ?";
             ps = conn.prepareStatement(query);
@@ -195,8 +194,7 @@ public class ShipmentTermDAO {
             ps.setString(1, shipmentTerm.getShipmentTermName());
             ps.setString(2, shipmentTerm.getDescription());
             ps.setTimestamp(3, shipmentTerm.getModifiedDateTime());
-            ps.setTimestamp(4, shipmentTerm.getCreatedDate());
-            ps.setString(5, shipmentTerm.getShipmentTermID());
+            ps.setString(4, shipmentTerm.getShipmentTermID());
             ps.execute();
 
             return shipmentTerm.getShipmentTermID();
@@ -221,7 +219,7 @@ public class ShipmentTermDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        String latestID = null;
+        String latestID = "";
 
         try {
             conn = SQLDatabaseConnection.openConn();

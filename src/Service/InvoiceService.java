@@ -32,7 +32,7 @@ public class InvoiceService {
 
         newIDStruct.setName("INV");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         String latestID = InvoiceDAO.getLatestCode();
         if (latestID != "") {

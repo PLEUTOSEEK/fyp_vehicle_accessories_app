@@ -35,7 +35,7 @@ public class RDNService {
 
         newIDStruct.setName("RDN");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         try {
             String latestID = ReturnDeliveryNoteDAO.getLatestCode();

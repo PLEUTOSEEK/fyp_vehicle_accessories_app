@@ -70,7 +70,7 @@ public class GeneralRulesConfigurationCONTR implements Initializable, BasicCONTR
     }
 
     public void autoClose() {
-        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
+        Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut().intValue());
         PauseTransition transitionAlert = new PauseTransition(delay1);
         this.passObj.setLoginStaff(new Staff());
         transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
@@ -100,7 +100,7 @@ public class GeneralRulesConfigurationCONTR implements Initializable, BasicCONTR
                 contentTxt);
 
         if (alertBtnClicked == ButtonType.OK) {
-            switchScene(passObj.getFxmlPaths().getLast().toString(), new BasicObjs(), BasicObjs.back);
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
         } else if (alertBtnClicked == ButtonType.CANCEL) {
             //nothing need to do, remain same page
         }

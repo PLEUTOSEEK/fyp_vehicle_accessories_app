@@ -183,7 +183,7 @@ public class InventoryDAO {
             conn = SQLDatabaseConnection.openConn();
 
             query = "SELECT "
-                    + "    Product_ID, SUM(Ready_Qty) AS TTL_READY_QTY"
+                    + "    Product_ID, SUM(Ready_Qty) AS TTL_READY_QTY "
                     + "FROM "
                     + "    Inventory "
                     + "WHERE "
@@ -203,6 +203,7 @@ public class InventoryDAO {
             //return object
             return readyStock;
         } catch (Exception e) {
+
             return null;
         } finally {
             try {
@@ -245,10 +246,12 @@ public class InventoryDAO {
 
             if (rs.next()) {
                 reservedStock = rs.getInt("TTL_ORI_RESERVED_QTY");
+                //return object
+                return reservedStock;
+            } else {
+                return null;
             }
 
-            //return object
-            return reservedStock;
         } catch (Exception e) {
             return null;
         } finally {
@@ -283,7 +286,8 @@ public class InventoryDAO {
             ps = conn.prepareStatement(query);
             // bind parameter
             ps.setInt(1, qty);
-            ps.setString(2, inventory.getInventoryID());
+            ps.setInt(2, qty);
+            ps.setString(3, inventory.getInventoryID());
 
             ps.execute();
 

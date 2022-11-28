@@ -4,6 +4,8 @@
  */
 package Controller;
 
+import BizRulesConfiguration.CustomerRules;
+import BizRulesConfiguration.StaffRules;
 import Entity.Address;
 import Entity.CollectAddress;
 import Entity.Contact;
@@ -22,10 +24,15 @@ import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.cell.MFXDateCell;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.StringFilter;
+import io.github.palexdev.materialfx.utils.SwingFXUtils;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -33,12 +40,13 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -51,12 +59,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javax.imageio.ImageIO;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
@@ -165,13 +176,14 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
     //<editor-fold defaultstate="collapsed" desc="util declarations">
     private BasicObjs passObj;
     private Validator validator = new Validator();
-    private List<CollectAddress> newCollectAddresses = new ArrayList<>(); // use to know which address been update, and perform update action for those modified address
     private List<CollectAddress> tempCollectAddresses = new ArrayList<>(); // use to know which address been update, and perform update action for those modified address
     private List<CollectAddress> collectAddresses = new ArrayList<>(); // use to know which address been update, and perform update action for those modified address
     private Customer custInDraft;
     //</editor-fold>
 
     private static List<String> rowSelected = new ArrayList<>();
+    StaffRules staffRules = new StaffRules();
+    CustomerRules custRules = new CustomerRules();
 
     /**
      * Initializes the controller class.
@@ -183,6 +195,8 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                initializeUIControls();
+                initializeComboSelections();
                 inputValidation();
                 receiveData();
                 autoClose();
@@ -201,6 +215,39 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 }
             }
         });
+    }
+
+    private void initializeUIControls() {
+        this.dtDOB.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtDOB, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isAfter(LocalDate.now())) {
+                            setDisable(true);
+                        } else {
+                            setDisable(false);
+                        }
+                    }
+                };
+
+            }
+        });
+    }
+
+    private void initializeComboSelections() {
+        ((MFXComboBox<String>) this.cmbRace).setItems(FXCollections.observableList(staffRules.getRaces()));
+        ((MFXComboBox<String>) this.cmbReligion).setItems(FXCollections.observableList(staffRules.getReligions()));
+        ((MFXComboBox<String>) this.cmbNationality).setItems(FXCollections.observableList(staffRules.getNationalities()));
+        ((MFXComboBox<String>) this.cmbHonorifics).setItems(FXCollections.observableList(staffRules.getHonorifics()));
+        ((MFXComboBox<String>) this.cmbMaritalStatus).setItems(FXCollections.observableList(staffRules.getMaritalStatuses()));
+        ((MFXComboBox<String>) this.cmbGender).setItems(FXCollections.observableList(staffRules.getGenders()));
+        ((MFXComboBox<String>) this.cmbStatus).setItems(FXCollections.observableList(custRules.getStatuses()));
+        ((MFXComboBox<String>) this.cmbCustType).setItems(FXCollections.observableList(custRules.getCustTypes()));
+        ((MFXComboBox<String>) this.cmbBankAccProvider).setItems(FXCollections.observableList(custRules.getBankAccProviders()));
     }
 
     public void autoClose() {
@@ -266,10 +313,14 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 new StringFilter<>("Mobile No.", collAddr -> collAddr.getPerson().getContact().getMobileNo())
         );
 
-        tempCollectAddresses.addAll(collectAddresses);
-        ((MFXTableView<CollectAddress>) tblVw).getItems().clear();
-        ((MFXTableView<CollectAddress>) tblVw).setItems(FXCollections.observableList(collectAddresses));
         tempCollectAddresses.clear();
+        tempCollectAddresses = collectAddresses
+                .stream()
+                .map(e -> (CollectAddress) e)
+                .collect(Collectors.toList());
+
+        ((MFXTableView<CollectAddress>) tblVw).getItems().clear();
+        ((MFXTableView<CollectAddress>) tblVw).setItems(FXCollections.observableList(tempCollectAddresses));
 
         ((MFXTableView<CollectAddress>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
             @Override
@@ -285,7 +336,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                             // action here
                             Parent root;
                             try {
-                                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/Collector_UI.fxml"));
                                 Stage stage = new Stage();
                                 stage.initModality(Modality.WINDOW_MODAL);
                                 stage.initOwner(btnBack.getScene().getWindow());
@@ -293,6 +344,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
 
                                 BasicObjs passObj = new BasicObjs();
                                 passObj.setObj(collectAddress);
+                                passObj.setObjs((List<Object>) (Object) collectAddresses);
                                 passObj.setCrud(BasicObjs.read);
 
                                 stage.setUserData(passObj);
@@ -303,16 +355,9 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     CollectAddress catchedCollectAddress = new CollectAddress();
-                                    catchedCollectAddress = (CollectAddress) receiveObj.getObj();
+                                    catchedCollectAddress = ((CollectAddress) receiveObj.getObj()).clone();
 
-                                    if (catchedCollectAddress == null) { // remove
-                                        collectAddresses.remove(collectAddress);
-                                    } else if (!collectAddresses.contains(catchedCollectAddress)) {
-                                        collectAddresses.remove(collectAddress);
-                                        collectAddresses.add(catchedCollectAddress);
-                                    } else {
-                                        collectAddresses.set(collectAddresses.indexOf(collectAddress), catchedCollectAddress);
-                                    }
+                                    collectAddresses.set(collectAddresses.indexOf(collectAddress), catchedCollectAddress);
 
                                     setupCollectAddressTable();
 
@@ -340,6 +385,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         2. Marital Status
         3. Residential Address (Postal Code have)
         4. Corresponding Address (Postal Code have)
+        5. Bank Acc No
          */
         validatorCheck
                 .dependsOn("Honorifics", this.cmbHonorifics.textProperty())
@@ -717,6 +763,29 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         validatorCheck = (new Validator()).createCheck();
 
         validatorCheck
+                .dependsOn("Customer Type", this.cmbCustType.textProperty()
+                )
+                .withMethod(c -> {
+                    String textVal = c.get("Customer Type");
+                    textVal = textVal.trim();
+                    /*
+                     1.
+                     */
+                    // allow null
+                    if (textVal.isEmpty()) {
+                        c.error("Customer Type - Required Field");
+                        return;
+                    }
+                })
+                .decorates(this.cmbCustType);
+
+        validator.add(validatorCheck);
+
+        //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
                 .dependsOn("Bank_Acc._Provider", this.cmbBankAccProvider.textProperty())
                 .withMethod(c -> {
                     String textVal = c.get("Bank_Acc._Provider");
@@ -764,34 +833,6 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                     }
                 })
                 .decorates(this.txtBankAccOwnerName);
-
-        validator.add(validatorCheck);
-
-        //=====================================
-        //=====================================
-        validatorCheck = (new Validator()).createCheck();
-
-        validatorCheck
-                .dependsOn("Bank_Acc._No", this.txtBankAccNo.textProperty())
-                .withMethod(c -> {
-                    String textVal = c.get("Bank_Acc._No");
-                    textVal = textVal.trim();
-
-                    /*
-                     1. alphabet and spaces allowed ONLY
-                     */
-                    // allow null
-                    if (textVal.isEmpty()) {
-                        return;
-                    }
-
-                    if (!textVal.matches("^[a-zA-Z ]*$")) {
-                        c.error("Bank Acc. No - ONLY letter and spaces");
-                        return;
-                    }
-
-                })
-                .decorates(this.txtBankAccNo);
 
         validator.add(validatorCheck);
 
@@ -1240,6 +1281,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         this.txtIC.setDisable(disable);
         this.cmbNationality.setDisable(disable);
         this.cmbRace.setDisable(disable);
+        this.cmbReligion.setDisable(disable);
         this.cmbMaritalStatus.setDisable(disable);
 
         this.txtMobileNo.setDisable(disable);
@@ -1320,7 +1362,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
 
                 return;
             }
-
+            custInDraft = prepareCustomerInforToObj();
             saveCustomer();
             saveCollectAddresses();
 
@@ -1339,20 +1381,23 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
 
             custInDraft.getCorAddr().setAddressID(AddressService.saveNewAddress(custInDraft.getCorAddr()));
 
+            custInDraft.getBillToAddr().setAddressID(AddressService.saveNewAddress(custInDraft.getBillToAddr()));
+
             custInDraft.setCustID(CustomerService.saveNewCustomer(custInDraft));
 
         } else if (this.passObj.getCrud().equals(BasicObjs.update) || this.passObj.getCrud().equals(BasicObjs.read)) {
 
             AddressService.updateAddress(custInDraft.getResidentialAddr());
             AddressService.updateAddress(custInDraft.getCorAddr());
+            AddressService.updateAddress(custInDraft.getBillToAddr());
 
             CustomerService.updateCustomer(custInDraft);
         }
     }
 
     public void saveCollectAddresses() {
-        for (CollectAddress collAddr : newCollectAddresses) {
-            if (!collectAddresses.contains(collAddr) && collAddr.getCollectAddrID().isEmpty()) {
+        for (CollectAddress collAddr : collectAddresses) {
+            if (collAddr.getCollectAddrID().isEmpty()) {
                 Customer customer = new Customer();
                 customer.setCustID(custInDraft.getCustID());
                 collAddr.setCustomer(customer);
@@ -1369,6 +1414,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
                 CollectAddressService.updateCollectAddress(collAddr);
             }
         }
+
     }
 
     @Override
@@ -1488,7 +1534,12 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
     private Customer prepareCustomerInforToObj() throws IOException {
         Customer customer = new Customer();
 
+        customer.setCustID(this.txtCustID.getText());
+
         Address billToAddr = new Address();
+        if (!this.passObj.getCrud().equals(BasicObjs.create)) {
+            billToAddr.setAddressID(((Customer) this.passObj.getObj()).getBillToAddr().getAddressID());
+        }
         billToAddr.setLocationName(this.txtBillToAddrLocationName.getText());
         billToAddr.setAddress(this.txtBillToAddrAddress.getText());
         billToAddr.setCity(this.txtBillToAddrCity.getText());
@@ -1498,6 +1549,9 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         customer.setBillToAddr(billToAddr);
 
         Address residentialAddr = new Address();
+        if (!this.passObj.getCrud().equals(BasicObjs.create)) {
+            residentialAddr.setAddressID(((Customer) this.passObj.getObj()).getResidentialAddr().getAddressID());
+        }
         residentialAddr.setLocationName(this.txtResidentialAddrLocationName.getText());
         residentialAddr.setAddress(this.txtResidentialAddrAddress.getText());
         residentialAddr.setCity(this.txtResidentialAddrCity.getText());
@@ -1507,6 +1561,9 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         customer.setResidentialAddr(residentialAddr);
 
         Address corrAddr = new Address();
+        if (!this.passObj.getCrud().equals(BasicObjs.create)) {
+            corrAddr.setAddressID(((Customer) this.passObj.getObj()).getCorAddr().getAddressID());
+        }
         corrAddr.setLocationName(this.txtCorAddrLocationName.getText());
         corrAddr.setAddress(this.txtCorAddrAddress.getText());
         corrAddr.setCity(this.txtCorAddrCity.getText());
@@ -1526,7 +1583,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         customer.setAvatarImg(this.imgAvatarImg.getImage() == null ? "" : ImageUtils.byteToEncodedStr(ImageUtils.imgToByte(this.imgAvatarImg.getImage())));
         customer.setName(this.txtName.getText());
         customer.setGender(this.cmbGender.getText());
-        customer.setDOB(this.dtDOB.getValue() == null ? null : (java.sql.Date) Date.from(Instant.from(this.dtDOB.getValue().atStartOfDay(ZoneId.systemDefault())))); //https://stackoverflow.com/questions/20446026/get-value-from-date-picker
+        customer.setDOB(this.dtDOB.getValue() == null ? null : Date.valueOf(this.dtDOB.getValue()));//https://stackoverflow.com/questions/20446026/get-value-from-date-picker
         customer.setIC(this.txtIC.getText());
         customer.setMaritalStatus(this.cmbMaritalStatus.getText());
         customer.setNationality(this.cmbNationality.getText());
@@ -1534,11 +1591,85 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
         customer.setOccupation(this.txtOccupation.getText());
         customer.setRace(this.cmbRace.getText());
         customer.setReligion(this.cmbReligion.getText());
+        customer.setBankAccProvider(this.cmbBankAccProvider.getText());
+        customer.setBankAccOwnerName(this.txtBankAccOwnerName.getText());
         customer.setBankAccNo(this.txtBankAccNo.getText());
         customer.setCustType(this.cmbCustType.getText());
         customer.setStatus(this.cmbStatus.getText());
 
         return customer;
+    }
+
+    @FXML
+    private void uploadImage(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+
+            try {
+                Stage stage = (Stage) btnBack.getScene().getWindow();
+
+                FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Image Files (*.png, *.jpg)", "*.png", "*.jpg");
+
+                // create a File chooser
+                FileChooser fil_chooser = new FileChooser();
+                fil_chooser.getExtensionFilters().add(filter);
+
+                // get the file selected
+                File file = fil_chooser.showOpenDialog(stage);
+
+                if (file != null) {
+                    BufferedImage bi = ImageIO.read(file);
+                    Image img = SwingFXUtils.toFXImage(bi, null);
+                    this.imgAvatarImg.setImage(img);
+
+                    /*
+                        Save Image to database
+                        bi = SwingFXUtils.fromFXImage(img, null);
+                        byte[] customerImg = ImageUtils.toByteArray(bi, "png");
+                        String bytesBase64Img = Base64.encodeBase64String(customerImg);
+                     */
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void addCollectAddress(MouseEvent event) {
+        System.out.println("i am here");
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/Collector_UI.fxml"));
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(btnBack.getScene().getWindow());
+            stage.setScene(new Scene(root));
+
+            BasicObjs passObj = new BasicObjs();
+            passObj.setCrud(BasicObjs.create);
+            passObj.setObj(new CollectAddress());
+            passObj.setObjs((List<Object>) (Object) collectAddresses);
+            stage.setUserData(passObj);
+            stage.showAndWait();
+
+            // if have any change on the selected collect address
+            if (stage.getUserData() != null) {
+
+                BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                CollectAddress catchedCollectAddress = new CollectAddress();
+                catchedCollectAddress = ((CollectAddress) receiveObj.getObj()).clone();
+
+                collectAddresses.add(catchedCollectAddress);
+
+                this.setupCollectAddressTable();
+
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }

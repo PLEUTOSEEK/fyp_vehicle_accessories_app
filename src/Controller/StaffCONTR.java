@@ -5,8 +5,6 @@
 package Controller;
 
 import BizRulesConfiguration.StaffRules;
-import DAO.AddressDAO;
-import DAO.StaffDAO;
 import Entity.Address;
 import Entity.Contact;
 import Entity.Place;
@@ -21,18 +19,20 @@ import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.cell.MFXDateCell;
 import io.github.palexdev.materialfx.utils.SwingFXUtils;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.PauseTransition;
@@ -170,6 +170,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
 
                 initializeComboSelections();
 
+                initializeUIControls();
+
                 inputValidation();
 
                 receiveData();
@@ -178,6 +180,7 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
+                        passObj.setObj(StaffService.getStaffByID(((Staff) passObj.getObj()).getStaffID()));
                         fieldFillIn();
                     } catch (IOException ex) {
                         Logger.getLogger(StaffCONTR.class.getName()).log(Level.SEVERE, null, ex);
@@ -293,7 +296,7 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
 
             this.cmbEmpType.setText(staff.getEmpType());
             this.txtWorkPlaceID.setText(staff.getWorkPlace().getPlaceID());
-            this.txtReportTo.setText(staff.getReportTo().getStaffID());
+            this.txtReportTo.setText(staff.getReportTo() == null ? "" : staff.getReportTo().getStaffID());
             this.dtEntryDate.setValue(Instant.ofEpochMilli(staff.getEntryDate().getTime())
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate());
@@ -316,9 +319,48 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
         ((MFXComboBox<String>) this.cmbMaritalStatus).setItems(FXCollections.observableList(staffRules.getMaritalStatuses()));
         ((MFXComboBox<String>) this.cmbGender).setItems(FXCollections.observableList(staffRules.getGenders()));
         ((MFXComboBox<String>) this.cmbStatus).setItems(FXCollections.observableList(staffRules.getStatuses()));
-        //((MFXComboBox<String>) this).setItems(FXCollections.observableList(staffRules.getAccStatuses()));
         ((MFXComboBox<String>) this.cmbRole).setItems(FXCollections.observableList(staffRules.getRoles()));
         ((MFXComboBox<String>) this.cmbEmpType).setItems(FXCollections.observableList(staffRules.getEmpTypes()));
+    }
+
+    private void initializeUIControls() {
+        this.dtDOB.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtDOB, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isAfter(LocalDate.now())) {
+                            setDisable(true);
+                        } else {
+                            setDisable(false);
+                        }
+                    }
+                };
+
+            }
+        });
+
+        this.dtEntryDate.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtEntryDate, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isAfter(LocalDate.now())) {
+                            setDisable(true);
+                        } else {
+                            setDisable(false);
+                        }
+                    }
+                };
+
+            }
+        });
     }
 
     @Override
@@ -531,7 +573,12 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                         return;
                     }
 
-                    return;
+                    if (!textVal.matches("^\\d{6}-\\d{2}-\\d{4}$")) {
+
+                        c.error("IC - Format not matched");
+                        return;
+
+                    }
                 })
                 .decorates(this.txtIC);
 
@@ -957,7 +1004,6 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                      1. Cannot be null
                      */
                     if (textVal.isEmpty()) {
-                        c.error("Corresponding Location Name - Required Field");
                         return;
                     }
 
@@ -980,7 +1026,6 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                      1. Cannot be null
                      */
                     if (textVal.isEmpty()) {
-                        c.error("Corresponding Address - Required Field");
                         return;
                     }
                 })
@@ -1002,7 +1047,6 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                      1. alphabet and spaces allowed ONLY
                      */
                     if (textVal.isEmpty()) {
-                        c.error("Corresponding City - Required Field");
                         return;
                     }
 
@@ -1029,7 +1073,6 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                      1. must follow regex
                      */
                     if (textVal.isEmpty()) {
-                        c.error("Corresponding Postal Code - Required Field");
                         return;
                     }
 
@@ -1056,7 +1099,6 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                      1. alphabet and spaces allowed ONLY
                      */
                     if (textVal.isEmpty()) {
-                        c.error("Corresponding State - Required Field");
 
                         return;
                     }
@@ -1084,7 +1126,6 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                      1. alphabet and spaces allowed ONLY
                      */
                     if (textVal.isEmpty()) {
-                        c.error("Corresponding Country - Required Field");
                         return;
                     }
 
@@ -1342,7 +1383,7 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
                 contentTxt);
 
         if (alertBtnClicked == ButtonType.OK) {
-            switchScene(passObj.getFxmlPaths().getLast().toString(), new BasicObjs(), BasicObjs.back);
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
         } else if (alertBtnClicked == ButtonType.CANCEL) {
             //nothing need to do, remain same page
         }
@@ -1364,8 +1405,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
             staffInDraft = prepareStaffInforToObj();
 
             if (this.passObj.getCrud().equals(BasicObjs.create)) {
-                staffInDraft.getResidentialAddr().setAddressID(AddressDAO.saveNewAddress(staffInDraft.getResidentialAddr()));
-                staffInDraft.getCorAddr().setAddressID(AddressDAO.saveNewAddress(staffInDraft.getCorAddr()));
+                staffInDraft.getResidentialAddr().setAddressID(AddressService.saveNewAddress(staffInDraft.getResidentialAddr()));
+                staffInDraft.getCorAddr().setAddressID(AddressService.saveNewAddress(staffInDraft.getCorAddr()));
                 StaffService.saveNewStaff(staffInDraft);
             } else if (this.passObj.getCrud().equals(BasicObjs.update) || this.passObj.getCrud().equals(BasicObjs.read)) {
 
@@ -1383,7 +1424,7 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
         staff.setAvatarImg(this.imgAvatarImg.getImage() == null ? "" : ImageUtils.byteToEncodedStr(ImageUtils.imgToByte(this.imgAvatarImg.getImage())));
         staff.setName(this.txtName.getText());
         staff.setGender(this.cmbGender.getText());
-        staff.setDOB(this.dtDOB.getValue() == null ? null : (java.sql.Date) Date.from(Instant.from(this.dtDOB.getValue().atStartOfDay(ZoneId.systemDefault())))); //https://stackoverflow.com/questions/20446026/get-value-from-date-picker
+        staff.setDOB(this.dtDOB.getValue() == null ? null : Date.valueOf(this.dtDOB.getValue())); //https://stackoverflow.com/questions/20446026/get-value-from-date-picker
         staff.setIC(this.txtIC.getText());
         staff.setMaritalStatus(this.cmbMaritalStatus.getText());
         staff.setNationality(this.cmbNationality.getText());
@@ -1391,22 +1432,28 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
 
         //Residential Address
         Address residentialAddr = new Address();
+        if (!this.passObj.getCrud().equals(BasicObjs.create)) {
+            residentialAddr.setAddressID(((Staff) this.passObj.getObj()).getResidentialAddr().getAddressID());
+        }
         residentialAddr.setLocationName(this.txtResidentialAddrLocationName.getText());
         residentialAddr.setAddress(this.txtResidentialAddrAddress.getText());
         residentialAddr.setCity(this.txtResidentialAddrCity.getText());
         residentialAddr.setPostalCode(this.txtResidentialAddrPostalCode.getText());
         residentialAddr.setState(this.cmbResidentialAddrState.getText());
-        residentialAddr.setState(this.cmbResidentialAddrCountry.getText());
+        residentialAddr.setCountry(this.cmbResidentialAddrCountry.getText());
         staff.setResidentialAddr(residentialAddr);
 
         //Corresponding Address
         Address corrAddr = new Address();
+        if (!this.passObj.getCrud().equals(BasicObjs.create)) {
+            corrAddr.setAddressID(((Staff) this.passObj.getObj()).getCorAddr().getAddressID());
+        }
         corrAddr.setLocationName(this.txtCorAddrLocationName.getText());
         corrAddr.setAddress(this.txtCorAddrAddress.getText());
         corrAddr.setCity(this.txtCorAddrCity.getText());
         corrAddr.setPostalCode(this.txtCorAddrPostalCode.getText());
         corrAddr.setState(this.cmbCorAddrState.getText());
-        corrAddr.setState(this.cmbCorAddrCountry.getText());
+        corrAddr.setCountry(this.cmbCorAddrCountry.getText());
         staff.setCorAddr(corrAddr);
 
         //staff contact information
@@ -1427,10 +1474,18 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
         workPlace.setPlaceID(this.txtWorkPlaceID.getText());
         staff.setWorkPlace(workPlace);
 
-        staff.setEntryDate(this.dtEntryDate.getValue() == null ? null : (java.sql.Date) Date.from(Instant.from(this.dtEntryDate.getValue().atStartOfDay(ZoneId.systemDefault()))));
-        staff.setReportTo(StaffDAO.getStaffByID(this.txtReportTo.getText()));
+        staff.setEntryDate(this.dtEntryDate.getValue() == null ? null : Date.valueOf(this.dtEntryDate.getValue()));
+
+        Staff reportTo = new Staff();
+        if (!this.txtReportTo.getText().isEmpty()) {
+            reportTo.setStaffID(this.txtReportTo.getText());
+        } else {
+            reportTo.setStaffID(null);
+        }
+        staff.setReportTo(reportTo);
+
         staff.setEmpType(this.cmbEmpType.getText());
-        staff.setPassword(null);
+
         staff.setRole(this.cmbRole.getText());
         staff.setStatus(this.cmbStatus.getText());
 

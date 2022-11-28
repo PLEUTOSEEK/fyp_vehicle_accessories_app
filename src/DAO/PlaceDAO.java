@@ -50,9 +50,10 @@ public class PlaceDAO {
                 place.setPlaceID(rs.getString("Place_ID"));
                 place.setPlaceName(rs.getString("Place_Name"));
                 place.setPlaceAddr(AddressDAO.getAddressByID(rs.getString("Address_ID")));
-                place.setDescription(rs.getString("place"));
+                place.setDescription(rs.getString("Description"));
                 place.setContact(new Contact());
                 place.getContact().setEmail(rs.getString("Email"));
+                place.getContact().setOffPhNo(rs.getString("Office_Phone_No"));
                 place.setCreatedDate(rs.getTimestamp("Created_Date"));
                 place.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
                 places.add(place);

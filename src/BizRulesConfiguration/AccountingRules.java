@@ -20,9 +20,16 @@ public class AccountingRules {
         PARTIALLY_PAID,
         COMPLETED
     }
+
+    public enum BaselineDocuments {
+        SALES_ORDER,
+        DELIVERY_ORDER,
+        INVOICE
+    }
     private List<String> pymtTerms;
     private List<String> currencyCodes;
     private List<InvoiceStatus> invoiceStatuses;
+    private List<BaselineDocuments> baselineDocs;
     private Double taxRate;
 
     public AccountingRules() {
@@ -39,6 +46,7 @@ public class AccountingRules {
         currencyCodes.add("MYR");
         taxRate = -1.00;
         invoiceStatuses = Arrays.asList(InvoiceStatus.values());
+        baselineDocs = Arrays.asList(BaselineDocuments.values());
     }
 
     public Double getTaxRate() {
@@ -74,6 +82,14 @@ public class AccountingRules {
 
     public void setInvoiceStatuses(List<InvoiceStatus> invoiceStatuses) {
         this.invoiceStatuses = invoiceStatuses;
+    }
+
+    public List<BaselineDocuments> getBaselineDocs() {
+        return baselineDocs;
+    }
+
+    public void setBaselineDocs(List<BaselineDocuments> baselineDocs) {
+        this.baselineDocs = baselineDocs;
     }
 
 }

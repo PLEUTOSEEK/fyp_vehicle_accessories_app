@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import io.github.palexdev.materialfx.controls.MFXTableView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -22,8 +23,12 @@
           <RowConstraints maxHeight="62.19998779296873" minHeight="10.0" prefHeight="46.19998779296873" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <MFXTableView fx:id="tblVw" prefHeight="302.0" prefWidth="700.0" GridPane.columnSpan="2147483647" GridPane.rowSpan="2" />
             <MFXButton id="custom" fx:id="btnCancel" minHeight="27.0" minWidth="70.0" onMousePressed="#closeModalWindow" text="Cancel" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <MFXScrollPane prefHeight="222.0" prefWidth="465.0" GridPane.columnSpan="3" GridPane.rowSpan="2">
+               <content>
+                  <MFXTableView fx:id="tblVw" prefHeight="274.0" prefWidth="700.0" />
+               </content>
+            </MFXScrollPane>
          </children>
       </GridPane>
    </children>

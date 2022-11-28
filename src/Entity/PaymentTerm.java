@@ -73,7 +73,7 @@ public class PaymentTerm extends Entity implements Cloneable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
+        int hash = 3;
         return hash;
     }
 
@@ -89,6 +89,10 @@ public class PaymentTerm extends Entity implements Cloneable {
             return false;
         }
         final PaymentTerm other = (PaymentTerm) obj;
-        return Objects.equals(this.pymtTermID, other.pymtTermID);
+        if (!Objects.equals(this.pymtTermID, other.pymtTermID)) {
+            return false;
+        }
+        return Objects.equals(this.pymtTermName, other.pymtTermName);
     }
+
 }

@@ -10,6 +10,7 @@ import Entity.TransferOrder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,47 +25,62 @@ public class TransferOrderDAO {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
-
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        transferOrder.setActualCreatedDateTime(timestamp);
+        transferOrder.setModifiedDateTime(timestamp);
         try {
             conn = SQLDatabaseConnection.openConn();
 
             query = "INSERT INTO TransferOrder ("
-                    + "TO_TO_ID, "
-                    + "TO_Req_Type, "
-                    + "TO_Req_Type_Ref, "
-                    + "TO_Person_In_Charge, "
-                    + "TO_Destination, "
-                    + "TO_Issued_By, "
-                    + "TO_Transfer_By, "
-                    + "TO_Item_Received_By, "
-                    + "TO_Status, "
-                    + "TO_Created_Date, "
-                    + "TO_Actual_Created_Date, "
-                    + "TO_Signed_Doc_Pic, "
-                    + "TO_Modified_Date_Time "
+                    + "TO_ID, "
+                    + "Req_Type, "
+                    + "Req_Type_Ref, "
+                    + "SO_ID, "
+                    + "RDN_ID, "
+                    + "Person_In_Charge, "
+                    + "Destination, "
+                    + "Issued_By, "
+                    + "Transfer_By, "
+                    + "Item_Received_By, "
+                    + "Status, "
+                    + "Created_Date, "
+                    + "Actual_Created_Date, "
+                    + "Signed_Doc_Pic, "
+                    + "Modified_Date_Time "
                     + ") "
-                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(query);
 
             // bind parameter
             ps.setString(1, transferOrder.getCode());
             ps.setString(2, transferOrder.getReqType());
-            ps.setString(3, ((SalesOrder) transferOrder.getReqTypeRef()).getCode());
-            ps.setString(4, transferOrder.getPIC().getStaffID());
-            ps.setString(5, transferOrder.getDestination().getPlaceID());
-            ps.setString(6, transferOrder.getIssuedBy().getStaffID());
-            ps.setString(7, transferOrder.getTransferBy().getStaffID());
-            ps.setString(8, transferOrder.getItemReceivedBy().getStaffID());
-            ps.setString(9, transferOrder.getStatus());
-            ps.setTimestamp(10, transferOrder.getCreatedDate());
-            ps.setTimestamp(11, transferOrder.getActualCreatedDateTime());
-            ps.setString(12, transferOrder.getSignedDocPic());
-            ps.setTimestamp(13, transferOrder.getModifiedDateTime());
+            if (transferOrder.getReqType().equals("Sales Order (SO)")) {
+                ps.setString(3, ((SalesOrder) transferOrder.getReqTypeRef()).getCode());
+                ps.setString(4, ((SalesOrder) transferOrder.getReqTypeRef()).getCode());
+                ps.setString(5, null);
+
+            } else if (transferOrder.getReqType().equals("Return Delivery Note (RDN)")) {
+                ps.setString(3, ((ReturnDeliveryNote) transferOrder.getReqTypeRef()).getCode());
+                ps.setString(4, (ReturnDeliveryNoteDAO.getReturnDeliveryNoteByCode(((ReturnDeliveryNote) transferOrder.getReqTypeRef()).getCode())).getSO().getCode());
+                ps.setString(5, ((ReturnDeliveryNote) transferOrder.getReqTypeRef()).getCode());
+            }
+            ps.setString(6, transferOrder.getPIC().getStaffID());
+            ps.setString(7, transferOrder.getDestination().getPlaceID());
+            ps.setString(8, transferOrder.getIssuedBy().getStaffID());
+            ps.setString(9, transferOrder.getTransferBy().getStaffID());
+            ps.setString(10, transferOrder.getItemReceivedBy().getStaffID());
+            ps.setString(11, transferOrder.getStatus());
+            ps.setTimestamp(12, transferOrder.getCreatedDate());
+            ps.setTimestamp(13, transferOrder.getActualCreatedDateTime());
+            ps.setString(14, transferOrder.getSignedDocPic());
+            ps.setTimestamp(15, transferOrder.getModifiedDateTime());
 
             ps.execute();
 
             return transferOrder.getCode();
         } catch (Exception e) {
+            System.out.println("TO INSERT " + e.getMessage());
+
             return null;
         } finally {
             try {
@@ -116,7 +132,7 @@ public class TransferOrderDAO {
                 transferOrder.setItemReceivedBy(StaffDAO.getStaffByID(rs.getString("TO_Item_Received_By")));
                 transferOrder.setStatus(rs.getString("TO_Status"));
                 transferOrder.setCreatedDate(rs.getTimestamp("TO_Created_Date"));
-                transferOrder.setActualCreatedDateTime(rs.getTimestamp(rs.getString("TO_Actual_Created_Date")));
+                transferOrder.setActualCreatedDateTime(rs.getTimestamp("TO_Actual_Created_Date"));
                 transferOrder.setSignedDocPic(rs.getString("TO_Signed_Doc_Pic"));
                 transferOrder.setModifiedDateTime(rs.getTimestamp("TO_Modified_Date_Time"));
                 return transferOrder;
@@ -126,6 +142,7 @@ public class TransferOrderDAO {
 
             //return object
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -164,10 +181,10 @@ public class TransferOrderDAO {
                 transferOrder.setCode(rs.getString("TO_TO_ID"));
                 transferOrder.setReqType(rs.getString("TO_Req_Type"));
 
-                if (transferOrder.getReqType().equals("SO")) {
+                if (transferOrder.getReqType().equals("Sales Order (SO)")) {
                     transferOrder.setReqTypeRef(new SalesOrder());
                     ((SalesOrder) transferOrder.getReqTypeRef()).setCode(rs.getString("TO_Req_Type_Ref"));
-                } else if (transferOrder.getReqType().equals("RDN")) {
+                } else if (transferOrder.getReqType().equals("Return Delivery Note (RDN)")) {
                     transferOrder.setReqTypeRef(new ReturnDeliveryNote());
                     ((ReturnDeliveryNote) transferOrder.getReqTypeRef()).setCode(rs.getString("TO_Req_Type_Ref"));
                 }
@@ -179,7 +196,7 @@ public class TransferOrderDAO {
                 transferOrder.setItemReceivedBy(StaffDAO.getStaffByID(rs.getString("TO_Item_Received_By")));
                 transferOrder.setStatus(rs.getString("TO_Status"));
                 transferOrder.setCreatedDate(rs.getTimestamp("TO_Created_Date"));
-                transferOrder.setActualCreatedDateTime(rs.getTimestamp(rs.getString("TO_Actual_Created_Date")));
+                transferOrder.setActualCreatedDateTime(rs.getTimestamp("TO_Actual_Created_Date"));
                 transferOrder.setSignedDocPic(rs.getString("TO_Signed_Doc_Pic"));
                 transferOrder.setModifiedDateTime(rs.getTimestamp("TO_Modified_Date_Time"));
                 transferOrders.add(transferOrder);
@@ -189,6 +206,7 @@ public class TransferOrderDAO {
             //return object
             return transferOrders;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -209,7 +227,7 @@ public class TransferOrderDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        String latestCode = null;
+        String latestCode = "";
 
         try {
             conn = SQLDatabaseConnection.openConn();
@@ -228,7 +246,8 @@ public class TransferOrderDAO {
 
             //return object
         } catch (Exception e) {
-            return null;
+            System.out.println("TO Code generator " + e.getMessage());
+            return "";
         } finally {
             try {
                 ps.close();
@@ -247,30 +266,34 @@ public class TransferOrderDAO {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
-
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        transferOrder.setModifiedDateTime(timestamp);
         try {
             conn = SQLDatabaseConnection.openConn();
 
             query = "UPDATE TransferOrder SET "
-                    + "TO_Req_Type = ?, "
-                    + "TO_Req_Type_Ref = ?, "
-                    + "TO_Person_In_Charge = ?, "
-                    + "TO_Destination = ?, "
-                    + "TO_Issued_By = ?, "
-                    + "TO_Transfer_By = ?, "
-                    + "TO_Item_Received_By = ?, "
-                    + "TO_Status = ?, "
-                    + "TO_Created_Date = ?, "
-                    + "TO_Actual_Created_Date = ?, "
-                    + "TO_Signed_Doc_Pic = ?, "
-                    + "TO_Modified_Date_Time = ? "
+                    + "Req_Type = ?, "
+                    + "Req_Type_Ref = ?, "
+                    + "Person_In_Charge = ?, "
+                    + "Destination = ?, "
+                    + "Issued_By = ?, "
+                    + "Transfer_By = ?, "
+                    + "Item_Received_By = ?, "
+                    + "Status = ?, "
+                    + "Created_Date = ?, "
+                    + "Signed_Doc_Pic = ?, "
+                    + "Modified_Date_Time = ? "
                     + "WHERE "
-                    + "TO_TO_ID = ? ; ";
+                    + "TO_ID = ? ; ";
             ps = conn.prepareStatement(query);
 
             // bind parameter
             ps.setString(1, transferOrder.getReqType());
-            ps.setString(2, ((SalesOrder) transferOrder.getReqTypeRef()).getCode());
+            if (transferOrder.getReqType().equals("Sales Order (SO)")) {
+                ps.setString(2, ((SalesOrder) transferOrder.getReqTypeRef()).getCode());
+            } else if (transferOrder.getReqType().equals("Return Delivery Note (RDN)")) {
+                ps.setString(2, ((ReturnDeliveryNote) transferOrder.getReqTypeRef()).getCode());
+            }
             ps.setString(3, transferOrder.getPIC().getStaffID());
             ps.setString(4, transferOrder.getDestination().getPlaceID());
             ps.setString(5, transferOrder.getIssuedBy().getStaffID());
@@ -278,14 +301,15 @@ public class TransferOrderDAO {
             ps.setString(7, transferOrder.getItemReceivedBy().getStaffID());
             ps.setString(8, transferOrder.getStatus());
             ps.setTimestamp(9, transferOrder.getCreatedDate());
-            ps.setTimestamp(10, transferOrder.getActualCreatedDateTime());
-            ps.setString(11, transferOrder.getSignedDocPic());
-            ps.setTimestamp(12, transferOrder.getModifiedDateTime());
-            ps.setString(13, transferOrder.getCode());
+            ps.setString(10, transferOrder.getSignedDocPic());
+            ps.setTimestamp(11, transferOrder.getModifiedDateTime());
+            ps.setString(12, transferOrder.getCode());
             ps.execute();
 
             return transferOrder.getCode();
         } catch (Exception e) {
+            System.out.println("TO updatre " + e.getMessage());
+
             return null;
         } finally {
             try {

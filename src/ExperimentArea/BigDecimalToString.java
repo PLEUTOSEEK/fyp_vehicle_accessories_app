@@ -5,6 +5,8 @@
 package ExperimentArea;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.Calendar;
 
 /**
  *
@@ -13,6 +15,8 @@ import java.math.BigDecimal;
 public class BigDecimalToString {
 
     public static void main(String[] args) {
+        Date cuyrrentDate = new Date(Calendar.getInstance().getTimeInMillis());
+        System.out.println(cuyrrentDate);
         BigDecimal a = new BigDecimal("9879588600.00");
         String aa = new java.text.DecimalFormat("$ #,##0.00").format(a);
         System.out.println(aa);

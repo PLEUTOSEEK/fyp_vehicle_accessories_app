@@ -32,6 +32,6 @@ public class InventoryService {
     }
 
     public static boolean reserveQtyForSalesDoc(Item item) {
-        return reserveQtyForSalesDoc(item);
+        return InventoryDAO.reserveQtyForSalesDoc(item);
     }
 }

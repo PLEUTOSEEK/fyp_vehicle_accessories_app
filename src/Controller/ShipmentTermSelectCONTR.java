@@ -13,7 +13,9 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -48,17 +50,25 @@ public class ShipmentTermSelectCONTR implements Initializable {
     private Validator validator = new Validator();
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        inputValidation();
-        receiveData();
+    public void initialize(URL url, ResourceBundle rb) {        // TODO
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                inputValidation();
 
-        if (passObj.getCrud().equals(BasicObjs.create)) {
-            defaultValFillIn();
-        }
+                receiveData();
 
-        if (passObj.getCrud().equals(BasicObjs.read)) {
-            fieldFillIn();
-        }
+                if (passObj.getCrud()
+                        .equals(BasicObjs.create)) {
+                    defaultValFillIn();
+                }
+
+                if (passObj.getCrud()
+                        .equals(BasicObjs.read)) {
+                    fieldFillIn();
+                }
+            }
+        });
     }
 
     public void autoClose() {
@@ -154,20 +164,24 @@ public class ShipmentTermSelectCONTR implements Initializable {
                     }
 
                     if (passObj.getObjs().size() > 0) {
-                        List<ShipmentTerm> paymentTerms = (List<ShipmentTerm>) (ShipmentTerm) passObj.getObjs();
+                        List<ShipmentTerm> shipmentTerms = passObj.getObjs()
+                                .stream()
+                                .map(e -> (ShipmentTerm) e)
+                                .collect(Collectors.toList());
+
                         ShipmentTerm passInShipmentTerm = (ShipmentTerm) passObj.getObj();
 
                         if (passObj.getCrud().equals(BasicObjs.read)) {
 
-                            for (ShipmentTerm shipmentTerm : paymentTerms) {
+                            for (ShipmentTerm shipmentTerm : shipmentTerms) {
                                 if (shipmentTerm.getShipmentTermName().toLowerCase().equals(textVal.toLowerCase())
-                                        && !shipmentTerm.getShipmentTermID().equals(passInShipmentTerm.getShipmentTermID())) {
+                                        && !shipmentTerm.equals(passInShipmentTerm)) {
                                     c.error("Shipment Term Name - Must be unique");
                                     return;
                                 }
                             }
                         } else {
-                            for (ShipmentTerm shipmentTerm : paymentTerms) {
+                            for (ShipmentTerm shipmentTerm : shipmentTerms) {
                                 if (shipmentTerm.getShipmentTermName().toLowerCase().equals(textVal.toLowerCase())) {
                                     c.error("Shipment Term Name - Must be unique");
                                     return;

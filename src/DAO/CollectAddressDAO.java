@@ -194,6 +194,7 @@ public class CollectAddressDAO {
             }
 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -221,7 +222,7 @@ public class CollectAddressDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "INSERT INTO "
+            query = "INSERT INTO CollectAddress "
                     + "(Collect_Address_ID, "
                     + "Address_ID, "
                     + "Customer_ID, "
@@ -275,6 +276,7 @@ public class CollectAddressDAO {
             ps.execute();
             return collectAddr.getCollectAddrID();
         } catch (Exception e) {
+            System.out.println("Collector Insert" + e.getMessage());
             return null;
         } finally {
             try {
@@ -322,7 +324,6 @@ public class CollectAddressDAO {
                     + "Occupation = ?, "
                     + "Race = ?, "
                     + "Religion = ?, "
-                    + "Created_Date = ?, "
                     + "Modified_Date_Time = ? "
                     + "WHERE "
                     + "Collect_Address_ID = ?";
@@ -348,14 +349,15 @@ public class CollectAddressDAO {
             ps.setString(18, collAddr.getPerson().getOccupation());
             ps.setString(19, collAddr.getPerson().getRace());
             ps.setString(20, collAddr.getPerson().getReligion());
-            ps.setTimestamp(21, collAddr.getCreatedDate());
-            ps.setTimestamp(22, collAddr.getModifiedDateTime());
-            ps.setString(23, collAddr.getCollectAddrID());
+            ps.setTimestamp(21, collAddr.getModifiedDateTime());
+            ps.setString(22, collAddr.getCollectAddrID());
 
             ps.execute();
 
             return collAddr.getCollectAddrID();
         } catch (Exception e) {
+            System.out.println("Collector Update" + e.getMessage());
+
             return null;
         } finally {
             try {
@@ -443,6 +445,45 @@ public class CollectAddressDAO {
 
             //return object
             return collectAddrs;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static String getLatestID() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        String latestID = null;
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT * FROM View_CollectAddress_LatestID";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                latestID = rs.getString("Collect_Address_ID");
+            }
+
+            return latestID;
+
+            //return object
         } catch (Exception e) {
             return null;
         } finally {

@@ -39,7 +39,6 @@ public class SalesRules {
         NEW,
         ON_HOLD,
         IN_PROGRESS,
-        PARTIALLY_COMPLETED,
         COMPLETED
     }
 

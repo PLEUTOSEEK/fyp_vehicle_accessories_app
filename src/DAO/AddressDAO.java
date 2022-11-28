@@ -105,6 +105,7 @@ public class AddressDAO {
 
             return address.getAddressID();
         } catch (Exception e) {
+            System.out.println("Address Insert" + e.getMessage());
             return null;
         } finally {
             try {
@@ -176,7 +177,6 @@ public class AddressDAO {
                     + "Postal_Code = ?, "
                     + "State = ?, "
                     + "Country = ?, "
-                    + "Created_Date = ?, "
                     + "Modified_Date_Time = ? "
                     + "WHERE "
                     + "Address_ID = ?";
@@ -188,13 +188,13 @@ public class AddressDAO {
             ps.setString(4, addr.getPostalCode());
             ps.setString(5, addr.getState());
             ps.setString(6, addr.getCountry());
-            ps.setTimestamp(7, addr.getCreatedDate());
-            ps.setTimestamp(8, addr.getModifiedDateTime());
-            ps.setString(9, addr.getAddressID());
+            ps.setTimestamp(7, addr.getModifiedDateTime());
+            ps.setString(8, addr.getAddressID());
 
             ps.execute();
             return addr.getAddressID();
         } catch (Exception e) {
+            System.out.println("Address Update" + e.getMessage());
             return null;
         } finally {
             try {

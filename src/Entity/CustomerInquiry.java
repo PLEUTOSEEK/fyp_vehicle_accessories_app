@@ -135,35 +135,40 @@ public class CustomerInquiry extends Document {
     }
 
     public BigDecimal getGross() {
+        gross = gross.setScale(2, BigDecimal.ROUND_HALF_EVEN);
         return gross;
     }
 
     public void setGross(BigDecimal gross) {
-        this.gross = gross;
+        this.gross = gross.setScale(2, BigDecimal.ROUND_HALF_EVEN);
     }
 
     public BigDecimal getDiscount() {
+        discount = discount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
         return discount;
     }
 
     public void setDiscount(BigDecimal discount) {
-        this.discount = discount;
+        this.discount = discount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
     }
 
     public BigDecimal getSubTotal() {
+        subTotal = this.gross.subtract(this.discount);
+        subTotal = subTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
         return subTotal;
     }
 
     public void setSubTotal(BigDecimal subTotal) {
-        this.subTotal = subTotal;
+        this.subTotal = subTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);;
     }
 
     public BigDecimal getNett() {
+        nett = nett.setScale(2, BigDecimal.ROUND_HALF_EVEN);
         return nett;
     }
 
     public void setNett(BigDecimal nett) {
-        this.nett = nett;
+        this.nett = nett.setScale(2, BigDecimal.ROUND_HALF_EVEN);
     }
 
     public Staff getIssuedBy() {

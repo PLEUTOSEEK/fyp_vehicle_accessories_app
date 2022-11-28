@@ -33,7 +33,7 @@ public class TransferOrderService {
 
         newIDStruct.setName("TO");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         String latestID = TransferOrderDAO.getLatestCode();
         if (latestID != "") {

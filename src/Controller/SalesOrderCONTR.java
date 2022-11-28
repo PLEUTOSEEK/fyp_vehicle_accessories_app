@@ -9,6 +9,7 @@ import BizRulesConfiguration.SalesRules;
 import BizRulesConfiguration.WarehouseRules;
 import Entity.CollectAddress;
 import Entity.Customer;
+import Entity.Inventory;
 import Entity.Item;
 import Entity.PaymentTerm;
 import Entity.Quotation;
@@ -17,6 +18,7 @@ import Entity.ShipmentTerm;
 import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.GeneralRulesService;
+import Service.InventoryService;
 import Service.ItemService;
 import Service.QuotationService;
 import Service.SalesOrderService;
@@ -29,6 +31,7 @@ import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.cell.MFXDateCell;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.DoubleFilter;
 import io.github.palexdev.materialfx.filter.IntegerFilter;
@@ -36,6 +39,7 @@ import io.github.palexdev.materialfx.filter.StringFilter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -43,12 +47,15 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -72,6 +79,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * FXML Controller class
@@ -169,6 +177,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
     SalesRules salesRules = new SalesRules();
 
+    private List<Item> oriItems = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
+
     private List<Item> items = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
 
     private List<Item> tempItems = new ArrayList<>(); // use to know which Item been update, and perform update action for those modified address
@@ -184,13 +194,13 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        setupItemTable();
 
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
 
                 initializeComboSelections();
+                initializeUIControls();
                 inputValidation();
                 receiveData();
                 autoClose();
@@ -211,11 +221,40 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                     } else if (passObj.getObj() instanceof Quotation) {
                         items.addAll(ItemService.getItemByQuotID(((Quotation) passObj.getObj()).getCode()));
                     }
+
+                    oriItems = items
+                            .stream()
+                            .map(e -> (Item) e)
+                            .collect(Collectors.toList());
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read)) {
                     isViewMode(true);
                 }
+
+                setupItemTable();
+
+            }
+        });
+    }
+
+    private void initializeUIControls() {
+        this.dtReqDlvrDate.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtReqDlvrDate, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isAfter(LocalDate.now())) {
+                            setDisable(false);
+                        } else {
+                            setDisable(true);
+                        }
+                    }
+                };
+
             }
         });
     }
@@ -239,7 +278,6 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         // Product ID
         MFXTableColumn<Item> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(item -> item.getProduct() == null ? "" : item.getProduct().getProdID()));
         // Inventory ID
-        MFXTableColumn<Item> inventoryIDCol = new MFXTableColumn<>("Inventory ID", true, Comparator.comparing(item -> item.getInventory() == null ? "" : item.getInventory().getInventoryID()));
         // Remarks
         MFXTableColumn<Item> remarksCol = new MFXTableColumn<>("Remarks", true, Comparator.comparing(item -> item.getRemark()));
         // Quantity
@@ -258,7 +296,6 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         // Product ID
         prodIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? "" : item.getProduct().getProdID()));
         // Inventory ID
-        inventoryIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getInventory() == null ? "" : item.getInventory().getInventoryID()));
         // Remarks
         remarksCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getRemark()));
         // Quantity
@@ -277,7 +314,6 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getTableColumns().clear();
         ((MFXTableView<Item>) tblVw).getTableColumns().addAll(
                 prodIDCol,
-                inventoryIDCol,
                 remarksCol,
                 qtyCol,
                 unitPriceCol,
@@ -291,7 +327,6 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
         ((MFXTableView<Item>) tblVw).getFilters().addAll(
                 new StringFilter<>("Product ID", item -> item.getProduct() == null ? "" : item.getProduct().getProdID()),
-                new StringFilter<>("Inventory ID", item -> item.getInventory() == null ? "" : item.getInventory().getInventoryID()),
                 new StringFilter<>("Remark", item -> item.getRemark()),
                 new IntegerFilter<>("Quantity", item -> item.getQty()),
                 new DoubleFilter<>("Unit Price", item -> item.getUnitPrice().doubleValue()),
@@ -352,15 +387,20 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     Item catchedItem = new Item();
-                                    catchedItem = ((Item) receiveObj.getObj()).clone();
+                                    catchedItem = ((Item) receiveObj.getObj());
 
                                     if (catchedItem.getProduct() == null) { // remove
                                         items.remove(item);
-                                    } else if (!items.contains(catchedItem)) {
-                                        items.remove(item);
-                                        items.add(catchedItem);
                                     } else {
-                                        items.set(items.indexOf(item), catchedItem);
+
+                                        if (isDemandOverReadyStock(catchedItem) == false) {
+                                            if (!items.contains(catchedItem)) {
+                                                items.remove(item);
+                                                items.add(catchedItem);
+                                            } else {
+                                                items.set(items.indexOf(item), catchedItem);
+                                            }
+                                        }
                                     }
 
                                     setupItemTable();
@@ -386,7 +426,7 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         this.txtSubTtl.setText("0.00");
         this.txtDiscount.setText("0.00");
         this.txtNett.setText("0.00");
-        this.txtSalesPerson.setText(HomePageCONTR.logInStaff.getStaffID());
+        this.txtSalesPerson.setText(passObj.getLoginStaff().getStaffID());
         this.cmbStatus.setText(SalesRules.SOStatus.NEW.toString());
     }
 
@@ -521,7 +561,7 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                 contentTxt);
 
         if (alertBtnClicked == ButtonType.OK) {
-            switchScene(passObj.getFxmlPaths().getLast().toString(), new BasicObjs(), BasicObjs.back);
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
         } else if (alertBtnClicked == ButtonType.CANCEL) {
             //nothing need to do, remain same page
         }
@@ -926,7 +966,13 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         so.setCreatedDate(this.dtRefDate.getValue() == null ? null : Timestamp.valueOf(this.dtRefDate.getValue().atStartOfDay()));
 
         Quotation quotation = new Quotation();
-        quotation.setCode(this.txtQuotRef.getText());
+        if (isBlank(this.txtQuotRef.getText())) {
+            quotation.setCode(null);
+
+        } else {
+            quotation.setCode(this.txtQuotRef.getText());
+
+        }
         so.setQuotRef(quotation);
 
         so.setCustPOReference(this.txtCustPORef.getText());
@@ -946,15 +992,27 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         so.setNett(new BigDecimal(this.txtNett.getText()));
 
         Staff issuedBy = new Staff();
-        issuedBy.setStaffID(this.txtIssuedBy.getText());
+        if (isBlank(this.txtIssuedBy.getText())) {
+            issuedBy.setStaffID(null);
+        } else {
+            issuedBy.setStaffID(this.txtIssuedBy.getText());
+        }
         so.setIssuedBy(issuedBy);
 
         Staff releasedAVerifiedBy = new Staff();
-        releasedAVerifiedBy.setStaffID(this.txtReleeaseAVerifiedBy.getText());
+        if (isBlank(this.txtReleeaseAVerifiedBy.getText())) {
+            releasedAVerifiedBy.setStaffID(null);
+        } else {
+            releasedAVerifiedBy.setStaffID(this.txtReleeaseAVerifiedBy.getText());
+        }
         so.setReleasedAVerifiedBy(releasedAVerifiedBy);
 
         CollectAddress customerSignature = new CollectAddress();
-        customerSignature.setCollectAddrID(this.txtCustSignature.getText());
+        if (isBlank(this.txtCustSignature.getText())) {
+            customerSignature.setCollectAddrID(null);
+        } else {
+            customerSignature.setCollectAddrID(this.txtCustSignature.getText());
+        }
         so.setCustomerSignature(customerSignature);
 
         so.setSignedDocPic(this.lblImgStrs.getText());
@@ -1091,20 +1149,20 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                     Quotation quotation = (Quotation) receiveObj.getObj();
-
-                    if (quotation.getStatus().equals(SalesRules.QuotStatus.NEW)) {
+                    if (quotation.getQuotValidityDate().after(new Date(Calendar.getInstance().getTimeInMillis()))
+                            && quotation.getStatus().equals(SalesRules.QuotStatus.NEW.toString())) {
                         this.passObj.setObj(quotation);
-
+                        defaultValFillIn();
                         fieldFillIn();
-
+                        items.clear();
                         items.addAll(ItemService.getItemsByCIID(quotation.getCode()));
-
                         setupItemTable();
+                        calculateTotalInformation(items);
                     } else {
                         alertDialog(Alert.AlertType.INFORMATION,
                                 "Information",
                                 "Document Blocked Message",
-                                "Quotation without NEW status are not allowed to become any document reference.");
+                                "Quotation without NEW status or exceed quotation validity date are not allowed to become any document reference.");
                     }
 
                 }
@@ -1270,12 +1328,15 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
                 BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                 Item catchedItem = new Item();
-                catchedItem = (Item) receiveObj.getObj();
 
-                if (!items.contains(catchedItem)) {
-                    items.add(catchedItem);
-                } else {
-                    items.set(items.indexOf(catchedItem), catchedItem);
+                catchedItem = ((Item) receiveObj.getObj());
+
+                if (isDemandOverReadyStock(catchedItem) == false) {
+                    if (!items.contains(catchedItem)) {
+                        items.add(catchedItem);
+                    } else {
+                        items.set(items.indexOf(catchedItem), catchedItem);
+                    }
                 }
 
                 setupItemTable();
@@ -1298,7 +1359,11 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
             salesOrder.setDiscount(salesOrder.getDiscount().add(item.getDiscAmt()));
         }
 
-        salesOrder.setNett(salesOrder.getSubTotal().multiply(new BigDecimal(1 + (accRules.getTaxRate() / 100))));
+        if (salesOrder.getSubTotal().equals(BigDecimal.ZERO)) {
+            salesOrder.setNett(BigDecimal.ZERO);
+        } else {
+            salesOrder.setNett(salesOrder.getSubTotal().multiply(new BigDecimal(1 + (accRules.getTaxRate() / 100))));
+        }
 
         this.txtGross.setText(salesOrder.getGross().toString());
         this.txtDiscount.setText(salesOrder.getDiscount().toString());
@@ -1330,6 +1395,12 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
             for (Item i : soInDraft.getItems()) {
                 i.setOriQty(i.getQty());
+            }
+
+            soInDraft.setItems(reserveStock());
+
+            for (Item item : soInDraft.getItems()) {
+                InventoryService.reserveQtyForSalesDoc(item);
             }
 
             ItemService.updateItemsByDoc(soInDraft.getItems(), soInDraft.getCode());
@@ -1399,6 +1470,68 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private List<Item> reserveStock() {
+        for (Item item : oriItems) {
+            InventoryService.freeUpReservedQtyByInventoryID(item.getInventory(), item.getOriQty());
+        }
+
+        List<Item> finalItems = new ArrayList<>();
+
+        for (Item item : items) {
+            List<Inventory> inventories = new ArrayList<>();
+            inventories = InventoryService.getReadyInventoriesByProdID(item.getProduct().getProdID(), item.getOriQty());
+
+            int oriQty = item.getOriQty();
+
+            for (Inventory inventory : inventories) {
+                Item cloneItem = item.clone();
+
+                if (oriQty > inventory.getReadyQty()) {
+                    cloneItem.setQty(inventory.getReadyQty());
+                    oriQty -= inventory.getReadyQty();
+                } else {
+                    cloneItem.setQty(oriQty);
+                }
+                cloneItem.setOriQty(cloneItem.getQty());
+                cloneItem.setInventory(inventory);
+
+                finalItems.add(cloneItem);
+            }
+        }
+
+        return finalItems;
+
+    }
+
+    private boolean isDemandOverReadyStock(Item item) {
+        Integer ttlDemandQty = 0;
+
+        ttlDemandQty += item.getOriQty();
+        Integer ttlReadyQty = InventoryService.getInventoryReadyQtyByProdID(item.getProduct().getProdID());
+
+        for (Item itm : oriItems) {
+            if (itm.getProduct().getProdID().equals(item.getProduct().getProdID())) {
+                ttlReadyQty += itm.getOriQty();
+            }
+        }
+
+        for (Item itm : items) {
+            if (itm.getProduct().getProdID().equals(item.getProduct().getProdID())
+                    && !itm.equals(item)) {
+                ttlDemandQty += itm.getOriQty();
+            }
+        }
+
+        if (ttlDemandQty > ttlReadyQty) {
+            alertDialog(Alert.AlertType.WARNING,
+                    "Warning",
+                    "Insufficient Stock Alert", "Ready Qty = " + ttlReadyQty + "\nDemand Qty = " + ttlDemandQty + "\nKindly make Demand Qty below or equal Ready Qty.");
+            return true;
+        } else {
+            return false;
         }
     }
 }

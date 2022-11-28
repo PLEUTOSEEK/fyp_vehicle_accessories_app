@@ -5,12 +5,13 @@
 package Entity;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  *
  * @author Tee Zhuo Xuan
  */
-public class CollectAddress extends Entity {
+public class CollectAddress extends Entity implements Cloneable {
 
     private String collectAddrID;
     private Customer customer;
@@ -62,13 +63,41 @@ public class CollectAddress extends Entity {
     }
 
     @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.collectAddrID);
+        hash = 89 * hash + Objects.hashCode(this.person);
+        return hash;
+    }
+
+    @Override
     public boolean equals(Object obj) {
-        if (obj instanceof CollectAddress) {
-            CollectAddress collAddr = ((CollectAddress) obj);
-            if (this.getCollectAddrID().equals(collAddr.getCollectAddrID())) {
-                return true;
-            }
+        if (this == obj) {
+            return true;
         }
-        return false;
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CollectAddress other = (CollectAddress) obj;
+        if (!Objects.equals(this.collectAddrID, other.collectAddrID)) {
+            return false;
+        }
+        return Objects.equals(this.person, other.person);
+    }
+
+    @Override
+    public CollectAddress clone() {
+        CollectAddress clonedCollectAddr = null;
+        try {
+            clonedCollectAddr = (CollectAddress) super.clone();
+
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return clonedCollectAddr;
     }
 }

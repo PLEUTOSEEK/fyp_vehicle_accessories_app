@@ -7,6 +7,7 @@ package Service;
 import DAO.StaffDAO;
 import Entity.Staff;
 import Structures.CodeStructure;
+import Utils.GeneratePassword;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,7 +33,7 @@ public class StaffService {
 
         newIDStruct.setName("S");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         String latestID = StaffDAO.getLatestID();
         if (latestID != "") {
@@ -50,6 +51,9 @@ public class StaffService {
     }
 
     public static String saveNewStaff(Staff staff) {
+        staff.setIsFrozen(false);
+        staff.setResetPassNextLogin(false);
+        staff.setPassword(GeneratePassword.generateSecurePassword());
         staff.setStaffID(generateID());
         return StaffDAO.saveNewStaff(staff);
     }
@@ -60,5 +64,9 @@ public class StaffService {
 
     public static List<Staff> getAllStaff() {
         return StaffDAO.getAllStaff();
+    }
+
+    public static Object getStaffByID(String staffID) {
+        return StaffDAO.getStaffByID(staffID);
     }
 }

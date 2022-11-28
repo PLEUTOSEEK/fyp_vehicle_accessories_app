@@ -24,7 +24,7 @@ public class ItemService {
         return ItemDAO.getItemsByCode(code);
     }
 
-    public static Collection<? extends Item> getItemBySOID(String code) {
+    public static List<Item> getItemBySOID(String code) {
         return ItemDAO.getItemsByCode(code);
     }
 
@@ -57,6 +57,10 @@ public class ItemService {
     }
 
     public static Collection<? extends Item> getItemNotYetPaidByInvoice(String code) {
+        return ItemDAO.getItemsByCode(code);
+    }
+
+    public static Collection<? extends Item> getItemByPSID(String code) {
         return ItemDAO.getItemsByCode(code);
     }
 

@@ -35,7 +35,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <MFXTextField fx:id="txtSessionTimeOut" alignment="CENTER_RIGHT" allowEdit="false" editable="false" floatingText="Session Time Out (sec)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="170.0" textLimit="20" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <MFXTextField fx:id="txtSessionTimeOut" alignment="CENTER_RIGHT" floatingText="Session Time Out (sec)" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="170.0" textLimit="20" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="633.0" styleClass="entity-header-label" stylesheets="@../../css/labels.css" text="General Rules" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1">
                <font>
                   <Font name="Arial monospaced for SAP Bold" size="52.0" />

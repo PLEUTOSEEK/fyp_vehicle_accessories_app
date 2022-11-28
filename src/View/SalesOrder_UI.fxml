@@ -21,7 +21,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<fx:root id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" stylesheets="@../Material/css/Buttons.css" type="AnchorPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SalesOrderCONTR">
+<AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" stylesheets="@../Material/css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SalesOrderCONTR">
     <children>
         <MFXScrollPane minHeight="785.0" minWidth="1532.0" prefHeight="786.0" prefWidth="1533.0" styleClass="grid-pane" trackColor="#828282" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <content>
@@ -333,4 +333,4 @@
         <MFXButton id="custom" fx:id="btnDiscard" layoutX="1331.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" onMousePressed="#discardCurrentData" text="Discard" />
       <MFXButton fx:id="btnSave" buttonType="RAISED" layoutX="1430.0" layoutY="741.0" minHeight="27.0" minWidth="70.0" onMousePressed="#saveSO" styleClass="outline-button" text="Save" />
     </children>
-</fx:root>
+</AnchorPane>

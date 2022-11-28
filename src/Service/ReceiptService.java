@@ -32,7 +32,7 @@ public class ReceiptService {
 
         newIDStruct.setName("RCPT");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         String latestID = ReceiptDAO.getLatestCode();
 

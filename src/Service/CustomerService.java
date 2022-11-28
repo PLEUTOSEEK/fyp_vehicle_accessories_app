@@ -46,7 +46,7 @@ public class CustomerService {
 
         newIDStruct.setName("CUST");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
         String latestID = CustomerDAO.getLatestID();
         if (latestID != "") {

@@ -5,7 +5,6 @@
 package Service;
 
 import DAO.CollectAddressDAO;
-import DAO.CustomerDAO;
 import Entity.CollectAddress;
 import Structures.CodeStructure;
 import java.sql.Timestamp;
@@ -48,9 +47,9 @@ public class CollectAddressService {
 
         newIDStruct.setName("COLL");
         newIDStruct.setYear(currentYr);
-        newIDStruct.setYear(currenMth);
+        newIDStruct.setMonth(currenMth);
 
-        String latestID = CustomerDAO.getLatestID();
+        String latestID = CollectAddressDAO.getLatestID();
         if (latestID != "") {
             latestIDStruct = CodeStructure.strToStruct(latestID);
             if (latestIDStruct.getYear().equals(newIDStruct.getYear()) && latestIDStruct.getMonth().equals(newIDStruct.getMonth())) {

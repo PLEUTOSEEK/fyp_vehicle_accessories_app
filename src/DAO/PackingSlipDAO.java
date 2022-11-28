@@ -24,7 +24,6 @@ public class PackingSlipDAO {
         String query = "";
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        packingSlip.setCreatedDate(timestamp);
         packingSlip.setActualCreatedDateTime(timestamp);
         packingSlip.setModifiedDateTime(timestamp);
 
@@ -32,22 +31,25 @@ public class PackingSlipDAO {
             conn = SQLDatabaseConnection.openConn();
 
             query = "INSERT INTO PackingSlip( "
-                    + "PS_ID,"
-                    + "TO_ID,"
+                    + "PS_ID, "
+                    + "TO_ID, "
+                    + "Status, "
                     + "Actual_Created_Date, "
                     + "Modified_Date_Time "
                     + ") "
-                    + "VALUES (?,?,?,?);";
+                    + "VALUES (?,?,?,?,?);";
             ps = conn.prepareStatement(query);
             // bind parameter
             ps.setString(1, packingSlip.getCode());
             ps.setString(2, packingSlip.getTO().getCode());
-            ps.setTimestamp(3, packingSlip.getActualCreatedDateTime());
-            ps.setTimestamp(4, packingSlip.getModifiedDateTime());
+            ps.setString(3, packingSlip.getStatus());
+            ps.setTimestamp(4, packingSlip.getActualCreatedDateTime());
+            ps.setTimestamp(5, packingSlip.getModifiedDateTime());
             ps.execute();
 
             return packingSlip.getCode();
         } catch (Exception e) {
+            System.out.println("Insert PS " + e.getMessage());
             return null;
         } finally {
             try {
@@ -69,7 +71,6 @@ public class PackingSlipDAO {
         String query = "";
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        packingSlip.setCreatedDate(timestamp);
         packingSlip.setActualCreatedDateTime(timestamp);
         packingSlip.setModifiedDateTime(timestamp);
 
@@ -78,16 +79,14 @@ public class PackingSlipDAO {
 
             query = "UPDATE PackingSlip SET "
                     + "TO_ID = ?, "
-                    + "Actual_Created_Date = ?, "
                     + "Modified_Date_Time = ? "
                     + "WHERE "
                     + "PS_ID = ? ";
             ps = conn.prepareStatement(query);
             // bind parameter
             ps.setString(1, packingSlip.getTO().getCode());
-            ps.setTimestamp(2, packingSlip.getActualCreatedDateTime());
-            ps.setTimestamp(3, packingSlip.getModifiedDateTime());
-            ps.setString(4, packingSlip.getCode());
+            ps.setTimestamp(2, packingSlip.getModifiedDateTime());
+            ps.setString(3, packingSlip.getCode());
 
             ps.execute();
 
@@ -191,6 +190,9 @@ public class PackingSlipDAO {
             //return object
             return packingSlips;
         } catch (Exception e) {
+
+            System.out.println("Get PS by TO " + e.getMessage());
+
             return null;
         } finally {
             try {
@@ -269,14 +271,14 @@ public class PackingSlipDAO {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         try {
             conn = SQLDatabaseConnection.openConn();
-            conn.setAutoCommit(false);
 
             query = "UPDATE PackingSlip SET "
                     + "Status = ?, "
-                    + "DO_ID = ? "
+                    + "Modified_Date_Time = ? "
                     + "WHERE "
                     + "PS_ID = ?";
             ps = conn.prepareStatement(query);
@@ -285,8 +287,10 @@ public class PackingSlipDAO {
             int i = 0;
 
             for (PackingSlip packingSlip : packingSlips) {
+
+                packingSlip.setModifiedDateTime(timestamp);
                 ps.setString(1, packingSlip.getStatus());
-                ps.setString(2, packingSlip.getDO().getCode());
+                ps.setTimestamp(2, packingSlip.getModifiedDateTime());
                 ps.setString(3, packingSlip.getCode());
 
                 ps.addBatch();
@@ -366,4 +370,44 @@ public class PackingSlipDAO {
         }
     }
 
+    public static String getLatestCode() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        String latestCode = "";
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT * FROM View_PackingSlip_LatestID";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                latestCode = rs.getString("PS_ID");
+            }
+
+            return latestCode;
+
+            //return object
+        } catch (Exception e) {
+            System.out.println("PS Code generator " + e.getMessage());
+            return "";
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+
+    }
 }

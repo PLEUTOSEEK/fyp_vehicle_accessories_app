@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import Entity.Inventory;
 import Entity.Item;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  *
@@ -41,6 +43,7 @@ public class ItemDAO {
             ps.execute();
             return true;
         } catch (Exception e) {
+            System.out.println("Item Delete " + e.getMessage());
             return false;
         } finally {
             try {
@@ -67,17 +70,16 @@ public class ItemDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            conn.setAutoCommit(false);
-
+            //conn.setAutoCommit(false);
             query = "INSERT INTO Item ( "
                     + "Prod_ID, "
                     + "Ref_Doc_ID, "
                     + "Inventory_ID, "
                     + "Reason, "
                     + "Remark, "
-                    + "PackingSlipNo, "
                     + "Qty, "
                     + "Ori_Qty, "
+                    + "Qty_Not_Yet_Bill, "
                     + "Unit_Price, "
                     + "Delivery_Date, "
                     + "Excl_Amount, "
@@ -94,11 +96,12 @@ public class ItemDAO {
 
                 ps.setString(1, item.getProduct().getProdID());
                 ps.setString(2, code);
-                ps.setString(3, item.getInventory().getInventoryID());
+                ps.setString(3, isBlank(item.getInventory().getInventoryID()) == true ? null : item.getInventory().getInventoryID());
                 ps.setString(4, item.getReason());
                 ps.setString(5, item.getRemark());
-                ps.setInt(7, item.getQty());
-                ps.setInt(8, item.getOriQty());
+                ps.setInt(6, item.getQty());
+                ps.setInt(7, item.getOriQty());
+                ps.setInt(8, item.getQtyNotYetBill());
                 ps.setBigDecimal(9, item.getUnitPrice());
                 ps.setDate(10, item.getDlvrDate());
                 ps.setBigDecimal(11, item.getExclTaxAmt());
@@ -112,8 +115,11 @@ public class ItemDAO {
                     ps.executeBatch(); // Execute every 1000 items.
                 }
             }
+
+            ps.executeBatch();
             return true;
         } catch (Exception e) {
+            System.out.println("Item Insert " + e.getMessage());
             return false;
         } finally {
             try {
@@ -151,10 +157,13 @@ public class ItemDAO {
                 item = new Item();
 
                 item.setProduct(ProductDAO.getProductByID(rs.getString("Prod_ID")));
-                item.setInventory(InventoryDAO.getInventoryByID(rs.getString("Inventory_ID")));
+                Inventory inventory = InventoryDAO.getInventoryByID(rs.getString("Inventory_ID"));
+                inventory.setInventoryID(isBlank(inventory.getInventoryID()) ? null : inventory.getInventoryID());
+                item.setInventory(inventory);
                 item.setRemark(rs.getString("Remark"));
                 item.setQty(rs.getInt("Qty"));
                 item.setOriQty(rs.getInt("Ori_Qty"));
+                item.setQtyNotYetBill(rs.getInt("Qty_Not_Yet_Bill"));
                 item.setUnitPrice(rs.getBigDecimal("Unit_Price"));
                 item.setDlvrDate(rs.getDate("Delivery_Date"));
                 item.setExclTaxAmt(rs.getBigDecimal("Excl_Amount"));
@@ -166,6 +175,7 @@ public class ItemDAO {
             //return object
             return items;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {

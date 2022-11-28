@@ -182,8 +182,7 @@ public class StaffDAO {
                         StaffDAO.getStaffByID(rs.getString("STAFF_Report_To")), // recursive break suspected
                         rs.getString("STAFF_Employee_Type"),
                         rs.getString("STAFF_Password"),
-                        rs.getString("STAFF_Role"),
-                        rs.getString("STAFF_Account_Status")
+                        rs.getString("STAFF_Role")
                 );
                 return staff;
             } else {
@@ -217,41 +216,43 @@ public class StaffDAO {
         //pre-preparation before perform saving staff data
         staff.setCreatedDate(timestamp);
         staff.setModifiedDateTime(timestamp);
-        staff.setIsFrozen(false);
 
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "INSERT INTO Staff("
-                    + "Staff_ID, "
-                    + "Avatar_Img, "
-                    + "Name, "
-                    + "Gender, "
-                    + "DOB, "
-                    + "IC, "
-                    + "Marital_Status, "
-                    + "Nationality, "
-                    + "Honorifics, "
-                    + "Residential_Address, "
-                    + "Corresponding_Address, "
-                    + "Email, "
-                    + "Mobile_No, "
-                    + "Extension_No, "
-                    + "Officed_Phone_No, "
-                    + "Home_Phone_No, "
-                    + "Occupation, "
-                    + "Race, "
-                    + "Religion, "
-                    + "Work_Place, "
-                    + "Entry_Date, "
-                    + "Report_To, "
-                    + "Employee_Type, "
-                    + "Password, "
-                    + "Status, "
-                    + "Created_Date, "
-                    + "Modified_Date_Time, "
-                    + "Is_Frozen )"
-                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            query = "INSERT INTO [dbo].[Staff] "
+                    + "           ([Staff_ID] "
+                    + "           ,[Avatar_Img] "
+                    + "           ,[Name] "
+                    + "           ,[Gender] "
+                    + "           ,[DOB] "
+                    + "           ,[IC] "
+                    + "           ,[Marital_Status] "
+                    + "           ,[Nationality] "
+                    + "           ,[Honorifics] "
+                    + "           ,[Residential_Address] "
+                    + "           ,[Corresponding_Address] "
+                    + "           ,[Email] "
+                    + "           ,[Mobile_No] "
+                    + "           ,[Extension_No] "
+                    + "           ,[Officed_Phone_No] "
+                    + "           ,[Home_Phone_No] "
+                    + "           ,[Occupation] "
+                    + "           ,[Race] "
+                    + "           ,[Religion] "
+                    + "           ,[Work_Place] "
+                    + "           ,[Entry_Date] "
+                    + "           ,[Report_To] "
+                    + "           ,[Employee_Type] "
+                    + "           ,[Password] "
+                    + "           ,[Role] "
+                    + "           ,[Status] "
+                    + "           ,[Created_Date] "
+                    + "           ,[Modified_Date_Time] "
+                    + "           ,[Is_Frozen] "
+                    + "           ,[Reset_Password_Next_Login]) "
+                    + "VALUES "
+                    + "     (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(query);
             // bind parameter
             ps.setString(1, staff.getStaffID());
@@ -278,14 +279,17 @@ public class StaffDAO {
             ps.setString(22, staff.getReportTo().getStaffID());
             ps.setString(23, staff.getEmpType());
             ps.setString(24, staff.getPassword());
-            ps.setString(25, staff.getStatus());
-            ps.setTimestamp(26, staff.getCreatedDate());
-            ps.setTimestamp(27, staff.getModifiedDateTime());
-            ps.setBoolean(28, staff.getIsFrozen());
+            ps.setString(25, staff.getRole());
+            ps.setString(26, staff.getStatus());
+            ps.setTimestamp(27, staff.getCreatedDate());
+            ps.setTimestamp(28, staff.getModifiedDateTime());
+            ps.setBoolean(29, staff.getIsFrozen());
+            ps.setBoolean(30, staff.getResetPassNextLogin());
 
             ps.execute();
             return staff.getStaffID();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -353,34 +357,33 @@ public class StaffDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "UPDATE Staff SET"
-                    + "Avatar_Img = ?, "
-                    + "Name = ?, "
-                    + "Gender = ?, "
-                    + "DOB = ?, "
-                    + "IC = ?, "
-                    + "Marital_Status = ?, "
-                    + "Nationality = ?, "
-                    + "Honorifics = ?, "
-                    + "Residential_Address = ?, "
-                    + "Corresponding_Address = ?, "
-                    + "Email = ?, "
-                    + "Mobile_No = ?, "
-                    + "Extension_No = ?, "
-                    + "Officed_Phone_No = ?, "
-                    + "Home_Phone_No = ?, "
-                    + "Occupation = ?, "
-                    + "Race = ?, "
-                    + "Religion = ?, "
-                    + "Work_Place = ?, "
-                    + "Entry_Date = ?, "
-                    + "Report_To = ?, "
-                    + "Employee_Type = ?, "
-                    + "Password = ?, "
-                    + "Status = ?, "
-                    + "Created_Date = ?, "
-                    + "Modified_Date_Time = ?, "
-                    + "Is_Frozen "
+            query = "UPDATE [dbo].[Staff] "
+                    + "   SET "
+                    + "      [Avatar_Img] = ? "
+                    + "      ,[Name] = ? "
+                    + "      ,[Gender] = ? "
+                    + "      ,[DOB] = ? "
+                    + "      ,[IC] = ? "
+                    + "      ,[Marital_Status] = ? "
+                    + "      ,[Nationality] = ? "
+                    + "      ,[Honorifics] = ? "
+                    + "      ,[Residential_Address] = ? "
+                    + "      ,[Corresponding_Address] = ? "
+                    + "      ,[Email] = ? "
+                    + "      ,[Mobile_No] = ? "
+                    + "      ,[Extension_No] = ? "
+                    + "      ,[Officed_Phone_No] = ? "
+                    + "      ,[Home_Phone_No] = ? "
+                    + "      ,[Occupation] = ? "
+                    + "      ,[Race] = ? "
+                    + "      ,[Religion] = ? "
+                    + "      ,[Work_Place] = ? "
+                    + "      ,[Entry_Date] = ? "
+                    + "      ,[Report_To] = ? "
+                    + "      ,[Employee_Type] = ? "
+                    + "      ,[Role] = ? "
+                    + "      ,[Status] = ? "
+                    + "      ,[Modified_Date_Time] = ? "
                     + "WHERE "
                     + "Staff_ID = ? ";
             ps = conn.prepareStatement(query);
@@ -407,16 +410,15 @@ public class StaffDAO {
             ps.setDate(20, staff.getEntryDate());
             ps.setString(21, staff.getReportTo().getStaffID());
             ps.setString(22, staff.getEmpType());
-            ps.setString(23, staff.getPassword());
+            ps.setString(23, staff.getRole());
             ps.setString(24, staff.getStatus());
-            ps.setTimestamp(25, staff.getCreatedDate());
-            ps.setTimestamp(26, staff.getModifiedDateTime());
-            ps.setBoolean(27, staff.getIsFrozen());
-            ps.setString(28, staff.getStaffID());
+            ps.setTimestamp(25, staff.getModifiedDateTime());
+            ps.setString(26, staff.getStaffID());
 
             ps.execute();
             return staff.getStaffID();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -480,8 +482,7 @@ public class StaffDAO {
                         reportTo, // recursive break suspected
                         rs.getString("STAFF_Employee_Type"),
                         rs.getString("STAFF_Password"),
-                        rs.getString("STAFF_Role"),
-                        rs.getString("STAFF_Account_Status")
+                        rs.getString("STAFF_Role")
                 );
 
                 staffs.add(staff);

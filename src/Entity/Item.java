@@ -22,6 +22,7 @@ public class Item<E> implements Cloneable {
     private String remark;
     private Integer qty;
     private Integer oriQty;
+    private Integer qtyNotYetBill;
     private BigDecimal unitPrice;
     private Date dlvrDate;
     private BigDecimal exclTaxAmt;
@@ -103,7 +104,7 @@ public class Item<E> implements Cloneable {
 
     public BigDecimal getDiscAmt() {
         BigDecimal result = this.unitPrice;
-        result.multiply(BigDecimal.valueOf(this.oriQty));
+        result = result.multiply(BigDecimal.valueOf(this.oriQty));
         result = result.multiply(BigDecimal.valueOf(this.discPercent / 100));
 
         return result;
@@ -190,9 +191,17 @@ public class Item<E> implements Cloneable {
             clonedItem.setDlvrDate(this.dlvrDate == null ? null : (Date) this.dlvrDate.clone());
 
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+            clonedItem = null;
         }
 
         return clonedItem;
+    }
+
+    public Integer getQtyNotYetBill() {
+        return qtyNotYetBill;
+    }
+
+    public void setQtyNotYetBill(Integer qtyNotYetBill) {
+        this.qtyNotYetBill = qtyNotYetBill;
     }
 }
