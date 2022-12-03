@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class ReturnDeliveryNoteDAO {
 
-    public static ReturnDeliveryNote getReturnDeliveryNoteByCode(String code) {
+    public static ReturnDeliveryNote getReturnDeliveryNoteByCode(String code) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -63,7 +63,7 @@ public class ReturnDeliveryNoteDAO {
             //return object
             return returnDeliveryNote;
         } catch (Exception e) {
-            return null;
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 ps.close();
@@ -78,7 +78,7 @@ public class ReturnDeliveryNoteDAO {
         }
     }
 
-    public static String updateRDNStatus(ReturnDeliveryNote returnDeliveryNote) {
+    public static String updateRDNStatus(ReturnDeliveryNote returnDeliveryNote) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -103,7 +103,7 @@ public class ReturnDeliveryNoteDAO {
             ps.execute();
             return returnDeliveryNote.getCode();
         } catch (Exception e) {
-            return null;
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 ps.close();
@@ -118,7 +118,7 @@ public class ReturnDeliveryNoteDAO {
         }
     }
 
-    public static String saveNewRDN(ReturnDeliveryNote returnDeliveryNote) {
+    public static String saveNewRDN(ReturnDeliveryNote returnDeliveryNote) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -172,7 +172,7 @@ public class ReturnDeliveryNoteDAO {
             ps.execute();
             return returnDeliveryNote.getCode();
         } catch (Exception e) {
-            return null;
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 ps.close();
@@ -187,7 +187,7 @@ public class ReturnDeliveryNoteDAO {
         }
     }
 
-    public static String updateRDN(ReturnDeliveryNote returnDeliveryNote) {
+    public static String updateRDN(ReturnDeliveryNote returnDeliveryNote) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -240,7 +240,7 @@ public class ReturnDeliveryNoteDAO {
             ps.execute();
             return returnDeliveryNote.getCode();
         } catch (Exception e) {
-            return null;
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 ps.close();
@@ -255,18 +255,18 @@ public class ReturnDeliveryNoteDAO {
         }
     }
 
-    public static String getLatestCode() throws SQLException {
+    public static String getLatestCode() throws SQLException, Exception {
         //View_RDN_LatestID
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
 
-        String latestCode = null;
+        String latestCode = "";
 
         try {
             conn = SQLDatabaseConnection.openConn();
-            query = "SELECT * FROM View_Quotation_LatestID";
+            query = "SELECT * FROM View_RDN_LatestID";
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
 
@@ -277,7 +277,7 @@ public class ReturnDeliveryNoteDAO {
             return latestCode;
 
         } catch (Exception e) {
-            return null;
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 ps.close();
@@ -292,7 +292,7 @@ public class ReturnDeliveryNoteDAO {
         }
     }
 
-    public static List<ReturnDeliveryNote> getAllRDN() {
+    public static List<ReturnDeliveryNote> getAllRDN() throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -359,7 +359,7 @@ public class ReturnDeliveryNoteDAO {
             //return object
             return returnDeliveryNotes;
         } catch (Exception e) {
-            return null;
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 ps.close();

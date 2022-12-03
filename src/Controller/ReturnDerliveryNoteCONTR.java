@@ -24,6 +24,7 @@ import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.cell.MFXDateCell;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
@@ -40,6 +41,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -153,11 +157,11 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        setupItemTable();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 initializeComboSelections();
+                initializeUIControls();
                 inputValidation();
                 receiveData();
                 autoClose();
@@ -169,17 +173,25 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                     try {
                         fieldFillIn();
                     } catch (IOException ex) {
-                        java.util.logging.Logger.getLogger(TransferOrderCONTR.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        java.util.logging.Logger.getLogger(ReturnDerliveryNoteCONTR.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     }
 
                     if (passObj.getObj() instanceof ReturnDeliveryNote) {
-                        ReturnDeliveryNote rdn = (ReturnDeliveryNote) passObj.getObj();
+                        try {
+                            ReturnDeliveryNote rdn = (ReturnDeliveryNote) passObj.getObj();
 
-                        itemsNotYetReturn.addAll(ItemService.getReturnableItemsBySO(rdn.getSO().getCode()));
-                        items.addAll(ItemService.getItemByRDNID(rdn.getCode()));
+                            itemsNotYetReturn.addAll(ItemService.getReturnableItemsBySO(rdn.getSO().getCode()));
+                            items.addAll(ItemService.getItemByRDNID(rdn.getCode()));
+                        } catch (Exception ex) {
+                            Logger.getLogger(ReturnDerliveryNoteCONTR.class.getName()).log(Level.SEVERE, null, ex);
+                        }
 
                     } else if (passObj.getObj() instanceof SalesOrder) {
-                        itemsNotYetReturn.addAll(ItemService.getReturnableItemsBySO(((SalesOrder) passObj.getObj()).getCode()));
+                        try {
+                            itemsNotYetReturn.addAll(ItemService.getReturnableItemsBySO(((SalesOrder) passObj.getObj()).getCode()));
+                        } catch (Exception ex) {
+                            Logger.getLogger(ReturnDerliveryNoteCONTR.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
 
                 }
@@ -187,6 +199,8 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                 if (passObj.getCrud().equals(BasicObjs.read)) {
                     isViewMode(true);
                 }
+
+                setupItemTable();
             }
         });
     }
@@ -210,6 +224,46 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     4.
 
      */
+    private void initializeUIControls() {
+        this.dtRefDate.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtRefDate, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isAfter(LocalDate.now())) {
+                            setDisable(true);
+                        } else {
+                            setDisable(false);
+                        }
+                    }
+                };
+
+            }
+        });
+
+        this.dtCllctDate.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtCllctDate, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isAfter(LocalDate.now())) {
+                            setDisable(false);
+                        } else {
+                            setDisable(true);
+                        }
+                    }
+                };
+
+            }
+        });
+    }
+
     private void initializeComboSelections() {
         ((MFXComboBox<WarehouseRules.RDNStatus>) this.cmbStatus).setItems(FXCollections.observableList(warehouseRules.getRdnStatuses()));
     }
@@ -357,18 +411,18 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private void fieldFillIn() throws IOException {
-        clearAllFieldsValue();
         defaultValFillIn();
 
         if (passObj.getObj() != null) {
             if (passObj.getObj() instanceof ReturnDeliveryNote) {
-                ReturnDeliveryNote rdn = new ReturnDeliveryNote();
+                ReturnDeliveryNote rdn = (ReturnDeliveryNote) passObj.getObj();
                 this.txtRDNID.setText(rdn.getCode());
                 this.txtCllctBckFr.setText(rdn.getCollBckFr() == null ? "" : rdn.getCollBckFr().getCollectAddrID());
                 this.txtCllctBckTo.setText(rdn.getCollBackTo() == null ? "" : rdn.getCollBackTo().getPlaceID());
-                this.dtRefDate.setValue(rdn.getCreatedDate() == null ? null : Instant.ofEpochMilli(rdn.getCreatedDate().getTime())
+                this.dtRefDate.setValue(rdn.getCreatedDate() == null ? LocalDate.now() : Instant.ofEpochMilli(rdn.getCreatedDate().getTime())
                         .atZone(ZoneId.systemDefault())
-                        .toLocalDate());
+                        .toLocalDate()
+                );
                 this.txtSORef.setText(rdn.getSO() == null ? "" : rdn.getSO().getCode());
                 this.dtCllctDate.setValue(rdn.getCollectDate() == null ? null : Instant.ofEpochMilli(rdn.getCollectDate().getTime())
                         .atZone(ZoneId.systemDefault())
@@ -384,7 +438,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
             } else if (passObj.getObj() instanceof SalesOrder) {
 
-                SalesOrder salesOrder = new SalesOrder();
+                SalesOrder salesOrder = (SalesOrder) passObj.getObj();
                 this.txtSORef.setText(salesOrder.getCode());
             }
         }
@@ -677,6 +731,9 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
         this.txtItemPassedBckBy.clear();
         this.txtItemReceivedBy.clear();
 
+        this.itemsNotYetReturn.clear();
+        this.items.clear();
+
         return true;
     }
 
@@ -883,7 +940,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @FXML
-    private void openSORefSelection(MouseEvent event) {
+    private void openSORefSelection(MouseEvent event) throws Exception, Exception {
         if (event.isPrimaryButtonDown() == true) {
 
             ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
@@ -913,11 +970,22 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                     SalesOrder so = (SalesOrder) receiveObj.getObj();
 
-                    if (!so.getStatus().equals(SalesRules.SOStatus.COMPLETED)
-                            && !so.getStatus().equals(SalesRules.SOStatus.ON_HOLD)) {
+                    if (!so.getStatus().equals(SalesRules.SOStatus.ON_HOLD)) {
                         // condition to check SO status haven't implemented
-                        this.passObj.setObj(so);
-                        this.fieldFillIn();
+                        this.clearAllFieldsValue();
+                        itemsNotYetReturn.addAll(ItemService.getReturnableItemsBySO(so.getCode()));
+
+                        if (isValidDocumentByItems()) {
+                            this.passObj.setObj(so);
+                            this.fieldFillIn();
+                            setupItemTable();
+                        } else {
+                            alertDialog(Alert.AlertType.INFORMATION,
+                                    "Information",
+                                    "Document Blocked Message",
+                                    "There are no more goods needed to be return for the selected document.");
+                        }
+
                     } else {
                         alertDialog(Alert.AlertType.INFORMATION,
                                 "Information",
@@ -930,6 +998,21 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    private boolean isValidDocumentByItems() {
+        Integer count = 0;
+        for (Item item : itemsNotYetReturn) {
+            if (item.getQty() == 0) {
+                count++;
+            }
+        }
+
+        if (count == itemsNotYetReturn.size()) {
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -971,8 +1054,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @FXML
-    private void addProductItem(MouseEvent event
-    ) {
+    private void addProductItem(MouseEvent event) {
         if (this.txtSORef.getText().isEmpty()) {
             alertDialog(Alert.AlertType.INFORMATION,
                     "Information",
@@ -1013,7 +1095,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void saveRDN(MouseEvent event
-    ) throws SQLException {
+    ) throws SQLException, Exception {
         if (event.isPrimaryButtonDown() == true) {
 
             if (!this.btnSave.getText().equals("Save")) {

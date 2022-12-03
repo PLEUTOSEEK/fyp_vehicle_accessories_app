@@ -141,6 +141,7 @@ public class PackingSlipDAO {
             //return object
             return packingSlips;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -232,7 +233,7 @@ public class PackingSlipDAO {
                     + "    ON TransferOrder.Req_Type_Ref = SalesOrder.SO_ID "
                     + "WHERE "
                     + "    SalesOrder.SO_ID = ? "
-                    + "    AND TransferOrder.[Status] = 'TRANFERRED' ";
+                    + "    AND TransferOrder.[Status] = 'TRANSFERRED' ";
             ps = conn.prepareStatement(query);
 
             // bind parameter
@@ -252,6 +253,7 @@ public class PackingSlipDAO {
             //return object
             return packingSlips;
         } catch (Exception e) {
+            System.out.println("PS BY SO " + e.getMessage());
             return null;
         } finally {
             try {
@@ -278,6 +280,7 @@ public class PackingSlipDAO {
 
             query = "UPDATE PackingSlip SET "
                     + "Status = ?, "
+                    + "DO_ID = ?, "
                     + "Modified_Date_Time = ? "
                     + "WHERE "
                     + "PS_ID = ?";
@@ -290,8 +293,9 @@ public class PackingSlipDAO {
 
                 packingSlip.setModifiedDateTime(timestamp);
                 ps.setString(1, packingSlip.getStatus());
-                ps.setTimestamp(2, packingSlip.getModifiedDateTime());
-                ps.setString(3, packingSlip.getCode());
+                ps.setString(2, packingSlip.getDO().getCode());
+                ps.setTimestamp(3, packingSlip.getModifiedDateTime());
+                ps.setString(4, packingSlip.getCode());
 
                 ps.addBatch();
 

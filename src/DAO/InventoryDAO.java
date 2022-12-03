@@ -6,6 +6,7 @@ package DAO;
 
 import Entity.Inventory;
 import Entity.Item;
+import Entity.PackingSlip;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -268,6 +269,56 @@ public class InventoryDAO {
         }
     }
 
+    public static boolean postGoodsIssues(PackingSlip packingSlip) throws Exception {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query
+                    = "UPDATE "
+                    + "	INVT "
+                    + "SET "
+                    + "	INVT.Reserved_Qty = INVT.Reserved_Qty - PS_TABLE.Ori_Qty, "
+                    + "	INVT.Total_Qty = INVT.Total_Qty - PS_TABLE.Ori_Qty "
+                    + "FROM  "
+                    + "	Inventory AS INVT "
+                    + "	INNER JOIN  "
+                    + "	( "
+                    + "	SELECT "
+                    + "		Item.Ori_Qty, "
+                    + "		Item.Inventory_ID "
+                    + "	FROM "
+                    + "		PackingSlip "
+                    + "		INNER JOIN Item "
+                    + "		ON PackingSlip.PS_ID = Item.Ref_Doc_ID "
+                    + "	WHERE "
+                    + "		PackingSlip.PS_ID = ? "
+                    + "	) AS PS_TABLE "
+                    + "	ON  INVT.Inventory_ID = PS_TABLE.Inventory_ID";
+            ps = conn.prepareStatement(query);
+            // bind parameter
+            ps.setString(1, packingSlip.getCode());
+            ps.execute();
+            return true;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
     public static boolean freeUpReservedQtyByInventoryID(Inventory inventory, int qty) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -295,6 +346,60 @@ public class InventoryDAO {
 
         } catch (Exception e) {
             return false;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static List<Inventory> getInventoryByProdID(String prodID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        Inventory inventory = new Inventory();
+        List<Inventory> inventories = new ArrayList<>();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT [Inventory_ID] "
+                    + "      ,[Place_ID] "
+                    + "      ,[Product_ID] "
+                    + "      ,[Reserved_Qty] "
+                    + "      ,[Ready_Qty] "
+                    + "      ,[Modified_Date_Time] "
+                    + "  FROM [dbo].[Inventory]"
+                    + "  WHERE [Product_ID] = ?";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            ps.setString(1, prodID);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                inventory = new Inventory();
+                inventory.setInventoryID(rs.getString("Inventory_ID"));
+                inventory.setStorePlace(PlaceDAO.getPlaceByID(rs.getString("Place_ID")));
+                inventory.setProduct(ProductDAO.getProductByID(rs.getString("Product_ID")));
+                inventory.setReservedQty(rs.getInt("Reserved_Qty"));
+                inventory.setReadyQty(rs.getInt("Ready_Qty"));
+                inventories.add(inventory);
+            }
+
+            //return object
+            return inventories;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
         } finally {
             try {
                 ps.close();

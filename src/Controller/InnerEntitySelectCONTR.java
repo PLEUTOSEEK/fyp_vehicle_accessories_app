@@ -50,6 +50,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -94,10 +96,14 @@ public class InnerEntitySelectCONTR implements Initializable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                receiveData();
-                setupTable();
-                autoClose();
-                tblVw.autosizeColumnsOnInitialization();
+                try {
+                    receiveData();
+                    setupTable();
+                    autoClose();
+                    tblVw.autosizeColumnsOnInitialization();
+                } catch (Exception ex) {
+                    Logger.getLogger(InnerEntitySelectCONTR.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -146,7 +152,7 @@ public class InnerEntitySelectCONTR implements Initializable {
         return passObj;
     }
 
-    private void setupTable() {
+    private void setupTable() throws Exception {
 
         Object entity = this.passObj.getObj();
 
@@ -947,7 +953,7 @@ public class InnerEntitySelectCONTR implements Initializable {
         });
     }
 
-    private void forReturnDeliveryNote() {
+    private void forReturnDeliveryNote() throws Exception {
         // RDN ID
         // So Ref.
         // Collect Back From Location Name

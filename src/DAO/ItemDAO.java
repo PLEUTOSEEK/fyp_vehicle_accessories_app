@@ -285,7 +285,7 @@ public class ItemDAO {
         }
     }
 
-    public static List<Item> getReturnableItemsBySO(String code) {
+    public static List<Item> getReturnableItemsBySO(String code) throws java.lang.Exception {
         Connection conn = null;
         PreparedStatement ps = null;
         String query = "";
@@ -299,8 +299,8 @@ public class ItemDAO {
             query = "SELECT "
                     + "    ITEM_DELIVERED.Prod_ID, "
                     + "    ITEM_DELIVERED.TOTAL_DELIVERED_QTY, "
-                    + "    ITEM_RETURNED.TOTAL_RETURNED_QTY, "
-                    + "    (ITEM_DELIVERED.TOTAL_DELIVERED_QTY - ITEM_RETURNED.TOTAL_RETURNED_QTY) AS TOTAL_RETURNABLE_QTY "
+                    + "    ISNULL(ITEM_RETURNED.TOTAL_RETURNED_QTY,0) AS TOTAL_RETURNED_QTY, "
+                    + "    (ITEM_DELIVERED.TOTAL_DELIVERED_QTY - ISNULL(ITEM_RETURNED.TOTAL_RETURNED_QTY,0)) AS TOTAL_RETURNABLE_QTY "
                     + "FROM "
                     + "    ( "
                     + "        SELECT "
@@ -320,10 +320,8 @@ public class ItemDAO {
                     + "                                                        DeliveryOrder.DO_ID "
                     + "                                                    FROM "
                     + "                                                        DeliveryOrder "
-                    + "                                                        INNER JOIN TransferOrder "
-                    + "                                                        ON DeliveryOrder.Reference_Type_Ref = TransferOrder.TO_ID "
                     + "                                                        INNER JOIN SalesOrder "
-                    + "                                                        ON TransferOrder.Req_Type_Ref = SalesOrder.SO_ID "
+                    + "                                                        ON DeliveryOrder.SO_ID = SalesOrder.SO_ID "
                     + "                                                    WHERE "
                     + "                                                        SalesOrder.SO_ID = ? AND "
                     + "                                                        DeliveryOrder.Status = 'DELIVERED' "
@@ -332,7 +330,7 @@ public class ItemDAO {
                     + "        GROUP BY "
                     + "            Prod_ID "
                     + "    ) AS ITEM_DELIVERED "
-                    + "    INNER JOIN "
+                    + "    LEFT JOIN "
                     + "    ( "
                     + "        SELECT "
                     + "            Prod_ID, SUM(Qty) AS TOTAL_RETURNED_QTY "
@@ -347,12 +345,12 @@ public class ItemDAO {
                     + "                            ReturnDeliveryNote "
                     + "                        WHERE "
                     + "                            SO_ID = ? AND "
-                    + "                            (Status IN ('RETURNED', 'APPROVED')) "
+                    + "                            (Status NOT IN ('REJECTED')) "
                     + "                        ) "
                     + "        GROUP BY "
                     + "            Prod_ID "
                     + "    ) AS ITEM_RETURNED "
-                    + "    ON ITEM_DELIVERED.Prod_ID = ITEM_RETURNED.Prod_ID";
+                    + "    ON ITEM_DELIVERED.Prod_ID = ITEM_RETURNED.Prod_ID"; //
             ps = conn.prepareStatement(query);
 
             // bind parameter
@@ -373,6 +371,7 @@ public class ItemDAO {
             //return object
             return items;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -387,4 +386,5 @@ public class ItemDAO {
             }
         }
     }
+
 }

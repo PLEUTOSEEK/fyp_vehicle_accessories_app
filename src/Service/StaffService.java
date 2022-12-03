@@ -69,4 +69,13 @@ public class StaffService {
     public static Object getStaffByID(String staffID) {
         return StaffDAO.getStaffByID(staffID);
     }
+
+    public static String updateStaffAcc(Staff staff) {
+        return StaffDAO.updateStaffAcc(staff);
+    }
+
+    public static String updateStaffPassword(Staff loginStaff) {
+        return StaffDAO.updateStaffPassword(loginStaff);
+
+    }
 }

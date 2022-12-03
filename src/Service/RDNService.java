@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class RDNService {
 
-    public static String generateID() {
+    public static String generateID() throws Exception {
         DateFormat df = new SimpleDateFormat("yy"); // Just the year, with 2 digits
         String currentYr = df.format(Timestamp.from(Instant.now()));
         df = new SimpleDateFormat("MM"); // Just the month, with 2 digits
@@ -59,20 +59,20 @@ public class RDNService {
 
     }
 
-    public static String updateRDNStatus(ReturnDeliveryNote returnDeliveryNote) {
+    public static String updateRDNStatus(ReturnDeliveryNote returnDeliveryNote) throws Exception {
         return ReturnDeliveryNoteDAO.updateRDNStatus(returnDeliveryNote);
     }
 
-    public static String saveNewRDN(ReturnDeliveryNote returnDeliveryNote) {
+    public static String saveNewRDN(ReturnDeliveryNote returnDeliveryNote) throws Exception {
         returnDeliveryNote.setCode(generateID());
         return ReturnDeliveryNoteDAO.saveNewRDN(returnDeliveryNote);
     }
 
-    public static String updateRDN(ReturnDeliveryNote returnDeliveryNote) {
+    public static String updateRDN(ReturnDeliveryNote returnDeliveryNote) throws Exception {
         return ReturnDeliveryNoteDAO.updateRDN(returnDeliveryNote);
     }
 
-    public static List<ReturnDeliveryNote> getAllRDN() {
+    public static List<ReturnDeliveryNote> getAllRDN() throws Exception {
         return ReturnDeliveryNoteDAO.getAllRDN();
     }
 

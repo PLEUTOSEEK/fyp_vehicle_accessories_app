@@ -36,7 +36,7 @@ public class WarehouseRules {
     public enum TOStatus {
         NEW,
         TRANSFERING,
-        TRANFERRED
+        TRANSFERRED
     }
 
     private List<String> refTypeForTO;

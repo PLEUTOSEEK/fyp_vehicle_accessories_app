@@ -7,9 +7,9 @@ package Controller;
 import Entity.Customer;
 import Entity.CustomerInquiry;
 import Entity.DeliveryOrder;
-import Entity.Inventory;
 import Entity.Invoice;
 import Entity.PackingSlip;
+import Entity.Product;
 import Entity.Quotation;
 import Entity.Receipt;
 import Entity.ReturnDeliveryNote;
@@ -37,6 +37,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -109,20 +110,6 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     private MenuItem mniInventoryRpt;
     @FXML
     private MenuItem mniAccRpt;
-
-    public static Staff logInStaff;
-    @FXML
-    private MenuItem mniCreateRDN1;
-    @FXML
-    private MenuItem mniUpdateRDN1;
-    @FXML
-    private MenuItem mniViewRDN1;
-    @FXML
-    private MenuItem mniCreateTO1;
-    @FXML
-    private MenuItem mniUpdateTO1;
-    @FXML
-    private MenuItem mniViewTO1;
     @FXML
     private MFXScrollPane settingScrollPanel;
     @FXML
@@ -135,6 +122,20 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     private MenuItem mniWarehouse;
     @FXML
     private MenuItem mniAccounting;
+    @FXML
+    private MenuItem mniStaffAccMgmt;
+    @FXML
+    private MenuItem mniViewDO;
+    @FXML
+    private MenuItem mniUpdatePS;
+    @FXML
+    private MenuItem mniUpdateDO;
+    @FXML
+    private MenuItem mniCreatePS;
+    @FXML
+    private MenuItem mniViewPS;
+    @FXML
+    private MenuItem mniCreateDO;
 
     /**
      * Initializes the controller class.
@@ -149,9 +150,11 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
             @Override
             public void run() {
                 receiveData();
-                logInStaff = (Staff) passObj.getLoginStaff();
                 autoClose();
 
+                if (passObj.getLoginStaff().getResetPassNextLogin() == true) {
+                    resetPasswordModalWindow();
+                }
             }
         });
     }
@@ -181,10 +184,17 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @FXML
+    private void goToStaffAccMgmtUI(ActionEvent event) {
+        passObj.setObj(new Staff());
+        passObj.setCrud(BasicObjs.update);
+        switchScene("View/Staff_UI.fxml", passObj, BasicObjs.forward);
+    }
+
+    @FXML
     private void goToCreateStaffUI(ActionEvent event) {
         passObj.setObj(new Staff());
         passObj.setCrud(BasicObjs.create);
-        switchScene("View/Staff_UI.fxml", passObj, BasicObjs.forward);
+        switchScene("View/AccountMgmt_UI.fxml", passObj, BasicObjs.forward);
     }
 
     @FXML
@@ -288,7 +298,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void goToViewInventory(ActionEvent event) {
-        passObj.setObj(new Inventory());
+        passObj.setObj(new Product());
         passObj.setCrud(BasicObjs.read);
         switchScene("View/EntityOverview_UI.fxml", passObj, BasicObjs.forward);
     }
@@ -541,4 +551,123 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
+    private void resetPasswordModalWindow() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("View/ResetPassword_UI.fxml"));
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(btnSetting.getScene().getWindow());
+            stage.setScene(new Scene(root));
+
+            BasicObjs passObj = new BasicObjs();
+            passObj.setCrud(BasicObjs.create);
+            passObj.setObj(new Staff());
+
+            stage.setUserData(passObj);
+            stage.showAndWait();
+
+            // if have any change on the selected item
+            if (stage.getUserData() != null) {
+                this.passObj.setLoginStaff(((BasicObjs) stage.getUserData()).getLoginStaff());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void assignPrivileges() {
+        String privilege = passObj.getLoginStaff().getRole();
+        privilege = privilege.toUpperCase();
+
+        switch (privilege) {
+            case "USER":
+                userPrivilege();
+                break;
+            case "SALESMAN":
+                salesmanPrivilege();
+                break;
+            case "WAREHOUSEMAN":
+                warehousemanPrivilege();
+                break;
+            case "ACCOUNTANT":
+                accountingPrivilege();
+                break;
+            case "ADMINISTRATOR":
+                adminPrivileges();
+                break;
+        }
+    }
+
+    private void userPrivilege() {
+        this.mniCreateCust.setDisable(false);
+        this.mniUpdateCust.setDisable(false);
+        this.mniViewCust.setDisable(false);
+
+        this.mniViewCI.setDisable(false);
+        this.mniViewQuotation.setDisable(false);
+        this.mniViewSO.setDisable(false);
+
+        this.mniViewInventory.setDisable(false);
+        this.mniViewTO.setDisable(false);
+        this.mniViewPS.setDisable(false);
+        this.mniViewDO.setDisable(false);
+        this.mniViewRDN.setDisable(false);
+
+        this.mniViewInvoice.setDisable(false);
+        this.mniViewReceipt.setDisable(false);
+    }
+
+    private void salesmanPrivilege() {
+        userPrivilege();
+
+        this.mniCreateCI.setDisable(false);
+        this.mniCreateQuotation.setDisable(false);
+        this.mniCreateSO.setDisable(false);
+
+        this.mniUpdateCI.setDisable(false);
+        this.mniUpdateQuotation.setDisable(false);
+        this.mniUpdateSO.setDisable(false);
+    }
+
+    private void warehousemanPrivilege() {
+        userPrivilege();
+
+        this.mniCreateTO.setDisable(false);
+        this.mniCreatePS.setDisable(false);
+        this.mniCreateDO.setDisable(false);
+        this.mniCreateRDN.setDisable(false);
+
+        this.mniUpdateTO.setDisable(false);
+        this.mniUpdatePS.setDisable(false);
+        this.mniUpdateDO.setDisable(false);
+        this.mniUpdateRDN.setDisable(false);
+    }
+
+    private void accountingPrivilege() {
+        userPrivilege();
+
+        this.mniCreateInvoice.setDisable(false);
+        this.mniCreatePayment.setDisable(false);
+
+        this.mniViewInvoice.setDisable(false);
+        this.mniViewReceipt.setDisable(false);
+    }
+
+    private void adminPrivileges() {
+        userPrivilege();
+        salesmanPrivilege();
+        warehousemanPrivilege();
+        accountingPrivilege();
+
+        this.mniGeneral.setDisable(false);
+        this.mniSales.setDisable(false);
+        this.mniWarehouse.setDisable(false);
+        this.mniAccounting.setDisable(false);
+
+        this.mniSalesRpt.setDisable(false);
+        this.mniInventoryRpt.setDisable(false);
+        this.mniAccRpt.setDisable(false);
+    }
 }

@@ -145,7 +145,38 @@ public class StaffDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM View_Retrieve_All_Staff WHERE STAFF_Staff_ID = ?";
+            query = "SELECT [Staff_ID] "
+                    + "      ,[Avatar_Img] "
+                    + "      ,[Name] "
+                    + "      ,[Gender] "
+                    + "      ,[DOB] "
+                    + "      ,[IC] "
+                    + "      ,[Marital_Status] "
+                    + "      ,[Nationality] "
+                    + "      ,[Honorifics] "
+                    + "      ,[Residential_Address] "
+                    + "      ,[Corresponding_Address] "
+                    + "      ,[Email] "
+                    + "      ,[Mobile_No] "
+                    + "      ,[Extension_No] "
+                    + "      ,[Officed_Phone_No] "
+                    + "      ,[Home_Phone_No] "
+                    + "      ,[Occupation] "
+                    + "      ,[Race] "
+                    + "      ,[Religion] "
+                    + "      ,[Work_Place] "
+                    + "      ,[Entry_Date] "
+                    + "      ,[Report_To] "
+                    + "      ,[Employee_Type] "
+                    + "      ,[Password] "
+                    + "      ,[Role] "
+                    + "      ,[Status] "
+                    + "      ,[Created_Date] "
+                    + "      ,[Modified_Date_Time] "
+                    + "      ,[Is_Frozen] "
+                    + "      ,[Reset_Password_Next_Login] "
+                    + "  FROM [dbo].[Staff] "
+                    + "  WHERE [Staff_ID] = ? ";
             ps = conn.prepareStatement(query);
 
             // bind parameter
@@ -154,6 +185,9 @@ public class StaffDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
+                /*
+
+
                 staff = new Staff(
                         rs.getTimestamp("STAFF_Created_Date"),
                         rs.getTimestamp("STAFF_Modified_Date_Time"),
@@ -184,6 +218,40 @@ public class StaffDAO {
                         rs.getString("STAFF_Password"),
                         rs.getString("STAFF_Role")
                 );
+                 */
+                staff = new Staff();
+                staff.setStaffID(rs.getString("Staff_ID"));
+                staff.setAvatarImg(rs.getString("Avatar_Img"));
+                staff.setStaffID(rs.getString("Name"));
+                staff.setStaffID(rs.getString("Gender"));
+                staff.setStaffID(rs.getString("DOB"));
+                staff.setStaffID(rs.getString("IC"));
+                staff.setStaffID(rs.getString("Marital_Status"));
+                staff.setStaffID(rs.getString("Nationality"));
+                staff.setStaffID(rs.getString("Honorifics"));
+                staff.setResidentialAddr(AddressDAO.getAddressByID(rs.getString("Residential_Address")));
+                staff.setCorAddr(AddressDAO.getAddressByID(rs.getString("Residential_Address")));
+                staff.setContact(new Contact());
+                staff.getContact().setEmail(rs.getString("Email"));
+                staff.getContact().setMobileNo(rs.getString("Mobile_No"));
+                staff.getContact().setExt(rs.getString("Extension_No"));
+                staff.getContact().setOffPhNo(rs.getString("Officed_Phone_No"));
+                staff.getContact().setHomePhNo(rs.getString("Home_Phone_No"));
+                staff.setOccupation(rs.getString("Occupation"));
+                staff.setRace(rs.getString("Race"));
+                staff.setReligion(rs.getString("Religion"));
+                staff.setWorkPlace(PlaceDAO.getPlaceByID(rs.getString("Work_Place")));
+                staff.setEntryDate(rs.getDate("Entry_Date"));
+                staff.setReportTo(new Staff());
+                staff.getReportTo().setStaffID(rs.getString("Report_To"));
+                staff.setEmpType(rs.getString("Employee_Type"));
+                staff.setPassword(rs.getString("Password"));
+                staff.setRole(rs.getString("Role"));
+                staff.setStatus(rs.getString("Status"));
+                staff.setCreatedDate(rs.getTimestamp("Created_Date"));
+                staff.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+                staff.setIsFrozen(rs.getBoolean("Is_Frozen"));
+                staff.setResetPassNextLogin(rs.getBoolean("Reset_Password_Next_Login"));
                 return staff;
             } else {
                 return null;
@@ -434,6 +502,54 @@ public class StaffDAO {
         }
     }
 
+    public static String updateStaffAcc(Staff staff) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        //pre-preparation before perform saving staff data
+        staff.setModifiedDateTime(timestamp);
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE [dbo].[Staff] "
+                    + "   SET "
+                    + "           ,[Modified_Date_Time] = ?, "
+                    + "           ,[Password] = ?, "
+                    + "           ,[Is_Frozen] = ?, "
+                    + "           ,[Reset_Password_Next_Login] = ? "
+                    + "WHERE "
+                    + "[Staff_ID] = ? ";
+            ps = conn.prepareStatement(query);
+            // bind parameter
+
+            ps.setTimestamp(1, staff.getModifiedDateTime());
+            ps.setString(2, staff.getPassword());
+            ps.setBoolean(3, staff.getIsFrozen());
+            ps.setBoolean(4, staff.getResetPassNextLogin());
+            ps.setString(5, staff.getStaffID());
+
+            ps.execute();
+            return staff.getStaffID();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
     public static List<Staff> getAllStaff() {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -491,6 +607,52 @@ public class StaffDAO {
             //return object
             return staffs;
         } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static String updateStaffPassword(Staff staff) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        //pre-preparation before perform saving staff data
+        staff.setModifiedDateTime(timestamp);
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "UPDATE [dbo].[Staff] "
+                    + "   SET "
+                    + "           ,[Modified_Date_Time] = ?, "
+                    + "           ,[Password] = ? "
+                    + "           ,[Reset_Password_Next_Login] = ? "
+                    + "WHERE "
+                    + "[Staff_ID] = ? ";
+            ps = conn.prepareStatement(query);
+            // bind parameter
+
+            ps.setTimestamp(1, staff.getModifiedDateTime());
+            ps.setString(2, staff.getPassword());
+            ps.setBoolean(3, staff.getResetPassNextLogin());
+            ps.setString(4, staff.getStaffID());
+
+            ps.execute();
+            return staff.getStaffID();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {

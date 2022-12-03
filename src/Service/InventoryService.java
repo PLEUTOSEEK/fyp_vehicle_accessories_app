@@ -7,6 +7,7 @@ package Service;
 import DAO.InventoryDAO;
 import Entity.Inventory;
 import Entity.Item;
+import Entity.PackingSlip;
 import java.util.List;
 
 /**
@@ -34,4 +35,15 @@ public class InventoryService {
     public static boolean reserveQtyForSalesDoc(Item item) {
         return InventoryDAO.reserveQtyForSalesDoc(item);
     }
+
+    public static void postGoodsIssue(List<PackingSlip> packingSlips) throws Exception {
+        for (PackingSlip packingSlip : packingSlips) {
+            InventoryDAO.postGoodsIssues(packingSlip);
+        }
+    }
+
+    public static List<Inventory> getInventoryByProdID(String prodID) {
+        return InventoryDAO.getInventoryByProdID(prodID);
+    }
+
 }

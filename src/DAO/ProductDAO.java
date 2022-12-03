@@ -99,6 +99,7 @@ public class ProductDAO {
                 prod.setMaxLvl(rs.getInt("Maximum_Level"));
                 prod.setAvgLvl(rs.getInt("Average_Level"));
                 prod.setMinLvl(rs.getInt("Minimum_Level"));
+                prod.setDangerLvl(rs.getInt("Danger_Level"));
                 prod.setReorderLvl(rs.getInt("Reorder_Level"));
                 prod.setCreatedDate(rs.getTimestamp("Created_Date"));
                 prod.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));

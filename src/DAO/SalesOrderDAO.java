@@ -152,7 +152,7 @@ public class SalesOrderDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                salesOrder.setCode(rs.getString("ID"));
+                salesOrder.setCode(rs.getString("SO_ID"));
                 salesOrder.setQuotRef(QuotationDAO.getQuotationByCode(rs.getString("Quot_ID")));
                 salesOrder.setBillToCust(CustomerDAO.getCustomerByID(rs.getString("Bill_To_Cust")));
                 salesOrder.setDeliverToCust(CollectAddressDAO.getCollectAddressByID(rs.getString("Deliver_To")));
@@ -184,6 +184,7 @@ public class SalesOrderDAO {
 
             //return object
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {

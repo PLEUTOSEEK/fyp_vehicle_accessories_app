@@ -21,7 +21,7 @@
         </rowConstraints>
          <children>
             <MFXButton fx:id="btnRemove" minHeight="27.0" minWidth="70.0" onMousePressed="#removeCurrentPackingSlip" styleClass="outline-button" text="Remove" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <MFXButton id="custom" fx:id="btnCancel" minHeight="27.0" minWidth="70.0" onMousePressed="#cancelAction" text="Remove" GridPane.rowIndex="2" />
+            <MFXButton id="custom" fx:id="btnCancel" minHeight="27.0" minWidth="70.0" onMousePressed="#cancelAction" text="Cancel" GridPane.rowIndex="2" />
             <MFXTextField fx:id="txtPackingSlipCode" alignment="CENTER_RIGHT" editable="false" floatingText="Packing Slip ID" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="145.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
          </children>
       </GridPane>

@@ -40,7 +40,7 @@ public class ItemService {
         return ItemDAO.getItemsByCode(code);
     }
 
-    public static List<Item> getReturnableItemsBySO(String code) {
+    public static List<Item> getReturnableItemsBySO(String code) throws Exception {
         return ItemDAO.getReturnableItemsBySO(code);
     }
 

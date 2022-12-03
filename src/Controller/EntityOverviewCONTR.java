@@ -9,6 +9,7 @@ import Entity.CustomerInquiry;
 import Entity.DeliveryOrder;
 import Entity.Invoice;
 import Entity.PackingSlip;
+import Entity.Product;
 import Entity.Quotation;
 import Entity.Receipt;
 import Entity.ReturnDeliveryNote;
@@ -22,6 +23,7 @@ import Service.DeliveryOrderService;
 import Service.GeneralRulesService;
 import Service.InvoiceService;
 import Service.PackingSlipService;
+import Service.ProductService;
 import Service.QuotationService;
 import Service.RDNService;
 import Service.ReceiptService;
@@ -41,6 +43,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -85,10 +89,14 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                receiveData();
-                setupTable();
-                autoClose();
-                tblVw.autosizeColumnsOnInitialization();
+                try {
+                    receiveData();
+                    setupTable();
+                    autoClose();
+                    tblVw.autosizeColumnsOnInitialization();
+                } catch (Exception ex) {
+                    Logger.getLogger(EntityOverviewCONTR.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -104,11 +112,12 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
 
     }
 
-    private void setupTable() {
+    private void setupTable() throws Exception {
 
         Object entity = this.passObj.getObj();
-
-        if (entity instanceof Staff) {
+        if (entity instanceof Product) {
+            forProduct();
+        } else if (entity instanceof Staff) {
             forStaff();
         } else if (entity instanceof Customer) {
             forCustomer();
@@ -131,6 +140,76 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
         } else if (entity instanceof Receipt) {
             forPayment();
         }
+    }
+
+    private void forProduct() {
+        // Product ID
+        // Product Name
+        // Part Number
+        // Sell price
+        // MSRP
+        // Product ID
+        MFXTableColumn<Product> prodIDCol = new MFXTableColumn<>("Product ID", true, Comparator.comparing(product -> product.getProdID()));
+        // Product Name
+        MFXTableColumn<Product> prodNmCol = new MFXTableColumn<>("Product Name", true, Comparator.comparing(product -> product.getProdName()));
+        // Part Number
+        MFXTableColumn<Product> partNoCol = new MFXTableColumn<>("Part No.", true, Comparator.comparing(product -> product.getPartNo()));
+        // Sell price
+        MFXTableColumn<Product> sellPriceCol = new MFXTableColumn<>("Sell Price", true, Comparator.comparing(product -> product.getSellPrice()));
+        // MSRP
+        MFXTableColumn<Product> msrpCol = new MFXTableColumn<>("MSRP", true, Comparator.comparing(product -> product.getMSRP()));
+
+        // Product ID
+        prodIDCol.setRowCellFactory(prod -> new MFXTableRowCell<>(product -> product.getProdID()));
+        // Product Name
+        prodNmCol.setRowCellFactory(prod -> new MFXTableRowCell<>(product -> product.getProdName()));
+        // Part Number
+        partNoCol.setRowCellFactory(prod -> new MFXTableRowCell<>(product -> product.getPartNo()));
+        // Sell price
+        sellPriceCol.setRowCellFactory(prod -> new MFXTableRowCell<>(product -> product.getSellPrice()));
+        // MSRP
+        msrpCol.setRowCellFactory(prod -> new MFXTableRowCell<>(product -> product.getMSRP()));
+
+        ((MFXTableView<Product>) tblVw).getTableColumns().addAll(
+                prodIDCol,
+                prodNmCol,
+                partNoCol,
+                sellPriceCol,
+                msrpCol
+        );
+
+        ((MFXTableView<Product>) tblVw).getFilters().addAll(
+                new StringFilter<>("Product ID", product -> product.getProdID()),
+                new StringFilter<>("Product Name", product -> product.getProdName()),
+                new StringFilter<>("Part No.", product -> product.getPartNo()),
+                new DoubleFilter<>("Sell Price", product -> product.getSellPrice().doubleValue()),
+                new DoubleFilter<>("MSRP", product -> product.getMSRP().doubleValue())
+        );
+
+        List<Product> products = ProductService.getAllProducts();
+
+        ((MFXTableView<Product>) tblVw).setItems(FXCollections.observableList(products));
+
+        ((MFXTableView<Product>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+
+                if (((MFXTableView<Product>) tblVw).getSelectionModel().getSelectedValues().size() != 0) {
+                    Product product = (((MFXTableView<Product>) tblVw).getSelectionModel().getSelectedValues().get(0));
+                    rowSelected.add(product.getProdID());
+
+                    if (rowSelected.size() == 2) {
+                        if (rowSelected.get(0).equals(rowSelected.get(1))) {
+                            System.out.println(product.getProdID());
+                            passObj.setObj(product);
+                            passObj.setCrud(BasicObjs.read);
+                            switchScene("View/ViewInventory_UI.fxml", passObj, BasicObjs.forward);
+                        }
+                        rowSelected.clear();
+                    }
+                }
+            }
+        });
     }
 
     private void forStaff() {
@@ -708,7 +787,7 @@ public class EntityOverviewCONTR implements Initializable, BasicCONTRFunc {
         });
     }
 
-    private void forReturnDeliveryNote() {
+    private void forReturnDeliveryNote() throws Exception {
         // RDN ID
         MFXTableColumn<ReturnDeliveryNote> rdnIDCol = new MFXTableColumn<>("RDN ID", true, Comparator.comparing(rdn -> rdn.getCode()));
         // So Ref.

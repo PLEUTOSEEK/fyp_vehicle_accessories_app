@@ -165,6 +165,7 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
     private MFXTextField txtShipmentTerm;
     @FXML
     private MFXCircleToggleNode ctnShipmentTermSelection;
+    //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="util declarations">
     private BasicObjs passObj;
@@ -203,6 +204,7 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                 initializeUIControls();
                 inputValidation();
                 receiveData();
+                privilegeDetect();
                 autoClose();
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
@@ -537,6 +539,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         this.tblVw.setDisable(disable);
         this.btnAdd.setDisable(disable);
         this.imgDocs.setDisable(disable);
+
+        privilegeDetect();
     }
 
     @FXML
@@ -1158,6 +1162,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                         items.addAll(ItemService.getItemsByCIID(quotation.getCode()));
                         setupItemTable();
                         calculateTotalInformation(items);
+
+                        //
                     } else {
                         alertDialog(Alert.AlertType.INFORMATION,
                                 "Information",
@@ -1533,5 +1539,18 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         } else {
             return false;
         }
+    }
+
+    private void privilegeDetect() {
+        String privilege = passObj.getLoginStaff().getRole();
+
+        switch (privilege) {
+            case "ADMINISTRATOR":
+                this.ctnSalesPersonSelection.setDisable(false);
+                break;
+            default:
+                this.ctnSalesPersonSelection.setDisable(true);
+        }
+
     }
 }

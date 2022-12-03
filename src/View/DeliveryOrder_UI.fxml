@@ -21,7 +21,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<fx:root id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" type="AnchorPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.DeliveryOrderCONTR">
+<AnchorPane id="AnchorPane" minHeight="786.0" minWidth="1533.0" prefHeight="786.0" prefWidth="1533.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.DeliveryOrderCONTR">
     <children>
         <MFXScrollPane minHeight="785.0" minWidth="1532.0" prefHeight="786.0" prefWidth="1533.0" styleClass="grid-pane" stylesheets="@../../css/PaneBackgroundColor.css" trackColor="#828282" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <content>
@@ -295,4 +295,4 @@
       <URL value="@../Material/css/Buttons.css" />
       <URL value="@../Material/css/labels.css" />
    </stylesheets>
-</fx:root>
+</AnchorPane>

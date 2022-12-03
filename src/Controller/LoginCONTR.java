@@ -61,7 +61,6 @@ public class LoginCONTR implements Initializable, BasicCONTRFunc {
         if (event.isPrimaryButtonDown() == true) {
 
             if (!validator.validate()) {
-                alertDialog(AlertType.WARNING, "Warning", "Validation Message", validator.createStringBinding().getValue());
                 return;
             }
 
@@ -69,11 +68,17 @@ public class LoginCONTR implements Initializable, BasicCONTRFunc {
 
             if (loginStaff != null) {
                 //get inside the home page
+
+                if (loginStaff.getIsFrozen() == true) {
+                    alertDialog(AlertType.ERROR, "Error", "Staff Account frozen", "Please contact system administrator to unlock the account");
+                    return;
+                }
+
                 passObj.setLoginStaff(loginStaff);
                 switchScene("View/HomePage_UI.fxml", passObj, BasicObjs.forward);
             } else {
                 //pop out dialog mention user id or password is wrong
-                alertDialog(AlertType.ERROR, "Error", "Invalid User", validator.createStringBinding().getValue());
+                alertDialog(AlertType.ERROR, "Error", "Invalid User", "ID or password incorrect");
             }
         }
     }

@@ -177,7 +177,9 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 initializeComboSelections();
                 inputValidation();
                 receiveData();
+                privilegeDetect();
                 autoClose();
+
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
                 }
@@ -358,7 +360,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         this.txtSubTtl.setText("0.00");
         this.txtDiscount.setText("0.00");
         this.txtNett.setText("0.00");
-        this.txtSalesPerson.setText(HomePageCONTR.logInStaff.getStaffID());
+        this.txtSalesPerson.setText(passObj.getLoginStaff().getStaffID());
         this.cmbStatus.setText(SalesRules.CIStatus.NEW.toString());
     }
 
@@ -430,6 +432,8 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
         this.tblVw.setDisable(disable);
         this.btnAdd.setDisable(disable);
         this.imgDocs.setDisable(disable);
+
+        privilegeDetect();
     }
 
     private void initializeComboSelections() {
@@ -1212,6 +1216,19 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void privilegeDetect() {
+        String privilege = passObj.getLoginStaff().getRole();
+
+        switch (privilege) {
+            case "ADMINISTRATOR":
+                this.ctnSalesPersonSelection.setDisable(false);
+                break;
+            default:
+                this.ctnSalesPersonSelection.setDisable(true);
+        }
+
     }
 
 }

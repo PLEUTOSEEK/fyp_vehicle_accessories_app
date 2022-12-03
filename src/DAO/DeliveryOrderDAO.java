@@ -142,6 +142,7 @@ public class DeliveryOrderDAO {
             ps.execute();
             return deliveryOrder.getCode();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -174,14 +175,13 @@ public class DeliveryOrderDAO {
                     + "      ,[Reference_Type] = ? "
                     + "      ,[Reference] = ? "
                     + "      ,[Deliver_From] = ? "
-                    + "      ,[Delivery_Date? "
+                    + "      ,[Delivery_Date] = ? "
                     + "      ,[Issued_By] = ? "
                     + "      ,[Released_And_Verified_By] = ? "
                     + "      ,[Delivery_By] = ? "
                     + "      ,[Item_Received_By] = ? "
                     + "      ,[Status] = ? "
                     + "      ,[Created_Date] = ? "
-                    + "      ,[Actual_Created_Date] = ? "
                     + "      ,[Signed_Doc_Pic] = ? "
                     + "      ,[Modified_Date_Time] = ? "
                     + " WHERE [DO_ID] = ? ";
@@ -198,14 +198,14 @@ public class DeliveryOrderDAO {
             ps.setString(9, deliveryOrder.getItemReceivedBy().getCollectAddrID());
             ps.setString(10, deliveryOrder.getStatus());
             ps.setTimestamp(11, deliveryOrder.getCreatedDate());
-            ps.setTimestamp(12, deliveryOrder.getActualCreatedDateTime());
-            ps.setString(13, deliveryOrder.getSignedDocPic());
-            ps.setTimestamp(14, deliveryOrder.getModifiedDateTime());
-            ps.setString(15, deliveryOrder.getCode());
+            ps.setString(12, deliveryOrder.getSignedDocPic());
+            ps.setTimestamp(13, deliveryOrder.getModifiedDateTime());
+            ps.setString(14, deliveryOrder.getCode());
 
             ps.execute();
             return deliveryOrder.getCode();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -226,7 +226,7 @@ public class DeliveryOrderDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        String latestID = null;
+        String latestID = "";
 
         try {
             conn = SQLDatabaseConnection.openConn();
@@ -316,6 +316,7 @@ public class DeliveryOrderDAO {
             //return object
             return deliveryOrders;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {

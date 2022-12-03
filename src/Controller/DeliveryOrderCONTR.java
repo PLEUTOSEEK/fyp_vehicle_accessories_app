@@ -15,6 +15,7 @@ import Entity.Staff;
 import PassObjs.BasicObjs;
 import Service.DeliveryOrderService;
 import Service.GeneralRulesService;
+import Service.InventoryService;
 import Service.PackingSlipService;
 import Utils.ImageUtils;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -24,6 +25,7 @@ import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.cell.MFXDateCell;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import java.io.IOException;
@@ -38,6 +40,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.PauseTransition;
@@ -57,12 +60,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * FXML Controller class
@@ -74,8 +77,6 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     //<editor-fold defaultstate="collapsed" desc="fields">
     @FXML
     private MFXCircleToggleNode btnBack;
-    @FXML
-    private AnchorPane AnchorPane;
     @FXML
     private MFXDatePicker dtRefDate;
     @FXML
@@ -145,6 +146,8 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     //</editor-fold>
     @FXML
     private MFXTextField txtRef;
+    @FXML
+    private MFXTextField txtRefType;
 
     /**
      * Initializes the controller class.
@@ -152,12 +155,12 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        setupPackingTable();
 
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 initializeComboSelections();
+                initializeUIControls();
                 inputValidation();
                 receiveData();
                 autoClose();
@@ -188,6 +191,8 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
                 if (passObj.getCrud().equals(BasicObjs.read)) {
                     isViewMode(true);
                 }
+
+                setupPackingTable();
             }
         });
     }
@@ -200,6 +205,27 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
         transitionAlert.setCycleCount(1);
 
         btnDiscard.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
+    }
+
+    private void initializeUIControls() {
+        this.dtRefDate.setCellFactory(new Function<>() {
+            @Override
+            public MFXDateCell apply(LocalDate t) {
+                return new MFXDateCell(dtRefDate, t) {
+                    @Override
+                    public void updateItem(LocalDate item) {
+                        super.updateItem(item);
+
+                        if (item.isAfter(LocalDate.now())) {
+                            setDisable(true);
+                        } else {
+                            setDisable(false);
+                        }
+                    }
+                };
+
+            }
+        });
     }
 
     private void initializeComboSelections() {
@@ -265,7 +291,12 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     PackingSlip catchedPackingSlip = new PackingSlip();
-                                    catchedPackingSlip = ((PackingSlip) receiveObj.getObj()).clone();
+
+                                    if (receiveObj.getObj() != null) {
+                                        catchedPackingSlip = ((PackingSlip) receiveObj.getObj()).clone();
+                                    } else {
+                                        catchedPackingSlip = null;
+                                    }
 
                                     adjustPackingSlipNotYetDeliver(catchedPackingSlip, packingSlip);
 
@@ -325,7 +356,6 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private void fieldFillIn() throws IOException {
-        clearAllFieldsValue();
         defaultValFillIn();
 
         if (passObj.getObj() != null) {
@@ -338,11 +368,14 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
                 this.dtDlvrDt.setValue(d.getDeliveryDate() == null ? null : Instant.ofEpochMilli(d.getDeliveryDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
-                this.dtRefDate.setValue(d.getCreatedDate() == null ? null : Instant.ofEpochMilli(d.getCreatedDate().getTime())
+                this.dtRefDate.setValue(d.getCreatedDate() == null ? LocalDate.now() : Instant.ofEpochMilli(d.getCreatedDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
                 this.txtSORef.setText(d.getSo() == null ? "" : d.getSo().getCode());
                 this.cmbStatus.setText(d.getStatus());
+
+                this.txtRefType.setText(d.getReferenceType());
+                this.txtRef.setText(d.getReference());
 
                 this.txtIssuedBy.setText(d.getIssuedBy() == null ? "" : d.getIssuedBy().getStaffID());
                 this.txtReleasedAVerifiedBy.setText(d.getReleasedAVerifiedBy() == null ? "" : d.getReleasedAVerifiedBy().getStaffID());
@@ -367,7 +400,8 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
         this.txtDeliverFrom.setDisable(disable);
         this.dtDlvrDt.setDisable(disable);
         this.dtRefDate.setDisable(disable);
-        this.txtSORef.setDisable(disable);
+        this.txtSORef.setDisable(true);
+        this.txtRefType.setDisable(disable);
         this.txtRef.setDisable(disable);
         this.cmbStatus.setDisable(disable);
 
@@ -668,23 +702,40 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
         soRef.setCode(this.txtSORef.getText());
         d.setSo(soRef);
 
+        d.setReferenceType(this.txtRefType.getText());
         d.setReference(this.txtRef.getText());
         d.setStatus(this.cmbStatus.getText());
 
         Staff issuedBy = new Staff();
-        issuedBy.setStaffID(this.txtIssuedBy.getText());
+        if (isBlank(this.txtIssuedBy.getText())) {
+            issuedBy.setStaffID(null);
+        } else {
+            issuedBy.setStaffID(this.txtIssuedBy.getText());
+        }
         d.setIssuedBy(issuedBy);
 
         Staff releasedAVerifiedBy = new Staff();
-        releasedAVerifiedBy.setStaffID(this.txtReleasedAVerifiedBy.getText());
+        if (isBlank(this.txtReleasedAVerifiedBy.getText())) {
+            releasedAVerifiedBy.setStaffID(null);
+        } else {
+            releasedAVerifiedBy.setStaffID(this.txtReleasedAVerifiedBy.getText());
+        }
         d.setReleasedAVerifiedBy(releasedAVerifiedBy);
 
         Staff deliveryBy = new Staff();
-        deliveryBy.setStaffID(this.txtDeliveryBy.getText());
+        if (isBlank(this.txtDeliveryBy.getText())) {
+            deliveryBy.setStaffID(null);
+        } else {
+            deliveryBy.setStaffID(this.txtDeliveryBy.getText());
+        }
         d.setDeliveryBy(deliveryBy);
 
         CollectAddress itemReceivedBy = new CollectAddress();
-        itemReceivedBy.setCollectAddrID(this.txtItemReceivedBy.getText());
+        if (isBlank(this.txtItemReceivedBy.getText())) {
+            itemReceivedBy.setCollectAddrID(null);
+        } else {
+            itemReceivedBy.setCollectAddrID(this.txtItemReceivedBy.getText());
+        }
         d.setItemReceivedBy(itemReceivedBy);
 
         d.setSignedDocPic(this.lblImgStrs.getText());
@@ -712,7 +763,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
                 if (stage.getUserData() != null) {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
-                    this.txtDeliverFrom.setText(((CollectAddress) receiveObj.getObj()).getCollectAddrID());
+                    this.txtDeliverFrom.setText(((Place) receiveObj.getObj()).getPlaceID());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -757,11 +808,25 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
                     if (!so.getStatus().equals(SalesRules.SOStatus.COMPLETED)
                             && !so.getStatus().equals(SalesRules.SOStatus.ON_HOLD)) {
+                        this.clearAllFieldsValue();
+                        packingSlipsNotYetDeliver.addAll(PackingSlipService.getPSsBySOID(so.getCode()));
+                        if (isValidDocumentByItems()) {
 
-                        this.passObj.setObj(so);
+                            this.passObj.setObj(so);
 
-                        fieldFillIn();
+                            fieldFillIn();
 
+                            for (PackingSlip i : packingSlipsNotYetDeliver) {
+                                packingSlips.add(i.clone());
+                            }
+
+                            this.setupPackingTable();
+                        } else {
+                            alertDialog(Alert.AlertType.INFORMATION,
+                                    "Information",
+                                    "Document Blocked Message",
+                                    "There are no more transfered packages needed to be deliver for the selected document.");
+                        }
                     } else {
                         alertDialog(Alert.AlertType.INFORMATION,
                                 "Information",
@@ -774,6 +839,21 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    private boolean isValidDocumentByItems() {
+        Integer count = 0;
+        for (PackingSlip i : packingSlipsNotYetDeliver) {
+            if (i.getStatus().equals(WarehouseRules.PSStatus.REFERED)) {
+                count++;
+            }
+        }
+
+        if (count == packingSlipsNotYetDeliver.size()) {
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -968,7 +1048,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @FXML
-    private void saveDO(MouseEvent event) {
+    private void saveDO(MouseEvent event) throws Exception {
 
         // transfer item's ref doc to PackingSlip Reference
         if (event.isPrimaryButtonDown() == true) {
@@ -985,11 +1065,16 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
             doInDraft = this.prepareDeliveryOrderToObj();
 
-            if (this.txtDOID.getText().isEmpty()) {
+            if (isBlank(this.txtDOID.getText())) {
                 doInDraft.setCode(DeliveryOrderService.saveNewDeliveryOrder(doInDraft));
 
             } else {
                 DeliveryOrderService.updateDeliveryOrder(doInDraft);
+
+                // if the status are turn to 'delivered', then need to deduct reserved qty on the inventory
+                if (doInDraft.getStatus().equals(WarehouseRules.DOStatus.DELIVERED.toString())) {
+                    InventoryService.postGoodsIssue(packingSlips);
+                }
             }
 
             packingSlips.forEach(e -> {
@@ -997,9 +1082,9 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
                 e.setStatus(WarehouseRules.PSStatus.REFERED.toString());
             });
 
+            PackingSlipService.updatePackingSlipsStatus(packingSlipsNotYetDeliver);
             // update packing slip status to all referred
             PackingSlipService.updatePackingSlipsStatus(packingSlips);
-
         }
     }
 

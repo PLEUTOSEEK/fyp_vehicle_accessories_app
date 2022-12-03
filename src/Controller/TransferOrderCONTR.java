@@ -393,7 +393,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
     private void defaultValFillIn() {
         this.dtRefDate.setValue(LocalDate.now());
-        this.txtPIC.setText(HomePageCONTR.logInStaff.getStaffID());
+        this.txtPIC.setText(passObj.getLoginStaff().getStaffID());
         this.cmbStatus.setText(WarehouseRules.TOStatus.NEW.toString());
     }
 
@@ -419,7 +419,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 this.txtTOID.setText(to.getCode());
                 this.txtPIC.setText(to.getPIC() == null ? "" : to.getPIC().getStaffID());
                 this.txtDestination.setText(to.getDestination() == null ? "" : to.getDestination().getPlaceID());
-                this.dtRefDate.setValue(to.getCreatedDate() == null ? null : Instant.ofEpochMilli(to.getCreatedDate().getTime())
+                this.dtRefDate.setValue(to.getCreatedDate() == null ? LocalDate.now() : Instant.ofEpochMilli(to.getCreatedDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
                 this.cmbRefType.setText(to.getReqType());
