@@ -388,6 +388,9 @@ public class WarehouseRulesConfigurationCONTR implements Initializable, BasicCON
 
         WarehouseRulesService.updateMaxRequiredDeliveryDays(this.txtMaxRequiredDeliveryDate.getText());
         ShipmentTermService.updateInsertShipmentTerms(shipmentTerms);
+
+        switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
+
     }
 
 }

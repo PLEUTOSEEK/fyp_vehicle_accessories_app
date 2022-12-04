@@ -1123,6 +1123,9 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
             ItemService.updateItemsByDoc(rdnInDraft.getItems(), rdnInDraft.getCode());
 
             updateSOStatus();
+
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
+
         }
     }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="72958a1e-2172-48b7-b115-145649b17ef0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="72958a1e-2172-48b7-b115-145649b17ef0">
     <property name="ireport.zoom" value="2.1435888100000047"/>
     <property name="ireport.x" value="0"/>
     <property name="ireport.y" value="171"/>
@@ -149,7 +149,7 @@ WHERE
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{PIC_NAME}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="40" y="195" width="100" height="10" uuid="8c019612-ace9-4e7b-8113-9a9cd118dde6"/>
@@ -157,7 +157,7 @@ WHERE
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{Mobile_No}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{PIC_MOBILE_NO}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="40" y="210" width="100" height="10" uuid="c36d9193-3ef4-49f4-8d5e-db0d70b423d7"/>

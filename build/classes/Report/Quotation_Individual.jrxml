@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8f231e0d-70f9-43f6-b3f8-e50ad197509f">
     <property name="ireport.zoom" value="2.0490403660952237"/>
     <property name="ireport.x" value="0"/>
-    <property name="ireport.y" value="0"/>
+    <property name="ireport.y" value="40"/>
     <subDataset name="dataset1" uuid="00a5c64b-f76e-4d58-839f-0e62284a8e12"/>
     <parameter name="param_QUOT_ID_Header" class="java.lang.String">
         <defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -14,19 +14,19 @@
 		<![CDATA[SELECT
     Customer.Customer_ID,
     Customer.Name AS BILL_TO_NAME,
-    BILL_TO_ADDR.Location_Name,
-    BILL_TO_ADDR.Address,
-    BILL_TO_ADDR.City,
-    BILL_TO_ADDR.Postal_Code,
-    BILL_TO_ADDR.[State],
-    BILL_TO_ADDR.Country,
+    BILL_TO_ADDR.Location_Name AS BILL_TO_LOCATION_NAME,
+    BILL_TO_ADDR.Address AS BILL_TO_ADDRESS,
+    BILL_TO_ADDR.City AS BILL_TO_CITY,
+    BILL_TO_ADDR.Postal_Code AS BILL_TO_POSTAL_CODE,
+    BILL_TO_ADDR.[State] AS BILL_TO_STATE,
+    BILL_TO_ADDR.Country AS BILL_TO_COUNTRY,
     DELIVER_TO.Name AS DELIVER_TO_NAME,
-    DELIVER_TO_ADDR.Location_Name,
-    DELIVER_TO_ADDR.Address,
-    DELIVER_TO_ADDR.City,
-    DELIVER_TO_ADDR.Postal_Code,
-    DELIVER_TO_ADDR.[State],
-    DELIVER_TO_ADDR.Country,
+    DELIVER_TO_ADDR.Location_Name AS DELIVER_TO_LOCATION_NAME,
+    DELIVER_TO_ADDR.Address AS DELIVER_TO_ADDRESS,
+    DELIVER_TO_ADDR.City AS DELIVER_TO_CITY,
+    DELIVER_TO_ADDR.Postal_Code AS DELIVER_TO_POSTAL_CODE,
+    DELIVER_TO_ADDR.[State] AS DELIVER_TO_STATE,
+    DELIVER_TO_ADDR.Country AS DELIVER_TO_COUNTRY,
     Quotation.QUOT_ID,
     FORMAT (Quotation.Created_Date, 'dd-MMM-yyyy') AS CREATED_DATE,
     Quotation.CI_ID,
@@ -81,13 +81,19 @@ WHERE
     </queryString>
     <field name="Customer_ID" class="java.lang.String"/>
     <field name="BILL_TO_NAME" class="java.lang.String"/>
-    <field name="Location_Name" class="java.lang.String"/>
-    <field name="Address" class="java.lang.String"/>
-    <field name="City" class="java.lang.String"/>
-    <field name="Postal_Code" class="java.lang.String"/>
-    <field name="State" class="java.lang.String"/>
-    <field name="Country" class="java.lang.String"/>
+    <field name="BILL_TO_LOCATION_NAME" class="java.lang.String"/>
+    <field name="BILL_TO_ADDRESS" class="java.lang.String"/>
+    <field name="BILL_TO_CITY" class="java.lang.String"/>
+    <field name="BILL_TO_POSTAL_CODE" class="java.lang.String"/>
+    <field name="BILL_TO_STATE" class="java.lang.String"/>
+    <field name="BILL_TO_COUNTRY" class="java.lang.String"/>
     <field name="DELIVER_TO_NAME" class="java.lang.String"/>
+    <field name="DELIVER_TO_LOCATION_NAME" class="java.lang.String"/>
+    <field name="DELIVER_TO_ADDRESS" class="java.lang.String"/>
+    <field name="DELIVER_TO_CITY" class="java.lang.String"/>
+    <field name="DELIVER_TO_POSTAL_CODE" class="java.lang.String"/>
+    <field name="DELIVER_TO_STATE" class="java.lang.String"/>
+    <field name="DELIVER_TO_COUNTRY" class="java.lang.String"/>
     <field name="QUOT_ID" class="java.lang.String"/>
     <field name="CREATED_DATE" class="java.lang.String"/>
     <field name="CI_ID" class="java.lang.String"/>
@@ -204,7 +210,7 @@ WHERE
                 </textField>
                 <elementGroup>
                     <textField>
-                        <reportElement x="0" y="107" width="130" height="10" uuid="2fa5b1fb-17d9-4652-9d65-f149b5f19e8e"/>
+                        <reportElement x="0" y="110" width="130" height="10" uuid="2fa5b1fb-17d9-4652-9d65-f149b5f19e8e"/>
                         <textElement>
                             <font fontName="Calibri" size="8"/>
                             <paragraph leftIndent="2"/>
@@ -212,7 +218,7 @@ WHERE
                         <textFieldExpression><![CDATA[$F{DELIVER_TO_NAME}]]></textFieldExpression>
                     </textField>
                     <textField>
-                        <reportElement x="0" y="157" width="130" height="10" uuid="08aed3c7-b196-4e77-8b0b-f9cb9b831a4d"/>
+                        <reportElement x="0" y="160" width="130" height="10" uuid="08aed3c7-b196-4e77-8b0b-f9cb9b831a4d"/>
                         <textElement>
                             <font fontName="Calibri" size="8"/>
                             <paragraph leftIndent="2"/>
@@ -220,7 +226,7 @@ WHERE
                         <textFieldExpression><![CDATA[$F{DELIVER_TO_STATE}]]></textFieldExpression>
                     </textField>
                     <textField>
-                        <reportElement x="0" y="127" width="130" height="10" uuid="d8e7cdd5-f735-40c2-b030-27581fe6d5f3"/>
+                        <reportElement x="0" y="130" width="130" height="10" uuid="d8e7cdd5-f735-40c2-b030-27581fe6d5f3"/>
                         <textElement>
                             <font fontName="Calibri" size="8"/>
                             <paragraph leftIndent="2"/>
@@ -228,7 +234,7 @@ WHERE
                         <textFieldExpression><![CDATA[$F{DELIVER_TO_ADDRESS}]]></textFieldExpression>
                     </textField>
                     <textField>
-                        <reportElement x="0" y="117" width="130" height="10" uuid="70af2b24-a7e5-49df-aa95-9f2335585bb5"/>
+                        <reportElement x="0" y="120" width="130" height="10" uuid="70af2b24-a7e5-49df-aa95-9f2335585bb5"/>
                         <textElement>
                             <font fontName="Calibri" size="8"/>
                             <paragraph leftIndent="2"/>
@@ -236,7 +242,7 @@ WHERE
                         <textFieldExpression><![CDATA[$F{DELIVER_TO_LOCATION_NAME}]]></textFieldExpression>
                     </textField>
                     <textField>
-                        <reportElement x="0" y="147" width="130" height="10" uuid="23d18423-5a19-4746-82e7-f63c3d5640b5"/>
+                        <reportElement x="0" y="150" width="130" height="10" uuid="23d18423-5a19-4746-82e7-f63c3d5640b5"/>
                         <textElement>
                             <font fontName="Calibri" size="8"/>
                             <paragraph leftIndent="2"/>
@@ -244,7 +250,7 @@ WHERE
                         <textFieldExpression><![CDATA[$F{DELIVER_TO_POSTAL_CODE}]]></textFieldExpression>
                     </textField>
                     <staticText>
-                        <reportElement x="0" y="97" width="40" height="10" uuid="f3537a7e-fd34-44e1-a07f-325cdf13b94c"/>
+                        <reportElement x="0" y="100" width="40" height="10" uuid="f3537a7e-fd34-44e1-a07f-325cdf13b94c"/>
                         <box>
                             <pen lineWidth="0.0"/>
                             <topPen lineWidth="0.0"/>
@@ -259,7 +265,7 @@ WHERE
                         <text><![CDATA[Deliver To:]]></text>
                     </staticText>
                     <textField>
-                        <reportElement x="0" y="137" width="130" height="10" uuid="b44704f9-970c-4c23-84d1-d287a25c512b"/>
+                        <reportElement x="0" y="140" width="130" height="10" uuid="b44704f9-970c-4c23-84d1-d287a25c512b"/>
                         <textElement>
                             <font fontName="Calibri" size="8"/>
                             <paragraph leftIndent="2"/>
@@ -267,7 +273,7 @@ WHERE
                         <textFieldExpression><![CDATA[$F{DELIVER_TO_CITY}]]></textFieldExpression>
                     </textField>
                     <textField>
-                        <reportElement x="0" y="167" width="130" height="10" uuid="8c2b9fd4-c19f-41bf-9a39-d50d19df36fa"/>
+                        <reportElement x="0" y="170" width="130" height="10" uuid="8c2b9fd4-c19f-41bf-9a39-d50d19df36fa"/>
                         <textElement>
                             <font fontName="Calibri" size="8"/>
                             <paragraph leftIndent="2"/>
@@ -344,7 +350,7 @@ WHERE
                             <font fontName="Calibri" size="8"/>
                             <paragraph leftIndent="2"/>
                         </textElement>
-                        <textFieldExpression><![CDATA[$F{SALES_PERSON_Name}]]></textFieldExpression>
+                        <textFieldExpression><![CDATA[$F{SALES_PERSON_NAME}]]></textFieldExpression>
                     </textField>
                     <textField>
                         <reportElement x="414" y="120" width="141" height="10" uuid="043e1cef-4ad2-4abc-bdf1-695f1c876f7c"/>

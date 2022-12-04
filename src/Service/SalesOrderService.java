@@ -4,6 +4,7 @@
  */
 package Service;
 
+import DAO.SQLDatabaseConnection;
 import DAO.SalesOrderDAO;
 import Entity.SalesOrder;
 import Structures.CodeStructure;
@@ -12,7 +13,14 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -70,6 +78,26 @@ public class SalesOrderService {
 
     public static List<SalesOrder> getAllSalesOrders() {
         return SalesOrderDAO.getAllSalesOrder();
+    }
+
+    public static void salesOrderSheet(String soCode) {
+        try {
+            String report = "src/Report/SalesOrder_Header_Individual.jrxml";
+            String report2 = "src/Report/SalesOrder_Body_Individual.jrxml";
+
+            JasperReport jr = JasperCompileManager.compileReport(report);
+            JasperReport jrBody = JasperCompileManager.compileReport(report2);
+
+            Map< String, Object> para = new HashMap<>();
+            para.put("param_SO_ID_Header", soCode);
+            para.put("subreportParameter", jrBody);
+
+            JasperPrint jp = JasperFillManager.fillReport(jr, para, SQLDatabaseConnection.openConn());
+            JasperViewer.viewReport(jp, false);
+
+        } catch (Exception e) {
+            System.out.println("assasa" + e.getMessage());
+        }
     }
 
 }

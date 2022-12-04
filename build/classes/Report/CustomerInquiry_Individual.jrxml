@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8f231e0d-70f9-43f6-b3f8-e50ad197509f">
-    <property name="ireport.zoom" value="2.0490403660952237"/>
+    <property name="ireport.zoom" value="1.5394743546921288"/>
     <property name="ireport.x" value="0"/>
     <property name="ireport.y" value="0"/>
     <subDataset name="dataset1" uuid="00a5c64b-f76e-4d58-839f-0e62284a8e12"/>
@@ -14,19 +14,19 @@
 		<![CDATA[SELECT
     Customer.Customer_ID,
     Customer.Name AS BILL_TO_NAME,
-    BILL_TO_ADDR.Location_Name,
-    BILL_TO_ADDR.Address,
-    BILL_TO_ADDR.City,
-    BILL_TO_ADDR.Postal_Code,
-    BILL_TO_ADDR.[State],
-    BILL_TO_ADDR.Country,
+    BILL_TO_ADDR.Location_Name AS BILL_TO_LOCATION_NAME,
+    BILL_TO_ADDR.Address AS BILL_TO_ADDRESS,
+    BILL_TO_ADDR.City AS BILL_TO_CITY,
+    BILL_TO_ADDR.Postal_Code AS BILL_TO_POSTAL_CODE,
+    BILL_TO_ADDR.[State] AS BILL_TO_STATE,
+    BILL_TO_ADDR.Country AS BILL_TO_COUNTRY,
     DELIVER_TO.Name AS DELIVER_TO_NAME,
-    DELIVER_TO_ADDR.Location_Name,
-    DELIVER_TO_ADDR.Address,
-    DELIVER_TO_ADDR.City,
-    DELIVER_TO_ADDR.Postal_Code,
-    DELIVER_TO_ADDR.[State],
-    DELIVER_TO_ADDR.Country,
+    DELIVER_TO_ADDR.Location_Name AS DELIVER_TO_LOCATION_NAME,
+    DELIVER_TO_ADDR.Address AS DELIVER_TO_ADDRESS,
+    DELIVER_TO_ADDR.City AS DELIVER_TO_CITY,
+    DELIVER_TO_ADDR.Postal_Code AS DELIVER_TO_POSTAL_CODE,
+    DELIVER_TO_ADDR.[State] AS DELIVER_TO_STATE,
+    DELIVER_TO_ADDR.Country AS DELIVER_TO_COUNTRY,
     CustomerInquiry.CI_ID,
     FORMAT (CustomerInquiry.Created_Date, 'dd-MMM-yyyy') AS CREATED_DATE,
     CustomerInquiry.Reference,
@@ -79,13 +79,19 @@ WHERE
     </queryString>
     <field name="Customer_ID" class="java.lang.String"/>
     <field name="BILL_TO_NAME" class="java.lang.String"/>
-    <field name="Location_Name" class="java.lang.String"/>
-    <field name="Address" class="java.lang.String"/>
-    <field name="City" class="java.lang.String"/>
-    <field name="Postal_Code" class="java.lang.String"/>
-    <field name="State" class="java.lang.String"/>
-    <field name="Country" class="java.lang.String"/>
+    <field name="BILL_TO_LOCATION_NAME" class="java.lang.String"/>
+    <field name="BILL_TO_ADDRESS" class="java.lang.String"/>
+    <field name="BILL_TO_CITY" class="java.lang.String"/>
+    <field name="BILL_TO_POSTAL_CODE" class="java.lang.String"/>
+    <field name="BILL_TO_STATE" class="java.lang.String"/>
+    <field name="BILL_TO_COUNTRY" class="java.lang.String"/>
     <field name="DELIVER_TO_NAME" class="java.lang.String"/>
+    <field name="DELIVER_TO_LOCATION_NAME" class="java.lang.String"/>
+    <field name="DELIVER_TO_ADDRESS" class="java.lang.String"/>
+    <field name="DELIVER_TO_CITY" class="java.lang.String"/>
+    <field name="DELIVER_TO_POSTAL_CODE" class="java.lang.String"/>
+    <field name="DELIVER_TO_STATE" class="java.lang.String"/>
+    <field name="DELIVER_TO_COUNTRY" class="java.lang.String"/>
     <field name="CI_ID" class="java.lang.String"/>
     <field name="CREATED_DATE" class="java.lang.String"/>
     <field name="Reference" class="java.lang.String"/>
@@ -332,7 +338,7 @@ WHERE
                             <font fontName="Calibri" size="8"/>
                             <paragraph leftIndent="2"/>
                         </textElement>
-                        <textFieldExpression><![CDATA[$F{SALES_PERSON_Name}]]></textFieldExpression>
+                        <textFieldExpression><![CDATA[$F{SALES_PERSON_NAME}]]></textFieldExpression>
                     </textField>
                     <textField>
                         <reportElement x="414" y="110" width="141" height="10" uuid="043e1cef-4ad2-4abc-bdf1-695f1c876f7c"/>

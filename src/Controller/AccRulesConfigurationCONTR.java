@@ -389,6 +389,8 @@ public class AccRulesConfigurationCONTR implements Initializable, BasicCONTRFunc
 
         AccountingRulesService.updateTaxRate(this.txtTaxRate.getText());
         PaymentTermService.updateInsertPaymentTerms(paymentTerms);
+
+        switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
     }
 
     public void autoClose() {

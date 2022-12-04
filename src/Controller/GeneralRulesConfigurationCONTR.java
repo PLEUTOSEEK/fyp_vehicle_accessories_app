@@ -119,6 +119,8 @@ public class GeneralRulesConfigurationCONTR implements Initializable, BasicCONTR
             return;
         }
         GeneralRulesService.updateSessionTimeOut(this.txtSessionTimeOut.getText());
+        switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
+
     }
 
     @Override

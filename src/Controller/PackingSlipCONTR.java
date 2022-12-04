@@ -618,6 +618,9 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
             ItemService.updateItemsByDoc(packingSlipInDraft.getItems(), packingSlipInDraft.getCode());
 
             updateRefDoc();
+
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
+
         }
     }
 

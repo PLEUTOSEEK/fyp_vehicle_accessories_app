@@ -5,6 +5,7 @@
 package Service;
 
 import DAO.QuotationDAO;
+import DAO.SQLDatabaseConnection;
 import Entity.Quotation;
 import Structures.CodeStructure;
 import java.sql.SQLException;
@@ -12,9 +13,16 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -78,6 +86,22 @@ public class QuotationService {
 
     public static Quotation getQuotationByID(String code) throws SQLException {
         return QuotationDAO.getQuotationByCode(code);
+    }
+
+    public static void getQuotationSheet(String quotCode) {
+        try {
+            String report = "src/Report/Quotation_Individual.jrxml";
+            JasperReport jr = JasperCompileManager.compileReport(report);
+
+            Map< String, Object> para = new HashMap<>();
+            para.put("param_QUOT_ID_Header", quotCode);
+
+            JasperPrint jp = JasperFillManager.fillReport(jr, para, SQLDatabaseConnection.openConn());
+            JasperViewer.viewReport(jp, false);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

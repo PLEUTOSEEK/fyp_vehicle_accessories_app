@@ -750,6 +750,9 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
             }
 
             ItemService.updateItemsByDoc(receiptInDraft.getItems(), receiptInDraft.getCode());
+
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
+
         }
     }
 

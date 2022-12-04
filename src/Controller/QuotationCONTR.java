@@ -39,6 +39,7 @@ import io.github.palexdev.materialfx.filter.StringFilter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -747,10 +748,15 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                     }
 
                     LocalDate date = LocalDate.parse(textVal, formatter);
-                    LocalDate date2 = LocalDate.parse(this.dtRefDate.getText(), formatter);
 
                     if (!date.isAfter(LocalDate.now())) {
-                        c.error("Quotation Validity Date - Cannot be before the reference date");
+                        c.error("Quotation Validity Date - Cannot be before the current date");
+                        return;
+                    }
+                    Date minDlvrDateOfItems = items.stream().map(Item::getDlvrDate).min(Date::compareTo).get();
+
+                    if (date.compareTo(minDlvrDateOfItems.toLocalDate()) >= 0) {
+                        c.error("Quotation Validity Date - Cannot be after start delivery date");
                         return;
                     }
                 })
@@ -783,6 +789,14 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                         c.error("Required Delivery Date - Cannot be before the current date");
                         return;
                     }
+
+                    Date maxDlvrDateOfItems = items.stream().map(Item::getDlvrDate).max(Date::compareTo).get();
+
+                    if (date.compareTo(maxDlvrDateOfItems.toLocalDate()) < 0) {
+                        c.error("Required Delivery Date - Cannot be before the last delivery date");
+                        return;
+                    }
+
                 })
                 .decorates(this.dtReqDlvrDate);
 
@@ -1430,6 +1444,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
             ItemService.updateItemsByDoc(quotInDraft.getItems(), quotInDraft.getCode());
 
             updateRefDoc();
+
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
 
         }
     }

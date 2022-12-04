@@ -1183,6 +1183,9 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             ItemService.updateItemsByDoc(toInDraft.getItems(), toInDraft.getCode());
 
             updateRefDoc();
+
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
+
         }
 
     }

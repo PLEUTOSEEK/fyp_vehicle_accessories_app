@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f731804b-a97e-4a4f-bfd3-6eab6d4d57c4">
-    <property name="ireport.zoom" value="2.5937424601000076"/>
-    <property name="ireport.x" value="29"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subReport1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f731804b-a97e-4a4f-bfd3-6eab6d4d57c4">
+    <property name="ireport.zoom" value="1.7715610000000048"/>
+    <property name="ireport.x" value="0"/>
     <property name="ireport.y" value="0"/>
     <parameter name="param_SO_ID_Body" class="java.lang.String"/>
     <parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -39,7 +39,6 @@ WHERE
     <field name="Excl_Amount" class="java.math.BigDecimal"/>
     <field name="Discount_Amount" class="java.math.BigDecimal"/>
     <field name="Incl_Amount" class="java.math.BigDecimal"/>
-    <field name="Serial_No" class="java.lang.String"/>
     <background>
         <band splitType="Stretch"/>
     </background>

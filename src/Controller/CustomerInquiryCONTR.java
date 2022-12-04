@@ -1161,6 +1161,9 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
             }
 
             ItemService.updateItemsByDoc(customerInquiryInDraft.getItems(), customerInquiryInDraft.getCode());
+
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
+
         }
     }
 

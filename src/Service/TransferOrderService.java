@@ -4,6 +4,7 @@
  */
 package Service;
 
+import DAO.SQLDatabaseConnection;
 import DAO.TransferOrderDAO;
 import Entity.TransferOrder;
 import Structures.CodeStructure;
@@ -12,7 +13,14 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -71,4 +79,20 @@ public class TransferOrderService {
         return TransferOrderDAO.getTransferOrderByCode(code);
     }
 
+    public static void getTransferOrderSheet(String toCode) {
+        try {
+            String report = "src/Report/TransferOrder_Individual.jrxml";
+
+            JasperReport jr = JasperCompileManager.compileReport(report);
+
+            Map< String, Object> para = new HashMap<>();
+            para.put("param_TO_ID", toCode);
+
+            JasperPrint jp = JasperFillManager.fillReport(jr, para, SQLDatabaseConnection.openConn());
+            JasperViewer.viewReport(jp, false);
+
+        } catch (Exception e) {
+            System.out.println("assasa" + e.getMessage());
+        }
+    }
 }

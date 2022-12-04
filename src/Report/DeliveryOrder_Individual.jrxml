@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="72958a1e-2172-48b7-b115-145649b17ef0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="72958a1e-2172-48b7-b115-145649b17ef0">
     <property name="ireport.zoom" value="2.1435888100000047"/>
     <property name="ireport.x" value="0"/>
     <property name="ireport.y" value="0"/>
@@ -331,7 +331,7 @@ WHERE
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[016-3717733]]></textFieldExpression>
+                <textFieldExpression><![CDATA["016-3717733"]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="0" y="99" width="130" height="10" uuid="8715d19d-2775-4000-8b16-b4dbd54fce2e"/>
@@ -339,7 +339,7 @@ WHERE
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[Thir Shen Sdn. Bhd.]]></textFieldExpression>
+                <textFieldExpression><![CDATA["Thir Shen Sdn. Bhd."]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="0" y="109" width="130" height="10" uuid="eb192dc6-f1f4-4c65-b220-231e80240285"/>
@@ -347,7 +347,7 @@ WHERE
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[Lot.8538, Jalan Klang Banting]]></textFieldExpression>
+                <textFieldExpression><![CDATA["Lot.8538, Jalan Klang Banting"]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="0" y="139" width="130" height="10" uuid="bf2b7e66-469a-40e3-96c4-e6f870a95c7e"/>
@@ -355,7 +355,7 @@ WHERE
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[Selangor]]></textFieldExpression>
+                <textFieldExpression><![CDATA["Selangor"]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="0" y="129" width="130" height="10" uuid="a5773a73-2787-434c-a4f6-3823f15573a0"/>
@@ -371,7 +371,7 @@ WHERE
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[Malaysia]]></textFieldExpression>
+                <textFieldExpression><![CDATA["Malaysia"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="0" y="89" width="40" height="10" uuid="d74cd76b-b73f-4341-9ea6-5fdaeeaf543d"/>
@@ -394,7 +394,7 @@ WHERE
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[Banting]]></textFieldExpression>
+                <textFieldExpression><![CDATA["Banting"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="401" y="285" width="52" height="10" uuid="6bf6087a-bd61-4a79-8e18-f6106beec4db"/>

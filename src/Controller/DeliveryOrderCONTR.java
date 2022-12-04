@@ -1085,6 +1085,9 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
             PackingSlipService.updatePackingSlipsStatus(packingSlipsNotYetDeliver);
             // update packing slip status to all referred
             PackingSlipService.updatePackingSlipsStatus(packingSlips);
+
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
+
         }
     }
 

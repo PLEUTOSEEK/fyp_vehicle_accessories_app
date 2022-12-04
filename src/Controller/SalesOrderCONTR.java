@@ -541,6 +541,10 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         this.imgDocs.setDisable(disable);
 
         privilegeDetect();
+
+        if (!this.txtQuotRef.getText().isEmpty()) {
+            blockControlWhileReferQuot();
+        }
     }
 
     @FXML
@@ -727,6 +731,36 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         validator.add(validatorCheck);
 
         //=====================================
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Quotation Reference", this.txtQuotRef.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Quotation Reference");
+                    textVal = textVal.trim();
+                    /*
+                     1.
+                     */
+                    // allow null
+                    if (textVal.isEmpty()) {
+                        return;
+                    }
+
+                    try {
+                        if (QuotationService.getQuotationByID(textVal).getQuotValidityDate().toLocalDate().compareTo(LocalDate.now()) == -1) {
+                            c.error("Required Delivery Date - Invalid Quotation, due to quotation validity date exceeded");
+                            return;
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SalesOrderCONTR.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                })
+                .decorates(this.txtQuotRef);
+
+        validator.add(validatorCheck);
+
+//=====================================
         //=====================================
         validatorCheck = (new Validator()).createCheck();
 
@@ -1163,7 +1197,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                         setupItemTable();
                         calculateTotalInformation(items);
 
-                        //
+                        // block all
+                        blockControlWhileReferQuot();
                     } else {
                         alertDialog(Alert.AlertType.INFORMATION,
                                 "Information",
@@ -1177,6 +1212,18 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
             }
 
         }
+    }
+
+    private void blockControlWhileReferQuot() {
+        this.ctnBillToSelection.setDisable(true);
+        this.ctnDeliverToSelection.setDisable(true);
+        this.dtReqDlvrDate.setDisable(true);
+        this.cmbCurrencyCode.setDisable(true);
+        this.ctnPymtTermSelection.setDisable(true);
+        this.ctnShipmentTermSelection.setDisable(true);
+        this.btnAdd.setDisable(true);
+        this.tblVw.setDisable(true);
+
     }
 
     @FXML
@@ -1412,6 +1459,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
             ItemService.updateItemsByDoc(soInDraft.getItems(), soInDraft.getCode());
 
             updateRefDoc();
+
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
 
         }
     }

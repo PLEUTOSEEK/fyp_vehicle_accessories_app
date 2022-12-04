@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8f231e0d-70f9-43f6-b3f8-e50ad197509f">
     <property name="ireport.zoom" value="1.862763969177476"/>
     <property name="ireport.x" value="0"/>
-    <property name="ireport.y" value="657"/>
+    <property name="ireport.y" value="192"/>
     <subDataset name="dataset1" uuid="00a5c64b-f76e-4d58-839f-0e62284a8e12"/>
     <parameter name="param_SO_ID_Header" class="java.lang.String">
         <defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -10,6 +10,7 @@
     <parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
         <defaultValueExpression><![CDATA["C:\\Users\\Tee Zhuo Xuan\\OneDrive - Tunku Abdul Rahman University College\\Desktop\\fyp_vehicle_accessories_app\\src\\Report\\"]]></defaultValueExpression>
     </parameter>
+    <parameter name="subreportParameter" class="net.sf.jasperreports.engine.JasperReport"/>
     <queryString>
 		<![CDATA[SELECT
     Customer.Customer_ID,
@@ -62,7 +63,7 @@ FROM
     ON SalesOrder.Sales_Person = SALES_PERSON.Staff_ID
 
 WHERE
-    SalesOrder.SO_ID = = $P{param_SO_ID_Header}]]>
+    SalesOrder.SO_ID = $P{param_SO_ID_Header}]]>
     </queryString>
     <field name="Customer_ID" class="java.lang.String"/>
     <field name="BILL_TO_NAME" class="java.lang.String"/>
@@ -498,15 +499,15 @@ WHERE
     <detail>
         <band height="75" splitType="Stretch">
             <subreport>
-                <reportElement x="0" y="0" width="555" height="75" uuid="f6b8f5d9-5423-4bc1-90df-f1cd12d86711"/>
+                <reportElement x="-27" y="0" width="553" height="75" uuid="54398f5e-6f65-481e-9c4e-3d28e5735b21"/>
                 <subreportParameter name="param_SO_ID_Body">
                     <subreportParameterExpression><![CDATA[$P{param_SO_ID_Header}]]></subreportParameterExpression>
                 </subreportParameter>
                 <subreportParameter name="SUBREPORT_DIR">
-                    <subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+                    <subreportParameterExpression><![CDATA[]]></subreportParameterExpression>
                 </subreportParameter>
                 <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "SalesOrder_Body_Individual.jasper"]]></subreportExpression>
+                <subreportExpression><![CDATA[$P{subreportParameter}]]></subreportExpression>
             </subreport>
         </band>
     </detail>

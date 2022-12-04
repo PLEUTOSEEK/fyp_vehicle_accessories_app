@@ -944,6 +944,9 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
             ItemService.updateItemsByDoc(invoiceInDraft.getItems(), invoiceInDraft.getCode());
 
             updateSOStatus();
+
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
+
         }
     }
 

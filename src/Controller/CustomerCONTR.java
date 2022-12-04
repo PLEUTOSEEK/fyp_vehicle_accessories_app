@@ -1365,6 +1365,7 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
             custInDraft = prepareCustomerInforToObj();
             saveCustomer();
             saveCollectAddresses();
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
 
             /*
             // alert successful insert to database

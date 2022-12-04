@@ -1415,6 +1415,8 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
 
                 StaffService.updateStaff(staffInDraft);
             }
+
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
         }
     }
 

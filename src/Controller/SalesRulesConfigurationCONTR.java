@@ -324,6 +324,9 @@ public class SalesRulesConfigurationCONTR implements Initializable, BasicCONTRFu
         SalesRulesService.updateMaxOrderAmtperSO(this.txtMaxOrderAmt.getText());
         SalesRulesService.updateMaxQuotationValidityPeriod(this.txtMaxQuotValidityPeriod.getText());
         SalesRulesService.updateUpperLimitPercentageDiscount(this.txtUpperLimitDiscount.getText());
+
+        switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
+
     }
 
 }
