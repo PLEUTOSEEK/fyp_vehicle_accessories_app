@@ -1225,6 +1225,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
     private void privilegeDetect() {
         String privilege = passObj.getLoginStaff().getRole();
+        privilege = privilege.toUpperCase();
 
         switch (privilege) {
             case "ADMINISTRATOR":
