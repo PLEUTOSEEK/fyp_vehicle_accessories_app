@@ -129,11 +129,13 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
     public void autoClose() {
         Duration delay1 = Duration.seconds(GeneralRulesService.getSessionTimeOut());
         PauseTransition transitionAlert = new PauseTransition(delay1);
-        this.passObj.setLoginStaff(new Staff());
-        transitionAlert.setOnFinished(evt -> switchScene("View/Login_UI.fxml", passObj, BasicObjs.back));
+        transitionAlert.setOnFinished(evt -> {
+            this.passObj.setLoginStaff(new Staff());
+            switchScene("View/Login_UI.fxml", passObj, BasicObjs.back);
+        });
         transitionAlert.setCycleCount(1);
 
-        this.btnSave.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
+        btnBack.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
     private void setupItemTable() {
