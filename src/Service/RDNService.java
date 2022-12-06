@@ -5,6 +5,7 @@
 package Service;
 
 import DAO.ReturnDeliveryNoteDAO;
+import DAO.SQLDatabaseConnection;
 import Entity.ReturnDeliveryNote;
 import Structures.CodeStructure;
 import java.sql.SQLException;
@@ -12,9 +13,16 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -74,6 +82,27 @@ public class RDNService {
 
     public static List<ReturnDeliveryNote> getAllRDN() throws Exception {
         return ReturnDeliveryNoteDAO.getAllRDN();
+    }
+
+    public static ReturnDeliveryNote getReturnDeliveryNoteByCode(String code) throws Exception {
+        return ReturnDeliveryNoteDAO.getReturnDeliveryNoteByCode(code);
+    }
+
+    public static void getRDNSheet(String code) {
+        try {
+            String report = "src/Report/ReturnDeliveryNote_Individual.jrxml";
+
+            JasperReport jr = JasperCompileManager.compileReport(report);
+
+            Map< String, Object> para = new HashMap<>();
+            para.put("param_RDN_ID", code);
+
+            JasperPrint jp = JasperFillManager.fillReport(jr, para, SQLDatabaseConnection.openConn());
+            JasperViewer.viewReport(jp, false);
+
+        } catch (Exception e) {
+            System.out.println("assasa" + e.getMessage());
+        }
     }
 
 }

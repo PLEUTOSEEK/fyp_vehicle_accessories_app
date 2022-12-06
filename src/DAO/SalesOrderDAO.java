@@ -68,7 +68,7 @@ public class SalesOrderDAO {
             ps.setString(3, salesOrder.getBillToCust().getCustID());
             ps.setString(4, salesOrder.getDeliverToCust().getCollectAddrID());
             ps.setString(5, salesOrder.getCustPOReference());
-            ps.setString(6, salesOrder.getReference());
+            ps.setString(6, salesOrder.getReferenceType());
             ps.setString(7, salesOrder.getReference());
             ps.setString(8, salesOrder.getSalesPerson().getStaffID());
             ps.setString(9, salesOrder.getCurrencyCode());
@@ -435,14 +435,16 @@ public class SalesOrderDAO {
             conn = SQLDatabaseConnection.openConn();
 
             query = "UPDATE SalesOrder SET "
-                    + "Status = ? "
+                    + "Status = ?, "
+                    + "Modified_Date_Time = ? "
                     + "WHERE "
                     + "SO_ID = ? ";
 
             ps = conn.prepareStatement(query);
             // bind parameter
             ps.setString(1, salesOrder.getStatus());
-            ps.setString(2, salesOrder.getCode());
+            ps.setTimestamp(2, salesOrder.getModifiedDateTime());
+            ps.setString(3, salesOrder.getCode());
 
             ps.execute();
             return salesOrder.getCode();
@@ -461,4 +463,5 @@ public class SalesOrderDAO {
             }
         }
     }
+
 }

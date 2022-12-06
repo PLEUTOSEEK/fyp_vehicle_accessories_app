@@ -90,6 +90,8 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
     private PackingSlip packingSlipInDraft;
     //</editor-fold>
+    @FXML
+    private MFXButton btnPrint;
 
     /**
      * Initializes the controller class.
@@ -104,10 +106,11 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                 inputValidation();
                 receiveData();
                 autoClose();
-
+                btnPrint.setVisible(false);
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
+                        btnPrint.setVisible(true);
                     } catch (IOException ex) {
                         java.util.logging.Logger.getLogger(TransferOrderCONTR.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     }
@@ -144,14 +147,14 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
         // Part No
         MFXTableColumn<Item> partNoCol = new MFXTableColumn<>("Part No.", true, Comparator.comparing(item -> item.getProduct() == null ? null : item.getProduct().getPartNo()));
         // Qty
-        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Qty", true, Comparator.comparing(item -> item.getQty()));
+        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Qty", true, Comparator.comparing(item -> item.getOriQty()));
 
         // Product ID
         prodIDCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? null : item.getProduct().getProdID()));
         // Part No
         partNoCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? null : item.getProduct().getPartNo()));
         // Qty
-        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getQty()));
+        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getOriQty()));
 
         ((MFXTableView<Item>) tblVw).getTableColumns().clear();
 
@@ -166,7 +169,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getFilters().addAll(
                 new StringFilter<>("Product ID", item -> item.getProduct() == null ? null : item.getProduct().getProdID()),
                 new StringFilter<>("Part No.", item -> item.getProduct() == null ? null : item.getProduct().getPartNo()),
-                new IntegerFilter<>("Qty", item -> item.getQty())
+                new IntegerFilter<>("Qty", item -> item.getOriQty())
         );
 
         tempItems.addAll(items);
@@ -263,6 +266,11 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
             itemInPS.setOriQty(0);
             itemInTO.setQty(itemInTO.getQty() - itemInPS.getQty() + itemInPS.getOriQty());
         }
+
+        for (Item i : items) {
+            i.setOriQty(i.getQty());
+        }
+
         setupItemTable();
     }
 
@@ -512,6 +520,10 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                                 i.setQty(0);
                             }
 
+                            for (Item i : items) {
+                                i.setOriQty(i.getQty());
+                            }
+
                             setupItemTable();
                         } else {
                             alertDialog(Alert.AlertType.INFORMATION,
@@ -635,5 +647,10 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
             // packing slip no need update the refer document (TO) status
         }
+    }
+
+    @FXML
+    private void printPS(MouseEvent event) {
+        PackingSlipService.getPackingSlipSheet(this.txtPSID.getText());
     }
 }

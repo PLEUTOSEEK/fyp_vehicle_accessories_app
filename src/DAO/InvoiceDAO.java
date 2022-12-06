@@ -72,6 +72,7 @@ public class InvoiceDAO {
 
             return invoice.getCode();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -146,7 +147,7 @@ public class InvoiceDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        String latestCode = null;
+        String latestCode = "";
 
         try {
             conn = SQLDatabaseConnection.openConn();
@@ -205,7 +206,6 @@ public class InvoiceDAO {
                     + "           ,[Customer_Signed] = ? "
                     + "           ,[Status] = ? "
                     + "           ,[Created_Date] = ? "
-                    + "           ,[Actual_Created_Date] = ? "
                     + "           ,[Signed_Doc_Pic] = ? "
                     + "           ,[Modified_Date_Time] = ? "
                     + "WHERE "
@@ -225,10 +225,9 @@ public class InvoiceDAO {
             ps.setString(10, invoice.getCustomerSignature().getCollectAddrID());
             ps.setString(11, invoice.getStatus());
             ps.setTimestamp(12, invoice.getCreatedDate());
-            ps.setTimestamp(13, invoice.getActualCreatedDateTime());
-            ps.setString(14, invoice.getSignedDocPic());
-            ps.setTimestamp(15, invoice.getModifiedDateTime());
-            ps.setString(16, invoice.getCode());
+            ps.setString(13, invoice.getSignedDocPic());
+            ps.setTimestamp(14, invoice.getModifiedDateTime());
+            ps.setString(15, invoice.getCode());
 
             ps.execute();
 
@@ -310,6 +309,7 @@ public class InvoiceDAO {
             rs = ps.executeQuery();
 
             while (rs.next()) {
+                invoice = new Invoice();
                 invoice.setCode(rs.getString("INV_ID"));
                 invoice.setSO(SalesOrderDAO.getSalesOrderByID(rs.getString("SO_ID")));
                 invoice.setReferenceType(rs.getString("Reference_Type"));

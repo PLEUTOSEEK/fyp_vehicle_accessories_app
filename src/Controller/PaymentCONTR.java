@@ -125,6 +125,8 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
     private Validator validator = new Validator();
     @FXML
     private MFXTableView<?> tblVw;
+    @FXML
+    private MFXButton btnPrint;
 
     //</editor-fold>
     /**
@@ -141,11 +143,13 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
                 autoClose();
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
+                    btnPrint.setVisible(false);
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
+                        btnPrint.setVisible(true);
                     } catch (IOException ex) {
                         Logger.getLogger(InvoiceCONTR.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -169,9 +173,38 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
                 if (passObj.getCrud().equals(BasicObjs.read)) {
                     isViewMode(true);
                 }
+                setupItemTable();
+                try {
+                    calculateTotalInformation(items);
+                } catch (Exception ex) {
+                    Logger.getLogger(PaymentCONTR.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
-        setupItemTable();
+    }
+
+    private void calculateTotalInformation(List<Item> items) throws Exception {
+
+        Receipt receipt = new Receipt();
+        System.out.println("Invoice vode here" + this.txtInvoiceRef.getText());
+        BigDecimal ttlPayable = InvoiceService.getInvoiceByID(this.txtInvoiceRef.getText()).getTtlPayable();
+        BigDecimal ttlPrevPaidAmt = ReceiptService.getPrevPaid(this.txtInvoiceRef.getText());
+        BigDecimal ttlPaidAmt = new BigDecimal("0.00");
+        for (Item item : items) {
+            ttlPaidAmt = ttlPaidAmt.add(item.getInclTaxAmt());
+        }
+
+        BigDecimal ttlBlcUnpaid = ttlPayable.subtract(ttlPrevPaidAmt.add(ttlPaidAmt));
+
+        receipt.setTtlPayable(ttlPayable);
+        receipt.setPaidAmtPrev(ttlPrevPaidAmt);
+        receipt.setPaidAmt(ttlPaidAmt);
+        receipt.setBalUnpaid(ttlBlcUnpaid);
+
+        this.txtTtlPayable.setText(receipt.getTtlPayable().toString());
+        this.txtPrevPaidAmt.setText(receipt.getPaidAmtPrev().toString());
+        this.txtPymtAmt.setText(receipt.getPaidAmt().toString());
+        this.txtBalanceUnPaid.setText(receipt.getBalUnpaid().toString());
     }
 
     public void autoClose() {
@@ -194,7 +227,7 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
         // Remarks
         MFXTableColumn<Item> remarksCol = new MFXTableColumn<>("Remarks", true, Comparator.comparing(item -> item.getRemark()));
         // Quantity
-        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getQty()));
+        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getOriQty()));
         // Unit Price
         MFXTableColumn<Item> unitPriceCol = new MFXTableColumn<>("Unit Price", true, Comparator.comparing(item -> item.getUnitPrice()));
         // Excl. Amount
@@ -211,7 +244,7 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
         // Remarks
         remarksCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getRemark()));
         // Quantity
-        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getQty()));
+        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getOriQty()));
         // Unit Price
         unitPriceCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getUnitPrice()));
         // Excl. Amount
@@ -239,7 +272,7 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
                 new StringFilter<>("Product ID", item -> item.getProduct() == null ? "" : item.getProduct().getProdID()),
                 new StringFilter<>("Part No.", item -> item.getProduct() == null ? "" : item.getProduct().getPartNo()),
                 new StringFilter<>("Remark", item -> item.getRemark()),
-                new IntegerFilter<>("Quantity", item -> item.getQty()),
+                new IntegerFilter<>("Quantity", item -> item.getOriQty()),
                 new DoubleFilter<>("Unit Price", item -> item.getUnitPrice().doubleValue()),
                 new DoubleFilter<>("Excl. Amount", item -> item.getExclTaxAmt().doubleValue()),
                 new DoubleFilter<>("Discount Amount", item -> item.getDiscAmt().doubleValue()),
@@ -283,9 +316,17 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     Item catchedItem = new Item();
-                                    catchedItem = ((Item) receiveObj.getObj()).clone();
+                                    if (receiveObj.getObj() != null) {
+                                        catchedItem = ((Item) receiveObj.getObj()).clone();
+                                    } else {
+                                        catchedItem = null;
+                                    }
 
-                                    adjustItemsNotYetPaid(catchedItem, item);
+                                    try {
+                                        adjustItemsNotYetPaid(catchedItem, item);
+                                    } catch (Exception ex) {
+                                        Logger.getLogger(PaymentCONTR.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
 
                                 }
                             } catch (IOException e) {
@@ -300,40 +341,45 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
 
     }
 
-    private void adjustItemsNotYetPaid(Item catchedItem, Item item) {
+    private void adjustItemsNotYetPaid(Item catchedItem, Item item) throws Exception {
         if (catchedItem.getProduct() == null) {//remove
-            Item itemInSO = itemsNotYetPaid.get(itemsNotYetPaid.indexOf(item));
-            Item itemInTO = (Item) items.get(items.indexOf(item));
+            Item itemInInvoice = itemsNotYetPaid.get(itemsNotYetPaid.indexOf(item));
+            Item itemInRcpt = (Item) items.get(items.indexOf(item));
 
-            itemInSO.setQty(itemInSO.getQty() + itemInTO.getQty());
+            itemInInvoice.setQty(itemInInvoice.getQty() + itemInRcpt.getQty());
             items.remove(item);
         } else if (!items.contains(catchedItem)) { //add
             items.add(catchedItem);
 
-            Item itemInSO = itemsNotYetPaid.get(itemsNotYetPaid.indexOf(catchedItem));
-            Item itemInTO = (Item) items.get(items.indexOf(catchedItem));
+            Item itemInInvoice = itemsNotYetPaid.get(itemsNotYetPaid.indexOf(catchedItem));
+            Item itemInRcpt = (Item) items.get(items.indexOf(catchedItem));
 
-            itemInTO.setOriQty(0);
-            itemInSO.setQty(itemInSO.getQty() - itemInTO.getQty() + itemInTO.getOriQty());
+            itemInRcpt.setOriQty(0);
+            itemInInvoice.setQty(itemInInvoice.getQty() - itemInRcpt.getQty() + itemInRcpt.getOriQty());
 
         } else { // update
             //remove
-            Item itemInSO = itemsNotYetPaid.get(itemsNotYetPaid.indexOf(catchedItem));
-            Item itemInTO = (Item) items.get(items.indexOf(catchedItem));
+            Item itemInInvoice = itemsNotYetPaid.get(itemsNotYetPaid.indexOf(catchedItem));
+            Item itemInRcpt = (Item) items.get(items.indexOf(catchedItem));
 
-            itemInSO.setQty(itemInSO.getQty() + itemInTO.getQty());
+            itemInInvoice.setQty(itemInInvoice.getQty() + itemInRcpt.getOriQty());
             items.remove(catchedItem);
 
             //add
             items.add(catchedItem);
 
-            itemInSO = itemsNotYetPaid.get(itemsNotYetPaid.indexOf(catchedItem));
-            itemInTO = (Item) items.get(items.indexOf(catchedItem));
+            itemInInvoice = itemsNotYetPaid.get(itemsNotYetPaid.indexOf(catchedItem));
+            itemInRcpt = (Item) items.get(items.indexOf(catchedItem));
 
-            itemInTO.setOriQty(0);
-            itemInSO.setQty(itemInSO.getQty() - itemInTO.getQty() + itemInTO.getOriQty());
+            itemInRcpt.setOriQty(0);
+            itemInInvoice.setQty(itemInInvoice.getQty() - itemInRcpt.getQty() + itemInRcpt.getOriQty());
+        }
+
+        for (Item i : items) {
+            i.setOriQty(i.getQty());
         }
         setupItemTable();
+        this.calculateTotalInformation(items);
     }
 
     private void defaultValFillIn() {
@@ -341,7 +387,6 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private void fieldFillIn() throws IOException {
-        clearAllFieldsValue();
         defaultValFillIn();
 
         if (passObj.getObj() != null) {
@@ -545,7 +590,7 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
                 .withMethod(c -> {
 
                     if (items.size() <= 0) {
-                        c.error("Item - At least one item are required to build a Return Delivery Note");
+                        c.error("Item - At least one item are required to build a payment");
                         return;
                     }
 
@@ -612,7 +657,7 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @FXML
-    private void openINVSelection(MouseEvent event) {
+    private void openINVSelection(MouseEvent event) throws Exception {
         if (event.isPrimaryButtonDown() == true) {
 
             ButtonType alertBtnClicked = alertDialog(Alert.AlertType.CONFIRMATION,
@@ -645,8 +690,31 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
                     Invoice invoice = (Invoice) receiveObj.getObj();
 
                     if (!invoice.getStatus().equals(AccountingRules.InvoiceStatus.COMPLETED)) {
-                        this.passObj.setObj(invoice);
-                        fieldFillIn();
+                        this.clearAllFieldsValue();
+                        this.itemsNotYetPaid.addAll(ItemService.getItemsByINVID(invoice.getCode()));
+                        if (isValidDocumentByItems()) {
+                            this.passObj.setObj(invoice);
+                            fieldFillIn();
+                            items.clear();
+                            for (Item i : this.itemsNotYetPaid) {
+                                items.add(i.clone());
+
+                                i.setQty(0);
+                            }
+
+                            for (Item i : items) {
+                                i.setOriQty(i.getQty());
+                            }
+
+                            setupItemTable();
+                            calculateTotalInformation(items);
+                        } else {
+                            alertDialog(Alert.AlertType.INFORMATION,
+                                    "Information",
+                                    "Document Blocked Message",
+                                    "There are no more item needed to be pay for the selected document.");
+                        }
+
                     } else {
                         alertDialog(Alert.AlertType.INFORMATION,
                                 "Information",
@@ -662,8 +730,23 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
+    private boolean isValidDocumentByItems() {
+        Integer count = 0;
+        for (Item item : itemsNotYetPaid) {
+            if (item.getQty() == 0) {
+                count++;
+            }
+        }
+
+        if (count == itemsNotYetPaid.size()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     @FXML
-    private void addProductItem(MouseEvent event) {
+    private void addProductItem(MouseEvent event) throws Exception {
         Parent root;
         try {
             root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelectWithItemsProvided_UI.fxml"));
@@ -753,17 +836,25 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
 
             ItemService.updateItemsByDoc(receiptInDraft.getItems(), receiptInDraft.getCode());
 
+            updateDocStatus();
+
             switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
 
         }
     }
 
-    private void updateDocStatus() {
+    private void updateDocStatus() throws SQLException {
         if (!this.txtInvoiceRef.getText().isEmpty()) {
 
             receiptInDraft.getINV().setStatus(AccountingRules.InvoiceStatus.PARTIALLY_PAID.toString());
             InvoiceService.updateInvoiceStatus(receiptInDraft.getINV());
+            ItemService.updateItemsByDoc(itemsNotYetPaid, receiptInDraft.getINV().getCode());
         }
+    }
+
+    @FXML
+    private void printPayment(MouseEvent event) {
+        ReceiptService.getPaymentSheet(this.txtRcptID.getText());
     }
 
 }

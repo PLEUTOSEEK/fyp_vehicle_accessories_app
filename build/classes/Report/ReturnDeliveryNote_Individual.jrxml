@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1e6fb3ad-0716-4e4a-a16d-e90a85d5d493">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1e6fb3ad-0716-4e4a-a16d-e90a85d5d493">
     <property name="ireport.zoom" value="1.4641000000000013"/>
     <property name="ireport.x" value="0"/>
-    <property name="ireport.y" value="0"/>
+    <property name="ireport.y" value="46"/>
     <parameter name="param_RDN_ID" class="java.lang.String">
         <defaultValueExpression><![CDATA[]]></defaultValueExpression>
     </parameter>
     <queryString>
-		<![CDATA[SELECT
-    CollectAddress.Name AS COLLECTOR_NAME,
-    CLLCT_BACK_FR.Location_Name AS CLLCT_BACK_FR_LOCATION_NAME,
-    CLLCT_BACK_FR.Address AS CLLCT_BACK_FR_ADDRESS,
-    CLLCT_BACK_FR.City AS CLLCT_BACK_FR_CITY,
-    CLLCT_BACK_FR.Postal_Code AS CLLCT_BACK_FR_POSTAL_CODE,
-    CLLCT_BACK_FR.[State] AS CLLCT_BACK_FR_STATE,
-    CLLCT_BACK_FR.Country AS CLLCT_BACK_FR_COUNTRY,
-    CLLCT_BCK_TO.Location_Name AS CLLCT_BCK_TO_LOCATION_NAME,
-    CLLCT_BCK_TO.Address AS CLLCT_BCK_TO_ADDRESS,
-    CLLCT_BCK_TO.City AS CLLCT_BCK_TO_CITY,
-    CLLCT_BCK_TO.Postal_Code AS CLLCT_BCK_TO_POSTAL_CODE,
-    CLLCT_BCK_TO.[State] AS CLLCT_BCK_TO_STATE,
-    CLLCT_BCK_TO.Country AS CLLCT_BCK_TO_COUNTRY,
-    Staff.Name AS SALES_PERSON_NAME,
-    ReturnDeliveryNote.Collect_Date,
-    ReturnDeliveryNote.Created_Date AS RDN_CREATED_DATE,
-    SalesOrder.SO_ID,
-    SalesOrder.Created_Date AS SO_CREATED_DATE,
-    CollectAddress.Mobile_No,
-    CollectAddress.Email,
-    Product.Prod_ID,
-    CONCAT(Product.Part_No,' ',Product.[Description]) AS PART_NO_DESC,
-    Item.Ori_Qty,
-    Item.Reason,
-    Item.Remark
+		<![CDATA[ SELECT
+     ReturnDeliveryNote.RDN_ID,
+     CollectAddress.Name AS COLLECTOR_NAME,
+     CLLCT_BACK_FR.Location_Name AS CLLCT_BACK_FR_LOCATION_NAME,
+     CLLCT_BACK_FR.Address AS CLLCT_BACK_FR_ADDRESS,
+     CLLCT_BACK_FR.City AS CLLCT_BACK_FR_CITY,
+     CLLCT_BACK_FR.Postal_Code AS CLLCT_BACK_FR_POSTAL_CODE,
+     CLLCT_BACK_FR.[State] AS CLLCT_BACK_FR_STATE,
+     CLLCT_BACK_FR.Country AS CLLCT_BACK_FR_COUNTRY,
+     CLLCT_BCK_TO.Location_Name AS CLLCT_BCK_TO_LOCATION_NAME,
+     CLLCT_BCK_TO.Address AS CLLCT_BCK_TO_ADDRESS,
+     CLLCT_BCK_TO.City AS CLLCT_BCK_TO_CITY,
+     CLLCT_BCK_TO.Postal_Code AS CLLCT_BCK_TO_POSTAL_CODE,
+     CLLCT_BCK_TO.[State] AS CLLCT_BCK_TO_STATE,
+     CLLCT_BCK_TO.Country AS CLLCT_BCK_TO_COUNTRY,
+     Staff.Name AS SALES_PERSON_NAME,
+     ReturnDeliveryNote.Collect_Date,
+     ReturnDeliveryNote.Created_Date AS RDN_CREATED_DATE,
+     SalesOrder.SO_ID,
+     SalesOrder.Created_Date AS SO_CREATED_DATE,
+     CollectAddress.Mobile_No,
+     CollectAddress.Email,
+     Product.Prod_ID,
+     CONCAT(Product.Part_No,' ',Product.[Description]) AS PART_NO_DESC,
+     Item.Ori_Qty,
+     Item.Reason,
+     Item.Remark
 FROM
     ReturnDeliveryNote
     INNER JOIN CollectAddress
     ON ReturnDeliveryNote.Collect_Back_From = CollectAddress.Collect_Address_ID
 
     INNER JOIN [Address] AS CLLCT_BACK_FR
-    ON CollectAddress.Collect_Address_ID = CLLCT_BACK_FR.Address_ID
+    ON CollectAddress.Address_ID = CLLCT_BACK_FR.Address_ID
 
     INNER JOIN Place
     ON ReturnDeliveryNote.Collect_Back_To = Place.Place_ID
@@ -63,6 +64,7 @@ WHERE
 
 ]]>
     </queryString>
+    <field name="RDN_ID" class="java.lang.String"/>
     <field name="COLLECTOR_NAME" class="java.lang.String"/>
     <field name="CLLCT_BACK_FR_LOCATION_NAME" class="java.lang.String"/>
     <field name="CLLCT_BACK_FR_ADDRESS" class="java.lang.String"/>
@@ -159,7 +161,7 @@ WHERE
                 <textFieldExpression><![CDATA[$F{COLLECTOR_NAME}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="414" y="94" width="71" height="10" uuid="f6033ce3-0fd8-429b-8050-afd11e04e6b2"/>
+                <reportElement x="372" y="94" width="71" height="10" uuid="f6033ce3-0fd8-429b-8050-afd11e04e6b2"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle">
                     <font fontName="Calibri" size="8" isBold="true"/>
                     <paragraph leftIndent="2" rightIndent="5"/>
@@ -179,7 +181,7 @@ WHERE
                 <textElement textAlignment="Right" verticalAlignment="Middle">
                     <font fontName="Calibri" size="9"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{PS_ID}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{RDN_ID}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="0" y="114" width="131" height="10" uuid="33171c91-0cd9-4103-8e5a-d7f4c7e040ec"/>
@@ -230,7 +232,7 @@ WHERE
                 <textFieldExpression><![CDATA[$F{CLLCT_BACK_FR_STATE}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="414" y="124" width="131" height="10" uuid="68103725-14e4-431c-ad30-b1c2f88670ab"/>
+                <reportElement x="372" y="124" width="131" height="10" uuid="68103725-14e4-431c-ad30-b1c2f88670ab"/>
                 <textElement verticalAlignment="Middle">
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
@@ -238,7 +240,7 @@ WHERE
                 <textFieldExpression><![CDATA[$F{CLLCT_BCK_TO_CITY}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="414" y="144" width="131" height="10" uuid="326a3954-82ac-49fe-aa79-2d53e82dc104"/>
+                <reportElement x="372" y="144" width="131" height="10" uuid="326a3954-82ac-49fe-aa79-2d53e82dc104"/>
                 <textElement verticalAlignment="Middle">
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
@@ -246,7 +248,7 @@ WHERE
                 <textFieldExpression><![CDATA[$F{CLLCT_BCK_TO_STATE}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="414" y="134" width="131" height="10" uuid="965cb3f3-ab0a-4508-b0aa-8c43cd0a34dd"/>
+                <reportElement x="372" y="134" width="131" height="10" uuid="965cb3f3-ab0a-4508-b0aa-8c43cd0a34dd"/>
                 <textElement verticalAlignment="Middle">
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
@@ -254,7 +256,7 @@ WHERE
                 <textFieldExpression><![CDATA[$F{CLLCT_BCK_TO_POSTAL_CODE}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="414" y="154" width="131" height="10" uuid="a6e83c48-05f1-4f70-b61d-5fad90f476fd"/>
+                <reportElement x="372" y="154" width="131" height="10" uuid="a6e83c48-05f1-4f70-b61d-5fad90f476fd"/>
                 <textElement verticalAlignment="Middle">
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
@@ -262,7 +264,7 @@ WHERE
                 <textFieldExpression><![CDATA[$F{CLLCT_BCK_TO_COUNTRY}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="414" y="114" width="131" height="10" uuid="3b5c0cf8-5273-477d-b284-3b04dfd4a796"/>
+                <reportElement x="372" y="114" width="131" height="10" uuid="3b5c0cf8-5273-477d-b284-3b04dfd4a796"/>
                 <textElement verticalAlignment="Middle">
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>
@@ -270,7 +272,7 @@ WHERE
                 <textFieldExpression><![CDATA[$F{CLLCT_BCK_TO_ADDRESS}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="414" y="104" width="131" height="10" uuid="527f2d14-e09f-4476-adc0-4ccbb253e2a6"/>
+                <reportElement x="372" y="104" width="131" height="10" uuid="527f2d14-e09f-4476-adc0-4ccbb253e2a6"/>
                 <textElement verticalAlignment="Middle">
                     <font fontName="Calibri" size="8"/>
                     <paragraph leftIndent="2"/>

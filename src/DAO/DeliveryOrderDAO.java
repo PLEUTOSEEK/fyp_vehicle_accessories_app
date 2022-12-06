@@ -292,7 +292,8 @@ public class DeliveryOrderDAO {
             // bind parameter
             rs = ps.executeQuery();
 
-            if (rs.next()) {
+            while (rs.next()) {
+                deliveryOrder = new DeliveryOrder();
                 deliveryOrder.setCode(rs.getString("DO_ID"));
 
                 deliveryOrder.setSo(SalesOrderDAO.getSalesOrderByID(rs.getString("SO_ID")));

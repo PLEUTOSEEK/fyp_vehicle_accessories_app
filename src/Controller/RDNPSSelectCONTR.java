@@ -12,8 +12,10 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -200,6 +202,25 @@ public class RDNPSSelectCONTR implements Initializable {
                         c.error("Quantity - Cannot less than 1");
                         return;
                     }
+
+                    if (passObj.getObjs().size() > 0) {
+                        List<Item> itemNotYetTransfer = passObj.getObjs()
+                                .stream()
+                                .map(e -> (Item) e)
+                                .collect(Collectors.toList());
+
+                        Item passInItem = (Item) passObj.getObj();
+
+                        for (Item itm : itemNotYetTransfer) {
+                            if (itm.equals(passInItem)) {
+                                if (qty > itm.getQty() + passInItem.getQty()) {
+                                    c.error("Quantity - Cannot more than " + itm.getQty() + passInItem.getQty());
+                                    return;
+                                }
+                                break;
+                            }
+                        }
+                    }
                 })
                 .decorates(this.txtQuantity);
 
@@ -251,8 +272,8 @@ public class RDNPSSelectCONTR implements Initializable {
     private Item prepareItemToObj() {
         Item item = (Item) this.passObj.getObj();
 
-        item.setQty(Integer.valueOf(this.txtQuantity.getText()));
         item.setOriQty(item.getQty());
+        item.setQty(Integer.valueOf(this.txtQuantity.getText()));
         item.setReason(this.txtReason.getText());
         item.setRemark(this.txtRemark.getText());
 

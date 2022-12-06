@@ -80,7 +80,7 @@ public class SalesOrderService {
         return SalesOrderDAO.getAllSalesOrder();
     }
 
-    public static void salesOrderSheet(String soCode) {
+    public static void getSalesOrderSheet(String soCode) {
         try {
             String report = "src/Report/SalesOrder_Header_Individual.jrxml";
             String report2 = "src/Report/SalesOrder_Body_Individual.jrxml";

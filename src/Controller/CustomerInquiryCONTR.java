@@ -140,7 +140,8 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
     private MFXTextField txtPymtTerm;
     @FXML
     private MFXCircleToggleNode ctnPymtTermSelection;
-
+    @FXML
+    private MFXButton btnPrint;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="util declarations">
     private BasicObjs passObj;
@@ -182,6 +183,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
 
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
+                    btnPrint.setVisible(false);
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
@@ -189,6 +191,7 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                     try {
 
                         fieldFillIn();
+                        btnPrint.setVisible(true);
                     } catch (IOException ex) {
                         Logger.getLogger(CustomerInquiryCONTR.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -1235,6 +1238,11 @@ public class CustomerInquiryCONTR implements Initializable, BasicCONTRFunc {
                 this.ctnSalesPersonSelection.setDisable(true);
         }
 
+    }
+
+    @FXML
+    private void printCI(MouseEvent event) {
+        CustomerInquiryService.getCustomerInquirySheet(this.txtCIID.getText());
     }
 
 }

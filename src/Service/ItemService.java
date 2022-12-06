@@ -64,4 +64,8 @@ public class ItemService {
         return ItemDAO.getItemsByCode(code);
     }
 
+    public static boolean putBackNotYetdeliveredQty(List<Item> items, String code) {
+        return ItemDAO.putBackNotYetdeliveredQty(items, code);
+    }
+
 }

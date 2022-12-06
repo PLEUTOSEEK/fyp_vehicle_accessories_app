@@ -72,35 +72,40 @@ public class Receipt extends Document {
     }
 
     public BigDecimal getTtlPayable() {
+        ttlPayable = ttlPayable.setScale(2, BigDecimal.ROUND_HALF_EVEN);
         return ttlPayable;
     }
 
     public void setTtlPayable(BigDecimal ttlPayable) {
-        this.ttlPayable = ttlPayable;
+        this.ttlPayable = ttlPayable.setScale(2, BigDecimal.ROUND_HALF_EVEN);
     }
 
     public BigDecimal getPaidAmt() {
+        paidAmt = paidAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
         return paidAmt;
     }
 
     public void setPaidAmt(BigDecimal paidAmt) {
-        this.paidAmt = paidAmt;
+        this.paidAmt = paidAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
     }
 
     public BigDecimal getPaidAmtPrev() {
+        paidAmtPrev = paidAmtPrev.setScale(2, BigDecimal.ROUND_HALF_EVEN);
         return paidAmtPrev;
     }
 
     public void setPaidAmtPrev(BigDecimal paidAmtPrev) {
-        this.paidAmtPrev = paidAmtPrev;
+        this.paidAmtPrev = paidAmtPrev.setScale(2, BigDecimal.ROUND_HALF_EVEN);
     }
 
     public BigDecimal getBalUnpaid() {
+        balUnpaid = balUnpaid.setScale(2, BigDecimal.ROUND_HALF_EVEN);
         return balUnpaid;
     }
 
     public void setBalUnpaid(BigDecimal balUnpaid) {
-        this.balUnpaid = balUnpaid;
+        this.balUnpaid = balUnpaid.setScale(2, BigDecimal.ROUND_HALF_EVEN);
     }
 
 }

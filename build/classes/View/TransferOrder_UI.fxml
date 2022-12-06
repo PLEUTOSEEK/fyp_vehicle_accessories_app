@@ -274,6 +274,11 @@
                      </graphic>
                   </MFXCircleToggleNode>
                   <Label fx:id="lblImgStrs" visible="false" GridPane.columnIndex="3" />
+                  <MFXButton fx:id="btnPrint" buttonType="RAISED" minHeight="27.0" minWidth="70.0" onMousePressed="#printTO" styleClass="outline-button" text="Print" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                     <GridPane.margin>
+                        <Insets bottom="10.0" />
+                     </GridPane.margin>
+                  </MFXButton>
                </children>
             </GridPane>
          </content>

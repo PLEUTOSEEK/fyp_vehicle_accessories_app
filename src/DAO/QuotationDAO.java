@@ -143,7 +143,7 @@ public class QuotationDAO {
                     + "      ,[Signed_Doc_Pic] "
                     + "      ,[Modified_Date_Time] "
                     + "  FROM [dbo].[Quotation]"
-                    + "  WHERE [CI_ID] = ?";
+                    + "  WHERE [QUOT_ID] = ?";
             ps = conn.prepareStatement(query);
             ps.setString(1, code);
 
@@ -166,7 +166,7 @@ public class QuotationDAO {
                 quotation.setGross(rs.getBigDecimal("Gross"));
                 quotation.setDiscount(rs.getBigDecimal("Discount"));
                 quotation.setSubTotal(rs.getBigDecimal("Sub_Total"));
-                quotation.setNett(rs.getBigDecimal(rs.getString("Nett")));
+                quotation.setNett(rs.getBigDecimal("Nett"));
                 quotation.setIssuedBy(StaffDAO.getStaffByID(rs.getString("Issued_By")));
                 quotation.setReleasedAVerifiedBy(StaffDAO.getStaffByID(rs.getString("Released_And_Verified_By")));
                 quotation.setCustomerSignature(CollectAddressDAO.getCollectAddressByID(rs.getString("Customer_Signed")));

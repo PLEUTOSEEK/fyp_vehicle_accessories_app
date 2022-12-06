@@ -148,6 +148,8 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
     private MFXTextField txtRef;
     @FXML
     private MFXTextField txtRefType;
+    @FXML
+    private MFXButton btnPrint;
 
     /**
      * Initializes the controller class.
@@ -166,11 +168,13 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
                 autoClose();
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
+                    btnPrint.setVisible(false);
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
+                        btnPrint.setVisible(true);
                     } catch (IOException ex) {
                         Logger.getLogger(QuotationCONTR.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -1091,6 +1095,11 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
             switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
 
         }
+    }
+
+    @FXML
+    private void printDO(MouseEvent event) {
+
     }
 
 }

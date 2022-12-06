@@ -68,6 +68,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * FXML Controller class
@@ -144,6 +145,8 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
 
     private Validator validator = new Validator();
     //</editor-fold>
+    @FXML
+    private MFXButton btnPrint;
 
     /**
      * Initializes the controller class.
@@ -151,7 +154,6 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        setupItemTable();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -162,11 +164,13 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
 
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
+                    btnPrint.setVisible(false);
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
+                        btnPrint.setVisible(true);
                     } catch (IOException ex) {
                         Logger.getLogger(InvoiceCONTR.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -175,12 +179,12 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
 
                         Invoice invoice = (Invoice) passObj.getObj();
 
-                        itemsNotYetBill.addAll(ItemService.getItemNotYetBillBySO(invoice.getSO().getCode()));
+                        itemsNotYetBill.addAll(ItemService.getItemBySOID(invoice.getSO().getCode()));
 
                         items.addAll(ItemService.getItemsByINVID(invoice.getCode()));
 
                     } else if (passObj.getObj() instanceof SalesOrder) {
-                        itemsNotYetBill.addAll(ItemService.getItemNotYetBillBySO(((SalesOrder) passObj.getObj()).getCode()));
+                        itemsNotYetBill.addAll(ItemService.getItemBySOID(((SalesOrder) passObj.getObj()).getCode()));
 
                         for (Item i : itemsNotYetBill) {
                             items.add(i.clone());
@@ -192,6 +196,9 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                 if (passObj.getCrud().equals(BasicObjs.read)) {
                     isViewMode(true);
                 }
+
+                setupItemTable();
+                calculateTotalInformation(items);
             }
         });
     }
@@ -220,7 +227,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
         // Remarks
         MFXTableColumn<Item> remarksCol = new MFXTableColumn<>("Remarks", true, Comparator.comparing(item -> item.getRemark()));
         // Quantity
-        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getQty()));
+        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getOriQty()));
         // Unit Price
         MFXTableColumn<Item> unitPriceCol = new MFXTableColumn<>("Unit Price", true, Comparator.comparing(item -> item.getUnitPrice()));
         // Excl. Amount
@@ -237,7 +244,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
         // Remarks
         remarksCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getRemark()));
         // Quantity
-        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getQty()));
+        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getOriQty()));
         // Unit Price
         unitPriceCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getUnitPrice()));
         // Excl. Amount
@@ -265,7 +272,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                 new StringFilter<>("Product ID", item -> item.getProduct() == null ? "" : item.getProduct().getProdID()),
                 new StringFilter<>("Part No.", item -> item.getProduct() == null ? "" : item.getProduct().getPartNo()),
                 new StringFilter<>("Remark", item -> item.getRemark()),
-                new IntegerFilter<>("Quantity", item -> item.getQty()),
+                new IntegerFilter<>("Quantity", item -> item.getOriQty()),
                 new DoubleFilter<>("Unit Price", item -> item.getUnitPrice().doubleValue()),
                 new DoubleFilter<>("Excl. Amount", item -> item.getExclTaxAmt().doubleValue()),
                 new DoubleFilter<>("Discount Amount", item -> item.getDiscAmt().doubleValue()),
@@ -324,7 +331,11 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     Item catchedItem = new Item();
-                                    catchedItem = ((Item) receiveObj.getObj()).clone();
+                                    if (receiveObj.getObj() != null) {
+                                        catchedItem = ((Item) receiveObj.getObj()).clone();
+                                    } else {
+                                        catchedItem = null;
+                                    }
 
                                     adjustItemsNotYetBill(catchedItem, item);
 
@@ -342,41 +353,48 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private void adjustItemsNotYetBill(Item catchedItem, Item item) {
-        if (catchedItem.getProduct() == null) {//remove
+        if (catchedItem == null) {//remove
             Item itemInSO = itemsNotYetBill.get(itemsNotYetBill.indexOf(item));
-            Item itemInTO = (Item) items.get(items.indexOf(item));
+            Item itemInInvoice = (Item) items.get(items.indexOf(item));
 
-            itemInSO.setQty(itemInSO.getQty() + itemInTO.getQty());
+            itemInSO.setQtyNotYetBill(itemInSO.getQtyNotYetBill() + itemInInvoice.getQtyNotYetBill());
             items.remove(item);
         } else if (!items.contains(catchedItem)) { //add
             items.add(catchedItem);
 
             Item itemInSO = itemsNotYetBill.get(itemsNotYetBill.indexOf(catchedItem));
-            Item itemInTO = (Item) items.get(items.indexOf(catchedItem));
+            Item itemInInvoice = (Item) items.get(items.indexOf(catchedItem));
 
-            itemInTO.setOriQty(0);
-            itemInSO.setQty(itemInSO.getQty() - itemInTO.getQty() + itemInTO.getOriQty());
+            itemInInvoice.setOriQty(0);
+            itemInSO.setQtyNotYetBill(itemInSO.getQtyNotYetBill() - itemInInvoice.getQtyNotYetBill() + itemInInvoice.getOriQty());
 
         } else { // update
             //remove
             Item itemInSO = itemsNotYetBill.get(itemsNotYetBill.indexOf(catchedItem));
-            Item itemInTO = (Item) items.get(items.indexOf(catchedItem));
+            Item itemInInvoice = (Item) items.get(items.indexOf(catchedItem));
 
-            itemInSO.setQty(itemInSO.getQty() + itemInTO.getQty());
+            itemInSO.setQtyNotYetBill(itemInSO.getQtyNotYetBill() + itemInInvoice.getOriQty());
             items.remove(catchedItem);
 
             //add
             items.add(catchedItem);
 
             itemInSO = itemsNotYetBill.get(itemsNotYetBill.indexOf(catchedItem));
-            itemInTO = (Item) items.get(items.indexOf(catchedItem));
+            itemInInvoice = (Item) items.get(items.indexOf(catchedItem));
 
-            itemInTO.setOriQty(0);
-            itemInSO.setQty(itemInSO.getQty() - itemInTO.getQty() + itemInTO.getOriQty());
+            itemInInvoice.setOriQty(0);
+            itemInSO.setQtyNotYetBill(itemInSO.getQtyNotYetBill() - itemInInvoice.getQtyNotYetBill() + itemInInvoice.getOriQty());
         }
+
+        for (Item i : items) {
+            i.setOriQty(i.getQtyNotYetBill());
+            i.setQty(i.getQtyNotYetBill());
+        }
+
         setupItemTable();
 
         calculateTotalInformation(items);
+
     }
 
     private void defaultValFillIn() {
@@ -385,7 +403,6 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private void fieldFillIn() throws IOException {
-        clearAllFieldsValue();
         defaultValFillIn();
 
         if (passObj.getObj() != null) {
@@ -415,7 +432,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
 
             } else if (passObj.getObj() instanceof SalesOrder) {
                 SalesOrder so = (SalesOrder) passObj.getObj();
-                this.txtRef.setText(so.getCode());
+                this.txtSORef.setText(so.getCode());
             }
         }
     }
@@ -689,15 +706,27 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
         invoice.setTtlPayable(new BigDecimal(this.txtTtlPayable.getText()));
 
         Staff issuedBy = new Staff();
-        issuedBy.setStaffID(this.txtIssuedBy.getText());
+        if (isBlank(this.txtIssuedBy.getText())) {
+            issuedBy.setStaffID(null);
+        } else {
+            issuedBy.setStaffID(this.txtIssuedBy.getText());
+        }
         invoice.setIssuedBy(issuedBy);
 
         Staff releasedAVerifiedBy = new Staff();
-        releasedAVerifiedBy.setStaffID(this.txtReleasedAVerrifiedBy.getText());
+        if (isBlank(this.txtReleasedAVerrifiedBy.getText())) {
+            releasedAVerifiedBy.setStaffID(null);
+        } else {
+            releasedAVerifiedBy.setStaffID(this.txtReleasedAVerrifiedBy.getText());
+        }
         invoice.setReleasedAVerifiedBy(releasedAVerifiedBy);
 
         CollectAddress customerSignature = new CollectAddress();
-        customerSignature.setCollectAddrID(this.txtCustSignature.getText());
+        if (isBlank(this.txtCustSignature.getText())) {
+            customerSignature.setCollectAddrID(null);
+        } else {
+            customerSignature.setCollectAddrID(this.txtCustSignature.getText());
+        }
         invoice.setCustomerSignature(customerSignature);
 
         invoice.setSignedDocPic(this.lblImgStrs.getText());
@@ -741,9 +770,31 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
 
                     if (!so.getStatus().equals(SalesRules.SOStatus.COMPLETED)
                             && !so.getStatus().equals(SalesRules.SOStatus.ON_HOLD)) {
-                        this.passObj.setObj(so);
-                        //this.passObj.setObj(SalesOrderService.getSOByID(so.getCode()));
-                        fieldFillIn();
+                        this.clearAllFieldsValue();
+                        itemsNotYetBill.addAll(ItemService.getItemBySOID(so.getCode()));
+                        if (isValidDocumentByItems()) {
+                            this.passObj.setObj(so);
+                            fieldFillIn();
+                            items.clear();
+                            for (Item i : this.itemsNotYetBill) {
+                                items.add(i.clone());
+
+                                i.setQtyNotYetBill(0);
+                            }
+
+                            for (Item i : items) {
+                                i.setOriQty(i.getQtyNotYetBill());
+                                i.setQty(i.getQtyNotYetBill());
+                            }
+
+                            setupItemTable();
+                            calculateTotalInformation(items);
+                        } else {
+                            alertDialog(Alert.AlertType.INFORMATION,
+                                    "Information",
+                                    "Document Blocked Message",
+                                    "There are no more item needed to be generate invoice for the selected document.");
+                        }
                     } else {
                         alertDialog(Alert.AlertType.INFORMATION,
                                 "Information",
@@ -756,6 +807,21 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    private boolean isValidDocumentByItems() {
+        Integer count = 0;
+        for (Item item : itemsNotYetBill) {
+            if (item.getQtyNotYetBill() == 0) {
+                count++;
+            }
+        }
+
+        if (count == itemsNotYetBill.size()) {
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -952,11 +1018,13 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
         }
     }
 
-    private void updateSOStatus() {
+    private void updateSOStatus() throws SQLException {
         if (!this.txtSORef.getText().isEmpty()) {
 
             invoiceInDraft.getSO().setStatus(SalesRules.SOStatus.IN_PROGRESS.toString());
             SalesOrderService.updateSalesOrderStatus(invoiceInDraft.getSO());
+            ItemService.updateItemsByDoc(this.itemsNotYetBill, invoiceInDraft.getSO().getCode());
+
         }
 
     }
@@ -968,8 +1036,8 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
         invoice.setDiscount(BigDecimal.ZERO);
 
         for (Item item : items) {
-            invoice.setGross(invoice.getGross().add(item.getExclTaxAmt()));
-            invoice.setDiscount(invoice.getDiscount().add(item.getDiscAmt()));
+            invoice.setGross(invoice.getGross().add(item.getExclTaxAmtByQtyNotYetBill()));
+            invoice.setDiscount(invoice.getDiscount().add(item.getDiscAmtByQtyNotYetBill()));
         }
 
         invoice.setTtlPayable(invoice.getSubTotal().multiply(new BigDecimal(1 + (accRules.getTaxRate() / 100))));
@@ -978,6 +1046,11 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
         this.txtDiscount.setText(invoice.getDiscount().toString());
         this.txtSubTtl.setText(invoice.getSubTotal().toString());
         this.txtTtlPayable.setText(invoice.getTtlPayable().toString());
+    }
+
+    @FXML
+    private void printInvoice(MouseEvent event) {
+        InvoiceService.getInvoiceSheet(this.txtInvoiceID.getText());
     }
 
 }

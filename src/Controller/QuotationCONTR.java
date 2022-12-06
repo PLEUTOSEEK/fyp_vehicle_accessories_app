@@ -180,6 +180,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
 
     private Quotation quotInDraft;
     //</editor-fold>
+    @FXML
+    private MFXButton btnPrint;
 
     /**
      * Initializes the controller class.
@@ -200,11 +202,13 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                 autoClose();
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
+                    btnPrint.setVisible(false);
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
+                        btnPrint.setVisible(true);
                     } catch (IOException ex) {
                         Logger.getLogger(QuotationCONTR.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -1525,6 +1529,11 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
                 this.ctnSalesPersonSelection.setDisable(true);
         }
 
+    }
+
+    @FXML
+    private void printQuot(MouseEvent event) {
+        QuotationService.getQuotationSheet(this.txtQuotID.getText());
     }
 
 }

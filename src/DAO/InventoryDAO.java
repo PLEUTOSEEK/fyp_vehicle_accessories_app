@@ -10,6 +10,7 @@ import Entity.PackingSlip;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -400,6 +401,157 @@ public class InventoryDAO {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static void putBackInventory(Item item, String destination, String newInventoryID) throws Exception {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            if (getInventoryByPlaceProd(destination, item.getProduct().getProdID()) == true) {
+                query = "UPDATE "
+                        + "    Inventory "
+                        + "SET "
+                        + "    Ready_Qty = Ready_Qty + ?, "
+                        + "    Total_Qty = Total_Qty  + ? "
+                        + "WHERE  "
+                        + "    Place_ID = ? AND "
+                        + "    Product_ID = ?";
+                ps = conn.prepareStatement(query);
+                // bind parameter
+                ps.setInt(1, item.getQty());
+                ps.setInt(2, item.getQty());
+                ps.setString(3, destination);
+                ps.setString(4, item.getProduct().getProdID());
+            } else {
+                query = "INSERT INTO [dbo].[Inventory] "
+                        + "           ([Inventory_ID] "
+                        + "           ,[Place_ID] "
+                        + "           ,[Product_ID] "
+                        + "           ,[Reserved_Qty] "
+                        + "           ,[Ready_Qty] "
+                        + "           ,[Total_Qty] "
+                        + "           ,[Modified_Date_Time]) "
+                        + "     VALUES "
+                        + "           (? "
+                        + "           ,? "
+                        + "           ,? "
+                        + "           ,0 "
+                        + "           ,? "
+                        + "           ,? "
+                        + "           ,?)";
+                ps = conn.prepareStatement(query);
+                // bind parameter
+                ps.setString(1, newInventoryID);
+                ps.setString(2, destination);
+                ps.setString(3, item.getProduct().getProdID());
+                ps.setInt(4, item.getQty());
+                ps.setInt(5, item.getQty());
+                ps.setTimestamp(6, timestamp);
+            }
+            ps.execute();
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    private static boolean getInventoryByPlaceProd(String placeCode, String prodCode) throws Exception {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT "
+                    + "    Inventory_ID "
+                    + "FROM "
+                    + "    Inventory "
+                    + "WHERE "
+                    + "    Place_ID = ? AND "
+                    + "    Product_ID = ?";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            ps.setString(1, placeCode);
+            ps.setString(2, prodCode);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return true;
+            } else {
+                return false;
+            }
+
+            //return object
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static String getLatestCode() {
+        //
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+
+        String latestCode = null;
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+            query = "SELECT * FROM View_INVT_LatestID";
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                latestCode = rs.getString("Inventory_ID");
+                return latestCode;
+            } else {
+                return "";
+            }
+
+        } catch (Exception e) {
+            return "";
         } finally {
             try {
                 ps.close();

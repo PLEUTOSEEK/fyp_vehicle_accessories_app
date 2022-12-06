@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Controller;
 
@@ -33,11 +33,10 @@ import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
 /**
- * FXML Controller class
  *
  * @author Tee Zhuo Xuan
  */
-public class TOPSSelectCONTR implements Initializable {
+public class PaymentItemSelectCONTR implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="fields">
     @FXML
@@ -47,20 +46,19 @@ public class TOPSSelectCONTR implements Initializable {
     @FXML
     private MFXButton btnCancel;
     @FXML
-    private MFXTextField txtQuantity;
-    @FXML
     private MFXButton btnRemove;
+    @FXML
+    private MFXTextField txtRemark;
+    @FXML
+    private MFXTextField txtQuantity;
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="util declarations">
     private BasicObjs passObj;
 
     private Validator validator = new Validator();
-    //</editor-fold>
 
-    /**
-     * Initializes the controller class.
-     */
+    //</editor-fold>
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -68,7 +66,6 @@ public class TOPSSelectCONTR implements Initializable {
 
             @Override
             public void run() {
-                intializeComboSelections();
                 inputValidation();
                 receiveData();
                 fieldFillIn();
@@ -86,13 +83,11 @@ public class TOPSSelectCONTR implements Initializable {
         });
         transitionAlert.setCycleCount(1);
 
-        btnCancel.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
+        btnConfirm.getScene().addEventFilter(InputEvent.ANY, evt -> transitionAlert.playFromStart());
     }
 
-    public void switchScene(String fxmlPath, BasicObjs passObj,
-            String direction
-    ) {
-        Stage stage = (Stage) btnCancel.getScene().getWindow();
+    public void switchScene(String fxmlPath, BasicObjs passObj, String direction) {
+        Stage stage = (Stage) btnConfirm.getScene().getWindow();
         stage.close();
         try {
             // Step 4
@@ -111,20 +106,15 @@ public class TOPSSelectCONTR implements Initializable {
         }
     }
 
-    public BasicObjs sendData(BasicObjs passObj, String direction
-    ) {
+    public BasicObjs sendData(BasicObjs passObj, String direction) {
         switch (direction) {
             case BasicObjs.forward:
-                passObj.getFxmlPaths().addLast("View/TOPSSelect_UI.fxml");
+                passObj.getFxmlPaths().addLast("View/InvoiceItemSelect_UI.fxml");
                 break;
         }
         passObj.setPassDirection(direction);
         passObj.setLoginStaff(this.passObj.getLoginStaff());
         return passObj;
-    }
-
-    private void intializeComboSelections() {
-
     }
 
     private void defaultValFillIn() {
@@ -134,17 +124,18 @@ public class TOPSSelectCONTR implements Initializable {
     private void fieldFillIn() {
         clearAllFieldsValue();
         defaultValFillIn();
-
         if (this.passObj.getObj() != null) {
             Item item = (Item) this.passObj.getObj();
             this.txtProdID.setText(item.getProduct().getProdID());
             this.txtQuantity.setText(Integer.toString(item.getQty()));
+            this.txtRemark.setText(item.getRemark());
         }
     }
 
     private boolean clearAllFieldsValue() {
         this.txtProdID.clear();
         this.txtQuantity.clear();
+        this.txtRemark.clear();
         return true;
     }
 
@@ -154,9 +145,31 @@ public class TOPSSelectCONTR implements Initializable {
 
         /*
         No need include:
-        1.
-        2.
+        1. Remark
          */
+        //=====================================
+        validatorCheck = (new Validator()).createCheck();
+
+        validatorCheck
+                .dependsOn("Product ID", this.txtProdID.textProperty())
+                .withMethod(c -> {
+                    String textVal = c.get("Product ID");
+                    textVal = textVal.trim();
+                    /*
+                     1. cannot be null
+                     */
+                    // allow null
+                    if (textVal.isEmpty()) {
+                        c.error("Product ID - Required Field ");
+                        return;
+                    }
+
+                })
+                .decorates(this.txtProdID);
+
+        validator.add(validatorCheck);
+
+        //=====================================
         //=====================================
         validatorCheck = (new Validator()).createCheck();
 
@@ -187,20 +200,19 @@ public class TOPSSelectCONTR implements Initializable {
                         c.error("Quantity - Cannot less than 1");
                         return;
                     }
-
                     if (passObj.getObjs().size() > 0) {
-                        List<Item> itemNotYetTransfer = passObj.getObjs()
+                        List<Item> itemsNotYetPaid = passObj.getObjs()
                                 .stream()
                                 .map(e -> (Item) e)
                                 .collect(Collectors.toList());
 
                         Item passInItem = (Item) passObj.getObj();
 
-                        for (Item itm : itemNotYetTransfer) {
+                        for (Item itm : itemsNotYetPaid) {
                             if (itm.equals(passInItem)) {
 
                                 if (qty > itm.getQty() + passInItem.getQty()) {
-                                    c.error("Quantity - Cannot more than " + itm.getQty() + passInItem.getQty());
+                                    c.error("Quantity - Cannot more than " + (itm.getQty() + passInItem.getQty()));
                                     return;
                                 }
                                 break;
@@ -229,8 +241,10 @@ public class TOPSSelectCONTR implements Initializable {
     private Item prepareItemToObj() {
         Item item = (Item) this.passObj.getObj();
 
-        item.setOriQty(item.getQty());
+        item.setOriQty(item.getQtyNotYetBill());
+        item.setQtyNotYetBill(Integer.valueOf(this.txtQuantity.getText()));
         item.setQty(Integer.valueOf(this.txtQuantity.getText()));
+        item.setRemark(this.txtRemark.getText());
 
         return item;
     }

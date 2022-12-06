@@ -98,13 +98,42 @@ public class Item<E> implements Cloneable {
     }
 
     public BigDecimal getExclTaxAmt() {
+        if (unitPrice == null) {
+            return new BigDecimal("0.00");
+        }
+
         exclTaxAmt = BigDecimal.valueOf(Double.valueOf(qty) * unitPrice.doubleValue());
         return exclTaxAmt;
     }
 
+    public BigDecimal getExclTaxAmtByQtyNotYetBill() {
+        if (unitPrice == null) {
+            return new BigDecimal("0.00");
+        }
+
+        exclTaxAmt = BigDecimal.valueOf(Double.valueOf(qtyNotYetBill) * unitPrice.doubleValue());
+        return exclTaxAmt;
+    }
+
     public BigDecimal getDiscAmt() {
+        if (getExclTaxAmt().doubleValue() == 0) {
+            return new BigDecimal("0.00");
+        }
+
         BigDecimal result = this.unitPrice;
         result = result.multiply(BigDecimal.valueOf(this.oriQty));
+        result = result.multiply(BigDecimal.valueOf(this.discPercent / 100));
+
+        return result;
+    }
+
+    public BigDecimal getDiscAmtByQtyNotYetBill() {
+        if (getExclTaxAmt().doubleValue() == 0) {
+            return new BigDecimal("0.00");
+        }
+
+        BigDecimal result = this.unitPrice;
+        result = result.multiply(BigDecimal.valueOf(this.qtyNotYetBill));
         result = result.multiply(BigDecimal.valueOf(this.discPercent / 100));
 
         return result;
@@ -115,6 +144,10 @@ public class Item<E> implements Cloneable {
     }
 
     public BigDecimal getInclTaxAmt() {
+        if (getExclTaxAmt().doubleValue() == 0) {
+            return new BigDecimal("0.00");
+        }
+
         AccountingRules accRules = new AccountingRules();
         inclTaxAmt = BigDecimal.valueOf((getExclTaxAmt().doubleValue() - getDiscAmt().doubleValue()) * (1 + (accRules.getTaxRate() / 100.0)));
         return inclTaxAmt;

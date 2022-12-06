@@ -5,6 +5,7 @@
 package DAO;
 
 import Entity.Receipt;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +39,6 @@ public class ReceiptDAO {
                     + "      ,[Prev_Paid_Amount] = ? "
                     + "      ,[Bal_Unpaid] = ? "
                     + "      ,[Created_Date] =  ? "
-                    + "      ,[Actual_Created_Date] =  ? "
                     + "      ,[Signed_Doc_Pic] =  ? "
                     + "      ,[Modified_Date_Time] =  ? "
                     + " WHERE [RCPT_ID] =  ? ";
@@ -52,10 +52,9 @@ public class ReceiptDAO {
             ps.setBigDecimal(6, receipt.getPaidAmtPrev());
             ps.setBigDecimal(7, receipt.getBalUnpaid());
             ps.setTimestamp(8, receipt.getCreatedDate());
-            ps.setTimestamp(9, receipt.getActualCreatedDateTime());
-            ps.setString(10, receipt.getSignedDocPic());
-            ps.setTimestamp(11, receipt.getModifiedDateTime());
-            ps.setString(12, receipt.getCode());
+            ps.setString(9, receipt.getSignedDocPic());
+            ps.setTimestamp(10, receipt.getModifiedDateTime());
+            ps.setString(11, receipt.getCode());
 
             ps.execute();
             return receipt.getCode();
@@ -100,7 +99,7 @@ public class ReceiptDAO {
                     + "           ,[Actual_Created_Date] "
                     + "           ,[Signed_Doc_Pic] "
                     + "           ,[Modified_Date_Time]) "
-                    + "     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,)";
+                    + "     VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(query);
             // bind parameter
             ps.setString(1, receipt.getCode());
@@ -118,6 +117,7 @@ public class ReceiptDAO {
             ps.execute();
             return receipt.getCode();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         } finally {
             try {
@@ -206,7 +206,7 @@ public class ReceiptDAO {
         String query = "";
         ResultSet rs = null;
 
-        String latestCode = null;
+        String latestCode = "";
 
         try {
             conn = SQLDatabaseConnection.openConn();
@@ -222,6 +222,50 @@ public class ReceiptDAO {
 
         } catch (Exception e) {
             return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static BigDecimal getPrevPaid(String invCode) throws Exception {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        BigDecimal ttlPrevPaid = new BigDecimal("0.00");
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT "
+                    + "    ISNULL(SUM(Paid_Amount),0) AS TTL_PREV_PAID "
+                    + "FROM "
+                    + "    Receipt "
+                    + "WHERE "
+                    + "    INV_ID = ?";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            ps.setString(1, invCode);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                ttlPrevPaid = rs.getBigDecimal("TTL_PREV_PAID");
+            }
+
+            //return object
+            return ttlPrevPaid;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 ps.close();

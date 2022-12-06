@@ -177,6 +177,11 @@
                                 <FontAwesomeIconView glyphName="ANGLE_LEFT" size="35" />
                             </graphic>
                         </MFXCircleToggleNode>
+                  <MFXButton fx:id="btnPrint" buttonType="RAISED" minHeight="27.0" minWidth="70.0" onMousePressed="#printPS" styleClass="outline-button" text="Print" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                     <GridPane.margin>
+                        <Insets bottom="10.0" />
+                     </GridPane.margin>
+                  </MFXButton>
                     </children>
                 </GridPane>
             </content>

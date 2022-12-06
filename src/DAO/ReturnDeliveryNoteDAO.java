@@ -211,7 +211,6 @@ public class ReturnDeliveryNoteDAO {
                     + "Item_Received_By = ?, "
                     + "Status = ?, "
                     + "Created_Date = ?, "
-                    + "Actual_Created_Date = ?, "
                     + "Signed_Doc_Pic = ?, "
                     + "Modified_Date_Time = ? "
                     + "WHERE "
@@ -232,10 +231,9 @@ public class ReturnDeliveryNoteDAO {
             ps.setString(10, returnDeliveryNote.getItemReceivedBy().getStaffID());
             ps.setString(11, returnDeliveryNote.getStatus());
             ps.setTimestamp(12, returnDeliveryNote.getCreatedDate());
-            ps.setTimestamp(13, returnDeliveryNote.getActualCreatedDateTime());
-            ps.setString(14, returnDeliveryNote.getSignedDocPic());
-            ps.setTimestamp(15, returnDeliveryNote.getModifiedDateTime());
-            ps.setString(16, returnDeliveryNote.getCode());
+            ps.setString(13, returnDeliveryNote.getSignedDocPic());
+            ps.setTimestamp(14, returnDeliveryNote.getModifiedDateTime());
+            ps.setString(15, returnDeliveryNote.getCode());
 
             ps.execute();
             return returnDeliveryNote.getCode();

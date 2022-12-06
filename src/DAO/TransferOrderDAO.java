@@ -169,7 +169,7 @@ public class TransferOrderDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM View_Retrieve_All_TransferOrder ";
+            query = "SELECT * FROM View_Retrieve_All_TransferOrder";
 
             ps = conn.prepareStatement(query);
 
@@ -177,7 +177,7 @@ public class TransferOrderDAO {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-
+                transferOrder = new TransferOrder();
                 transferOrder.setCode(rs.getString("TO_TO_ID"));
                 transferOrder.setReqType(rs.getString("TO_Req_Type"));
 
@@ -336,7 +336,7 @@ public class TransferOrderDAO {
             query = "UPDATE TransferOrder SET "
                     + "TO_Status = ? "
                     + "WHERE "
-                    + "TO_TO_ID = ? ; ";
+                    + "TO_ID = ? ; ";
             ps = conn.prepareStatement(query);
 
             // bind parameter

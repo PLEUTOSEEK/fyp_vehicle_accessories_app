@@ -5,13 +5,22 @@
 package Service;
 
 import DAO.ReceiptDAO;
+import DAO.SQLDatabaseConnection;
 import Entity.Receipt;
 import Structures.CodeStructure;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -61,6 +70,27 @@ public class ReceiptService {
 
     public static List<Receipt> getAllReceipt() {
         return ReceiptDAO.getAllReceipt();
+    }
+
+    public static BigDecimal getPrevPaid(String invCode) throws Exception {
+        return ReceiptDAO.getPrevPaid(invCode);
+    }
+
+    public static void getPaymentSheet(String code) {
+        try {
+            String report = "src/Report/Receipt_Individual.jrxml";
+
+            JasperReport jr = JasperCompileManager.compileReport(report);
+
+            Map< String, Object> para = new HashMap<>();
+            para.put("param_RCPT_ID_Header", code);
+
+            JasperPrint jp = JasperFillManager.fillReport(jr, para, SQLDatabaseConnection.openConn());
+            JasperViewer.viewReport(jp, false);
+
+        } catch (Exception e) {
+            System.out.println("assasa" + e.getMessage());
+        }
     }
 
 }

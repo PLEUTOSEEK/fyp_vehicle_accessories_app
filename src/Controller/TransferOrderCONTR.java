@@ -7,6 +7,7 @@ package Controller;
 import BizRulesConfiguration.SalesRules;
 import BizRulesConfiguration.WarehouseRules;
 import BizRulesConfiguration.WarehouseRules.TOStatus;
+import Entity.Inventory;
 import Entity.Item;
 import Entity.Place;
 import Entity.ReturnDeliveryNote;
@@ -15,7 +16,9 @@ import Entity.Staff;
 import Entity.TransferOrder;
 import PassObjs.BasicObjs;
 import Service.GeneralRulesService;
+import Service.InventoryService;
 import Service.ItemService;
+import Service.RDNService;
 import Service.SalesOrderService;
 import Service.TransferOrderService;
 import Utils.ImageUtils;
@@ -141,6 +144,8 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
     private TransferOrder toInDraft;
 //</editor-fold>
+    @FXML
+    private MFXButton btnPrint;
 
     /**
      * Initializes the controller class.
@@ -159,12 +164,13 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
+                    btnPrint.setVisible(false);
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
-
+                        btnPrint.setVisible(true);
                     } catch (IOException ex) {
                         java.util.logging.Logger.getLogger(TransferOrderCONTR.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     }
@@ -261,7 +267,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
         // Part No
         MFXTableColumn<Item> partNoCol = new MFXTableColumn<>("Part No.", true, Comparator.comparing(item -> item.getProduct() == null ? null : item.getProduct().getPartNo()));
         // Qty
-        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Qty", true, Comparator.comparing(item -> item.getQty()));
+        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Qty", true, Comparator.comparing(item -> item.getOriQty()));
         // UOM
         MFXTableColumn<Item> uomCol = new MFXTableColumn<>("UOM", true, Comparator.comparing(item -> item.getProduct() == null ? null : item.getProduct().getUom()));
         // Source
@@ -272,7 +278,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
         // Part No
         partNoCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? null : item.getProduct().getPartNo()));
         // Qty
-        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getQty()));
+        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getOriQty()));
         // UOM
         uomCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? null : item.getProduct().getUom()));
         // Source
@@ -293,7 +299,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getFilters().addAll(
                 new StringFilter<>("Product ID", item -> item.getProduct() == null ? null : item.getProduct().getProdID()),
                 new StringFilter<>("Part No.", item -> item.getProduct() == null ? null : item.getProduct().getPartNo()),
-                new IntegerFilter<>("Qty", item -> item.getQty()),
+                new IntegerFilter<>("Qty", item -> item.getOriQty()),
                 new StringFilter<>("UOM", item -> item.getProduct() == null ? null : item.getProduct().getUom()),
                 new StringFilter<>("Source", item -> item.getInventory() == null ? null : item.getInventory().getInventoryID())
         );
@@ -388,6 +394,10 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
             itemInTO.setOriQty(0);
             itemInSO.setQty(itemInSO.getQty() - itemInTO.getQty() + itemInTO.getOriQty());
+        }
+
+        for (Item i : items) {
+            i.setOriQty(i.getQty());
         }
 
         setupItemTable();
@@ -925,7 +935,12 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                                     i.setQty(0);
                                 }
 
+                                for (Item i : items) {
+                                    i.setOriQty(i.getQty());
+                                }
+
                                 setupItemTable();
+
                             } else {
                                 alertDialog(Alert.AlertType.INFORMATION,
                                         "Information",
@@ -1157,7 +1172,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @FXML
-    private void savveTO(MouseEvent event) throws SQLException {
+    private void savveTO(MouseEvent event) throws SQLException, Exception {
         if (event.isPrimaryButtonDown() == true) {
 
             if (!this.btnSave.getText().equals("Save")) {
@@ -1187,9 +1202,60 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
             updateRefDoc();
 
+            if (toInDraft.getStatus().equals(WarehouseRules.TOStatus.TRANSFERRED.toString())
+                    && toInDraft.getReqTypeRef() instanceof ReturnDeliveryNote) {
+                ReturnDeliveryNote rdn = RDNService.getReturnDeliveryNoteByCode(((ReturnDeliveryNote) toInDraft.getReqTypeRef()).getCode());
+
+                reserveStock(rdn.getSO().getCode());
+
+            }
+
             switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
 
         }
+
+    }
+
+    private List<Item> reserveStock(String code) throws SQLException, Exception {
+
+        for (Item item : items) {
+            InventoryService.putBackInventory(item, this.txtDestination.getText());
+        }
+
+        for (Item item : ItemService.getItemBySOID(code)) {
+            InventoryService.freeUpReservedQtyByInventoryID(item.getInventory(), item.getQty());
+        }
+
+        List<Item> finalItems = new ArrayList<>();
+        ItemService.putBackNotYetdeliveredQty(items, code);
+
+        for (Item item : ItemService.getItemBySOID(code)) {
+            List<Inventory> inventories = new ArrayList<>();
+            inventories = InventoryService.getReadyInventoriesByProdID(item.getProduct().getProdID(), item.getQty());
+
+            int oriQty = item.getQty();
+
+            for (Inventory inventory : inventories) {
+                Item cloneItem = item.clone();
+
+                if (oriQty > inventory.getReadyQty()) {
+                    cloneItem.setQty(inventory.getReadyQty());
+                    oriQty -= inventory.getReadyQty();
+                } else {
+                    cloneItem.setQty(oriQty);
+                }
+                cloneItem.setOriQty(cloneItem.getQty());
+                cloneItem.setInventory(inventory);
+
+                finalItems.add(cloneItem);
+            }
+        }
+
+        for (Item item : finalItems) {
+            InventoryService.reserveQtyForSalesDoc(item);
+        }
+
+        return finalItems;
 
     }
 
@@ -1213,6 +1279,11 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
             }
         }
+    }
+
+    @FXML
+    private void printTO(MouseEvent event) {
+        TransferOrderService.getTransferOrderSheet(this.txtTOID.getText());
     }
 
 }

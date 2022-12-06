@@ -73,7 +73,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -91,8 +90,6 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
     //<editor-fold defaultstate="collapsed" desc="fields">
     @FXML
     private MFXCircleToggleNode btnBack;
-    @FXML
-    private AnchorPane AnchorPane;
     @FXML
     private MFXCircleToggleNode ctnBillToSelection;
     @FXML
@@ -188,6 +185,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
 
     private SalesOrder soInDraft;
     //</editor-fold>
+    @FXML
+    private MFXButton btnPrint;
 
     /**
      * Initializes the controller class.
@@ -208,11 +207,13 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                 autoClose();
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
+                    btnPrint.setVisible(false);
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
+                        btnPrint.setVisible(true);
                     } catch (IOException ex) {
                         Logger.getLogger(QuotationCONTR.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -285,7 +286,7 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         // Remarks
         MFXTableColumn<Item> remarksCol = new MFXTableColumn<>("Remarks", true, Comparator.comparing(item -> item.getRemark()));
         // Quantity
-        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getQty()));
+        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getOriQty()));
         // Unit Price
         MFXTableColumn<Item> unitPriceCol = new MFXTableColumn<>("Unit Price", true, Comparator.comparing(item -> item.getUnitPrice()));
         // Excl. Amount
@@ -303,7 +304,7 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         // Remarks
         remarksCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getRemark()));
         // Quantity
-        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getQty()));
+        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getOriQty()));
         // Unit Price
         unitPriceCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getUnitPrice()));
         // Excl. Amount
@@ -332,7 +333,7 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getFilters().addAll(
                 new StringFilter<>("Product ID", item -> item.getProduct() == null ? "" : item.getProduct().getProdID()),
                 new StringFilter<>("Remark", item -> item.getRemark()),
-                new IntegerFilter<>("Quantity", item -> item.getQty()),
+                new IntegerFilter<>("Quantity", item -> item.getOriQty()),
                 new DoubleFilter<>("Unit Price", item -> item.getUnitPrice().doubleValue()),
                 new DoubleFilter<>("Excl. Amount", item -> item.getExclTaxAmt().doubleValue()),
                 new DoubleFilter<>("Discount Amount", item -> item.getDiscAmt().doubleValue()),
@@ -750,6 +751,7 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                     }
 
                     try {
+                        System.out.println("Quotation Reference : " + textVal);
                         if (QuotationService.getQuotationByID(textVal).getQuotValidityDate().toLocalDate().compareTo(LocalDate.now()) == -1) {
                             c.error("Required Delivery Date - Invalid Quotation, due to quotation validity date exceeded");
                             return;
@@ -1604,5 +1606,10 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
                 this.ctnSalesPersonSelection.setDisable(true);
         }
 
+    }
+
+    @FXML
+    private void printSO(MouseEvent event) {
+        SalesOrderService.getSalesOrderSheet(this.txtSOID.getText());
     }
 }

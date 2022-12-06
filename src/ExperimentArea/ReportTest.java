@@ -21,12 +21,12 @@ public class ReportTest {
 
     public static void main(String[] args) {
         try {
-            String report = "src/Report/ReturnDeliveryNote_Individual.jrxml";
+            String report = "src/Report/DeliveryOrder_Individual.jrxml";
 
             JasperReport jr = JasperCompileManager.compileReport(report);
 
             Map< String, Object> para = new HashMap<>();
-            para.put("param_DO_ID", "DO2211-001");
+            para.put("param_DO_ID", "DO2212-002");
 
             JasperPrint jp = JasperFillManager.fillReport(jr, para, SQLDatabaseConnection.openConn());
             JasperViewer.viewReport(jp, false);

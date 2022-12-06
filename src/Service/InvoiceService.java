@@ -5,13 +5,21 @@
 package Service;
 
 import DAO.InvoiceDAO;
+import DAO.SQLDatabaseConnection;
 import Entity.Invoice;
 import Structures.CodeStructure;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -49,12 +57,12 @@ public class InvoiceService {
 
     }
 
-    public static String updateInvoice(Invoice invoice) {
+    public static String saveNewInvoice(Invoice invoice) {
         invoice.setCode(generateID());
         return InvoiceDAO.saveNewInvoice(invoice);
     }
 
-    public static String saveNewInvoice(Invoice invoice) {
+    public static String updateInvoice(Invoice invoice) {
         return InvoiceDAO.updateInvoice(invoice);
     }
 
@@ -68,6 +76,23 @@ public class InvoiceService {
 
     public static List<Invoice> getAllInvoices() {
         return InvoiceDAO.getAllInvoices();
+    }
+
+    public static void getInvoiceSheet(String code) {
+        try {
+            String report = "src/Report/Invoice_Individual.jrxml";
+
+            JasperReport jr = JasperCompileManager.compileReport(report);
+
+            Map< String, Object> para = new HashMap<>();
+            para.put("param_INV_ID_Header", code);
+
+            JasperPrint jp = JasperFillManager.fillReport(jr, para, SQLDatabaseConnection.openConn());
+            JasperViewer.viewReport(jp, false);
+
+        } catch (Exception e) {
+            System.out.println("assasa" + e.getMessage());
+        }
     }
 
 }

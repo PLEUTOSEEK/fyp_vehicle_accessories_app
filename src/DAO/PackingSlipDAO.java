@@ -233,7 +233,8 @@ public class PackingSlipDAO {
                     + "    ON TransferOrder.Req_Type_Ref = SalesOrder.SO_ID "
                     + "WHERE "
                     + "    SalesOrder.SO_ID = ? "
-                    + "    AND TransferOrder.[Status] = 'TRANSFERRED' ";
+                    + "    AND TransferOrder.[Status] = 'TRANSFERRED' "
+                    + "    AND PackingSlip.Status = 'NOT_YET_REFERED' ";
             ps = conn.prepareStatement(query);
 
             // bind parameter

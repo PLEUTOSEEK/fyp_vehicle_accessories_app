@@ -399,7 +399,7 @@ public class InnerEntitySelectWithItemsProvidedCONTR implements Initializable {
         // Remarks
         MFXTableColumn<Item> remarksCol = new MFXTableColumn<>("Remarks", true, Comparator.comparing(item -> item.getRemark()));
         // Quantity
-        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getQty()));
+        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getQtyNotYetBill()));
         // Unit Price
         MFXTableColumn<Item> unitPriceCol = new MFXTableColumn<>("Unit Price", true, Comparator.comparing(item -> item.getUnitPrice()));
         // Excl. Amount
@@ -416,7 +416,7 @@ public class InnerEntitySelectWithItemsProvidedCONTR implements Initializable {
         // Remarks
         remarksCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getRemark()));
         // Quantity
-        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getQty()));
+        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getQtyNotYetBill()));
         // Unit Price
         unitPriceCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getUnitPrice()));
         // Excl. Amount
@@ -441,7 +441,7 @@ public class InnerEntitySelectWithItemsProvidedCONTR implements Initializable {
                 new StringFilter<>("Product ID", item -> item.getProduct() == null ? "" : item.getProduct().getProdID()),
                 new StringFilter<>("Part No.", item -> item.getProduct() == null ? "" : item.getProduct().getPartNo()),
                 new StringFilter<>("Remark", item -> item.getRemark()),
-                new IntegerFilter<>("Quantity", item -> item.getQty()),
+                new IntegerFilter<>("Quantity", item -> item.getQtyNotYetBill()),
                 new DoubleFilter<>("Unit Price", item -> item.getUnitPrice().doubleValue()),
                 new DoubleFilter<>("Excl. Amount", item -> item.getExclTaxAmt().doubleValue()),
                 new DoubleFilter<>("Discount Amount", item -> item.getDiscAmt().doubleValue()),

@@ -6,6 +6,9 @@ package DAO;
 
 import Entity.Inventory;
 import Entity.Item;
+import Entity.Product;
+import Entity.SalesOrder;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -101,12 +104,12 @@ public class ItemDAO {
                 ps.setString(5, item.getRemark());
                 ps.setInt(6, item.getQty());
                 ps.setInt(7, item.getOriQty());
-                ps.setInt(8, item.getQtyNotYetBill());
-                ps.setBigDecimal(9, item.getUnitPrice());
-                ps.setDate(10, item.getDlvrDate());
-                ps.setBigDecimal(11, item.getExclTaxAmt());
-                ps.setBigDecimal(12, item.getDiscAmt());
-                ps.setBigDecimal(13, item.getInclTaxAmt());
+                ps.setInt(8, item.getQtyNotYetBill() == null ? 0 : item.getQtyNotYetBill());
+                ps.setBigDecimal(9, item.getUnitPrice() == null ? new BigDecimal("0.00") : item.getUnitPrice());
+                ps.setDate(10, item.getDlvrDate() == null ? null : item.getDlvrDate());
+                ps.setBigDecimal(11, item.getExclTaxAmt() == null ? new BigDecimal("0.00") : item.getExclTaxAmt());
+                ps.setBigDecimal(12, item.getDiscAmt() == null ? new BigDecimal("0.00") : item.getDiscAmt());
+                ps.setBigDecimal(13, item.getInclTaxAmt() == null ? new BigDecimal("0.00") : item.getInclTaxAmt());
 
                 ps.addBatch();
                 i++;
@@ -373,6 +376,134 @@ public class ItemDAO {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    private static List<Item> getOriSOItems(String prodID, String docCode) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String query = "";
+        ResultSet rs = null;
+        List<Item> soItems = new ArrayList<>();
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+
+            query = "SELECT Qty, Ori_Qty, Prod_ID, Ref_Doc_ID  "
+                    + "FROM Item  "
+                    + "WHERE  "
+                    + "    Prod_ID = ? AND "
+                    + "    Ref_Doc_ID = ? "
+                    + "ORDER BY Delivery_Date ASC;";
+            ps = conn.prepareStatement(query);
+
+            // bind parameter
+            ps.setString(1, prodID);
+            ps.setString(2, docCode);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Item item = new Item();
+                item.setQty(rs.getInt("Qty"));
+                item.setOriQty(rs.getInt("Ori_Qty"));
+                item.setProduct(new Product());
+                item.getProduct().setProdID(rs.getString("Prod_ID"));
+                item.setRefDoc(new SalesOrder());
+                ((SalesOrder) item.getRefDoc()).setCode(rs.getString("Ref_Doc_ID"));
+
+                soItems.add(item);
+            }
+
+            //return object
+            return soItems;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                ps.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */
+            }
+        }
+    }
+
+    public static boolean putBackNotYetdeliveredQty(List<Item> items, String code) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String query = "";
+
+        try {
+            conn = SQLDatabaseConnection.openConn();
+            /*
+            Qty
+            Inventory ID
+            Prod ID
+             */
+            for (Item item : items) {
+                List<Item> soItems = getOriSOItems(item.getProduct().getProdID(), code);
+
+                Integer ttlPutBackQuanttities = item.getQty();
+                int i = 0;
+                while (ttlPutBackQuanttities > 0) {
+
+                    query = "WITH CTE AS (  "
+                            + "    SELECT  "
+                            + "        Item.Qty "
+                            + "    FROM  "
+                            + "        Item    "
+                            + "    WHERE   "
+                            + "        Prod_ID = ? AND  "
+                            + "        Ref_Doc_ID = ?  "
+                            + "    ORDER BY Delivery_Date ASC      "
+                            + "    OFFSET ? ROWS  "
+                            + "    FETCH NEXT 1 ROWS ONLY  "
+                            + ")  "
+                            + "UPDATE  "
+                            + "    CTE  "
+                            + "SET   "
+                            + "    Qty = Qty + ?;";
+
+                    ps = conn.prepareStatement(query);
+
+                    ps.setString(1, item.getProduct().getProdID());
+                    ps.setString(2, code);
+                    ps.setInt(3, i);
+
+                    Integer sendOutQuantities = soItems.get(i).getOriQty() - soItems.get(i).getQty();
+                    if (ttlPutBackQuanttities > sendOutQuantities) {
+                        ps.setInt(4, sendOutQuantities);
+                    } else {
+                        ps.setInt(4, ttlPutBackQuanttities);
+                    }
+                    ttlPutBackQuanttities -= sendOutQuantities;
+                    ps.addBatch();
+
+                    i++;
+
+                }
+                ps.executeBatch();
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
         } finally {
             try {
                 ps.close();

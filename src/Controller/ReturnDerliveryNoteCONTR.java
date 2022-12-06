@@ -7,6 +7,8 @@ package Controller;
 import BizRulesConfiguration.SalesRules;
 import BizRulesConfiguration.WarehouseRules;
 import Entity.CollectAddress;
+import Entity.Customer;
+import Entity.Inventory;
 import Entity.Item;
 import Entity.Place;
 import Entity.ReturnDeliveryNote;
@@ -16,6 +18,7 @@ import PassObjs.BasicObjs;
 import Service.GeneralRulesService;
 import Service.ItemService;
 import Service.RDNService;
+import Service.SalesOrderService;
 import Utils.ImageUtils;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
@@ -67,6 +70,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  *
@@ -150,6 +154,8 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
     private ReturnDeliveryNote rdnInDraft;
     //</editor-fold>
+    @FXML
+    private MFXButton btnPrint;
 
     /**
      * Initializes the controller class.
@@ -167,11 +173,13 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                 autoClose();
                 if (passObj.getCrud().equals(BasicObjs.create)) {
                     defaultValFillIn();
+                    btnPrint.setVisible(false);
                 }
 
                 if (passObj.getCrud().equals(BasicObjs.read) || passObj.getCrud().equals(BasicObjs.update)) {
                     try {
                         fieldFillIn();
+                        btnPrint.setVisible(true);
                     } catch (IOException ex) {
                         java.util.logging.Logger.getLogger(ReturnDerliveryNoteCONTR.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     }
@@ -268,6 +276,10 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
     private void initializeComboSelections() {
         ((MFXComboBox<WarehouseRules.RDNStatus>) this.cmbStatus).setItems(FXCollections.observableList(warehouseRules.getRdnStatuses()));
+
+        this.txtSORef.textProperty().addListener((observable, oldValue, newValue) -> {
+            this.txtCllctBckFr.clear();
+        });
     }
 
     private void setupItemTable() {
@@ -282,7 +294,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
         // Part No.
         MFXTableColumn<Item> partNoCol = new MFXTableColumn<>("Part No.", true, Comparator.comparing(item -> item.getProduct() == null ? "" : item.getProduct().getPartNo()));
         // Quantity
-        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getQty()));
+        MFXTableColumn<Item> qtyCol = new MFXTableColumn<>("Quantity", true, Comparator.comparing(item -> item.getOriQty()));
         // Reason
         MFXTableColumn<Item> reasonCol = new MFXTableColumn<>("Reason", true, Comparator.comparing(item -> item.getReason()));
         // Remark/ Additional Description
@@ -293,7 +305,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
         // Part No.
         partNoCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getProduct() == null ? "" : item.getProduct().getPartNo()));
         // Quantity
-        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getQty()));
+        qtyCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getOriQty()));
         // Reason
         reasonCol.setRowCellFactory(i -> new MFXTableRowCell<>(item -> item.getReason()));
         // Remark/ Additional Description
@@ -313,7 +325,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
         ((MFXTableView<Item>) tblVw).getFilters().addAll(
                 new StringFilter<>("Product ID", item -> item.getProduct() == null ? "" : item.getProduct().getProdID()),
                 new StringFilter<>("Part No.", item -> item.getProduct() == null ? "" : item.getProduct().getPartNo()),
-                new IntegerFilter<>("Quantity", item -> item.getQty()),
+                new IntegerFilter<>("Quantity", item -> item.getOriQty()),
                 new StringFilter<>("Reason", item -> item.getReason()),
                 new StringFilter<>("Remarks", item -> item.getRemark())
         );
@@ -355,7 +367,12 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
                                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
                                     Item catchedItem = new Item();
-                                    catchedItem = ((Item) receiveObj.getObj()).clone();
+
+                                    if (receiveObj.getObj() != null) {
+                                        catchedItem = ((Item) receiveObj.getObj()).clone();
+                                    } else {
+                                        catchedItem = null;
+                                    }
 
                                     adjustItemsNotYetTransfer(catchedItem, item);
                                 }
@@ -392,7 +409,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
             Item itemInReturnable = itemsNotYetReturn.get(itemsNotYetReturn.indexOf(catchedItem));
             Item itemInRDN = (Item) items.get(items.indexOf(catchedItem));
 
-            itemInReturnable.setQty(itemInReturnable.getQty() + itemInRDN.getQty());
+            itemInReturnable.setQty(itemInReturnable.getQty() + itemInRDN.getOriQty());
             items.remove(catchedItem);
 
             //add
@@ -404,6 +421,11 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
             itemInRDN.setOriQty(0);
             itemInReturnable.setQty(itemInReturnable.getQty() - itemInRDN.getQty() + itemInRDN.getOriQty());
         }
+
+        for (Item i : items) {
+            i.setOriQty(i.getQty());
+        }
+
         setupItemTable();
     }
 
@@ -419,24 +441,24 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
             if (passObj.getObj() instanceof ReturnDeliveryNote) {
                 ReturnDeliveryNote rdn = (ReturnDeliveryNote) passObj.getObj();
                 this.txtRDNID.setText(rdn.getCode());
-                this.txtCllctBckFr.setText(rdn.getCollBckFr() == null ? "" : rdn.getCollBckFr().getCollectAddrID());
+                this.txtSORef.setText(rdn.getSO() == null ? "" : rdn.getSO().getCode());
+                this.txtCllctBckFr.setText(rdn.getCollBckFr().getCollectAddrID());
                 this.txtCllctBckTo.setText(rdn.getCollBackTo() == null ? "" : rdn.getCollBackTo().getPlaceID());
                 this.dtRefDate.setValue(rdn.getCreatedDate() == null ? LocalDate.now() : Instant.ofEpochMilli(rdn.getCreatedDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate()
                 );
-                this.txtSORef.setText(rdn.getSO() == null ? "" : rdn.getSO().getCode());
                 this.dtCllctDate.setValue(rdn.getCollectDate() == null ? null : Instant.ofEpochMilli(rdn.getCollectDate().getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
                 this.cmbStatus.setText(rdn.getStatus());
                 this.txtInspectorMsg.setText(rdn.getInspectorMsg());
 
-                this.txtIssuedBy.setText(rdn.getIssuedBy() == null ? "" : rdn.getIssuedBy().getStaffID());
-                this.txtInspectedBy.setText(rdn.getInspectedBy() == null ? "" : rdn.getInspectedBy().getStaffID());
-                this.txtCollectBackBy.setText(rdn.getCollectBackBy() == null ? "" : rdn.getCollectBackBy().getStaffID());
-                this.txtItemPassedBckBy.setText(rdn.getItemPassedBackBy() == null ? "" : rdn.getItemPassedBackBy().getCollectAddrID());
-                this.txtItemReceivedBy.setText(rdn.getItemReceivedBy() == null ? "" : rdn.getItemReceivedBy().getStaffID());
+                this.txtIssuedBy.setText(rdn.getIssuedBy().getStaffID() == null ? "" : rdn.getIssuedBy().getStaffID());
+                this.txtInspectedBy.setText(rdn.getInspectedBy().getStaffID() == null ? "" : rdn.getInspectedBy().getStaffID());
+                this.txtCollectBackBy.setText(rdn.getCollectBackBy().getStaffID() == null ? "" : rdn.getCollectBackBy().getStaffID());
+                this.txtItemPassedBckBy.setText(rdn.getItemPassedBackBy().getCollectAddrID() == null ? "" : rdn.getItemPassedBackBy().getCollectAddrID());
+                this.txtItemReceivedBy.setText(rdn.getItemReceivedBy().getStaffID() == null ? "" : rdn.getItemReceivedBy().getStaffID());
 
             } else if (passObj.getObj() instanceof SalesOrder) {
 
@@ -757,7 +779,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
         rdn.setCode(this.txtRDNID.getText());
 
         CollectAddress collectBckFr = new CollectAddress();
-        collectBckFr.setCollectAddrID(this.txtCllctBckTo.getText());
+        collectBckFr.setCollectAddrID(this.txtCllctBckFr.getText());
         rdn.setCollBckFr(collectBckFr);
 
         Place collBackTo = new Place();
@@ -776,23 +798,43 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
         rdn.setInspectorMsg(this.txtInspectorMsg.getText());
 
         Staff issuedBy = new Staff();
-        issuedBy.setStaffID(this.txtIssuedBy.getText());
+        if (isBlank(this.txtIssuedBy.getText())) {
+            issuedBy.setStaffID(null);
+        } else {
+            issuedBy.setStaffID(this.txtIssuedBy.getText());
+        }
         rdn.setIssuedBy(issuedBy);
 
         Staff inspectedBy = new Staff();
-        inspectedBy.setStaffID(this.txtInspectedBy.getText());
+        if (isBlank(this.txtInspectedBy.getText())) {
+            inspectedBy.setStaffID(null);
+        } else {
+            inspectedBy.setStaffID(this.txtInspectedBy.getText());
+        }
         rdn.setInspectedBy(inspectedBy);
 
         Staff collectBackBy = new Staff();
-        collectBackBy.setStaffID(this.txtCollectBackBy.getText());
+        if (isBlank(this.txtCollectBackBy.getText())) {
+            collectBackBy.setStaffID(null);
+        } else {
+            collectBackBy.setStaffID(this.txtCollectBackBy.getText());
+        }
         rdn.setCollectBackBy(collectBackBy);
 
         CollectAddress itemPassedBackBy = new CollectAddress();
-        itemPassedBackBy.setCollectAddrID(this.txtItemPassedBckBy.getText());
+        if (isBlank(this.txtItemPassedBckBy.getText())) {
+            itemPassedBackBy.setCollectAddrID(null);
+        } else {
+            itemPassedBackBy.setCollectAddrID(this.txtItemPassedBckBy.getText());
+        }
         rdn.setItemPassedBackBy(itemPassedBackBy);
 
         Staff itemReceivedBy = new Staff();
-        itemReceivedBy.setStaffID(this.txtItemReceivedBy.getText());
+        if (isBlank(this.txtItemReceivedBy.getText())) {
+            itemReceivedBy.setStaffID(null);
+        } else {
+            itemReceivedBy.setStaffID(this.txtItemReceivedBy.getText());
+        }
         rdn.setItemReceivedBy(itemReceivedBy);
 
         rdn.setItems(items);
@@ -980,6 +1022,11 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                         if (isValidDocumentByItems()) {
                             this.passObj.setObj(so);
                             this.fieldFillIn();
+
+                            for (Item i : items) {
+                                i.setOriQty(i.getQty());
+                            }
+
                             setupItemTable();
                         } else {
                             alertDialog(Alert.AlertType.INFORMATION,
@@ -1114,12 +1161,13 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
             if (this.txtRDNID.getText().isEmpty()) {
                 rdnInDraft.setCode(RDNService.saveNewRDN(rdnInDraft));
 
-            } else if (this.passObj.getCrud().equals(BasicObjs.update)) {
+            } else if (this.passObj.getCrud().equals(BasicObjs.update) || this.passObj.getCrud().equals(BasicObjs.read)) {
                 RDNService.updateRDN(rdnInDraft);
             }
 
             for (Item item : rdnInDraft.getItems()) {
                 item.setOriQty(item.getQty());
+                item.setInventory(new Inventory());
             }
 
             ItemService.updateItemsByDoc(rdnInDraft.getItems(), rdnInDraft.getCode());
@@ -1133,6 +1181,87 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
 
     private void updateSOStatus() {
         // if approved change to in progress
+        if (rdnInDraft.getStatus().toUpperCase().equals("APPROVED")) {
+            // add back qty to SO, but no warehouse
+            SalesOrder so = new SalesOrder();
+            so.setCode(rdnInDraft.getSO().getCode());
+            so.setStatus(SalesRules.SOStatus.IN_PROGRESS.toString());
+
+            SalesOrderService.updateSalesOrderStatus(so);
+        }
+    }
+
+    @FXML
+    private void openCllctBckToSelection(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                passObj.setObj(new Place());
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtCllctBckTo.setText(((Place) receiveObj.getObj()).getPlaceID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    private void openCllctBckFrSelectrion(MouseEvent event) {
+        if (event.isPrimaryButtonDown() == true) {
+            if (this.txtSORef.getText().isEmpty()) {
+                alertDialog(Alert.AlertType.INFORMATION,
+                        "Information",
+                        "Prerequisite Condition",
+                        "Must fill in SO Reference column, before select collect back from");
+                return;
+            }
+
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("View/InnerEntitySelect_UI.fxml"));
+                Stage stage = new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(btnBack.getScene().getWindow());
+                stage.setScene(new Scene(root));
+
+                BasicObjs passObj = new BasicObjs();
+                CollectAddress cllctAddr = new CollectAddress();
+
+                cllctAddr.setCustomer(new Customer());
+                cllctAddr.getCustomer().setCustID(SalesOrderService.getSOByID(this.txtSORef.getText()).getBillToCust().getCustID());
+                passObj.setObj(cllctAddr);
+
+                stage.setUserData(passObj);
+                stage.showAndWait();
+
+                if (stage.getUserData() != null) {
+                    BasicObjs receiveObj = (BasicObjs) stage.getUserData();
+                    this.txtCllctBckFr.setText(((CollectAddress) receiveObj.getObj()).getCollectAddrID());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    @FXML
+    private void printRDN(MouseEvent event) {
+        RDNService.getRDNSheet(this.txtRDNID.getText());
     }
 
 }
