@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a392d495-06ea-4587-8739-868c7fc59293">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a392d495-06ea-4587-8739-868c7fc59293">
     <property name="ireport.zoom" value="1.6105100000000014"/>
     <property name="ireport.x" value="0"/>
     <property name="ireport.y" value="0"/>
-    <queryString language="SQL">
+    <queryString>
 		<![CDATA[SELECT
     PRODUCT_STOCK_LEVEL_STATUS.Prod_ID,
     PRODUCT_STOCK_LEVEL_STATUS.Part_No,
@@ -39,7 +39,7 @@ FROM
     FROM
         Product
         LEFT JOIN Inventory
-        ON Product.Prod_ID = Inventory.Inventory_ID
+        ON Product.Prod_ID = Inventory.Product_ID
     GROUP BY
         Product.Prod_ID,
         Product.Part_No,
@@ -59,7 +59,7 @@ INNER JOIN (SELECT
             FROM
                 Inventory
                 INNER JOIN Place
-                ON Inventory.Inventory_ID = Place.Place_ID
+                ON Inventory.Place_ID = Place.Place_ID
             ) AS PRODUCT_STORED_PLACES
 ON PRODUCT_STOCK_LEVEL_STATUS.Prod_ID = PRODUCT_STORED_PLACES.Product_ID
 ORDER BY
@@ -86,7 +86,7 @@ ORDER BY
                     <text><![CDATA[Product ID]]></text>
                 </staticText>
                 <staticText>
-                    <reportElement x="137" y="2" width="60" height="12" uuid="bd108497-faa8-4e02-956e-e38b1241f89c"/>
+                    <reportElement x="123" y="2" width="60" height="12" uuid="bd108497-faa8-4e02-956e-e38b1241f89c"/>
                     <textElement verticalAlignment="Top">
                         <font fontName="Century Gothic" size="9" isBold="true"/>
                         <paragraph leftIndent="2"/>
@@ -94,7 +94,7 @@ ORDER BY
                     <text><![CDATA[Part No.]]></text>
                 </staticText>
                 <staticText>
-                    <reportElement x="274" y="2" width="63" height="12" uuid="d6b0975d-e114-49dc-906f-2e9094a7231b"/>
+                    <reportElement x="260" y="2" width="63" height="12" uuid="d6b0975d-e114-49dc-906f-2e9094a7231b"/>
                     <textElement verticalAlignment="Top">
                         <font fontName="Century Gothic" size="9" isBold="true"/>
                         <paragraph leftIndent="2"/>
@@ -102,7 +102,7 @@ ORDER BY
                     <text><![CDATA[Reorder Level]]></text>
                 </staticText>
                 <textField>
-                    <reportElement x="60" y="2" width="77" height="12" uuid="fe5b575e-9599-4cb4-a838-68b9b730e8a0"/>
+                    <reportElement x="60" y="2" width="63" height="12" uuid="fe5b575e-9599-4cb4-a838-68b9b730e8a0"/>
                     <textElement textAlignment="Right" verticalAlignment="Top">
                         <font fontName="Century Gothic" size="9"/>
                         <paragraph leftIndent="2" rightIndent="5"/>
@@ -110,7 +110,7 @@ ORDER BY
                     <textFieldExpression><![CDATA[$F{Prod_ID}]]></textFieldExpression>
                 </textField>
                 <textField>
-                    <reportElement x="197" y="2" width="77" height="12" uuid="7d0d4373-1c4f-4137-bf6c-824f3a212894"/>
+                    <reportElement x="183" y="2" width="77" height="12" uuid="7d0d4373-1c4f-4137-bf6c-824f3a212894"/>
                     <textElement textAlignment="Right" verticalAlignment="Top">
                         <font fontName="Century Gothic" size="9"/>
                         <paragraph leftIndent="2" rightIndent="5"/>
@@ -118,7 +118,7 @@ ORDER BY
                     <textFieldExpression><![CDATA[$F{Part_No}]]></textFieldExpression>
                 </textField>
                 <textField>
-                    <reportElement x="337" y="2" width="74" height="12" uuid="044fcd3f-3b27-4301-ac5f-55815efbba3c"/>
+                    <reportElement x="323" y="2" width="74" height="12" uuid="044fcd3f-3b27-4301-ac5f-55815efbba3c"/>
                     <textElement textAlignment="Right" verticalAlignment="Top">
                         <font fontName="Century Gothic" size="9"/>
                         <paragraph leftIndent="2" rightIndent="5"/>
@@ -126,7 +126,7 @@ ORDER BY
                     <textFieldExpression><![CDATA[$F{Reorder_Level}]]></textFieldExpression>
                 </textField>
                 <staticText>
-                    <reportElement x="411" y="2" width="60" height="12" uuid="2a2e9703-435b-47d1-bf27-174b167e9935"/>
+                    <reportElement x="397" y="2" width="60" height="12" uuid="2a2e9703-435b-47d1-bf27-174b167e9935"/>
                     <textElement verticalAlignment="Top">
                         <font fontName="Century Gothic" size="9" isBold="true"/>
                         <paragraph leftIndent="2"/>
@@ -134,7 +134,7 @@ ORDER BY
                     <text><![CDATA[Stock Level]]></text>
                 </staticText>
                 <textField>
-                    <reportElement x="471" y="2" width="77" height="12" uuid="7d7d831d-d83f-41a8-8f33-186703715757"/>
+                    <reportElement x="457" y="2" width="98" height="12" uuid="7d7d831d-d83f-41a8-8f33-186703715757"/>
                     <textElement textAlignment="Right" verticalAlignment="Top">
                         <font fontName="Century Gothic" size="9"/>
                         <paragraph leftIndent="2" rightIndent="5"/>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="441.0" stylesheets="@../Material/css/Buttons.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/18" fx:controller="Controller.SalesRptCONTR">
+   <children>
+      <Label alignment="CENTER" minHeight="70.0" prefHeight="70.0" prefWidth="446.0" styleClass="entity-header-label" stylesheets="@../Material/css/labels.css" text="Sales Report" textFill="WHITE">
+         <font>
+            <Font name="Arial monospaced for SAP Bold" size="52.0" />
+         </font>
+      </Label>
+      <MFXTextField fx:id="txtStaffID" floatMode="BORDER" floatingText="Staff ID" layoutX="80.0" layoutY="104.0" prefHeight="58.0" prefWidth="286.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </MFXTextField>
+      <MFXDatePicker fx:id="dtStartDate" accessibleRole="DATE_PICKER" alignment="CENTER_RIGHT" editable="false" floatMode="INLINE" floatingText="Start Date" layoutX="80.0" layoutY="174.0" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="286.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </MFXDatePicker>
+      <MFXDatePicker fx:id="dtEndDate" accessibleRole="DATE_PICKER" alignment="CENTER_RIGHT" editable="false" floatMode="INLINE" floatingText="End Date" layoutX="80.0" layoutY="235.0" minHeight="47.0" minWidth="200.0" prefHeight="47.0" prefWidth="286.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </MFXDatePicker>
+      <MFXCircleToggleNode fx:id="ctnStaffSelection" graphicTextGap="2.0" layoutX="382.0" layoutY="110.0" onMousePressed="#openStaffAccSelection" prefHeight="48.0" prefWidth="39.0" size="23.0">
+         <graphic>
+            <FontAwesomeIconView glyphName="LIST" size="15" text="" />
+         </graphic>
+         <padding>
+            <Insets bottom="1.0" />
+         </padding>
+      </MFXCircleToggleNode>
+      <MFXButton fx:id="btnGenerateReport" buttonType="RAISED" layoutX="230.0" layoutY="317.0" minHeight="27.0" minWidth="70.0" onMousePressed="#generateSalesReport" prefHeight="38.0" prefWidth="176.0" styleClass="outline-button" text="Generate Report">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </MFXButton>
+      <MFXButton id="custom" fx:id="btnCancel" buttonType="RAISED" layoutX="40.0" layoutY="317.0" minHeight="27.0" minWidth="70.0" onMousePressed="#cancelAction" prefHeight="38.0" prefWidth="169.0" styleClass="outline-button" text="Back">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </MFXButton>
+   </children>
+</AnchorPane>

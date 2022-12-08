@@ -74,6 +74,7 @@ public class AccountMgmtCONTR implements Initializable, BasicCONTRFunc {
                 inputValidation();
                 receiveData();
                 autoClose();
+                fieldFillIn();
             }
         });
     }
@@ -82,7 +83,7 @@ public class AccountMgmtCONTR implements Initializable, BasicCONTRFunc {
         if (passObj.getObj() != null) {
 
             Staff staff = (Staff) passObj.getObj();
-
+            this.txtStaffID.setText(staff.getStaffID());
             this.txtPassword.setText(staff.getPassword());
             this.chkFrozen.setSelected(staff.getIsFrozen());
             this.chkResetPass.setSelected(staff.getResetPassNextLogin());
@@ -188,7 +189,13 @@ public class AccountMgmtCONTR implements Initializable, BasicCONTRFunc {
 
     @Override
     public ButtonType alertDialog(Alert.AlertType alertType, String title, String headerTxt, String contentTxt) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerTxt);
+        alert.setContentText(contentTxt);
+
+        alert.showAndWait();
+        return alert.getResult();
     }
 
     @Override
@@ -280,6 +287,8 @@ public class AccountMgmtCONTR implements Initializable, BasicCONTRFunc {
 
             Staff staff = prepareStaffToObj();
             StaffService.updateStaffAcc(staff);
+
+            switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);
         }
     }
 
@@ -309,7 +318,8 @@ public class AccountMgmtCONTR implements Initializable, BasicCONTRFunc {
 
                 if (stage.getUserData() != null) {
                     BasicObjs receiveObj = (BasicObjs) stage.getUserData();
-                    this.txtStaffID.setText(((Staff) receiveObj.getObj()).getStaffID());
+                    this.passObj.setObj(receiveObj.getObj());
+                    this.fieldFillIn();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

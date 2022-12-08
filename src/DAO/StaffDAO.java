@@ -516,9 +516,9 @@ public class StaffDAO {
 
             query = "UPDATE [dbo].[Staff] "
                     + "   SET "
-                    + "           ,[Modified_Date_Time] = ?, "
-                    + "           ,[Password] = ?, "
-                    + "           ,[Is_Frozen] = ?, "
+                    + "            [Modified_Date_Time] = ? "
+                    + "           ,[Password] = ? "
+                    + "           ,[Is_Frozen] = ? "
                     + "           ,[Reset_Password_Next_Login] = ? "
                     + "WHERE "
                     + "[Staff_ID] = ? ";
@@ -534,7 +534,7 @@ public class StaffDAO {
             ps.execute();
             return staff.getStaffID();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("WALAO" + e.getMessage());
             return null;
         } finally {
             try {
@@ -560,47 +560,46 @@ public class StaffDAO {
         try {
             conn = SQLDatabaseConnection.openConn();
 
-            query = "SELECT * FROM  View_Retrieve_All_Staff";
+            query = "SELECT * FROM  Staff";
             ps = conn.prepareStatement(query);
 
             // bind parameter
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                Staff reportTo = new Staff();
-                reportTo.setStaffID(rs.getString("STAFF_Report_To"));
-
-                staff = new Staff(
-                        rs.getTimestamp("STAFF_Created_Date"),
-                        rs.getTimestamp("STAFF_Modified_Date_Time"),
-                        rs.getString("STAFF_Avatar_Img"),
-                        rs.getString("STAFF_Name"),
-                        rs.getString("STAFF_Gender"),
-                        rs.getDate("STAFF_DOB"),
-                        rs.getString("STAFF_IC"),
-                        rs.getString("STAFF_Marital_Status"),
-                        rs.getString("STAFF_Nationality"),
-                        rs.getString("STAFF_Honorifics"),
-                        new Address(rs.getString("STAFF_Residential_Address")),
-                        new Address(rs.getString("STAFF_Corresponding_Address")),
-                        new Contact(rs.getString("STAFF_Email"),
-                                rs.getString("STAFF_Mobile_No"),
-                                rs.getString("STAFF_Extension_No"),
-                                rs.getString("STAFF_Office_Phone_No"),
-                                rs.getString("STAFF_Home_Phone_No")),
-                        rs.getString("STAFF_Occupation"),
-                        rs.getString("STAFF_Race"),
-                        rs.getString("STAFF_Religion"),
-                        rs.getString("STAFF_Status"),
-                        rs.getString("STAFF_Staff_ID"),
-                        new Place(rs.getString("STAFF_Work_Place")),
-                        rs.getDate("STAFF_Entry_Date"),
-                        reportTo, // recursive break suspected
-                        rs.getString("STAFF_Employee_Type"),
-                        rs.getString("STAFF_Password"),
-                        rs.getString("STAFF_Role")
-                );
-
+                staff = new Staff();
+                staff.setStaffID(rs.getString("Staff_ID"));
+                staff.setAvatarImg(rs.getString("Avatar_Img"));
+                staff.setName(rs.getString("Name"));
+                staff.setGender(rs.getString("Gender"));
+                staff.setDOB(rs.getDate("DOB"));
+                staff.setIC(rs.getString("IC"));
+                staff.setMaritalStatus(rs.getString("Marital_Status"));
+                staff.setNationality(rs.getString("Nationality"));
+                staff.setHonorifics(rs.getString("Honorifics"));
+                staff.setResidentialAddr(AddressDAO.getAddressByID(rs.getString("Residential_Address")));
+                staff.setCorAddr(AddressDAO.getAddressByID(rs.getString("Residential_Address")));
+                staff.setContact(new Contact());
+                staff.getContact().setEmail(rs.getString("Email"));
+                staff.getContact().setMobileNo(rs.getString("Mobile_No"));
+                staff.getContact().setExt(rs.getString("Extension_No"));
+                staff.getContact().setOffPhNo(rs.getString("Officed_Phone_No"));
+                staff.getContact().setHomePhNo(rs.getString("Home_Phone_No"));
+                staff.setOccupation(rs.getString("Occupation"));
+                staff.setRace(rs.getString("Race"));
+                staff.setReligion(rs.getString("Religion"));
+                staff.setWorkPlace(PlaceDAO.getPlaceByID(rs.getString("Work_Place")));
+                staff.setEntryDate(rs.getDate("Entry_Date"));
+                staff.setReportTo(new Staff());
+                staff.getReportTo().setStaffID(rs.getString("Report_To"));
+                staff.setEmpType(rs.getString("Employee_Type"));
+                staff.setPassword(rs.getString("Password"));
+                staff.setRole(rs.getString("Role"));
+                staff.setStatus(rs.getString("Status"));
+                staff.setCreatedDate(rs.getTimestamp("Created_Date"));
+                staff.setModifiedDateTime(rs.getTimestamp("Modified_Date_Time"));
+                staff.setIsFrozen(rs.getBoolean("Is_Frozen"));
+                staff.setResetPassNextLogin(rs.getBoolean("Reset_Password_Next_Login"));
                 staffs.add(staff);
             }
 
@@ -636,7 +635,7 @@ public class StaffDAO {
 
             query = "UPDATE [dbo].[Staff] "
                     + "   SET "
-                    + "           ,[Modified_Date_Time] = ?, "
+                    + "           [Modified_Date_Time] = ? "
                     + "           ,[Password] = ? "
                     + "           ,[Reset_Password_Next_Login] = ? "
                     + "WHERE "

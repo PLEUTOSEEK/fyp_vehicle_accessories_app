@@ -102,7 +102,7 @@ public class Item<E> implements Cloneable {
             return new BigDecimal("0.00");
         }
 
-        exclTaxAmt = BigDecimal.valueOf(Double.valueOf(qty) * unitPrice.doubleValue());
+        exclTaxAmt = BigDecimal.valueOf(Double.valueOf(oriQty) * unitPrice.doubleValue());
         return exclTaxAmt;
     }
 

@@ -5,13 +5,21 @@
 package Service;
 
 import DAO.DeliveryOrderDAO;
+import DAO.SQLDatabaseConnection;
 import Entity.DeliveryOrder;
 import Structures.CodeStructure;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -61,6 +69,23 @@ public class DeliveryOrderService {
 
     public static List<DeliveryOrder> getAllDOs() {
         return DeliveryOrderDAO.getAllDOs();
+    }
+
+    public static void getDOSheet(String code) {
+        try {
+            String report = "src/Report/DeliveryOrder_Individual.jrxml";
+
+            JasperReport jr = JasperCompileManager.compileReport(report);
+
+            Map< String, Object> para = new HashMap<>();
+            para.put("param_DO_ID", code);
+
+            JasperPrint jp = JasperFillManager.fillReport(jr, para, SQLDatabaseConnection.openConn());
+            JasperViewer.viewReport(jp, false);
+
+        } catch (Exception e) {
+            System.out.println("assasa" + e.getMessage());
+        }
     }
 
 }

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b78bbaa9-266c-47d9-bff4-a0a7ae9cce87">
-    <property name="ireport.zoom" value="1.8627639691774651"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b78bbaa9-266c-47d9-bff4-a0a7ae9cce87">
+    <property name="ireport.zoom" value="1.156629868288595"/>
     <property name="ireport.x" value="0"/>
     <property name="ireport.y" value="0"/>
-    <queryString language="SQL">
+    <queryString>
 		<![CDATA[SELECT
     IS_EXCEED_PAYMENT_TERM,
     COUNT(IS_EXCEED_PAYMENT_TERM) AS COUNT_IS_EXCEED_PAYMENT_TERM
 FROM
     (SELECT
         CASE
-            WHEN DATEDIFF(DAY,Baseline_Documet_Date, DOC_DATE_TIME) > Days_Limit THEN 'YES'
+            WHEN DATEDIFF(DAY,GETDATE(), DOC_DATE_TIME) > Days_Limit THEN 'YES'
             ELSE 'NO'
         END AS IS_EXCEED_PAYMENT_TERM
     FROM

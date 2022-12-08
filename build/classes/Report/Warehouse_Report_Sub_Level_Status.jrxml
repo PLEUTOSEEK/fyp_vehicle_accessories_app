@@ -5,55 +5,53 @@
     <property name="ireport.y" value="0"/>
     <queryString>
 		<![CDATA[SELECT
-    Prod_ID,
-    TTL_INVENTORY,
-    CASE
-        WHEN TTL_INVENTORY >= Maximum_Level THEN 'MAXIMUM_LEVEL'
-        WHEN TTL_INVENTORY >= Average_Level THEN 'AVERAGE_LEVEL'
-        WHEN TTL_INVENTORY >= Minimum_Level THEN 'MINIMUM_LEVEL'
-        WHEN TTL_INVENTORY >= Reorder_Level THEN 'REORDER_LEVEL'
-        ELSE 'DANGER_LEVEL'
-    END AS LEVEL_STATUS
-FROM (
-    SELECT
-        Product.Prod_ID,
-        Product.Maximum_Level,
-        Product.Average_Level,
-        Product.Minimum_Level,
-        Product.Reorder_Level,
-        Product.Danger_Level,
-        SUM(Inventory.Reserved_Qty) + SUM(Inventory.Ready_Qty) AS TTL_INVENTORY
-    FROM
-        Product
-        LEFT JOIN Inventory
-        ON Product.Prod_ID = Inventory.Inventory_ID
-    GROUP BY
-        Product.Prod_ID,
-        Product.Maximum_Level,
-        Product.Average_Level,
-        Product.Minimum_Level,
-        Product.Reorder_Level,
-        Product.Danger_Level
-) AS PROD_TTL_INVENTORY]]>
+
+  SUM(case when PROD_TTL_INVENTORY_2.LEVEL_STATUS = 'MAXIMUM_LEVEL' then 1 else 0 end) MAXIMUM_LEVEL,
+  SUM(case when PROD_TTL_INVENTORY_2.LEVEL_STATUS = 'AVERAGE_LEVEL' then 1 else 0 end) AVERAGE_LEVEL,
+  SUM(case when PROD_TTL_INVENTORY_2.LEVEL_STATUS = 'MINIMUM_LEVEL' then 1 else 0 end) MINIMUM_LEVEL,
+  SUM(case when PROD_TTL_INVENTORY_2.LEVEL_STATUS = 'REORDER_LEVEL' then 1 else 0 end) REORDER_LEVEL,
+  SUM(case when PROD_TTL_INVENTORY_2.LEVEL_STATUS = 'DANGER_LEVEL' then 1 else 0 end) DANGER_LEVEL
+
+FROM
+    (SELECT
+        Prod_ID,
+        TTL_INVENTORY,
+        CASE
+            WHEN TTL_INVENTORY >= Maximum_Level THEN 'MAXIMUM_LEVEL'
+            WHEN TTL_INVENTORY >= Average_Level THEN 'AVERAGE_LEVEL'
+            WHEN TTL_INVENTORY >= Minimum_Level THEN 'MINIMUM_LEVEL'
+            WHEN TTL_INVENTORY >= Reorder_Level THEN 'REORDER_LEVEL'
+            ELSE 'DANGER_LEVEL'
+        END AS LEVEL_STATUS
+    FROM (
+        SELECT
+            Product.Prod_ID,
+            Product.Maximum_Level,
+            Product.Average_Level,
+            Product.Minimum_Level,
+            Product.Reorder_Level,
+            Product.Danger_Level,
+            SUM(Inventory.Reserved_Qty) + SUM(Inventory.Ready_Qty) AS TTL_INVENTORY
+        FROM
+            Product
+            LEFT JOIN Inventory
+            ON Product.Prod_ID = Inventory.Product_ID
+        GROUP BY
+            Product.Prod_ID,
+            Product.Maximum_Level,
+            Product.Average_Level,
+            Product.Minimum_Level,
+            Product.Reorder_Level,
+            Product.Danger_Level
+    ) AS PROD_TTL_INVENTORY
+)AS PROD_TTL_INVENTORY_2
+]]>
     </queryString>
-    <field name="Prod_ID" class="java.lang.String"/>
-    <field name="TTL_INVENTORY" class="java.lang.Integer"/>
-    <field name="LEVEL_STATUS" class="java.lang.String"/>
-    <variable name="param_Count_Maximum" class="java.lang.Integer" calculation="Sum">
-        <variableExpression><![CDATA["MAXIMUM_LEVEL".equals($F{LEVEL_STATUS}) ? 1 : 0]]></variableExpression>
-    </variable>
-    <variable name="param_Count_Minimum" class="java.lang.Integer" calculation="Sum">
-        <variableExpression><![CDATA["MINIMUM_LEVEL".equals($F{LEVEL_STATUS}) ? 1 : 0]]></variableExpression>
-    </variable>
-    <variable name="param_Count_Average" class="java.lang.Integer" calculation="Sum">
-        <variableExpression><![CDATA["AVERAGE_LEVEL".equals($F{LEVEL_STATUS}) ? 1 : 0]]></variableExpression>
-    </variable>
-    <variable name="param_Count_Danger" class="java.lang.Integer" calculation="Sum">
-        <variableExpression><![CDATA["DANGER_LEVEL".equals($F{LEVEL_STATUS}) ? 1 : 0]]></variableExpression>
-    </variable>
-    <variable name="param_Count_Reorder" class="java.lang.Integer" calculation="Sum">
-        <variableExpression><![CDATA["REORDER_LEVEL".equals($F{LEVEL_STATUS}) ? 1 : 0]]></variableExpression>
-    </variable>
+    <field name="MAXIMUM_LEVEL" class="java.lang.Integer"/>
+    <field name="AVERAGE_LEVEL" class="java.lang.Integer"/>
+    <field name="MINIMUM_LEVEL" class="java.lang.Integer"/>
+    <field name="REORDER_LEVEL" class="java.lang.Integer"/>
+    <field name="DANGER_LEVEL" class="java.lang.Integer"/>
     <background>
         <band splitType="Stretch"/>
     </background>
@@ -71,7 +69,7 @@ FROM (
                     <font fontName="Century Gothic" size="9"/>
                     <paragraph rightIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$V{param_Count_Maximum}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{MAXIMUM_LEVEL}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="223" y="0" width="56" height="12" uuid="bc2a92b8-2cb0-4abe-bfd2-1715c9d33f34"/>
@@ -79,7 +77,7 @@ FROM (
                     <font fontName="Century Gothic" size="9"/>
                     <paragraph rightIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$V{param_Count_Reorder}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{REORDER_LEVEL}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="223" y="20" width="56" height="12" uuid="bb6f5ea8-2500-4d91-9f76-227ed423a9d8"/>
@@ -87,7 +85,7 @@ FROM (
                     <font fontName="Century Gothic" size="9"/>
                     <paragraph rightIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$V{param_Count_Danger}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{DANGER_LEVEL}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="78" y="20" width="56" height="12" uuid="c1be3460-6e15-4957-be99-c4cd39506b2e"/>
@@ -95,7 +93,7 @@ FROM (
                     <font fontName="Century Gothic" size="9"/>
                     <paragraph rightIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$V{param_Count_Average}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{AVERAGE_LEVEL}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="78" y="40" width="56" height="12" uuid="e1ec1ba9-d3da-4c12-932e-e5f8b4ea3e94"/>
@@ -103,7 +101,7 @@ FROM (
                     <font fontName="Century Gothic" size="9"/>
                     <paragraph rightIndent="2"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$V{param_Count_Minimum}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{MINIMUM_LEVEL}]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="0" y="0" width="78" height="12" uuid="06f21be7-bf62-4e21-b98d-6ed146e00f17"/>

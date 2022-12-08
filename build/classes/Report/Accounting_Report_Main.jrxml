@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="036cc074-dcc3-4420-8062-473130f61cf1">
-    <property name="ireport.zoom" value="1.7715610000000035"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="036cc074-dcc3-4420-8062-473130f61cf1">
+    <property name="ireport.zoom" value="0.9090909090909111"/>
     <property name="ireport.x" value="0"/>
-    <property name="ireport.y" value="384"/>
+    <property name="ireport.y" value="0"/>
     <parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
         <defaultValueExpression><![CDATA["C:\\Users\\Tee Zhuo Xuan\\OneDrive - Tunku Abdul Rahman University College\\Desktop\\fyp_vehicle_accessories_app\\src\\Report\\"]]></defaultValueExpression>
     </parameter>
+    <parameter name="rptPieChart" class="net.sf.jasperreports.engine.JasperReport"/>
     <queryString>
 		<![CDATA[-- Report Body
 SELECT
@@ -23,7 +24,7 @@ FROM
         SO_INFORMATION.Customer_ID,
         SO_INFORMATION.Name,
         CASE
-            WHEN DATEDIFF(DAY,SO_INFORMATION.Baseline_Documet_Date, SO_INFORMATION.DOC_DATE_TIME) > Days_Limit THEN 'YES'
+            WHEN DATEDIFF(DAY,GETDATE(), SO_INFORMATION.DOC_DATE_TIME) > Days_Limit THEN 'YES'
             ELSE 'NO'
         END AS IS_EXCEED_PAYMENT_TERM
     FROM
@@ -100,7 +101,7 @@ FROM
         <variableExpression><![CDATA[$F{BAL_UNPAID}]]></variableExpression>
     </variable>
     <variable name="param_Ttl_Ttl" class="java.math.BigDecimal" calculation="Sum">
-        <variableExpression><![CDATA[$F{RECEIVED_AMOUNT} + $F{BAL_UNPAID}]]></variableExpression>
+        <variableExpression><![CDATA[$F{RECEIVED_AMOUNT}.add($F{BAL_UNPAID})]]></variableExpression>
     </variable>
     <variable name="param_Ttl_Exceed_Pymt_Term" class="java.lang.Integer" calculation="Sum">
         <variableExpression><![CDATA["YES".equals($F{IS_EXCEED_PAYMENT_TERM}.toUpperCase()) ? 1 : 0]]></variableExpression>
@@ -267,9 +268,9 @@ FROM
                 <text><![CDATA[Print Date & Time]]></text>
             </staticText>
             <subreport>
-                <reportElement x="0" y="123" width="555" height="139" uuid="9f93cd17-cdeb-48bd-a3d6-c016a9570c97"/>
+                <reportElement x="0" y="123" width="555" height="125" uuid="9f93cd17-cdeb-48bd-a3d6-c016a9570c97"/>
                 <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Accounting_Report_Sub_Pie_Chart.jasper"]]></subreportExpression>
+                <subreportExpression><![CDATA[$P{rptPieChart}]]></subreportExpression>
             </subreport>
             <staticText>
                 <reportElement x="3" y="279" width="113" height="12" uuid="15c55f89-5522-42f1-a33b-8bcc96fec1b9"/>
@@ -311,32 +312,27 @@ FROM
                 </textElement>
                 <text><![CDATA[WITHIN PYMT TERM]]></text>
             </staticText>
-            <staticText>
-                <reportElement x="-62" y="671" width="97" height="12" uuid="855a5c17-75cd-4b94-a4ea-2f125089d8f0"/>
-                <textElement verticalAlignment="Middle">
-                    <font fontName="Century Gothic" size="9" isBold="true"/>
-                    <paragraph leftIndent="2"/>
-                </textElement>
-                <text><![CDATA[TOTAL]]></text>
-            </staticText>
-            <textField>
+            <textField evaluationTime="Report">
                 <reportElement x="116" y="279" width="100" height="12" uuid="2f2b4ca0-126f-4361-8421-a447bf521468"/>
-                <textElement>
+                <textElement textAlignment="Right">
                     <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="5"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$V{param_Ttl_Received}]]></textFieldExpression>
             </textField>
-            <textField>
+            <textField evaluationTime="Report">
                 <reportElement x="116" y="291" width="100" height="12" uuid="367f11b5-728f-4ee9-bf92-d4f71c038ca0"/>
-                <textElement>
+                <textElement textAlignment="Right">
                     <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="5"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$V{param_Ttl_Bal_Unpaid}]]></textFieldExpression>
             </textField>
-            <textField>
+            <textField evaluationTime="Report">
                 <reportElement x="116" y="303" width="100" height="12" uuid="76f9f136-db3f-476e-a350-91a5c77bbd0d"/>
-                <textElement>
+                <textElement textAlignment="Right">
                     <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="5"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$V{param_Ttl_Ttl}]]></textFieldExpression>
             </textField>
@@ -348,27 +344,38 @@ FROM
                 </textElement>
                 <text><![CDATA[Invoices In: ]]></text>
             </staticText>
-            <textField>
+            <textField evaluationTime="Report">
                 <reportElement x="453" y="279" width="100" height="12" uuid="e1b5b885-c261-4e1b-81d6-639cd51b7113"/>
-                <textElement>
+                <textElement textAlignment="Right">
                     <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="5"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$V{param_Ttl_Exceed_Pymt_Term}]]></textFieldExpression>
             </textField>
-            <textField>
+            <textField evaluationTime="Report">
                 <reportElement x="453" y="291" width="100" height="12" uuid="e31f544a-cc1f-4b61-88f7-844bcf69e975"/>
-                <textElement>
+                <textElement textAlignment="Right">
                     <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="5"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$V{param_Ttl_Within_Pymt_Term}]]></textFieldExpression>
             </textField>
-            <textField>
+            <textField evaluationTime="Report">
                 <reportElement x="453" y="303" width="100" height="12" uuid="df765867-3192-455b-b457-ab1e634ac95a"/>
-                <textElement>
+                <textElement textAlignment="Right">
                     <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="5"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$V{param_Ttl_Pymt_Term}]]></textFieldExpression>
             </textField>
+            <staticText>
+                <reportElement x="356" y="303" width="97" height="12" uuid="6b58823b-80e2-4cd4-b78b-a77d80631d42"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Century Gothic" size="9" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[TOTAL]]></text>
+            </staticText>
         </band>
     </title>
     <columnHeader>
@@ -531,6 +538,14 @@ FROM
                 </textElement>
                 <text><![CDATA[Tel: 016-3717733    Fax: (603) 7965 9999    Email: ThirShen_Gan@gmail.com]]></text>
             </staticText>
+            <textField>
+                <reportElement x="6" y="18" width="100" height="12" uuid="0398fae4-e6d0-43d8-8deb-e32ce6c58580"/>
+                <textElement textAlignment="Right">
+                    <font fontName="Century Gothic" size="9"/>
+                    <paragraph rightIndent="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{param_Ttl_Received}]]></textFieldExpression>
+            </textField>
         </band>
     </pageFooter>
 </jasperReport>

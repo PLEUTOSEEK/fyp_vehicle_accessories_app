@@ -55,8 +55,8 @@ public class ResetPasswordCONTR implements Initializable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                inputValidation();
                 receiveData();
+                inputValidation();
                 autoClose();
             }
         });
@@ -86,7 +86,7 @@ public class ResetPasswordCONTR implements Initializable {
                         return;
                     }
 
-                    if (!textVal.equals(passObj.getLoginStaff().getStaffID())) {
+                    if (!textVal.equals(passObj.getLoginStaff().getPassword())) {
                         c.error("Current Password - Not match with original password");
                         return;
                     }

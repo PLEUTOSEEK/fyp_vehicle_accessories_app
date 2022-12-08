@@ -119,9 +119,9 @@ public class TransferOrderDAO {
                 transferOrder.setCode(rs.getString("TO_TO_ID"));
                 transferOrder.setReqType(rs.getString("TO_Req_Type"));
 
-                if (rs.getString("TO_Req_Type").equals("SO")) {
+                if (rs.getString("TO_Req_Type").equals("Sales Order (SO)")) {
                     transferOrder.setReqTypeRef(SalesOrderDAO.getSalesOrderByID(rs.getString("TO_Req_Type_Ref")));
-                } else if (rs.getString("TO_Req_Type").equals("RDN")) {
+                } else if (rs.getString("TO_Req_Type").equals("Return Delivery Note (RDN)")) {
                     transferOrder.setReqTypeRef(ReturnDeliveryNoteDAO.getReturnDeliveryNoteByCode(rs.getString("TO_Req_Type_Ref")));
                 }
 

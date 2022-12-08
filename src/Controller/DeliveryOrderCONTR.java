@@ -1099,7 +1099,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
 
     @FXML
     private void printDO(MouseEvent event) {
-
+        DeliveryOrderService.getDOSheet(this.txtDOID.getText());
     }
 
 }

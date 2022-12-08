@@ -17,7 +17,9 @@ import Entity.SalesOrder;
 import Entity.Staff;
 import Entity.TransferOrder;
 import PassObjs.BasicObjs;
+import Service.AccountingReportService;
 import Service.GeneralRulesService;
+import Service.WarehouseReportService;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXContextMenuItem;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
@@ -188,14 +190,14 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     private void goToStaffAccMgmtUI(ActionEvent event) {
         passObj.setObj(new Staff());
         passObj.setCrud(BasicObjs.update);
-        switchScene("View/Staff_UI.fxml", passObj, BasicObjs.forward);
+        switchScene("View/AccountMgmt_UI.fxml", passObj, BasicObjs.forward);
     }
 
     @FXML
     private void goToCreateStaffUI(ActionEvent event) {
         passObj.setObj(new Staff());
         passObj.setCrud(BasicObjs.create);
-        switchScene("View/AccountMgmt_UI.fxml", passObj, BasicObjs.forward);
+        switchScene("View/Staff_UI.fxml", passObj, BasicObjs.forward);
     }
 
     @FXML
@@ -420,16 +422,21 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
     @FXML
     private void goToSalesReportUI(ActionEvent event) {
         //haven't create report UI controls
+        passObj.setObj(new SalesOrder());
+        passObj.setCrud(BasicObjs.read);
+        switchScene("View/SalesRpt_UI.fxml", passObj, BasicObjs.forward);
     }
 
     @FXML
     private void goToInventoryReportUI(ActionEvent event) {
         //haven't create report UI controls
+        WarehouseReportService.getInventoryControlRptSheet();
     }
 
     @FXML
     private void goToAccountingReportUI(ActionEvent event) {
         //haven't create report UI controls
+        AccountingReportService.getAccRptSheet();
     }
 
     @Override
@@ -564,7 +571,6 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
             stage.initOwner(btnSetting.getScene().getWindow());
             stage.setScene(new Scene(root));
 
-            BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
             passObj.setObj(new Staff());
 
@@ -573,7 +579,7 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
 
             // if have any change on the selected item
             if (stage.getUserData() != null) {
-                this.passObj.setLoginStaff(((BasicObjs) stage.getUserData()).getLoginStaff());
+                this.passObj.setLoginStaff(((Staff) stage.getUserData()));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -663,6 +669,11 @@ public class HomePageCONTR implements Initializable, BasicCONTRFunc {
         salesmanPrivilege();
         warehousemanPrivilege();
         accountingPrivilege();
+
+        this.mniStaffAccMgmt.setDisable(false);
+        this.mniCreateStaff.setDisable(false);
+        this.mniUpdateStaff.setDisable(false);
+        this.mniViewStaff.setDisable(false);
 
         this.mniGeneral.setDisable(false);
         this.mniSales.setDisable(false);

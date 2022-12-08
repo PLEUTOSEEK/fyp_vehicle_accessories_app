@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b7ed81ce-3bc5-4de9-bf39-8701e5f24536">
-    <property name="ireport.zoom" value="2.0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b7ed81ce-3bc5-4de9-bf39-8701e5f24536">
+    <property name="ireport.zoom" value="1.24184264611831"/>
     <property name="ireport.x" value="0"/>
-    <property name="ireport.y" value="96"/>
+    <property name="ireport.y" value="184"/>
     <parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
         <defaultValueExpression><![CDATA["C:\\Users\\Tee Zhuo Xuan\\OneDrive - Tunku Abdul Rahman University College\\Desktop\\fyp_vehicle_accessories_app\\src\\Report\\"]]></defaultValueExpression>
     </parameter>
-    <queryString language="SQL">
-		<![CDATA[SELECT ''
+    <parameter name="rptBody" class="net.sf.jasperreports.engine.JasperReport"/>
+    <parameter name="rptSubLvl" class="net.sf.jasperreports.engine.JasperReport"/>
+    <parameter name="rptPieChart" class="net.sf.jasperreports.engine.JasperReport"/>
+    <parameter name="rptSubQty" class="net.sf.jasperreports.engine.JasperReport"/>
+    <queryString>
+		<![CDATA[Select ''
 FROM Customer]]>
     </queryString>
-    <field name="" class="java.lang.String"/>
     <background>
         <band splitType="Stretch"/>
     </background>
     <title>
         <band height="389" splitType="Stretch">
+            <subreport>
+                <reportElement x="312" y="323" width="232" height="66" uuid="13445c0d-d8f5-44ab-828d-c61ab4c82f09"/>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{rptSubQty}]]></subreportExpression>
+            </subreport>
             <staticText>
                 <reportElement x="0" y="0" width="464" height="104" uuid="817ee483-6dd4-4005-971c-e60c80729039"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle">
@@ -44,11 +52,6 @@ REPORT]]></text>
                 </textElement>
                 <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
             </textField>
-            <subreport>
-                <reportElement x="0" y="330" width="235" height="52" uuid="68911760-a523-4676-975e-ce5609b1a81e"/>
-                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Warehouse_Report_Sub_Quantities.jasper"]]></subreportExpression>
-            </subreport>
             <staticText>
                 <reportElement x="0" y="129" width="100" height="10" uuid="d10f7dbd-501e-420a-a036-e85642ae4c63"/>
                 <textElement verticalAlignment="Middle">
@@ -72,7 +75,7 @@ REPORT]]></text>
                 </graphicElement>
             </line>
             <staticText>
-                <reportElement x="255" y="313" width="100" height="10" uuid="7d713f38-3838-4697-a665-f643683ecd67"/>
+                <reportElement x="329" y="329" width="100" height="10" uuid="7d713f38-3838-4697-a665-f643683ecd67"/>
                 <textElement verticalAlignment="Middle">
                     <font fontName="Century Gothic" size="8" isBold="true"/>
                     <paragraph leftIndent="2"/>
@@ -80,22 +83,23 @@ REPORT]]></text>
                 <text><![CDATA[Products In: ]]></text>
             </staticText>
             <subreport>
-                <reportElement x="255" y="330" width="300" height="52" uuid="a63723d4-2d97-496f-8af8-b95c5b5a78e5"/>
+                <reportElement x="0" y="323" width="188" height="66" uuid="2d9452a1-1c36-4d5f-9e41-3959eff2978c"/>
                 <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Warehouse_Report_Sub_Level_Status.jasper"]]></subreportExpression>
+                <subreportExpression><![CDATA[$P{rptSubLvl}]]></subreportExpression>
             </subreport>
             <subreport>
-                <reportElement x="0" y="165" width="555" height="143" uuid="fea7eab2-bfdf-480a-94e6-3339e1998c76"/>
-                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Warehouse_Report_Sub_Pie_Chart.jasper"]]></subreportExpression>
+                <reportElement x="0" y="165" width="555" height="103" uuid="52dcfd24-565b-4c0b-a985-e5bd22bd27b6"/>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{rptPieChart}]]></subreportExpression>
             </subreport>
         </band>
     </title>
     <detail>
         <band height="125" splitType="Stretch">
             <subreport>
-                <reportElement x="0" y="0" width="555" height="125" uuid="31810d2e-fa26-43b3-a4c9-2fc38f468ba4"/>
+                <reportElement x="0" y="0" width="555" height="125" uuid="f679738a-238c-44c8-80c0-842ba3e2523d"/>
                 <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Warehouse_Report_Sub_Body.jasper"]]></subreportExpression>
+                <subreportExpression><![CDATA[$P{rptBody}]]></subreportExpression>
             </subreport>
         </band>
     </detail>

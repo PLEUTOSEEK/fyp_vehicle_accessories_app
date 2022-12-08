@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b535f0c1-1c98-4c37-94ea-dca941eb1b2e">
-    <property name="ireport.zoom" value="1.948717100000002"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b535f0c1-1c98-4c37-94ea-dca941eb1b2e">
+    <property name="ireport.zoom" value="1.6105100000000017"/>
     <property name="ireport.x" value="0"/>
-    <property name="ireport.y" value="61"/>
+    <property name="ireport.y" value="0"/>
     <parameter name="param_Sub_Staff_ID" class="java.lang.String">
         <defaultValueExpression><![CDATA[]]></defaultValueExpression>
     </parameter>
@@ -13,10 +13,9 @@
         <defaultValueExpression><![CDATA[]]></defaultValueExpression>
     </parameter>
     <queryString>
-		<![CDATA[-- Time Series
-SELECT
-    Staff.Staff_ID,
-    SalesOrder.Actual_Created_Date,
+		<![CDATA[SELECT
+    CAST(SalesOrder.Actual_Created_Date AS date) AS SO_CREATED_DATE,
+    SalesOrder.Status,
     COUNT(SalesOrder.SO_ID) AS SO_TTL_CASES
 FROM
     Staff
@@ -25,26 +24,33 @@ FROM
 WHERE
     Staff.Staff_ID = $P{param_Sub_Staff_ID} AND
     SalesOrder.Actual_Created_Date BETWEEN $P{Start_Date_Range} AND $P{End_Date_Range}
-GROUP BY
-    Staff.Staff_ID,
-    SalesOrder.Actual_Created_Date]]>
+Group BY
+  Staff.Staff_ID,
+  SalesOrder.Actual_Created_Date,
+  SalesOrder.Status]]>
     </queryString>
-    <field name="Staff_ID" class="java.lang.String"/>
-    <field name="Actual_Created_Date" class="java.sql.Timestamp"/>
+    <field name="SO_CREATED_DATE" class="java.sql.Date"/>
+    <field name="Status" class="java.lang.String"/>
     <field name="SO_TTL_CASES" class="java.lang.Integer"/>
     <background>
         <band splitType="Stretch"/>
     </background>
     <title>
-        <band height="191" splitType="Stretch">
+        <band height="99" splitType="Stretch">
             <timeSeriesChart>
                 <chart evaluationTime="Report">
-                    <reportElement x="0" y="0" width="555" height="191" uuid="1a7389cf-4ae5-47e9-b6ae-a748d05319d2"/>
+                    <reportElement x="0" y="0" width="447" height="99" uuid="1a7389cf-4ae5-47e9-b6ae-a748d05319d2"/>
                     <chartTitle/>
                     <chartSubtitle/>
                     <chartLegend/>
                 </chart>
-                <timeSeriesDataset/>
+                <timeSeriesDataset>
+                    <timeSeries>
+                        <seriesExpression><![CDATA[$F{Status}]]></seriesExpression>
+                        <timePeriodExpression><![CDATA[$F{SO_CREATED_DATE}]]></timePeriodExpression>
+                        <valueExpression><![CDATA[$F{SO_TTL_CASES}]]></valueExpression>
+                    </timeSeries>
+                </timeSeriesDataset>
                 <timeSeriesPlot>
                     <plot/>
                     <timeAxisFormat>
