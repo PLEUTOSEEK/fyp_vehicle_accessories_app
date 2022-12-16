@@ -348,23 +348,8 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         );
 
         tempItems.addAll(items);
-
-        List<Item> tempTempItems = new ArrayList<>();
-        for (Item item : tempItems) {
-            Item clonedItem = item.clone();
-            clonedItem.setQty(0);
-            for (Item i : tempItems) {
-                if (i.getDlvrDate().equals(clonedItem.getDlvrDate())
-                        && i.getProduct().getProdID().equals(clonedItem.getProduct().getProdID())) {
-                    clonedItem.setQty(clonedItem.getQty() + i.getQty());
-                }
-            }
-            clonedItem.setOriQty(clonedItem.getQty());
-            tempTempItems.add(clonedItem);
-        }
-
         ((MFXTableView<Item>) tblVw).getItems().clear();
-        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempTempItems));
+        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
         tempItems.clear();
 
         ((MFXTableView<Item>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
@@ -508,7 +493,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         } else {
             this.btnSave.setText("Save");
         }
-
+        this.ctnSalesPersonSelection.setDisable(disable);
         this.txtQuotID.setDisable(disable);
         this.txtSalesPerson.setDisable(disable);
         this.txtBillTo.setDisable(disable);
@@ -544,7 +529,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         this.tblVw.setDisable(disable);
         this.btnAdd.setDisable(disable);
         this.imgDocs.setDisable(disable);
-        privilegeDetect();
+
     }
 
     @FXML
@@ -1009,7 +994,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         quotation.setCode(this.txtQuotID.getText());
 
         CustomerInquiry customerInquiry = new CustomerInquiry();
-        if (this.txtIssuedBy.getText().isEmpty()) {
+        if (this.txtCIRef.getText().isEmpty()) {
             customerInquiry.setCode(null);
         } else {
             customerInquiry.setCode(this.txtCIRef.getText());
@@ -1054,7 +1039,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         quotation.setIssuedBy(issuedBy);
 
         Staff releasedAVerifiedBy = new Staff();
-        if (this.txtIssuedBy.getText().isEmpty()) {
+        if (this.txtReleasedAVerifiedBy.getText().isEmpty()) {
             releasedAVerifiedBy.setStaffID(null);
         } else {
             releasedAVerifiedBy.setStaffID(this.txtReleasedAVerifiedBy.getText());
@@ -1062,7 +1047,7 @@ public class QuotationCONTR implements Initializable, BasicCONTRFunc {
         quotation.setReleasedAVerifiedBy(releasedAVerifiedBy);
 
         CollectAddress customerSignature = new CollectAddress();
-        if (this.txtIssuedBy.getText().isEmpty()) {
+        if (this.txtCustSignature.getText().isEmpty()) {
             customerSignature.setCollectAddrID(null);
         } else {
             customerSignature.setCollectAddrID(this.txtCustSignature.getText());

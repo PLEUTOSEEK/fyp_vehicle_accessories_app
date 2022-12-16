@@ -330,6 +330,7 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
                 new StringFilter<>("Remarks", item -> item.getRemark())
         );
 
+        tempItems.clear();
         tempItems.addAll(items);
         ((MFXTableView<Item>) tblVw).getItems().clear();
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
@@ -1123,7 +1124,19 @@ public class ReturnDerliveryNoteCONTR implements Initializable, BasicCONTRFunc {
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
             passObj.setObj(new ReturnDeliveryNote());
-            passObj.setObjs((List<Object>) (Object) itemsNotYetReturn);
+
+            tempItems.clear();
+
+            for (Item item : itemsNotYetReturn) {
+                tempItems.add(item.clone());
+            }
+
+            for (Item item : tempItems) {
+                if (item.getQty() == 0) {
+                    tempItems.remove(item);
+                }
+            }
+            passObj.setObjs((List<Object>) (Object) tempItems);
 
             stage.setUserData(passObj);
             stage.showAndWait();

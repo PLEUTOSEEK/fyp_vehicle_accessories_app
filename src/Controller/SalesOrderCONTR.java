@@ -342,23 +342,8 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         );
 
         tempItems.addAll(items);
-
-        List<Item> tempTempItems = new ArrayList<>();
-        for (Item item : tempItems) {
-            Item clonedItem = item.clone();
-            clonedItem.setQty(0);
-            for (Item i : tempItems) {
-                if (i.getDlvrDate().equals(clonedItem.getDlvrDate())
-                        && i.getProduct().getProdID().equals(clonedItem.getProduct().getProdID())) {
-                    clonedItem.setQty(clonedItem.getQty() + i.getQty());
-                }
-            }
-            clonedItem.setOriQty(clonedItem.getQty());
-            tempTempItems.add(clonedItem);
-        }
-
         ((MFXTableView<Item>) tblVw).getItems().clear();
-        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempTempItems));
+        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
         tempItems.clear();
 
         ((MFXTableView<Item>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
@@ -542,8 +527,6 @@ public class SalesOrderCONTR implements Initializable, BasicCONTRFunc {
         this.tblVw.setDisable(disable);
         this.btnAdd.setDisable(disable);
         this.imgDocs.setDisable(disable);
-
-        privilegeDetect();
 
         if (!this.txtQuotRef.getText().isEmpty()) {
             blockControlWhileReferQuot();

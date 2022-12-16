@@ -466,7 +466,7 @@ public class CollectAddressDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        String latestID = null;
+        String latestID = "";
 
         try {
             conn = SQLDatabaseConnection.openConn();

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8f231e0d-70f9-43f6-b3f8-e50ad197509f">
     <property name="ireport.zoom" value="1.862763969177476"/>
     <property name="ireport.x" value="0"/>
-    <property name="ireport.y" value="432"/>
+    <property name="ireport.y" value="807"/>
     <subDataset name="dataset1" uuid="00a5c64b-f76e-4d58-839f-0e62284a8e12"/>
     <parameter name="param_SO_ID_Header" class="java.lang.String">
         <defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -698,7 +698,7 @@ WHERE
             <staticText>
                 <reportElement x="0" y="149" width="275" height="11" uuid="0e522389-bdba-4db2-a455-d190da66fb4a"/>
                 <textElement>
-                    <font fontName="Calibri" size="8" isBold="true" isStrikeThrough="true"/>
+                    <font fontName="Calibri" size="8" isBold="true" isStrikeThrough="false"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
                 <text><![CDATA[Thir Shen Sdn. Bhd.]]></text>
@@ -706,7 +706,7 @@ WHERE
             <staticText>
                 <reportElement x="0" y="160" width="275" height="11" uuid="017f1b4d-25e8-4430-ba4b-914d99db4148"/>
                 <textElement>
-                    <font fontName="Calibri" size="7" isBold="false" isStrikeThrough="true"/>
+                    <font fontName="Calibri" size="7" isBold="false" isStrikeThrough="false"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
                 <text><![CDATA[Co. Reg. No.: 001515510-U]]></text>
@@ -714,7 +714,7 @@ WHERE
             <staticText>
                 <reportElement x="0" y="171" width="275" height="11" uuid="e6e5be4a-984e-4827-ad59-d8bb15eaa4f1"/>
                 <textElement>
-                    <font fontName="Calibri" size="8" isBold="false" isStrikeThrough="true"/>
+                    <font fontName="Calibri" size="8" isBold="false" isStrikeThrough="false"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
                 <text><![CDATA[Lot.8538, Jalan Klang Banting, 42700 Banting, Selangor]]></text>
@@ -722,7 +722,7 @@ WHERE
             <staticText>
                 <reportElement x="0" y="182" width="275" height="11" uuid="e2368559-8dd4-4c64-916b-7ae026d5ad4d"/>
                 <textElement>
-                    <font fontName="Calibri" size="8" isBold="false" isStrikeThrough="true"/>
+                    <font fontName="Calibri" size="8" isBold="false" isStrikeThrough="false"/>
                     <paragraph leftIndent="2"/>
                 </textElement>
                 <text><![CDATA[Tel: 016-3717733    Fax: (603) 7965 9999    Email: ThirShen_Gan@gmail.com]]></text>

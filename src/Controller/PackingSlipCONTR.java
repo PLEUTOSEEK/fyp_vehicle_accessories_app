@@ -172,6 +172,7 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
                 new IntegerFilter<>("Qty", item -> item.getOriQty())
         );
 
+        tempItems.clear();
         tempItems.addAll(items);
         ((MFXTableView<Item>) tblVw).getItems().clear();
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
@@ -522,6 +523,9 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
 
                             for (Item i : items) {
                                 i.setOriQty(i.getQty());
+                                if (i.getOriQty() == 0) {
+                                    items.remove(i);
+                                }
                             }
 
                             setupItemTable();
@@ -584,7 +588,19 @@ public class PackingSlipCONTR implements Initializable, BasicCONTRFunc {
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
             passObj.setObj(new PackingSlip());
-            passObj.setObjs((List<Object>) (Object) itemsNotYetPack);
+
+            tempItems.clear();
+            for (Item item : itemsNotYetPack) {
+                tempItems.add(item.clone());
+            }
+
+            for (Item item : tempItems) {
+                if (item.getQty() == 0) {
+                    tempItems.remove(item);
+                }
+            }
+
+            passObj.setObjs((List<Object>) (Object) tempItems);
 
             stage.setUserData(passObj);
             stage.showAndWait();

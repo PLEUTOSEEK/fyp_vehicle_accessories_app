@@ -1027,6 +1027,7 @@ public class DeliveryOrderCONTR implements Initializable, BasicCONTRFunc {
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
             passObj.setObj(new DeliveryOrder());
+
             passObj.setObjs((List<Object>) (Object) packingSlipsNotYetDeliver);
 
             stage.setUserData(passObj);

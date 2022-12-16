@@ -304,7 +304,13 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 new StringFilter<>("Source", item -> item.getInventory() == null ? null : item.getInventory().getInventoryID())
         );
 
+        tempItems.clear();
         tempItems.addAll(items);
+        for (Item item : tempItems) {
+            if (item.getQty() == 0) {
+                tempItems.remove(item);
+            }
+        }
         ((MFXTableView<Item>) tblVw).getItems().clear();
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
         tempItems.clear();
@@ -1032,7 +1038,18 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
             passObj.setObj(new TransferOrder());
-            passObj.setObjs((List<Object>) (Object) itemsNotYetTransfer);
+
+            tempItems.clear();
+            for (Item item : itemsNotYetTransfer) {
+                tempItems.add(item.clone());
+            }
+
+            for (Item item : tempItems) {
+                if (item.getQty() == 0) {
+                    tempItems.remove(item);
+                }
+            }
+            passObj.setObjs((List<Object>) (Object) tempItems);
 
             stage.setUserData(passObj);
             stage.showAndWait();

@@ -57,6 +57,7 @@ import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * FXML Controller class
@@ -1482,10 +1483,10 @@ public class StaffCONTR implements Initializable, BasicCONTRFunc {
         staff.setEntryDate(this.dtEntryDate.getValue() == null ? null : Date.valueOf(this.dtEntryDate.getValue()));
 
         Staff reportTo = new Staff();
-        if (!this.txtReportTo.getText().isEmpty()) {
-            reportTo.setStaffID(this.txtReportTo.getText());
-        } else {
+        if (isBlank(this.txtReportTo.getText())) {
             reportTo.setStaffID(null);
+        } else {
+            reportTo.setStaffID(this.txtReportTo.getText());
         }
         staff.setReportTo(reportTo);
 

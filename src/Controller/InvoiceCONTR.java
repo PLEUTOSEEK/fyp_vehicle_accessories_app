@@ -279,24 +279,15 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                 new DoubleFilter<>("Incl. Amount", item -> item.getInclTaxAmt().doubleValue())
         );
 
+        tempItems.clear();
         tempItems.addAll(items);
-
-        List<Item> tempTempItems = new ArrayList<>();
         for (Item item : tempItems) {
-            Item clonedItem = item.clone();
-            clonedItem.setQty(0);
-            for (Item i : tempItems) {
-                if (i.getDlvrDate().equals(clonedItem.getDlvrDate())
-                        && i.getProduct().getProdID().equals(clonedItem.getProduct().getProdID())) {
-                    clonedItem.setQty(clonedItem.getQty() + i.getQty());
-                }
+            if (item.getQtyNotYetBill() == 0) {
+                tempItems.remove(item);
             }
-            clonedItem.setOriQty(clonedItem.getQty());
-            tempTempItems.add(clonedItem);
         }
-
         ((MFXTableView<Item>) tblVw).getItems().clear();
-        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempTempItems));
+        ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
         tempItems.clear();
 
         ((MFXTableView<Item>) tblVw).getSelectionModel().selectionProperty().addListener(new ChangeListener() {
@@ -968,7 +959,18 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
             passObj.setObj(new Invoice());
-            passObj.setObjs((List<Object>) (Object) itemsNotYetBill);
+
+            tempItems.clear();
+            for (Item item : itemsNotYetBill) {
+                tempItems.add(item.clone());
+            }
+            for (Item item : tempItems) {
+                if (item.getQtyNotYetBill() == 0) {
+                    tempItems.remove(item);
+                }
+            }
+
+            passObj.setObjs((List<Object>) (Object) tempItems);
 
             stage.setUserData(passObj);
             stage.showAndWait();

@@ -378,7 +378,7 @@ public class StaffDAO {
         PreparedStatement ps = null;
         String query = "";
         ResultSet rs = null;
-        String latestCode = null;
+        String latestCode = "";
 
         try {
             conn = SQLDatabaseConnection.openConn();

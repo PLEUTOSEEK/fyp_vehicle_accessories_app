@@ -279,7 +279,13 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
                 new DoubleFilter<>("Incl. Amount", item -> item.getInclTaxAmt().doubleValue())
         );
 
+        tempItems.clear();
         tempItems.addAll(items);
+        for (Item item : tempItems) {
+            if (item.getQty() == 0) {
+                tempItems.remove(item);
+            }
+        }
         ((MFXTableView<Item>) tblVw).getItems().clear();
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
         tempItems.clear();
@@ -342,7 +348,7 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
     }
 
     private void adjustItemsNotYetPaid(Item catchedItem, Item item) throws Exception {
-        if (catchedItem.getProduct() == null) {//remove
+        if (catchedItem == null) {//remove
             Item itemInInvoice = itemsNotYetPaid.get(itemsNotYetPaid.indexOf(item));
             Item itemInRcpt = (Item) items.get(items.indexOf(item));
 
@@ -759,7 +765,18 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
             BasicObjs passObj = new BasicObjs();
             passObj.setCrud(BasicObjs.create);
             passObj.setObj(new Receipt());
-            passObj.setObjs((List<Object>) (Object) itemsNotYetPaid);
+
+            tempItems.clear();
+            for (Item item : itemsNotYetPaid) {
+                tempItems.add(item.clone());
+            }
+
+            for (Item item : tempItems) {
+                if (item.getQty() == 0) {
+                    tempItems.remove(item);
+                }
+            }
+            passObj.setObjs((List<Object>) (Object) tempItems);
 
             stage.setUserData(passObj);
             stage.showAndWait();

@@ -1215,9 +1215,13 @@ public class CustomerCONTR implements Initializable, BasicCONTRFunc {
             this.txtName.setText(customer.getName());
             this.cmbGender.setText(customer.getGender());
             this.txtOccupation.setText(customer.getOccupation());
-            this.dtDOB.setValue(Instant.ofEpochMilli(customer.getDOB().getTime())
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate());
+
+            if (customer.getDOB() != null) {
+                this.dtDOB.setValue(Instant.ofEpochMilli(customer.getDOB().getTime())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate());
+            }
+
             this.txtIC.setText(customer.getIC());
             this.cmbNationality.setText(customer.getNationality());
             this.cmbRace.setText(customer.getRace());

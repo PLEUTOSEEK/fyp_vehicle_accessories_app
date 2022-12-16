@@ -87,9 +87,10 @@ public class ItemDAO {
                     + "Delivery_Date, "
                     + "Excl_Amount, "
                     + "Discount_Amount, "
+                    + "Discount_Percentage, "
                     + "Incl_Amount "
                     + ") "
-                    + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(query);
             // bind parameter
 
@@ -109,7 +110,8 @@ public class ItemDAO {
                 ps.setDate(10, item.getDlvrDate() == null ? null : item.getDlvrDate());
                 ps.setBigDecimal(11, item.getExclTaxAmt() == null ? new BigDecimal("0.00") : item.getExclTaxAmt());
                 ps.setBigDecimal(12, item.getDiscAmt() == null ? new BigDecimal("0.00") : item.getDiscAmt());
-                ps.setBigDecimal(13, item.getInclTaxAmt() == null ? new BigDecimal("0.00") : item.getInclTaxAmt());
+                ps.setFloat(13, (float) item.getDiscPercent());
+                ps.setBigDecimal(14, item.getInclTaxAmt() == null ? new BigDecimal("0.00") : item.getInclTaxAmt());
 
                 ps.addBatch();
                 i++;
@@ -171,6 +173,7 @@ public class ItemDAO {
                 item.setDlvrDate(rs.getDate("Delivery_Date"));
                 item.setExclTaxAmt(rs.getBigDecimal("Excl_Amount"));
                 item.setDiscAmt(rs.getBigDecimal("Discount_Amount"));
+                item.setDiscPercent(rs.getFloat("Discount_Percentage"));
                 item.setInclTaxAmt(rs.getBigDecimal("Incl_Amount"));
                 items.add(item);
             }
