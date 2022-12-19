@@ -106,7 +106,8 @@ public class InvoiceDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                invoice.setSO(SalesOrderDAO.getSalesOrderByID(rs.getString("INV_ID")));
+                invoice.setCode(rs.getString("INV_ID"));
+                invoice.setSO(SalesOrderDAO.getSalesOrderByID(rs.getString("SO_ID")));
                 invoice.setReferenceType(rs.getString("Reference_Type"));
                 invoice.setReference(rs.getString("Reference"));
                 invoice.setGross(rs.getBigDecimal("Gross"));

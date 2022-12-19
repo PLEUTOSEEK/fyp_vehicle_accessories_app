@@ -628,7 +628,7 @@ public class InvoiceCONTR implements Initializable, BasicCONTRFunc {
                 .withMethod(c -> {
 
                     if (items.size() <= 0) {
-                        c.error("Item - At least one item are required to build a Return Delivery Note");
+                        c.error("Item - At least one item are required to build a Invoice");
                         return;
                     }
 

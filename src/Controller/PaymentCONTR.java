@@ -174,11 +174,15 @@ public class PaymentCONTR implements Initializable, BasicCONTRFunc {
                     isViewMode(true);
                 }
                 setupItemTable();
-                try {
-                    calculateTotalInformation(items);
-                } catch (Exception ex) {
-                    Logger.getLogger(PaymentCONTR.class.getName()).log(Level.SEVERE, null, ex);
+
+                if (passObj.getCrud().equals(BasicObjs.create)) {
+                    try {
+                        calculateTotalInformation(items);
+                    } catch (Exception ex) {
+                        Logger.getLogger(PaymentCONTR.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
+
             }
         });
     }

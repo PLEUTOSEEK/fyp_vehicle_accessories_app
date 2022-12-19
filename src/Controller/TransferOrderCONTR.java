@@ -251,6 +251,9 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
         this.cmbRefType.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             this.txtRef.clear();
+            // retrieve Product Information (String cmbRefType.getText())
+            // this.txtProdName.setText();
+            // this.txtProdDesc.setText();
         });
 
     }
@@ -306,11 +309,6 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
         tempItems.clear();
         tempItems.addAll(items);
-        for (Item item : tempItems) {
-            if (item.getQty() == 0) {
-                tempItems.remove(item);
-            }
-        }
         ((MFXTableView<Item>) tblVw).getItems().clear();
         ((MFXTableView<Item>) tblVw).setItems(FXCollections.observableArrayList(tempItems));
         tempItems.clear();
@@ -880,7 +878,7 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
     }
 
     @FXML
-    private void openDocSelection(MouseEvent event) {
+    private void openDocSelection(MouseEvent event) throws IOException {
         if (event.isPrimaryButtonDown() == true) {
 
             if (this.cmbRefType.getText().isEmpty()) {
@@ -970,29 +968,36 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                                 this.passObj.setObj(so);
 
                                 fieldFillIn();
+                                items.clear();
                                 for (Item i : itemsNotYetTransfer) {
-                                    items.add(i.clone());
-                                    i.setQty(0);
+                                    if (i.getQty() != 0) {
+                                        items.add(i.clone());
+                                        i.setQty(0);
+                                    }
+
+                                }
+
+                                for (Item i : items) {
+                                    i.setOriQty(i.getQty());
                                 }
 
                                 setupItemTable();
-
-                            } else {
-                                alertDialog(Alert.AlertType.INFORMATION,
-                                        "Information",
-                                        "Document Blocked Message",
-                                        "There are no more item needed to be transfer for the selected document.");
                             }
-
                         } else {
                             alertDialog(Alert.AlertType.INFORMATION,
                                     "Information",
                                     "Document Blocked Message",
-                                    "Sales Order without NEW status are not allowed to become any document reference.");
+                                    "There are no more item needed to be transfer for the selected document.");
                         }
-                    }
 
+                    } else {
+                        alertDialog(Alert.AlertType.INFORMATION,
+                                "Information",
+                                "Document Blocked Message",
+                                "Sales Order without NEW status are not allowed to become any document reference.");
+                    }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1041,12 +1046,8 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
 
             tempItems.clear();
             for (Item item : itemsNotYetTransfer) {
-                tempItems.add(item.clone());
-            }
-
-            for (Item item : tempItems) {
-                if (item.getQty() == 0) {
-                    tempItems.remove(item);
+                if (item.getQty() != 0) {
+                    tempItems.add(item.clone());
                 }
             }
             passObj.setObjs((List<Object>) (Object) tempItems);
@@ -1224,7 +1225,6 @@ public class TransferOrderCONTR implements Initializable, BasicCONTRFunc {
                 ReturnDeliveryNote rdn = RDNService.getReturnDeliveryNoteByCode(((ReturnDeliveryNote) toInDraft.getReqTypeRef()).getCode());
 
                 reserveStock(rdn.getSO().getCode());
-
             }
 
             switchScene(passObj.getFxmlPaths().getLast().toString(), passObj, BasicObjs.back);

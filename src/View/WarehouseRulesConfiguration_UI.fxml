@@ -39,7 +39,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <MFXTextField fx:id="txtMaxRequiredDeliveryDate" alignment="CENTER_RIGHT" floatingText="Max. Required Delivery Date" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="170.0" textLimit="20" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <MFXTextField fx:id="txtMaxRequiredDeliveryDate" alignment="CENTER_RIGHT" floatingText="Max. Allow delivery days" minHeight="47.0" minWidth="145.0" prefHeight="47.0" prefWidth="170.0" textLimit="20" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <MFXTableView fx:id="tblShipmentTerm" prefHeight="398.0" prefWidth="631.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="7" GridPane.rowSpan="4" GridPane.valignment="TOP" />
             <Label prefHeight="38.0" prefWidth="235.0" styleClass="small-label" stylesheets="@../../css/labels.css" text="Shipment Term" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
                <font>

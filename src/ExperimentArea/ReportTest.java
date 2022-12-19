@@ -21,14 +21,12 @@ public class ReportTest {
 
     public static void main(String[] args) {
         try {
-            String rpt = "src/Report/Accounting_Report_Main.jrxml";
-            String rptPieChart = "src/Report/Accounting_Report_Sub_Pie_Chart.jrxml";
+            String rpt = "src/Report/textForPZ.jrxml";
 
             JasperReport jr = JasperCompileManager.compileReport(rpt);
-            JasperReport jrPieChart = JasperCompileManager.compileReport(rptPieChart);
 
             Map< String, Object> para = new HashMap<>();
-            para.put("rptPieChart", jrPieChart);
+            para.put("paramCustID", "CUST2212-003");
 
             JasperPrint jp = JasperFillManager.fillReport(jr, para, SQLDatabaseConnection.openConn());
             JasperViewer.viewReport(jp, false);
